@@ -1,0 +1,97 @@
+﻿@model UMC_FORM.Models.Form_User
+@using UMC_FORM.Models
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
+}
+
+<h2>Edit</h2>
+
+<div id="layoutSidenav_content">
+    <div class="container-fluid ">
+        <div class="">
+            <div class="">
+                <div class="card-body">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label class="err">@ViewBag.message</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="code">Code</label>
+                            <input class="form-control" id="CODE" name="CODE" value="@Model.CODE">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input class="form-control" id="NAME" name="NAME" value="@Model.NAME">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Short Name</label>
+                            <input class="form-control" id="SHORT_NAME" name="SHORT_NAME" value="@Model.SHORT_NAME">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Dept</label>
+                            <select class="form-control" aria-label="Default select example" name="DEPT">
+                                @foreach (var item in ViewBag.depts)
+                                {
+                                    if (item == Model.DEPT)
+                                    {
+                                        <option value="@item" selected>@item</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Sign</label>
+                            <input name="SIGNATURE" class="form-control" id="sign" value="@Model.SIGNATURE">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" name="EMAIL" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@Model.EMAIL">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" name="PASSWORD" class="form-control" id="exampleInputPassword1" value="@Model.PASSWORD">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Role</label>
+                            <select class="form-control" aria-label="Default select example" name="ROLE_ID">
+                                @foreach (Form_Role item in ViewBag.roles)
+                                {
+                                    if (item.ID == Model.ROLE_ID)
+                                    {
+                                        <option value="@item.ID" selected>@item.NAME</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.ID">@item.NAME</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/bootstrap.bundle.min.js"></script>
+<script src="~/Content/js/moment.js"></script>
+<script src="~/Content/js/jquery.simplePagination.js"></script>
+<script src="~/Content/js/pagination.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+<script src="~/Content/assets/demo/datatables-demo.js"></script>
+<script src="~/Content/js/bootstrap-typeahead.js"></script>
+<script src="~/Content/js/mention.js"></script>
+<script src="~/Content/js/scripts.js"></script>
+<script src="~/Content/js/lang.js"></script>

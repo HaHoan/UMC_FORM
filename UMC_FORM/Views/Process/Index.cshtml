@@ -1,0 +1,157 @@
+﻿@model IEnumerable<UMC_FORM.Models.Form_ProcessName>
+@{
+    ViewBag.Title = "Process";
+    Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
+    int _no = 1;
+}
+
+<div id="layoutSidenav_content">
+    <div class="container-fluid ">
+        <div class="">
+            <div class="">
+                <div class="card-body">
+                    <a href="./index.html" style="text-decoration: none;">
+                        <span class="font-title text-muted lang">Process</span>
+                    </a>
+                    <br /><br />
+                    <a href="@Url.Action("Create","Process")" class="btn btn-primary btn-sm" role="button" aria-disabled="true">Tạo Process mới</a>
+                    <ul class="nav mt-4" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="all-tab" data-toggle="tab" aria-controls="inbox"
+                               href="#inbox" role="tab" aria-selected="true">
+                                <span class="d-block d-md-none"><i class="ti-email"></i></span>
+                                <span class="d-none d-md-block lang">Tất cả</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="comming-tab" data-toggle="tab" aria-controls="sent"
+                               href="#sent" role="tab" aria-selected="false">
+                                <span class="d-block d-md-none"><i class="ti-export"></i></span>
+                                <span class="d-none d-md-block lang">Users</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="dealine-tab" data-toggle="tab" aria-controls="spam"
+                               href="#spam" role="tab" aria-selected="false">
+                                <span class="d-block d-md-none"><i class="ti-panel"></i></span>
+                                <span class="d-none d-md-block lang">Flow</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade active show " id="inbox" aria-labelledby="inbox-tab"
+                         role="tabpanel">
+                        <!-- Request list-->
+                        <div class="table-responsive">
+                            <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
+                                <tbody class="table-request">
+                                    @foreach (var item in Model)
+                                    {
+                                        var id = "cst" + _no;
+                                        <tr class="row-request">
+                                            <td class="pl-3">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id=@id />
+                                                    <label class="custom-control-label" for=@id>&nbsp;</label>
+                                                </div>
+                                            </td>
+
+                                            <td><i class="fa fa-star text-info"></i></td>
+                                            <td>
+                                                <a class="link request-item" href="@Url.Action("Details","Process", new {id = item.PROCESS_ID })" data-slide="next" name="1">
+                                                    <span class="mb-0 text-muted">@Html.DisplayFor(m => item.PROCESS_ID)</span>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-user text-muted"></i>
+                                                <span class="mb-0 text-muted">@Html.DisplayFor(m => item.UPD_USER)</span>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-file-signature text-info"></i>
+                                                <span class="mb-0 text-muted">@Html.DisplayFor(m => item.UPD_TIME)</span>
+                                            </td>
+
+                                            <td class="text-muted">
+                                                <a href="@Url.Action("Edit","Process", new {id = item.PROCESS_ID })"><i style="color:gray" class='fas fa-edit'></i></a>
+                                            </td>
+                                        </tr>
+                                        _no++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-inline">
+                            <div id="pagination-container"></div>
+                            <i class="fas fa-redo-alt"></i>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="sent" aria-labelledby="sent-tab" role="tabpanel">
+                        <div class="row p-3 text-dark">
+                            <div class="col-md-6">
+                                <h3 class="font-light">Lets check profile</h3>
+                                <h4 class="font-light">you can use it with the small code</h4>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <p>
+                                    Donec pede justo, fringilla vel, aliquet nec, vulputate eget,
+                                    arcu.
+                                    In enim justo, rhoncus ut, imperdiet a.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="spam" aria-labelledby="spam-tab" role="tabpanel">
+                        <div class="row p-3 text-dark">
+                            <div class="col-md-6">
+                                <h3 class="font-light">Come on you have a lot message</h3>
+                                <h4 class="font-light">you can use it with the small code</h4>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <p>
+                                    Donec pede justo, fringilla vel, aliquet nec, vulputate eget,
+                                    arcu.
+                                    In enim justo, rhoncus ut, imperdiet a.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="delete" aria-labelledby="delete-tab" role="tabpanel">
+                        <div class="row p-3 text-dark">
+                            <div class="col-md-6">
+                                <h3 class="font-light">Just do Settings</h3>
+                                <h4 class="font-light">you can use it with the small code</h4>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <p>
+                                    Donec pede justo, fringilla vel, aliquet nec, vulputate eget,
+                                    arcu.
+                                    In enim justo, rhoncus ut, imperdiet a.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/bootstrap.bundle.min.js"></script>
+<script src="~/Content/js/moment.js"></script>
+<script src="~/Content/js/jquery.simplePagination.js"></script>
+<script src="~/Content/js/pagination.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+<script src="~/Content/assets/demo/datatables-demo.js"></script>
+<script src="~/Content/js/bootstrap-typeahead.js"></script>
+<script src="~/Content/js/mention.js"></script>
+<script src="~/Content/js/scripts.js"></script>
+<script src="~/Content/js/lang.js"></script>
+
+

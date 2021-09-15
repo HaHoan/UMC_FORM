@@ -1,0 +1,68 @@
+﻿@model IEnumerable<UMC_FORM.Models.Form_User>
+@using UMC_FORM.Models
+@{
+    Layout = null;
+    var users = ViewBag.users as List<Form_User>;
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div class=" container mt-5">
+        @*<label for="type_form" class="lang" key="type_form">Choose a Form:</label>
+
+            <select id="type_form" class="form-control" style="width:50%" onchange="GetProcess(this);">
+                <option label="PR ACC F06">F06-PR-ACC-03-01</option>
+                <option label="IT F01">IT F01</option>
+            </select>*@
+        <input type="text" id="process" class="form-control" value="@ViewBag.process" />
+        <svg xmlns:svg="http://www.w3.org/2000/svg" class=" steps-form mt-5">
+        </svg>
+        <div id="submitors" class="container">
+            <input class="form-control" id="searchUser" style="width:40%" type="text" placeholder="Tìm kiếm">
+            <br>
+            <ul class="list-group" style="width:50%" id="listUser">
+                @foreach (var item in Model)
+                {
+                    <li class="list-group-item form-check-inline">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" name="@Html.DisplayFor(m => item.CODE)" value="@Html.DisplayFor(m => item.NAME)">@Html.DisplayFor(m => item.NAME)
+                        </label>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <button class="btn btn-success mt-5 ml-2 lang" key="save_change" onclick="saveChange();">Lưu thay đổi</button>
+        <button class="btn btn-info mt-5 ml-2 lang" key="back" onclick="GoBack();">Back</button>
+        @*}*@
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
+
+    <script src="~/Content/js/lang.js"></script>
+    <script src="~/Content/js/scripts.js"></script>
+    <script src="~/Content/js/PR_ACC_F06.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+﻿@model UMC_FORM.Models.Form_User
+@using UMC_FORM.Models
+@{
+    ViewBag.Title = "UserCreate";
+    Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
+    var roles = ViewBag.roles as List<Form_Role>;
+}
+
+<div id="layoutSidenav_content">
+    <div class="container-fluid ">
+        <div class="">
+            <div class="">
+                <div class="card-body">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label class="err">@ViewBag.message</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="code">Code</label>
+                            <input class="form-control" id="code" name="CODE" placeholder="Enter code">
+                            @*<small class="form-text text-muted">Nhập code của người dùng.</small>*@
+                            @Html.ValidationMessageFor(m => m.CODE)
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input class="form-control" id="name" name="NAME" placeholder="Enter FullName">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Dept</label>
+                            <select class="form-control" aria-label="Default select example" name="DEPT">
+                                @foreach (var item in ViewBag.depts)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Sign</label>
+                            <input name="SIGNATURE" class="form-control" id="sign" placeholder="Enter Sign">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" name="EMAIL" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" name="PASSWORD" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select class="form-control" name="ROLE_ID">
+                                @foreach (var item in roles)
+                                {
+                                    <option value="@item.ID">@item.NAME</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

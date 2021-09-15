@@ -1,0 +1,47 @@
+﻿@model UMC_FORM.Models.Form_User
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
+}
+
+<div id="layoutSidenav_content">
+    <div class="container-fluid ">
+        <div class="">
+            <div class="">
+                <div class="card-body">
+                    <form>
+
+                        <div class="form-group">
+                            <label for="code">Code</label>
+                            <input class="form-control" value="@Html.DisplayFor(m=>m.CODE)">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input class="form-control" value="@Html.DisplayFor(m=>m.NAME)">
+                        </div>
+                        <div class="form-group">
+                            <label for="dept">Dept</label>
+                            <input class="form-control" value="@Html.DisplayFor(m=>m.DEPT)">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Sign</label>
+                            <input class="form-control" value="@Html.DisplayFor(m=>m.SIGNATURE)">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input class="form-control" value="@Html.DisplayFor(m=>m.EMAIL)">
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <input class="form-control" value="@ViewBag.role">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

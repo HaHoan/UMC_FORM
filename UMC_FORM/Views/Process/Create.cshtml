@@ -1,0 +1,36 @@
+﻿@using UMC_FORM.Models;
+@{
+    ViewBag.Title = "Process Create";
+    Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
+}
+
+<div id="layoutSidenav_content">
+    <div class="container-fluid ">
+        <div class="">
+            <div class="">
+                <div class="card-body">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label class="err">@ViewBag.message</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="code">Process</label>
+                            <input class="form-control" id="code" name="PROCESS_ID" placeholder="Enter Process Id">
+                        </div>
+                        <div class="form-group">
+                            <label for="code">Process</label>
+                            <input class="form-control" id="code" name="PROCESS_NAME" placeholder="Enter Process Name">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

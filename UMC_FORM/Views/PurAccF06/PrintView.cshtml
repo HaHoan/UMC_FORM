@@ -1,0 +1,492 @@
+﻿@model UMC_FORM.Models.PR_ACC_F06
+@using UMC_FORM.Models
+@{
+    Layout = null;
+    var user = ViewBag.createUser as Form_User;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="~/Content/css/pdf.css" rel="stylesheet" />
+    @*<link href="css/styles.css" rel="stylesheet" />
+        <link href="css/pdf.css" rel="stylesheet" />*@
+
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+          crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+            crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div>
+            <h2 class="text-center">SUPPLY REQUEST</h2>
+            <h2 class="text-center">YÊU CẦU CUNG CẤP</h2>
+            <div class="row m-5">
+                <div class="col">
+                    <p>
+                        ※物品受領後、依頼元は必ずアセットセンタ-スタッフ立会のもと現物確認（検収）と
+                        固定資産シールの貼付を行って下さい
+                        すべての物品は一旦ACに預け、必要な分を払出申請書にて払い出すことを原則とします
+                    </p>
+                    <p>
+                        Sau khi nhận hàng, người đề nghị phải kiểm tra cùng với
+                        Người Quản lý tài sản. Sau đó dán mã tài sản cùng thời gian
+                        Xin chuyển toàn bộ vào kho AC, sau đó làm "Supply Request" và chuyển về bộ phận.
+                    </p>
+
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col-4">ISSUS DATE <span class="font-italic">(Ngày phát hành)</span></div>
+                        <div class="col">@ViewBag.createDate</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">DEPT <span class="font-italic">(Bộ phận)</span></div>
+                        <div class="col">@user.DEPT</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">NAME <span class="font-italic">(Họ tên)</span></div>
+                        <div class="col">@user.CODE</div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Code No</th>
+                            <th>Item name</th>
+                            <th>Description</th>
+                            <th>Vendor</th>
+                            <th>Unit_Price</th>
+                            <th>Qty</th>
+                            <th>Unit<span class="font-italic">(kg*pcs)</span></th>
+                            <th>Amount<span class="font-italic">(USD or VND)</span></th>
+                            <th>Owner of Item</th>
+                            <th>Cost Center</th>
+                            <th width="50px">
+                                （A)→Asset
+                                （K)→Expense
+                            </th>
+                            <th>Account code</th>
+                            <th>Asset No.</th>
+                        </tr>
+                        <tr>
+                            <th class="font-weight-normal">STT</th>
+                            <th class="font-weight-normal">Mã số</th>
+                            <th class="font-weight-normal">Tên hàng</th>
+                            <th class="font-weight-normal">Quy cách</th>
+                            <th class="font-weight-normal">Nhà cung cấp</th>
+                            <th class="font-weight-normal">Đơn giá</th>
+                            <th class="font-weight-normal">Số lượng</th>
+                            <th class="font-weight-normal">Đơn vị</th>
+                            <th class="font-weight-normal">Số tiền</th>
+                            <th class="font-weight-normal">
+                                U→UMC
+                                C→Customer
+                            </th>
+                            <th class="font-weight-normal">
+                                AI/SMT/FAT/
+                                Other/Office
+                            </th>
+                            <th></th>
+                            <th class="font-weight-normal">Tài khoản</th>
+                            <th class="font-weight-normal">Số tài khoản</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableInfo">
+                        @{
+                            var totalRow = 0;
+                            if (!string.IsNullOrEmpty(Model.ITEM_NAME_10))
+                            {
+                                totalRow = 10;
+                            }
+                            else if (!string.IsNullOrEmpty(Model.ITEM_NAME_9))
+                            {
+                                totalRow = 9;
+                            }
+                            else if (!string.IsNullOrEmpty(Model.ITEM_NAME_8))
+                            {
+                                totalRow = 8;
+                            }
+                            else if (!string.IsNullOrEmpty(Model.ITEM_NAME_7))
+                            {
+                                totalRow = 7;
+                            }
+                            else if (!string.IsNullOrEmpty(Model.ITEM_NAME_6))
+                            {
+                                totalRow = 6;
+                            }
+                            else if (!string.IsNullOrEmpty(Model.ITEM_NAME_5))
+                            {
+                                totalRow = 5;
+                            }
+                            else if (!string.IsNullOrEmpty(Model.ITEM_NAME_4))
+                            {
+                                totalRow = 4;
+                            }
+                            else if (!string.IsNullOrEmpty(Model.ITEM_NAME_3))
+                            {
+                                totalRow = 3;
+                            }
+                            else if (!string.IsNullOrEmpty(Model.ITEM_NAME_2))
+                            {
+                                totalRow = 2;
+                            }
+                            else if (!string.IsNullOrEmpty(Model.ITEM_NAME_1))
+                            {
+                                totalRow = 1;
+                            }
+                            for (int i = 1; i <= totalRow; i++)
+                            {
+                                <tr class="row-info">
+                                    <td>@(i)</td>
+                                    <td>@Html.Display("NO_" + i)</td>
+                                    <td>@Html.Display("ITEM_NAME_" + i)</td>
+                                    <td>@Html.Display("DES_" + i)</td>
+                                    <td>@Html.Display("VENDOR_" + i)</td>
+                                    @Html.Hidden("UNIT_PRICE_" + i)
+                                    <td id=@("UNIT_PRICE_"+i+"_VIEW") class="type_number"></td>
+                                    <td class="type_number text-center">@Html.Display("QTY_" + i)</td>
+                                    <td class="text-center">@Html.Display("UNIT_" + i)</td>
+                                    @Html.Hidden("AMOUNT_" + i)
+                                    <td id=@("AMOUNT_"+i+"_VIEW") class="type_number"></td>
+                                    <td class="text-center text-uppercase">@Html.Display("OWNER_OF_ITEM_" + i)</td>
+                                    <td>@Html.Display("COST_CENTER_" + i)</td>
+                                    <td class="text-center text-uppercase">
+                                        @Html.Display("AK_" + i)
+                                    </td>
+                                    <td>@Html.Display("ACOUNT_CODE_" + i)</td>
+                                    <td>@Html.Display("ASSET_NO_" + i)</td>
+                                </tr>
+                            }
+                        }
+
+                        <tr>
+                            <td colspan="6"></td>
+                            <td colspan="2" class="lang font-weight-bold" key="table-total text-uppercase">
+                                TOTAL
+                            </td>
+                            <td class="font-weight-bold total type_number">0</td>
+                            <td colspan="2" class="font-weight-bold">（USD or VND）</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+                    <p>
+                        Request Delivery Date&nbsp;<span class="font-italic">(Ngày yêu cầu giao hàng):</span>
+                        @Html.DisplayFor(m => m.REQUEST_DATE)
+                    </p>
+                    <p>
+                        Remark&nbsp;<span class="font-italic">(Ghi chú):</span>
+                        <span>@Html.DisplayFor(m => m.REMARK)</span>
+                    </p>
+                    
+                </div>
+                <div class="col-4">
+                    @if (Model.IS_ROUND_ROBIN)
+                    {
+                        <p>Round robin: YES(Có)</p>
+                    }
+                    else
+                    {
+                        <p>Round robin: NO(Không)</p>
+                    }
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-8 table-responsive">
+                    <table class="table table-bordered ">
+                        <tbody>
+                            <tr>
+                                <td>1. Apply </td>
+                                <td>2. Dept Manager</td>
+                                <td>3. Asset Center</td>
+                                <td>4. Factory Manager</td>
+                                <td>5. General Director</td>
+                                <td>6. Purchasing Dept</td>
+                                <td colspan="2">7. Receive Check</td>
+                            </tr>
+                            <tr>
+                                <td class="font-italic">Người đề xuất </td>
+                                <td class="font-italic">Trưởng phòng</td>
+                                <td class="font-italic">Qly tài sản</td>
+                                <td class="font-italic">Giám đốc xưởng</td>
+                                <td class="font-italic">Tổng giám đốc</td>
+                                <td class="font-italic">Người duyệt</td>
+                                <td class="font-italic">Applicant</td>
+                                <td class="font-italic">Asset Center</td>
+                            </tr>
+                            <tr height="100px">
+                                @{
+                                    for (int i = 0; i < 8; i++)
+                                    {
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(@ViewBag.signature[i]))
+                                            {
+                                                <div class="rubber_stamp">
+                                                    <p>UMC-VN</p>
+                                                    <p>@ViewBag.dateSignatures[i]</p>
+                                                    <p>@ViewBag.signature[i]</p>
+
+                                                </div>
+                                            }
+                                        </td>
+                                    }
+                                }
+                                @*<td>
+                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[0]))
+                                        {
+                                            <div class="rubber_stamp">
+                                                <p>UMC-VN</p>
+                                                <p>22-6-2020</p>
+                                                <p>@ViewBag.signature[0]</p>
+                                            </div>
+                                        }
+                                    </td>
+
+                                    <td class="">
+                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[1]))
+                                        {
+                                            <div class="rubber_stamp">
+                                                <p>UMC-VN</p>
+                                                <p>22-6-2020</p>
+                                                <p>@ViewBag.signature[1]</p>
+                                            </div>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[2]))
+                                        {
+                                            <div class="rubber_stamp">
+                                                <p>UMC-VN</p>
+                                                <p>22-6-2020</p>
+                                                <p>@ViewBag.signature[2]</p>
+
+                                            </div>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[3]))
+                                        {
+                                            <div class="rubber_stamp">
+                                                <p>UMC-VN</p>
+                                                <p>22-6-2020</p>
+                                                <p>@ViewBag.signature[3]</p>
+
+                                            </div>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[4]))
+                                        {
+                                            <div class="rubber_stamp">
+                                                <p>UMC-VN</p>
+                                                <p>22-6-2020</p>
+                                                <p>@ViewBag.signature[4]</p>
+
+                                            </div>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[5]))
+                                        {
+                                            <div class="rubber_stamp">
+                                                <p>UMC-VN</p>
+                                                <p>22-6-2020</p>
+                                                <p>@ViewBag.signature[5]</p>
+
+                                            </div>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[6]))
+                                        {
+                                            <div class="rubber_stamp">
+                                                <p>UMC-VN</p>
+                                                <p>22-6-2020</p>
+                                                <p>@ViewBag.signature[6]</p>
+
+                                            </div>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[7]))
+                                        {
+                                            <div class="rubber_stamp">
+                                                <p>UMC-VN</p>
+                                                <p>22-6-2020</p>
+                                                <p>@ViewBag.signature[7]</p>
+
+                                            </div>
+                                        }
+                                    </td>*@
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-4">
+                    @if (Model.IS_REQ_CUS)
+                    {
+                        <div class="border p-2">
+                            <p>
+                                Request expenses to Customer? YES 　　客先費用請求あり？　なし？
+                            </p>
+                            <p>
+                                Có yêu cầu khách hàng thanh toán: Có
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="border p-2">
+                            <p>
+                                Request expenses to Customer? NO 　　客先費用請求あり？　なし？
+                            </p>
+                            <p>
+                                Có yêu cầu khách hàng thanh toán: Không
+                            </p>
+                        </div>
+                    }
+                    <div class="border p-2">
+                        <p>
+                            → if YES, How to request?　どのような方法で請求を行いますか(売上単価上乗せ、ＤＮ請求　等）
+                        </p>
+                        <p>Nếu có thì yêu cầu như thế nào (cho vào đơn giá bán hàng, hay yêu cầu DN …)</p>
+                        @Html.DisplayFor(m => m.CUS_PAY_REMARK)
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-1">
+                    <p class="text-danger">Chú ý:</p>
+                </div>
+                <div class="col-11">
+                    <p class="text-danger">1,500USD以上の物品購入は社長承認印を取得して下さい。その物品が固定資産（1,500USD以上)に該当するときは稟議書を添付してください。</p>
+                    <p class="text-danger">
+                        Nếu mua hàng hóa lớn hơn 1,500 usd, thì cần ký, đóng dấu của Tổng giám đốc.
+                        Mặt hàng này là Tài sản
+                        cố định thì cần kèm theo cả Round Robin
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-11">
+                    <p>要求を発行する時に購買部門からの最新見積りを取得するのが必要（見積りの有効は６ヶ月、６ヶ月つき１回変わる事）。見積りは購買部長の承認を取得しないはならない事（見積を頂くまで７日間</p>
+                    <p>
+                        Khi bộ phận làm supply sẽ phải lấy báo giá mới nhất từ PL (báo giá có hiệu lực trong 6 tháng sẽ
+                        thay
+                        đổi 1 lần). Báo giá phải được sự phê duyệt từ trưởng phòng PL (thời gian xin báo giá là 7 ngày)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*</div>*@
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            for (var i = 1; i <= $('#tableInfo tr').length; i++) {
+                var textCommas1 = addCommas($('#UNIT_PRICE_' + i).val());
+                var amount1 = addCommas($('#AMOUNT_' + i).val());
+
+                $("#UNIT_PRICE_" + i + "_VIEW").text(textCommas1);
+                $("#AMOUNT_" + i + "_VIEW").text(amount1);
+                $("#UNIT_PRICE_" + i + "_VIEW").text(textCommas1);
+                $("#AMOUNT_" + i + "_VIEW").text(amount1);
+
+                updateEachRowAmount(i - 1);
+
+            }
+        });
+        function addCommas(nStr) {
+            if (typeof nStr !== 'undefined') {
+                nStr = nStr.split(",").join("");
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? '.' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                }
+                return x1 + x2;
+            }
+            else return "0"
+        }
+        function updateEachRowAmount(rowIndex) {
+            var amount = getTotalPrice(rowIndex)
+            $('#AMOUNT_' + (rowIndex + 1)).val(amount)
+            $('#AMOUNT_' + (rowIndex + 1) + "_VIEW").text(addCommas(amount.toString()))
+            $('#tableInfo tr:eq(' + rowIndex + ') td:eq(8) .form-input').val(addCommas(amount.toString()))
+            $('.total').text(getTotalAmount())
+        }
+        function getTotalPrice(rowIndex) {
+            var total = 0;
+            var unit_price = $('#UNIT_PRICE_' + (rowIndex + 1)).val();
+            unit_price = convertCommas(unit_price)
+            var qty = $('#tableInfo tr:eq(' + rowIndex + ') td:eq(6) input').val();
+            if (typeof qty === "undefined") {
+                qty = $('#tableInfo tr:eq(' + rowIndex + ') td:eq(6)').text();
+            }
+
+            if (typeof unit_price !== "undefined" && unit_price && typeof qty !== "undefined" && qty) {
+                total += parseInt(unit_price) * parseInt(qty)
+            }
+
+            if (isNaN(total)) return "0"
+            else
+                return total;
+        }
+        function convertCommas(nStr) {
+            if (typeof nStr === "undefined") return ""
+            return nStr.split(',').join('')
+        }
+        function getTotalAmount() {
+            var total = 0;
+            $('#tableInfo tr').each(function (rowIndex) {
+                var amount = $('#AMOUNT_' + (rowIndex + 1)).val();
+                if (typeof amount !== 'undefined') {
+                    var result = amount.split(",").join("");
+                    if (typeof result !== "undefined" && result) {
+                        total += parseInt(result);
+                    }
+                }
+            });
+
+            if (isNaN(total)) return "0"
+            else
+                return addCommas(total.toString());
+        }
+    </script>
+</body>
+
+</html>
