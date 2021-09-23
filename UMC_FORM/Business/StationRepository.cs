@@ -15,11 +15,19 @@ namespace UMC_FORM.Business
                 return context.Form_Stations.Where(r => r.STATION_NO == stationNo).ToList();
             }
         }
-        public static List<Form_Stations> GetStations()
+        public static List<Form_Stations> GetStationsWithProcessName(string ProcessName = null)
         {
             using (DataContext context = new DataContext())
             {
-                return context.Form_Stations.ToList();
+                if (string.IsNullOrEmpty(ProcessName))
+                {
+                    return context.Form_Stations.ToList();
+                }
+                else
+                {
+                    return context.Form_Stations.Where(m => m.STATION_NO.Contains(ProcessName)).ToList();
+                }
+              
             }
         }
     }

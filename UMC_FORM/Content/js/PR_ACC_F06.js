@@ -192,16 +192,17 @@ $(function () {
     $.ajax({
         type: "GET",
         url: "/Process/LoadProcess",
-        data: { processId: "F06-PR-ACC-03-01" },
+        data: {
+            processId: $('#process').val() },
         success: function (msg) {
 
             $.each(msg.data, function (index, value) {
                 var items = "{"
                 for (var i = 0; i < index; i++) {
                     if (i == index - 1) {
-                        items += '"step-' + (i + 1) + '":{"name":"' + msg.data[i].STATION_NAME + '"}'
+                        items += '"step-' + (i + 1) + '":{"name":"' + msg.data[i].STATION_NAME.trim() + '"}'
                     } else {
-                        items += '"step-' + (i + 1) + '":{"name":"' + msg.data[i].STATION_NAME + '"},'
+                        items += '"step-' + (i + 1) + '":{"name":"' + msg.data[i].STATION_NAME.trim() + '"},'
                     }
                 }
                 items += "}"

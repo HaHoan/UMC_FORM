@@ -1,0 +1,406 @@
+﻿@model UMC_FORM.Models.PR_ACC_F06
+@using UMC_FORM.Models
+@using UMC_FORM.Business
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard - SB Admin</title>
+    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+            crossorigin="anonymous"></script>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <style>
+        table, td, th {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+
+<body class="container">
+
+    <!--Form nhập request-->
+    <div>
+        <h4 class="mt-3">GIẤY YÊU CẦU PHÒNG CƠ KHÍ  冶工具　加工依頼書</h4>
+        <div class="card-body border border-dark">
+
+            <div class="row">
+                <p class="text-uppercase lang font-weight-bold mb-4" style="font-size:15px;">
+                    ①	Bộ phận yêu cầu 依頼部門
+
+                </p>
+
+                <table class=" ">
+                    <tr class="">
+                        <td class="lang text-center" key="">
+                            Bộ phận yêu cầu
+                            <br />
+                            依頼部門
+                        </td>
+                        <td class="text-center " style="vertical-align: middle;" colspan="2">Hoan Ha Thi</td>
+                        <td class="lang   text-center">
+                            Ngày yêu cầu
+                            <br />
+                            依頼日
+                        </td>
+                        <td class="text-center " style="vertical-align: middle;">2021/09/08</td>
+                        <td class="lang text-center">
+                            Ngày mong muốn
+                            <br />
+                            渡し希望日
+                        </td>
+                        <td class="text-center" style="vertical-align: middle;" colspan="2">2021/09/08</td>
+                    </tr>
+                    <tr class="">
+                        <td class=""><label class=" lang text-left">Mục đích yêu cầu（目的）</label></td>
+                        <td class="text-center font-weight-bold">活人</td>
+                        <td class="text-center font-weight-bold" colspan="2">必要物(ない場合、生産不可能）</td>
+                        <td class="text-center font-weight-bold" colspan="2">品質&５S改善</td>
+                        <td class="text-center font-weight-bold" colspan="2">NGチェンジ</td>
+                    </tr>
+                    <tr>
+                        <td class="" rowspan="2" style="vertical-align: middle;">
+                            <label class="font-weight-bold lang text-left center">
+                                治具の分類
+                                <br />
+                                Phân loại Jig
+                            </label>
+                        </td>
+                        <td class="text-center  lang">
+                            Tăng năng suất
+                            <br />
+                            (生産性UP)
+                        </td>
+                        <td class="text-center  lang">
+                            Model mới
+                            <br />
+                            (new model)
+                        </td>
+                        <td class="text-center lang">
+                            Do tăng sản lượng
+                            <br />
+                            増産
+                        </td>
+                        <td class="text-center  lang">
+                            Cải tiến C/Lượng
+                            <br />
+                            品質改善
+                        </td>
+                        <td class="text-center  lang" key="5s">5S改善</td>
+                        <td class="text-center  lang" colspan="2">
+                            JIG bị mòn/NG
+                            <br />
+                            NG JIGチェンジ
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="text-center ">mmmm</td>
+                        <td class="text-center">mmmm</td>
+                        <td class="text-center ">mmmm</td>
+                        <td class="text-center ">mmmm</td>
+                        <td class="text-center ">mm</td>
+                        <td class="text-center " colspan="2"><input type="checkbox" /></td>
+                    </tr>
+                    <tr class="font-weight-bold">
+                        <td class="text-center" rowspan="5" style="vertical-align: middle;">
+
+                            効果
+                            <br />
+                            ■Ước lượng hiệu quả
+                            khi áp dụng mới
+
+                        </td>
+                        <td class="text-center lang" colspan="2">Cắt giảm người　(活人効果）</td>
+                        <td class="text-center lang" colspan="3">Hiệu quả cải tiến chất lượng (品質改善効果）</td>
+                        <td class="text-center  lang" colspan="2">
+                            Tiết kiệm chi phí
+                            (金効果)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3" style="vertical-align: middle;" class="text-center">5</td>
+                        <td style="vertical-align: middle;" class="text-center font-weight-bold" rowspan="3">人/月</td>
+                        <td class="" style="vertical-align: middle;">
+                            <label class="font-weight-bold lang text-left center">
+                                Nội dung Lỗi:
+                                <br />
+                                (不良内容）
+                            </label>
+
+                        </td>
+                        <td colspan="2" style="vertical-align: middle;">abc</td>
+                        <td rowspan="3" style="vertical-align: middle;" class="text-center">20000</td>
+                        <td rowspan="3" style="vertical-align: middle;" class="text-center font-weight-bold">USD/月</td>
+
+                    </tr>
+                    <tr>
+                        <td class="" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center">Tỉ lệ lỗi hiện tại（現在不良率):</label></td>
+                        <td colspan="2">mmm</td>
+
+                    </tr>
+                    <tr>
+                        <td class="" style="vertical-align: middle;">
+                            <label class="font-weight-bold lang text-left center">
+                                Hiệu quả cải tiến（改善効果):
+                            </label>
+                        </td>
+                        <td colspan="2">mmm</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Other:</td>
+                        <td colspan="6">mmm</td>
+                    </tr>
+                    <tr>
+                        <td class="">
+                            <label class="font-weight-bold lang">5. 支払■Chi trả:</label>
+                        </td>
+                        <td colspan="7">
+                            <label for="customer" class="lang mr-2">顧客■Khách hàng</label>
+                            <input id="customer" type="checkbox">
+                            <label for="customer" class="lang mr-2 ml-5" key="">UMCVN</label>
+                            <input id="customer" type="checkbox">
+                        </td>
+
+                    </tr>
+
+                </table>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <div class="lang">1. 利用■Đối tượng áp dụng:</div>
+
+                        </div>
+                        <div class="col ">
+                            <span>PCB</span>
+                            <input class=" ml-2 border-bottom" style="border:none;" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+
+                        <div class="col ">
+                            <span class="lang">顧客■Khách hàng:</span>
+                            <input class=" ml-2 border-bottom" style="border:none;" />
+                        </div>
+                        <div class="col ">
+                            <span>Model</span>
+                            <input class=" ml-2 border-bottom" style="border:none;" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row ml-1">
+                        <p>
+                            内容■　Nội dung yêu cầu: (Phải thêm comment tiếng Anh/ tiếng Nhật)
+                            <br />
+                            <span class="font-weight-bold">(MUST : Please add comment by English or Japanese)</span>
+                        <p></p>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <table class="mt-2 ">
+                        <tr>
+                            <td class="p-2">Người yêu cầu/担当 </td>
+                            <td class="p-2">Phê duyệt/承認</td>
+
+                        </tr>
+
+                        <tbody>
+                            <tr height="100px">
+                                <td>
+                                    <div class="rubber_stamp">
+                                        <p>UMCVN</p>
+                                        <p>06-09-2021</p>
+                                        <p>TEST</p>
+                                    </div>
+                                </td>
+                                <td></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="border card-body border-dark">
+            <div class="row">
+                <p class="text-uppercase lang font-weight-bold mb-4 col" style="font-size:15px;">
+                    ②LCA 「見積もり] /Báo giá, Leadtime
+                    <br />
+                    見積もり作成⇒Jig作成実施可能承認
+                </p>
+                <label class="col lang">受付日／Ngày nhận: <span>09/06/2021</span></label>
+                <label class="lang col">Lead time: <span>09/06/2021</span><br /><span class="font-italic">(After get approval from GD)</span></label>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered mt-3">
+                    <tr>
+                        <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                        <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                        <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                        <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                        <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                    </tr>
+                    <tr>
+
+                        <td class="lang text-center" width="">Unit price</td>
+                        <td class="lang text-center" width="">Total cost</td>
+                        <td class="lang text-center" width="">Unit price</td>
+                        <td class="lang text-center" width="">Total cost</td>
+
+                    </tr>
+
+                    <tbody id="tableInfo">
+                        @{
+                            for (int i = 1; i <= 5; i++)
+                            {
+                                <tr class="row-info">
+                                    <td>@(i)</td>
+                                    <td>  <input class="form-input inputDefault" name=@("ITEM_NAME_"+i) /></td>
+
+                                    <td>
+                                        <input class="form-input type_number inputDefault" type="hidden" name=@("QTY_"+i) id=@("QTY_HIDDEN_"+i) />
+                                        <input class="form-input type_number inputDefault" id=@("QTY_"+i) />
+                                    </td>
+                                    <td>
+                                        <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_"+i) />
+                                        <input class="form-input type_number inputDefault" type="hidden" id=@("UNIT_PRICE_LCA_HIDDEN_"+i) />
+                                    </td>
+                                    <td>
+                                        <input class="form-input type_number inputDefault" id=@("TOTAL_LCA_"+i) />
+                                        <input class="form-input type_number inputDefault" type="hidden" id=@("TOTAL_LCA_HIDDEN_"+i) />
+                                    </td>
+                                    <td>
+                                        <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_"+i) />
+
+                                    </td>
+                                    <td> <input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_"+i) /></td>
+                                </tr>
+                            }
+                        }
+
+                        <tr class="p-3 summary">
+                            <td class="border-0 font-italic" colspan="4">
+                                * If request Items are over 5, please issue more request sheet
+                            </td>
+                            <td class="border-0 font-weight-bold">
+                                <div class="text-right">
+                                    <span class="">Total:</span>
+                                    <span class="totalLCA">100</span>
+                                    <span class="">$</span>
+                                </div>
+
+                            </td>
+                            <td class="border-0"></td>
+                            <td class="border-0 font-weight-bold text-right">
+                                <span class="">Total:</span>
+                                <span class="totalCustomer">100</span>
+                                <span class="">$</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered ">
+                    <thead>
+                        <tr>
+                            <th class="font-italic lang" key="nguoi_yeu_cau" rowspan="2">Người đề xuất </th>
+                            <th class="font-italic lang" key="phe_duyet" rowspan="2">Trưởng phòng</th>
+                            <th class="font-italic lang" key="lca_approve" rowspan="2">LCA Approve</th>
+                            <th class="font-italic lang" key="request_approve" rowspan="2">Request Approve</th>
+                            <th class="font-italic lang" key="BC_approve" rowspan="2">BC Approve</th>
+                            <th class="font-italic lang" key="FM_approve" rowspan="2">FM Approve</th>
+                            <th class="font-italic lang" key="GD_approve" rowspan="2">GD Approve</th>
+
+
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <tr height="100px">
+                            <td>
+                                <div class="rubber_stamp">
+                                    <p>UMCVN</p>
+                                    <p>06-09-2021</p>
+                                    <p>TEST</p>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="row ml-1 mr-1">
+                <p class="font-italic text-underline mr-2 col-1">Comment</p>
+                <textarea class="form-control col" rows="3"></textarea>
+            </div>
+            <br />
+
+            <br />
+            <div class="col">
+                <p class="font-italic font-weight-bold row text-underline">Note</p>
+                <span class="border p-2 row">
+                    1. LCA chỉ bắt đầu triển khai thực hiện sau khi giấy yêu cầu nhận được phê duyệt cuối cùng từ Tổng Giám Đốc
+                    <br />
+                    作成依頼は100% 社長が承認します。注意してお願い致します。
+                    <br />
+                    2. Trường hợp khách hàng trả Tiền thì phải được xác nhận từ bộ phận BC
+                </span>
+            </div>
+            <br />
+            <h5 class="text-uppercase lang font-weight-bold mb-4" key="">③ Biểu kiểm tra dụng cụ の書式にて完成品の確認　（Xác nhận Jig　治具確認）</h5>
+            <p>
+                Sử dụng "Biểu kiểm tra Jig,Pallet trước khi sử dụng" mã số: F06-PR.ACC.01-**
+                <br />
+                治工具運用前のチェックシートを使う：F06-PR.ACC.01-**
+
+            </p>
+            <br />
+
+        </div>
+
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/js/moment.js"></script>
+    <script src="~/Content/js/jquery.simplePagination.js"></script>
+    <script src="~/Content/js/pagination.js"></script>
+    <script src="~/Content/js/mention.js"></script>
+    <script src="~/Content/js/scripts.js"></script>
+    <script src="~/Content/js/lang.js"></script>
+    <script src="~/Content/js/form_lca.js"></script>
+
+</body>
+
+</html>

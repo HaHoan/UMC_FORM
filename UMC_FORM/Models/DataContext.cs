@@ -21,7 +21,9 @@
         public virtual DbSet<Form_Dept> Form_Depts { get; set; }
         public virtual DbSet<Form_ProcessName> Form_ProcessNames { get; set; }
         public virtual DbSet<Form_Role> Form_Roles { get; set; }
-
+        public virtual DbSet<LCA_FORM_01> LCA_FORM_01 { get; set; }
+        public virtual DbSet<LCA_PERMISSION> LCA_PERMISSION { get; set; }
+        public virtual DbSet<LCA_QUOTE> LCA_QUOTE { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Form_Process>()

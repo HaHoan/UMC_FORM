@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<UMC_FORM.Models.Form_Summary>
+@using UMC_FORM.Business
 @{
     ViewBag.Title = "Home Page";
     Layout = "~/Views/Shared/_Layout_Custom1.cshtml";
@@ -58,8 +59,21 @@
                                             </td>
 
                                             <td><i class="fa fa-star text-warning"></i></td>
+                                            @{
+                                                var controller = "";
+
+                                                if (item.TITLE == Constant.PR_ACC_F06_TITLE)
+                                                {
+                                                    controller = "PurAccF06";
+                                                }
+                                                else if (item.TITLE == Constant.LCA_FORM_01_TITLE)
+                                                {
+                                                    controller = "LCA";
+                                                }
+                                            }
                                             <td>
-                                                <a class="link request-item" href="@Url.Action("Details","PurAccF06", new {ticket = item.TICKET })" data-slide="next" name="1">
+
+                                                <a class="link request-item" href="@Url.Action("Details",controller, new {ticket = item.TICKET })" data-slide="next" name="1">
                                                     <span class="mb-0 text-muted">@Html.DisplayFor(m => item.TICKET)</span>
                                                 </a>
                                             </td>
@@ -68,7 +82,7 @@
                                                 <span class="mb-0 text-muted">@Html.DisplayFor(m => item.CREATE_USER)</span>
                                             </td>
                                             <td>
-                                                <a class="link request-item" href="@Url.Action("Details","PurAccF06", new {ticket = item.TICKET })" data-slide="next" name="1">
+                                                <a class="link request-item" href="@Url.Action("Details",controller, new {ticket = item.TICKET })" data-slide="next" name="1">
                                                     <span class="badge badge-pill text-white font-medium badge-success mr-2">Work</span>
                                                     <span class="text-dark">@Html.DisplayFor(m => item.TITLE)</span>
                                                 </a>
@@ -159,34 +173,34 @@
 
 <script type="text/javascript">
         $(document).ready(function () {
-            if (@ViewBag.type == 1) { // Gửi cho tôi
-                document.getElementById("sendToMe").checked = true;
-                document.getElementById("myRequest").checked = false;
-                document.getElementById("myCancel").checked = false;
-                document.getElementById("myFinish").checked = false;
-            } else if(@ViewBag.type == 2){ //Tôi cần phê duyệt
+                                                    if (@ViewBag.type == 1) { // Gửi cho tôi
+                                                        document.getElementById("sendToMe").checked = true;
+                                                        document.getElementById("myRequest").checked = false;
+                                                        document.getElementById("myCancel").checked = false;
+                                                        document.getElementById("myFinish").checked = false;
+                                                        } else if(@ViewBag.type == 2){ //Tôi cần phê duyệt
                 $("#sendToMe").prop('checked', false);
                 $("#myRequest").prop('checked', true);
                 $("#myCancel").prop('checked', false);
                 $("#myFinish").prop('checked', false);
-            } else if (@ViewBag.type == 3) { //Bị từ chối
+                                                        } else if (@ViewBag.type == 3) { //Bị từ chối
                 $("#sendToMe").prop('checked', false);
                 $("#myRequest").prop('checked', false);
                 $("#myCancel").prop('checked', true);
                 $("#myFinish").prop('checked', false);
                 $(".badge").text("Reject");
                 $(".badge").addClass("badge-danger").removeClass("badge-success");
-            }
-                else if (@ViewBag.type == 4) { //Đã hoàn thành
+                                                        }
+                                                        else if (@ViewBag.type == 4) { //Đã hoàn thành
                 $("#sendToMe").prop('checked', false);
                 $("#myRequest").prop('checked', false);
                 $("#myCancel").prop('checked', false);
                 $("#myFinish").prop('checked', true);
                 $(".badge").text("Finish");
-            }
-            else {
-            }
-        });
+                                                        }
+                                                        else {
+                                                        }
+                                                        });
 
 
 

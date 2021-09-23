@@ -11457,3 +11457,7 @@ table td {
 .inputDefault {
     font-size: 1rem;
 }
+.field-validation-error {
+    color: red;
+   
+}

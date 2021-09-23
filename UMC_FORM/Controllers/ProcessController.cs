@@ -210,7 +210,7 @@ namespace UMC_FORM.Controllers
         {
             var process = ProcessRepository.GetProcessName(processId);
             var sort = process.OrderBy(r => r.FORM_INDEX);
-            var list = StationRepository.GetStations();
+            var list = StationRepository.GetStationsWithProcessName(processId);
             var listStation = new List<StationMemberModel>();
             foreach (var item in sort)
             {
