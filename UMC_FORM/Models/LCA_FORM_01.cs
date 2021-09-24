@@ -8,6 +8,7 @@ namespace UMC_FORM.Models
 
     public partial class LCA_FORM_01
     {
+        
         [StringLength(50)]
         public string ID { get; set; }
 
@@ -94,5 +95,8 @@ namespace UMC_FORM.Models
         [Required]
         [StringLength(50)]
         public string DEPT { get; set; }
+
+        [NotMapped]
+        public List<LCA_QUOTE> LCA_QUOTEs { get; set; }
     }
 }

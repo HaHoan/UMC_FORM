@@ -17,7 +17,7 @@
         var index = $('.row-info').length + 1;
 
         var row = $('<tr/>', {
-            class:"row-info"
+            class: "row-info"
         });
         var col1 = $('<td/>', {
             text: (index)
@@ -42,7 +42,7 @@
 
         rowDelete.append(btnXoa);
         row.append(rowDelete);
-       
+
         $('#tableInfo').append(row);
         $('.summary').remove();
 
@@ -56,11 +56,11 @@
 
     var $contextMenu = $("#contextMenu");
 
-    $("body").on("contextmenu", "#tableInfo tr", function (e) {
+    $("body").on("contextmenu", "table tr", function (e) {
         $contextMenu.css({
             display: "block",
-            left: e.pageX,
-            top: e.pageY
+            left: e.pageX - 200,
+            top: e.pageY - 100
         });
         return false;
     });
@@ -68,6 +68,7 @@
     $(".type_number").keypress(function (e) {
         return onlyNumber(e)
     });
+
     // update total
     for (var i = 1; i <= $('.row-info').length; i++) {
 
@@ -80,6 +81,7 @@
             var originValue = textCommas.split(",").join("");
             $('#QTY_HIDDEN_' + rowIndex).val(originValue);
             updateEachRowAmount(rowIndex)
+            updateQuote()
         })
 
         $('#UNIT_PRICE_LCA_' + i).keyup(function () {
@@ -91,6 +93,7 @@
             var originValue = textCommas.split(",").join("");
             $('#UNIT_PRICE_LCA_HIDDEN_' + rowIndex + '').val(originValue);
             updateEachRowAmount(rowIndex - 1)
+            updateQuote()
         });
         $('#UNIT_PRICE_CUSTOMER_' + i).keyup(function () {
             var id = $(this).attr('id')
@@ -101,6 +104,7 @@
             var originValue = textCommas.split(",").join("");
             $('#UNIT_PRICE_CUSTOMER_HIDDEN_' + rowIndex + '').val(originValue);
             updateEachRowAmount(rowIndex - 1)
+            updateQuote()
         });
 
     }
@@ -112,7 +116,41 @@
         }
     });
 
+    //for get data
+    $('.totalLCA').text(getTotalAmountLCA())
+    $('.totalCustomer').text(getTotalAmountCustomer())
+    updateSTT()
 });
+function updateQuote() {
+    try {
+        quotes = []
+        $('.row-info').each(function (rowIndex) {
+            index = rowIndex + 1
+            var item = $('#ITEM_NAME_' + index).val()
+            if (item == "") return true
+            var quantity = $('#QTY_' + index).val().split(",").join("")
+            var lca_unit_price = $('#UNIT_PRICE_LCA_' + index).val().split(",").join("")
+            var lca_total = $('#TOTAL_LCA_' + index).val().split(",").join("")
+            var customer_unit_price = $('#UNIT_PRICE_CUSTOMER_' + index).val().split(",").join("")
+            var customer_total = $('#TOTAL_CUSTOMER_' + index).val().split(",").join("")
+            var obj = {
+                NO: index,
+                REQUEST_ITEM: item,
+                QUANTITY: quantity == "" ? 0 : parseInt(quantity),
+                LCA_UNIT_PRICE: lca_unit_price == "" ? 0 : parseInt(lca_unit_price),
+                LCA_TOTAL_COST: lca_total == "" ? 0 : parseInt(lca_total),
+                CUSTOMER_UNIT_PRICE: customer_unit_price == "" ? 0 : parseInt(customer_unit_price),
+                CUSTOMER_TOTAL_COST: customer_total == "" ? 0 : parseInt(customer_total),
+            }
+            quotes.push(obj)
+        });
+
+        $('#quotes').val(JSON.stringify(quotes))
+    } catch (e) {
+        alert(e)
+    }
+   
+}
 function addTd(name) {
     var col2 = $('<td/>');
     var input2 = $('<input/>', {
@@ -136,6 +174,7 @@ function addTdQty(rowIndex) {
             var originValue = textCommas.split(",").join("");
             $('#QTY_HIDDEN_' + rowIndex).val(originValue);
             updateEachRowAmount(rowIndex)
+            updateQuote()
         }
     })
     col.append(input1);
@@ -161,6 +200,7 @@ function addTdUnitPrice(name, rowIndex, length) {
             var originValue = textCommas.split(",").join("");
             $('#' + name + '_HIDDEN_' + rowIndex).val(originValue);
             updateEachRowAmount(rowIndex)
+            updateQuote()
         }
     })
     col.append(input1);
@@ -174,28 +214,28 @@ function addTdUnitPrice(name, rowIndex, length) {
     return col;
 }
 function addTdSumary() {
-   
+
     var row = $('<tr />', {
-        class:"p-3 summary"
+        class: "p-3 summary"
     })
     var td = $('<td />', {
         class: "border-0 font-italic",
         colspan: "4",
-        text:" * If request Items are over 5, please issue more request sheet"
+        text: " * If request Items are over 5, please issue more request sheet"
     })
     row.append(td)
     var td1 = $('<td />', {
         class: "border-0 font-weight-bold text-right"
-       
+
     })
     var span1 = $('<span />', {
-        text:"Total: "
+        text: "Total: "
     })
     var span2 = $('<span />', {
-        class:'totalLCA'
+        class: 'totalLCA'
     })
     var span3 = $('<span />', {
-        text:'$'
+        text: '$'
     })
     td1.append(span1)
     td1.append(span2)
@@ -205,7 +245,7 @@ function addTdSumary() {
 
     var td2 = $('<td />', {
         class: "border-0 font-weight-bold text-right",
-        colspan:2
+        colspan: 2
 
     })
     var span4 = $('<span />', {
@@ -278,7 +318,6 @@ function getTotalPriceLCA(rowIndex) {
     else
         return totalLCA;
 }
-
 function getTotalAmountLCA() {
     var total = 0;
     $('.row-info').each(function (rowIndex) {
@@ -321,7 +360,7 @@ function updateSTT() {
     var index = 1;
     $('#tableInfo tr').each(function (rowIndex) {
         var stt = $('#tableInfo tr:eq(' + rowIndex + ') td:eq(0)').text();
-        if (!isNaN(stt) ) {
+        if (!isNaN(stt)) {
             $('#tableInfo tr:eq(' + rowIndex + ') td:eq(0)').text(index);
             index++;
         }

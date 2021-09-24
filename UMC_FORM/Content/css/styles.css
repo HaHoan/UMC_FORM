@@ -11461,3 +11461,12 @@ table td {
     color: red;
    
 }
+.table-border-dark, .table-border-dark td, .table-border-dark th {
+    border: 1px solid black;
+}
+
+.table-border-dark {
+    width: 100%;
+    border-collapse: collapse;
+}
+

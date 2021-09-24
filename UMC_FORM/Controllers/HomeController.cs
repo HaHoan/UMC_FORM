@@ -28,61 +28,18 @@ namespace UMC_FORM.Controllers
                 case SendType.SENDTOME:
                     foreach (var item in db.Form_Summary.Where(r => r.IS_FINISH == false).Where(t => t.IS_REJECT == false))
                     {
-                        if (item.TITLE == Constant.PR_ACC_F06_TITLE)
+                        var index = item.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
+                        var processNext = ProcessRepository.GetProcessName(item.PROCESS_ID).FirstOrDefault(r => r.FORM_INDEX == index);
+                        if (processNext != null)
                         {
-                            var form = db.PR_ACC_F06.FirstOrDefault(r => r.TICKET == item.TICKET && r.PROCEDURE_INDEX == item.PROCEDURE_INDEX);
-                            if (form != null)
+                            var stationNoNext = processNext.STATION_NO;
+                            var users = db.Form_Stations.Where(r => r.STATION_NO == stationNoNext);// Tim users approval
+                            foreach (var user in users)
                             {
-                                if (form.PROCEDURE_INDEX == 0)
+                                if (user.USER_ID == session.CODE)
                                 {
-                                    // var mngUser = db.Form_MNG.FirstOrDefault(r => r.Code_User == form.CREATE_USER);
-                                    var userCreate = UserRepository.GetUser(item.CREATE_USER);
-                                    var dept = DeptRepository.GetDept(userCreate.DEPT);
-                                    if (dept.CODE_MNG == session.CODE)
-                                    {
-                                        formSummaries.Add(item);
-                                    }
+                                    formSummaries.Add(item);
                                 }
-                                else if (form.PROCEDURE_INDEX == 2) // Gửi giám đốc nhà máy
-                                {
-                                    if (session.CODE.ToUpper().Equals(Constant.FM))
-                                    {
-                                        formSummaries.Add(item);
-                                    }
-                                }
-                                else if (form.PROCEDURE_INDEX == 3) // Gửi tổng giám đốc
-                                {
-                                    if (session.CODE.ToUpper().Equals(Constant.GD))
-                                    {
-                                        formSummaries.Add(item);
-                                    }
-                                }
-                                else // Gửi đến user được chỉ định
-                                {
-
-                                    var index = form.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
-                                    var processNext = db.Form_Process.FirstOrDefault(r => r.FORM_INDEX == index);
-                                    if (processNext != null)
-                                    {
-                                        var stationNoNext = processNext.STATION_NO;
-                                        var users = db.Form_Stations.Where(r => r.STATION_NO == stationNoNext);// Tim users approval
-                                        foreach (var user in users)
-                                        {
-                                            if (user.USER_ID == session.CODE)
-                                            {
-                                                formSummaries.Add(item);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (item.TITLE == Constant.LCA_FORM_01_TITLE)
-                        {
-                            var userApprover = db.Form_Stations.Where(m => m.FORM_INDEX == item.RETURN_TO).ToList();
-                            if (userApprover.Where(m => m.USER_ID == session.CODE).FirstOrDefault() != null)
-                            {
-                                formSummaries.Add(item);
                             }
                         }
 
@@ -92,17 +49,7 @@ namespace UMC_FORM.Controllers
                 case SendType.MYREQUEST:
                     foreach (var item in db.Form_Summary.Where(r => r.IS_FINISH == false).Where(t => t.IS_REJECT == false))
                     {
-                        object form = null;
-
-                        if (item.TITLE == Constant.PR_ACC_F06_TITLE)
-                        {
-                            form = db.PR_ACC_F06.FirstOrDefault(r => r.TICKET == item.TICKET && r.CREATE_USER.Contains(session.CODE));
-                        }
-                        else if (item.TITLE == Constant.LCA_FORM_01_TITLE)
-                        {
-                            form = db.LCA_FORM_01.FirstOrDefault(r => r.TICKET == item.TICKET && r.SUBMIT_USER.Contains(session.CODE));
-                        }
-
+                        var form = db.PR_ACC_F06.FirstOrDefault(r => r.TICKET == item.TICKET && r.CREATE_USER.Contains(session.CODE));
                         if (form != null)
                         {
                             formSummaries.Add(item);

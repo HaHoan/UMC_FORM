@@ -10,5 +10,7 @@ namespace UMC_FORM.Models.LCA
         public LCA_FORM_01 TICKET { get; set; }
         public Form_Summary SUMARY { get; set; }
         public bool IS_APPROVER { get; set; }
+
+        public List<string> PERMISSION { get; set; }
     }
 }

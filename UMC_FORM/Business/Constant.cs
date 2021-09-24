@@ -8,6 +8,7 @@ namespace UMC_FORM.Business
     public static class Constant
     {
         public static string PR_ACC_F06_NAME = "F06-PR-ACC-03-01";
+        public static string LCA_FORM_01_NAME = "LCA_Process";
         public static string PR_ACC_F06_TITLE = "F06-PR ACC 03-01 Giấy yêu cầu nhà cung cấp  購入申請書";
         public static string LCA_FORM_01_TITLE = "F01-LCA GIẤY YÊU CẦU PHÒNG CƠ KHÍ  冶工具　加工依頼書";
         public static string FM = "IWASAKI";
@@ -26,5 +27,11 @@ namespace UMC_FORM.Business
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
+    }
+
+    public static class PERMISSION
+    {
+        public static string QUOTE = "QUOTE";
+        public static string EDIT_QUOTE = "EDIT_QUOTE";
     }
 }

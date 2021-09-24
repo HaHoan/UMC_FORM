@@ -36,12 +36,13 @@
                         </div>
 
                         <hr>
-                        
+
                         @Html.HiddenFor(m => m.TICKET.TICKET, new { @Name = "ticket" })
+                        @Html.HiddenFor(m => m.TICKET.ID, new { @Name = "ID" })
                         @Html.ValidationMessage("Error")
                         if (Model.IS_APPROVER)
                         {
-                            <input id="status" name="status" type="hidden"/>
+                            <input id="status" name="status" type="hidden" />
                             <div class="row">
                                 <div class="col">
                                     <button class="btn btn-success col lang" key="accept" id="accept">Chấp thuận</button>
@@ -80,7 +81,7 @@
                             <p class="text-uppercase lang mb-4 font-weight-bold" key="req-dept" style="font-size:15px;">THÔNG TIN SẢN PHẨM</p>
 
                             <div class="row">
-                                <table class="table table-bordered border m-1">
+                                <table class="table-border-dark m-1">
                                     <tr class="">
                                         <td class="lang p-2 font-weight-bold" key="request_dept"></td>
                                         <td class="text-center p-2" colspan="2">@Html.DisplayFor(m => m.TICKET.DEPT)</td>
@@ -108,22 +109,35 @@
                                     </tr>
                                     <tr>
 
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_1" value="increase_productivity" disabled="disabled" /></td>
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_2" value="new_model" disabled /></td>
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_3" value="incre_prod" disabled /></td>
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_4" value="quantity" disabled /></td>
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_5" value="5s" disabled /></td>
-                                        <td class="text-center p-2" colspan="2"><input type="checkbox" id="select_target_6" value="ngjig" disabled /> </td>
+                                        <td class="text-center p-2">
+                                            <i id="select_target_1" class="fas fa-check" name="increase_productivity"></i>
+                                        </td>
+                                        <td class="text-center p-2">
+                                            <i id="select_target_2" class="fas fa-check" name="new_model"></i>
+                                        </td>
+                                        <td class="text-center p-2">
+                                            <i id="select_target_3" class="fas fa-check" name="incre_prod"></i>
+                                        </td>
+                                        <td class="text-center p-2">
+                                            <i id="select_target_4" class="fas fa-check" name="quantity"></i>
+                                        </td>
+                                        <td class="text-center p-2">
+                                            <i id="select_target_5" class="fas fa-check" name="5s"></i>
+                                        </td>
+                                        <td class="text-center p-2" colspan="2">
+                                            <i id="select_target_6" class="fas fa-check" name="ngjig"></i>
+                                        </td>
                                         @Html.HiddenFor(m => m.TICKET.REQUEST_TARGET)
                                         <script>
                                             $(function () {
-
                                                 var target = $('#TICKET_REQUEST_TARGET').val()
                                                 var arrTarget = target.split(',')
-                                                for (var i = 1; i <= 5; i++) {
-                                                    var select = $('#select_target_' + i).val();
+                                                for (var i = 1; i <= 6; i++) {
+                                                    var select = $('#select_target_' + i).attr('name')
                                                     if (arrTarget.includes(select)) {
-                                                        $('#select_target_' + i).prop('checked', true)
+                                                        $('#select_target_' + i).removeClass('d-none')
+                                                    } else {
+                                                        $('#select_target_' + i).addClass('d-none')
                                                     }
                                                 }
                                             })
@@ -164,19 +178,20 @@
                                         </td>
 
                                         <td colspan="7" class="p-2">
-                                            <label for="customer" class="lang mr-2" key="khach_hang"></label>
-                                            <input id="customer" type="checkbox" value="Customer" disabled>
-                                            <label for="umcvn" class="lang mr-2 ml-5" key="">UMCVN</label>
-                                            <input id="umcvn" type="checkbox" value="UMCVN" disabled>
+                                            <label class="lang mr-2" key="khach_hang"></label>
+                                            <i id="customer" class="fas fa-check d-none"></i>
+                                            <label class="lang mr-2 ml-5" key="">UMCVN</label>
+                                            <i id="umcvn" class="fas fa-check d-none"></i>
                                             @Html.HiddenFor(m => m.TICKET.PAYER)
                                         </td>
                                         <script>
                                             $(function () {
                                                 var payer = $('#TICKET_PAYER').val()
                                                 if (payer == "UMCVN") {
-                                                    $('#umcvn').prop('checked', true)
+                                                    $('#umcvn').removeClass('d-none')
                                                 } else if (payer == "Customer") {
-                                                    $('#customer').prop('checked', true)
+                                                    alert("customer")
+                                                    $('#customer').removeClass('d-none')
                                                 }
                                             })
 
@@ -210,7 +225,7 @@
                             <br />
                             <div class="row ml-1">
                                 <p>
-                                    内容■　Nội dung yêu cầu: (Phải thêm comment tiếng Anh/ tiếng Nhật)
+                                    2. 内容■　Nội dung yêu cầu: (Phải thêm comment tiếng Anh/ tiếng Nhật)
                                     <br />
                                     <span class="font-weight-bold">(MUST : Please add comment by English or Japanese)</span>
                                     <br />
@@ -222,88 +237,257 @@
                                 <p style="white-space: pre-wrap"> @Html.DisplayFor(m => m.TICKET.REQUEST_CONTENT)</p>
                             </div>
                             <hr>
-                            <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">THÔNG TIN SẢN PHẨM</h5>
-                            <div class="row">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="received-date">Target date</label>
-                                </div>
-                                <div class="col-9">
-                                    <input class="form-control" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
-                                </div>
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="">Lead time:</label>
-                                    <p class="font-italic">(After get approval from GD)</p>
-                                </div>
-                                <div class="col-9">
-                                    <input class="form-control" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered mt-3">
-                                    <tr>
-                                        <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                        <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                                        <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                        <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                                        <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                                    </tr>
-                                    <tr>
 
-                                        <td class="lang text-center" width="">Unit price</td>
-                                        <td class="lang text-center" width="">Total cost</td>
-                                        <td class="lang text-center" width="">Unit price</td>
-                                        <td class="lang text-center" width="">Total cost</td>
-
-                                    </tr>
-
-                                    <tbody id="tableInfo">
-                                        @{
-                                            for (int i = 1; i <= 5; i++)
-                                            {
-                                                <tr class="row-info">
-                                                    <td>@(i)</td>
-                                                    <td>  <input class="form-input inputDefault" name=@("ITEM_NAME_" + i) /></td>
-
-
-                                                    <td> <input class="form-input type_number text-center inputDefault" name=@("QTY_" + i) id=@("QTY_" + i) /></td>
-                                                    <td> <input class="form-input inputDefault" name=@("UNIT_" + i) /></td>
-                                                    <td> <input class="form-input inputDefault" name=@("UNIT_" + i) /></td>
-                                                    <td> <input class="form-input inputDefault" name=@("UNIT_" + i) /></td>
-                                                    <td> <input class="form-input inputDefault" name=@("UNIT_" + i) /></td>
+                            @{
+                                if (Model.PERMISSION.Contains(PERMISSION.QUOTE))
+                                {
+                                    <div class="create-quote">
+                                        <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label class="font-weight-bold lang" key="received-date">Target date</label>
+                                            </div>
+                                            <div class="col-9">
+                                                <input class="form-control" name="RECEIVE_DATE" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label class="font-weight-bold lang" key="">Lead time:</label>
+                                                <p class="font-italic">(After get approval from GD)</p>
+                                            </div>
+                                            <div class="col-9">
+                                                <input class="form-control" name="LEAD_TIME" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table-border-dark">
+                                                <tr>
+                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
                                                 </tr>
-                                            }
-                                        }
+                                                <tr>
 
-                                        <tr class="p-3">
-                                            <td class="border-0 font-italic" colspan="4">
-                                                * If request Items are over 5, please issue more request sheet
-                                            </td>
-                                            <td class="border-0">
-                                                <span class="font-weight-bold">Total:</span>
-                                                <input class="border-bottom" style="border:none;" />
-                                                <span class="font-weight-bold">$</span>
-                                            </td>
-                                            <td class="border-0"></td>
-                                            <td class="border-0 ">
-                                                <span class="font-weight-bold">Total:</span>
-                                                <input class="border-bottom" style="border:none;" />
-                                                <span class="font-weight-bold">$</span>
-                                            </td>
-                                        </tr>
+                                                    <td class="lang text-center" width="">Unit price</td>
+                                                    <td class="lang text-center" width="">Total cost</td>
+                                                    <td class="lang text-center" width="">Unit price</td>
+                                                    <td class="lang text-center" width="">Total cost</td>
 
-                                    </tbody>
-                                </table>
+                                                </tr>
 
-                                <div></div>
-                            </div>
-                            <div class="row ml-1">
-                                <p class="font-italic text-underline">Comment</p>
-                                <textarea class="form-control" rows="3"></textarea>
-                            </div>
-                            <br />
+                                                <tbody id="tableInfo">
+                                                    @{
+                                                        for (int i = 1; i <= 5; i++)
+                                                        {
+                                                            <tr class="row-info">
+                                                                <td>@(i)</td>
+                                                                <td><input class="form-input inputDefault" name=@("ITEM_NAME_"+i) id=@("ITEM_NAME_"+i) /></td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("QTY_"+i) /> </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_"+i) /> </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_"+i) disabled/>  </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_"+i) /> </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_"+i) disabled /></td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+
+                                                    <tr class="p-3 summary">
+                                                        <td class="border-0 font-italic" colspan="4">
+                                                            * If request Items are over 5, please issue more request sheet
+                                                        </td>
+                                                        <td class="border-0 font-weight-bold">
+                                                            <div class="text-right">
+                                                                <span class="">Total:</span>
+                                                                <span class="totalLCA">100</span>
+                                                                <span class="">$</span>
+                                                            </div>
+
+                                                        </td>
+                                                        <td class="border-0"></td>
+                                                        <td class="border-0 font-weight-bold text-right">
+                                                            <span class="">Total:</span>
+                                                            <span class="totalCustomer">100</span>
+                                                            <span class="">$</span>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                            <input type="hidden" name="quotes" id="quotes" />
+
+                                            <div id="contextMenu" class="dropdown clearfix">
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
+                                                    style="display:block;position:static;margin-bottom:5px; color:red">
+                                                    <li>
+                                                        <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
+                                                           class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row ml-1">
+                                            <p class="font-italic text-underline">Comment</p>
+                                            <textarea class="form-control" rows="3" name="COMMENT"></textarea>
+                                        </div>
+                                        <br />
+
+                                    </div>
+                                }
+
+                                else if (Model.PERMISSION.Contains(PERMISSION.EDIT_QUOTE))
+                                {
+                                    <div class="edit-quote">
+                                        <div class="row">
+                                            <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
+                                            <label class="col lang text-right">受付日／Ngày nhận: <span>@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
+                                            <label class="lang col text-right">Lead time: <span>@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table-border-dark">
+                                                <tr>
+                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                                </tr>
+                                                <tr>
+
+                                                    <td class="lang text-center" width="">Unit price</td>
+                                                    <td class="lang text-center" width="">Total cost</td>
+                                                    <td class="lang text-center" width="">Unit price</td>
+                                                    <td class="lang text-center" width="">Total cost</td>
+
+                                                </tr>
+
+                                                <tbody id="tableInfo">
+                                                    @{
+                                                        var i = 1;
+                                                        foreach (var quote in Model.TICKET.LCA_QUOTEs)
+                                                        {
+                                                            <tr class="row-info">
+                                                                <td>@(i)</td>
+                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_"+i) id=@("ITEM_NAME_"+i) value="@quote.REQUEST_ITEM" disabled /></td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_"+i) value="@quote.QUANTITY.ToString("#,##0")" disabled /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_"+i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_"+i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" disabled />  </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_"+i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_"+i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" disabled /></td>
+                                                            </tr>
+                                                            i++;
+                                                        }
+
+                                                    }
+
+                                                    <tr class="p-3 summary">
+                                                        <td class="border-0 font-italic" colspan="4">
+                                                            * If request Items are over 5, please issue more request sheet
+                                                        </td>
+                                                        <td class="border-0 font-weight-bold">
+                                                            <div class="text-right">
+                                                                <span class="">Total:</span>
+                                                                <span class="totalLCA">100</span>
+                                                                <span class="">$</span>
+                                                            </div>
+
+                                                        </td>
+                                                        <td class="border-0"></td>
+                                                        <td class="border-0 font-weight-bold text-right">
+                                                            <span class="">Total:</span>
+                                                            <span class="totalCustomer">100</span>
+                                                            <span class="">$</span>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                            <input type="hidden" name="quotes" id="quotes" />
+
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="view-quote">
+                                        <div class="row">
+                                            <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
+                                            <label class="col lang text-right">受付日／Ngày nhận: <span>@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
+                                            <label class="lang col text-right">Lead time: <span>@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered mt-3">
+                                                <tr>
+                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                                </tr>
+                                                <tr>
+
+                                                    <td class="lang text-center" width="">Unit price</td>
+                                                    <td class="lang text-center" width="">Total cost</td>
+                                                    <td class="lang text-center" width="">Unit price</td>
+                                                    <td class="lang text-center" width="">Total cost</td>
+
+                                                </tr>
+
+                                                <tbody id="tableInfo">
+                                                    @{
+                                                        var i = 1;
+                                                        foreach (var quote in Model.TICKET.LCA_QUOTEs)
+                                                        {
+                                                            <tr class="row-info">
+                                                                <td>@(i)</td>
+                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_"+i) id=@("ITEM_NAME_"+i) value="@quote.REQUEST_ITEM" disabled /></td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_"+i) value="@quote.QUANTITY.ToString("#,##0")" disabled /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_"+i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" disabled /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_"+i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" disabled />  </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_"+i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" disabled /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_"+i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" disabled /></td>
+                                                            </tr>
+                                                            i++;
+                                                        }
+
+                                                    }
+
+                                                    <tr class="p-3 summary">
+                                                        <td class="border-0 font-italic" colspan="4">
+                                                            * If request Items are over 5, please issue more request sheet
+                                                        </td>
+                                                        <td class="border-0 font-weight-bold">
+                                                            <div class="text-right">
+                                                                <span class="">Total:</span>
+                                                                <span class="totalLCA">100</span>
+                                                                <span class="">$</span>
+                                                            </div>
+
+                                                        </td>
+                                                        <td class="border-0"></td>
+                                                        <td class="border-0 font-weight-bold text-right">
+                                                            <span class="">Total:</span>
+                                                            <span class="totalCustomer">100</span>
+                                                            <span class="">$</span>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                }
+
+
+                            }
 
                             <br />
                             <div class="col">
