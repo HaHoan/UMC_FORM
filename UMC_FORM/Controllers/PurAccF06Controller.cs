@@ -39,8 +39,6 @@ namespace UMC_FORM.Controllers
                 {
                     return HttpNotFound();
                 }
-                _sess = Session["user"] as Form_User;
-                var dept = DeptRepository.GetDept(_sess.DEPT);
                 var summary = FormSummaryRepository.GetSummary(ticket);
                 if (summary == null)
                 {
@@ -52,6 +50,7 @@ namespace UMC_FORM.Controllers
                 {
                     return RedirectToAction("AssetEdit", new { ticket = ticket });
                 }
+                _sess = Session["user"] as Form_User;
                 var signatures = new string[8];
                 var dateSignatures = new string[8];
                 var allForm = PurAccF06Repository.GetForms(entity.TICKET);
@@ -68,69 +67,72 @@ namespace UMC_FORM.Controllers
                 ViewBag.summary = summary;
                 ViewBag.userCreate = db.Form_User.FirstOrDefault(r => r.CODE == summary.CREATE_USER);
                 ViewBag.dateSignatures = dateSignatures;
-                ViewBag.isMng = DeptRepository.IsMng(_sess.CODE);
+                //Kiểm tra xem có phải trưởng phòng và đã ký rồi hay chưa
+                var mngSignature = PurAccF06Repository.IsSignature(ticket, 1);
+                ViewBag.isMng = DeptRepository.IsMng(_sess.CODE) && !mngSignature;
                 List<CostChangeEntity> lst = new List<CostChangeEntity>();
-                var temp = allForm.Where(r => r.PROCEDURE_INDEX == 0 && r.CREATE_USER == summary.CREATE_USER).OrderBy(o => o.ORDER_HISTORY);
+                var temp = allForm.Where(r => r.PROCEDURE_INDEX == 0 && r.CREATE_USER == summary.CREATE_USER).OrderBy(o => o.ORDER_HISTORY).ToList();
+                temp.RemoveAt(temp.Count - 1);
                 #region Chèn giá cũ (Cần cải tiến code)
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_1",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_1).Select(h => h.FirstOrDefault().UNIT_PRICE_1).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_1).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_1)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_2",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_2).Select(h => h.FirstOrDefault().UNIT_PRICE_2).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_2).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_2)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_3",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_3).Select(h => h.FirstOrDefault().UNIT_PRICE_3).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_3).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_3)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_4",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_4).Select(h => h.FirstOrDefault().UNIT_PRICE_4).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_4).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_4)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_5",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_5).Select(h => h.FirstOrDefault().UNIT_PRICE_5).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_5).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_5)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_6",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_6).Select(h => h.FirstOrDefault().UNIT_PRICE_6).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_6).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_6)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_7",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_7).Select(h => h.FirstOrDefault().UNIT_PRICE_7).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_7).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_7)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_8",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_8).Select(h => h.FirstOrDefault().UNIT_PRICE_8).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_8).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_8)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_9",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_9).Select(h => h.FirstOrDefault().UNIT_PRICE_9).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_9).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_9)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_10",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_10).Select(h => h.FirstOrDefault().UNIT_PRICE_10).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_10).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_10)).ToList()
                 });
                 #endregion
                 entity.histories = lst;
@@ -190,7 +192,7 @@ namespace UMC_FORM.Controllers
             }
 
             var index = summary.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
-            var processNext = ProcessRepository.GetProcess(index);
+            var processNext = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, index);
             if (processNext != null)
             {
                 var stationNoNext = processNext.STATION_NO;
@@ -215,7 +217,7 @@ namespace UMC_FORM.Controllers
             var sess = Session["user"] as Form_User;
             var index = summary.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
             var dept = DeptRepository.GetDept(sess.DEPT);
-            var processNext = ProcessRepository.GetProcess(index);
+            var processNext = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, index);
             if (processNext != null)
             {
                 var stationNoNext = processNext.STATION_NO;
@@ -374,7 +376,7 @@ namespace UMC_FORM.Controllers
                                 transaction.Commit();
                                 msg = "OK";
                             }
-                            var process = ProcessRepository.GetProcess(f.PROCEDURE_INDEX + 1);
+                            var process = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, f.PROCEDURE_INDEX + 1);
                             var stations = StationRepository.GetStations(process.STATION_NO);
                             var userID = stations.Select(r => r.USER_ID).ToList();
                             var userMails = UserRepository.GetUsers(userID);
@@ -397,7 +399,6 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                            //userMails = new List<string>() { "quyetpv@umcvn.com" };// Debug
                             await Business.MailHelper.SenMailOutlook(userMails, body);
                         }
                         catch (Exception ex)
@@ -415,11 +416,7 @@ namespace UMC_FORM.Controllers
                 log.Fatal("Fatal", ex);
             }
 
-
-
-
             return Json(new { msg = msg }, JsonRequestBehavior.AllowGet);
-            //return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -475,7 +472,8 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                            await Business.MailHelper.SenMailOutlook(userCreate.EMAIL, body);
+                            Task t = Business.MailHelper.SenMailOutlook(userCreate.EMAIL, body);
+                            await t;
                             #endregion
                         }
                         catch (Exception ex)
@@ -595,6 +593,7 @@ namespace UMC_FORM.Controllers
                     var dateTimeNow = DateTime.Now;
                     var ticket = dateTimeNow.ToString("yyyyMMddHHmmss");
                     PurAccF06Repository.SetAmounts(entity);
+                    string formName = PurAccF06Repository.ChooseFormProcess(entity);
                     var a = ModelState.Values.Where(r => r.Errors.Count > 0).ToList();
                     string virtualPath = "";
                     string[] virtualPaths = new string[5];
@@ -631,7 +630,8 @@ namespace UMC_FORM.Controllers
                                         TICKET = ticket,
                                         CREATE_USER = _sess.CODE,
                                         UPD_DATE = dateTimeNow,
-                                        TITLE = Constant.PR_ACC_F06_TITLE
+                                        TITLE = Constant.PR_ACC_F06_TITLE,
+                                        PROCESS_ID = formName
                                     };
                                     db.Form_Summary.Add(summary);
                                     db.SaveChanges();
@@ -641,8 +641,8 @@ namespace UMC_FORM.Controllers
                                     entity.UPD_DATE = dateTimeNow;
                                     entity.ISSUE_DATE = dateTimeNow;
                                     entity.CREATE_USER = _sess.CODE;
-                                    entity.FORM_NAME = Constant.PR_ACC_F06_NAME;
-                                    entity.STATION_NO = $"{Constant.PR_ACC_F06_NAME}_0";
+                                    entity.FORM_NAME = formName;
+                                    entity.STATION_NO = $"{formName}_0";
                                     for (int file = 0; file < files.Count; file++)
                                     {
                                         HttpPostedFile filedata = files[file];
@@ -769,7 +769,8 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                                await Business.MailHelper.SenMailOutlook(userApproval.EMAIL, body);
+                                Task sendMail = Business.MailHelper.SenMailOutlook(userApproval.EMAIL, body);
+                                await sendMail;
                                 return RedirectToAction("Index", "Home", new { type = SendType.SENDTOME });
                             }
                             catch (Exception ex)
@@ -1095,7 +1096,7 @@ namespace UMC_FORM.Controllers
                 #region Send Email
                 if (!isFn) //Nếu là người cuối cùng xác nhận thì k gửi mail
                 {
-                    var process = ProcessRepository.GetProcess(entity.PROCEDURE_INDEX + 1);
+                    var process = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, entity.PROCEDURE_INDEX + 1);
                     var stations = StationRepository.GetStations(process.STATION_NO);
                     var userID = stations.Select(r => r.USER_ID).ToList();
                     var userMails = UserRepository.GetUsers(userID);
@@ -1284,7 +1285,7 @@ namespace UMC_FORM.Controllers
             if (flag)
             {
                 //var process = ProcessRepository.GetProcess(summary.RETURN_TO);
-                var process = ProcessRepository.GetProcess(entity.PROCEDURE_INDEX + 1);
+                var process = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, entity.PROCEDURE_INDEX + 1);
                 var station = StationRepository.GetStations(process.STATION_NO);
                 var userApproval = UserRepository.GetUser(station.FirstOrDefault().USER_ID);
                 string body = $@"
@@ -1298,7 +1299,8 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                await Business.MailHelper.SenMailOutlook(userApproval.EMAIL, body);
+                Task t = Business.MailHelper.SenMailOutlook(userApproval.EMAIL, body);
+                await t;
                 return RedirectToAction("Index", "Home");
             }
             return View(entity);

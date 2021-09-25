@@ -8,7 +8,7 @@
     var userCreate = ViewBag.userCreate as Form_User;
     var keyState = summary.IS_REJECT ? "cancel-request" : summary.IS_FINISH ? "finish-request" : "waitting";
     bool edit = summary.CREATE_USER == _session.CODE && summary.IS_REJECT == true ? true : false;
-    bool mng = ViewBag.isMng;
+    bool mng = ViewBag.isMng && summary.LAST_INDEX == 0;
 }
 <style type="text/css">
     .loadImg {
@@ -358,7 +358,7 @@
                                             @Html.Hidden("UNIT_PRICE_" + i)
                                             @{
                                                 var lst = Model.histories.FirstOrDefault(r => r.unitPrice == ("UNIT_PRICE_" + i)).prices;
-                                                if (lst.Count == 1)
+                                                if (lst.Count == 0)
                                                 {
                                                     <td id=@("UNIT_PRICE_" + i + "_VIEW") class="type_number inputDefault"></td>
                                                 }
@@ -374,7 +374,7 @@
                                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                                                     @foreach (var item in lst)
                                                                     {
-                                                                        <a class="dropdown-item" href="#">@item.Value</a>
+                                                                        <a class="dropdown-item" href="#">@item</a>
                                                                     }
                                                                 </div>
                                                             </div>

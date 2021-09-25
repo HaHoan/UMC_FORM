@@ -166,6 +166,27 @@ namespace UMC_FORM.Business
                 return context.PR_ACC_F06.Where(r => r.TICKET == ticket).ToList();
             }
         }
+        public static List<PR_ACC_F06> GetForms(string ticket, string createUser, bool signature)
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.PR_ACC_F06.Where(r => r.TICKET == ticket && r.CREATE_USER.ToUpper() == createUser && r.IS_SIGNATURE == signature).ToList();
+            }
+        }
+        public static List<PR_ACC_F06> GetFormsByUser(string createUser, bool signature)
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.PR_ACC_F06.Where(r => r.CREATE_USER.ToUpper() == createUser && r.IS_SIGNATURE == signature).ToList();
+            }
+        }
+        public static bool IsSignature(string ticket, int index)
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.PR_ACC_F06.Any(r => r.TICKET == ticket && r.PROCEDURE_INDEX == index);
+            }
+        }
 
         /// <summary>
         /// Lấy dữ liệu form cuối cùng
@@ -178,6 +199,25 @@ namespace UMC_FORM.Business
             {
                 return context.PR_ACC_F06.Where(r => r.TICKET == ticket).OrderByDescending(o => o.ORDER_HISTORY).FirstOrDefault();
             }
+        }
+
+        public static string ChooseFormProcess(PR_ACC_F06 entity)
+        {
+            string cus = "C";
+            if (entity.OWNER_OF_ITEM_1.ToUpper().Equals(cus) ||
+                entity.OWNER_OF_ITEM_2.ToUpper().Equals(cus) ||
+                entity.OWNER_OF_ITEM_3.ToUpper().Equals(cus) ||
+                entity.OWNER_OF_ITEM_4.ToUpper().Equals(cus) ||
+                entity.OWNER_OF_ITEM_5.ToUpper().Equals(cus) ||
+                entity.OWNER_OF_ITEM_6.ToUpper().Equals(cus) ||
+                entity.OWNER_OF_ITEM_7.ToUpper().Equals(cus) ||
+                entity.OWNER_OF_ITEM_8.ToUpper().Equals(cus) ||
+                entity.OWNER_OF_ITEM_9.ToUpper().Equals(cus) ||
+                entity.OWNER_OF_ITEM_10.ToUpper().Equals(cus))
+            {
+                return Constant.PR_ACC_F06_BC_NAME;
+            }
+            return Constant.PR_ACC_F06_NAME;
         }
 
     }

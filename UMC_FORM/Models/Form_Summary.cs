@@ -12,6 +12,7 @@ namespace UMC_FORM.Models
         [Key]
         public string ID { get; set; }
 
+        public string PROCESS_ID { get; set; }
         public string TICKET { get; set; }
 
         public bool IS_FINISH { get; set; }
@@ -31,6 +32,5 @@ namespace UMC_FORM.Models
         public string TITLE { get; set; }
         public int RETURN_TO { get; set; } = 0;
         public int? LAST_INDEX { get; set; } = 0;
-        public string PROCESS_ID { get; set; }
     }
 }

@@ -23,11 +23,11 @@ namespace UMC_FORM.Business
             }
         }
 
-        public static Form_Process GetProcess(int index)
+        public static Form_Process GetProcess(string processId, int index)
         {
             using (DataContext context = new DataContext())
             {
-                return context.Form_Process.FirstOrDefault(r => r.FORM_INDEX == index);
+                return context.Form_Process.FirstOrDefault(r => r.FORM_NAME == processId && r.FORM_INDEX == index);
             }
         }
 

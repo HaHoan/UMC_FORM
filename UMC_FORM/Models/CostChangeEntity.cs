@@ -9,6 +9,6 @@ namespace UMC_FORM.Models
     {
         public string unitPrice { get; set; }
         //public int? price { get; set; }
-        public List<int?> prices { get; set; }
+        public List<string> prices { get; set; }
     }
 }
