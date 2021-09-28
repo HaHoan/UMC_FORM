@@ -75,7 +75,9 @@
     "title": "UMC FORM REQUEST",
     "select_dept": "Select Dept",
     "reconfirm": "Reconfirm",
-    "lca_request": "GIẤY YÊU CẦU PHÒNG CƠ KHÍ"
+    "lca_request": "GIẤY YÊU CẦU PHÒNG CƠ KHÍ",
+    "monthly": "Monthly",
+    "daily": "Daily"
   },
   "vi": {
     "Home": "TRANG CHỦ",
@@ -182,7 +184,9 @@
     "table-item-req": "Hạng mục yêu cầu",
     "title-lca-req": "GIẤY YÊU CẦU PHÒNG CƠ KHÍ ",
     "nguoi_yeu_cau": "Người yêu cầu",
-    "phe_duyet": "Phê duyệt"
+    "phe_duyet": "Phê duyệt",
+    "monthly": "Ngày",
+    "daily": "Tháng"
   },
   "ja": {
     "lca_request": "冶工具　加工依頼書",
@@ -214,7 +218,9 @@
     "table-qty": "数量",
     "title-lca-req": " 冶工具　加工依頼書",
     "nguoi_yeu_cau": "担当",
-    "phe_duyet": "承認"
+    "phe_duyet": "承認",
+    "monthly": "月",
+    "daily": "日"
 
   }
 }

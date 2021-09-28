@@ -1,0 +1,79 @@
+﻿@using UMC_FORM.Models
+@{
+    Layout = "~/Views/Shared/_Layout_Custom1.cshtml";
+    var _session = Session["user"] as Form_User;
+}
+
+
+<div id="layoutSidenav_content">
+    <div class="container-fluid ">
+        <br />
+        <div class="row">
+
+            <div class=" border p-2">
+                <br />
+                <p class="font-weight-bold text-uppercase text-black">YEAR TO MONTH</p>
+                <hr />
+                <div class="form-inline">
+                    <input type="month" class="form-control" id="filter_month_from" />
+                    <span class="p-2">Đến</span>
+                    <input type="month" class="form-control" id="filter_month_to" />
+                </div>
+
+
+            </div>
+            <div class="border p-2">
+                <br />
+                <p class="font-weight-bold text-uppercase text-black">MONTH TO DATE</p>
+                <hr />
+                <div class="form-inline">
+                    <input type="date" class="form-control" id="filter_date_from" />
+                    <span class="p-2">Đến</span>
+                    <input type="date" class="form-control" id="filter_date_to" />
+                </div>
+            </div>
+            <div class="border p-2">
+                <br />
+                <p class="font-weight-bold text-uppercase text-black">Tổng tiền chi</p>
+                <hr />
+                <div class="form-inline font-weight-bold">
+                   <h3 id="totalMoney"></h3><span> VNĐ</span>
+                </div>
+            </div>
+        </div>
+        @*<div class="row">
+            <div class="centerer">
+
+
+                <div class="switcher">
+                    <input type="radio" name="filter_view" id="monthly" class="switcher__input switcher__input--monthly" checked="">
+                    <label for="monthly" class="switcher__label lang" key="monthly"></label>
+
+                    <input type="radio" name="filter_view" id="daily" class="switcher__input switcher__input--daily">
+                    <label for="daily" class="switcher__label lang" key="daily">Daily</label>
+
+                    <span class="switcher__toggle"></span>
+                </div>
+
+                <p>
+                </p>
+
+            </div>
+        </div>*@
+        <div class="row">
+            <div class="col">
+                <div id="chartMonthly" class="mt-5" style="height: 370px; width: 100%;"></div>
+            </div>
+            <div class="col">
+                <div id="chartDaily" class="mt-5" style="height: 370px; width: 100%;"></div>
+            </div>
+
+        </div>
+       
+      
+    </div>
+</div>
+@Scripts.Render("~/Content/js/moment.js")
+@Scripts.Render("~/Content/js/form_common.js")
+@Scripts.Render("~/Scripts/canvas/canvasjs.min.js")
+@Scripts.Render("~/Content/js/summary/sumary.js")

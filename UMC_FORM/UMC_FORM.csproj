@@ -161,6 +161,7 @@
     <Compile Include="Controllers\LCAController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
     <Compile Include="Controllers\PurAccF06Controller.cs" />
+    <Compile Include="Controllers\SummaryController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -184,6 +185,7 @@
     <Compile Include="Models\LCA_QUOTE.cs" />
     <Compile Include="Models\PR_ACC_F06.cs" />
     <Compile Include="Models\StationMemberModel.cs" />
+    <Compile Include="Models\Summary\QuoteChart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +393,7 @@
     <Content Include="Content\js\moment.js" />
     <Content Include="Content\js\pagination.js" />
     <Content Include="Content\js\scripts.js" />
+    <Content Include="Content\js\summary\sumary.js" />
     <Content Include="Content\js\vidu.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -423,6 +426,7 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Scripts\canvas\canvasjs.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
@@ -654,6 +658,7 @@
     <Content Include="Views\LCA\Create.cshtml" />
     <Content Include="Views\LCA\PrintView.cshtml" />
     <Content Include="Views\LCA\Details.cshtml" />
+    <Content Include="Views\Summary\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

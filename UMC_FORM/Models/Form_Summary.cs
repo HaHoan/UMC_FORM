@@ -32,5 +32,6 @@ namespace UMC_FORM.Models
         public string TITLE { get; set; }
         public int RETURN_TO { get; set; } = 0;
         public int? LAST_INDEX { get; set; } = 0;
+        public int? TOTAL_MONEY { get; set; } = 0;
     }
 }

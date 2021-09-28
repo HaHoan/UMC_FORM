@@ -368,7 +368,7 @@
 
                                                         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                                                             <div class="btn-group" role="group">
-                                                                <button id=@("UNIT_PRICE_" + i + "_VIEW") type="button" class="btn btn-info dropdown-toggle type_number inputDefault" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <button id=@("UNIT_PRICE_" + i + "_VIEW") type="button" class="btn btn-info dropdown-toggle type_number inputDefault" data-display="static" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                     Dropdown
                                                                 </button>
                                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -512,7 +512,7 @@
 
                                 <tr height="100px">
                                     @{
-                                        for (int i = 0; i < 8; i++)
+                                        for (int i = 0; i < 5; i++)
                                         {
                                             <td>
                                                 @if (!string.IsNullOrEmpty(@ViewBag.signature[i]))
@@ -526,6 +526,33 @@
                                                 }
                                             </td>
                                         }
+                                        for (int i = 5; i < 8; i++)
+                                        {
+
+                                            if (!string.IsNullOrEmpty(@ViewBag.signature[i]))
+                                            {
+                                                <td>
+                                                    <div class="rubber_stamp">
+                                                        <p>UMC-VN</p>
+                                                        <p>@ViewBag.dateSignatures[i]</p>
+                                                        <p>@ViewBag.signature[i]</p>
+
+                                                    </div>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="p-2 text-center crossed" style="vertical-align: middle;">
+                                                    @*<i class="fas fa-times text-danger " style="font-size:70px;"></i>*@
+                                                        <svg>
+                                                            <line x1="0" y1="0" x2="100%" y2="100%" />
+                                                        </svg>
+                                                </td>
+
+                                            }
+
+                                        }
+
                                     }
 
 
@@ -568,18 +595,12 @@
     </div>
 </div>
 
-
-<script src="~/Scripts/jquery-3.6.0.slim.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-<script src="~/Scripts/jquery-3.6.0.min.js"></script>
-<script src="~/Content/js/mention.js"></script>
-<script src="~/Content/js/moment.js"></script>
-<script src="~/Content/js/jquery.simplePagination.js"></script>
-<script type="text/javascript" src="~/Content/js/bootstrap-typeahead.js"></script>
-<script type="text/javascript" src="~/Content/js/mention.js"></script>
-<script src="~/Content/js/form_common.js"></script>
-<script src="~/Content/js/form_detail.js"></script>
-<script src="~/Content/js/scripts.js"></script>
-<script src="~/Content/js/lang.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+@Scripts.Render("~/Content/js/mention.js")
+@Scripts.Render("~/Content/js/moment.js")
+@Scripts.Render("~/Content/js/jquery.simplePagination.js")
+@Scripts.Render("~/Content/js/bootstrap-typeahead.js")
+@Scripts.Render("~/Content/js/bootstrap-typeahead.js")
+@Scripts.Render("~/Content/js/form_common.js")
+@Scripts.Render("~/Content/js/form_detail.js")
+@Scripts.Render("~/Content/js/scripts.js")
+@Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")

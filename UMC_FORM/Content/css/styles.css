@@ -11471,3 +11471,81 @@ table td {
     border-collapse: collapse;
 }
 
+
+
+.switcher {
+    display: inline-block;
+    height: 30px;
+    margin-top: 3px;
+    padding: 4px;
+    background: #fff;
+    width: 200px;
+    position: relative;
+}
+
+.switcher__input {
+    display: none;
+}
+
+.switcher__label {
+    float: left;
+    width: 50%;
+    font-size: 12px;
+    line-height: 30px;
+    color: #000;
+    text-align: center;
+    cursor: pointer;
+    position: inherit;
+    z-index: 10;
+    transition: color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    will-change: transform;
+}
+
+.switcher__toggle {
+    position: absolute;
+    float: left;
+    height: 30px;
+    width: 50%;
+    font-size: 12px;
+    line-height: 30px;
+    cursor: pointer;
+    background-color: #3366cc;
+    border-radius: 30px;
+    left: 5px;
+    top: 4px;
+    transition: left 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+    will-change: transform;
+}
+
+.switcher__input:checked + .switcher__label {
+    color: #fff;
+}
+
+.switcher__input--daily:checked ~ .switcher__toggle {
+    left: 100px;
+}
+
+.crossed {
+    position: relative;
+    width: 200px;
+    height: 80px;
+}
+
+    .crossed svg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+        .crossed svg line {
+            stroke: rgb(255, 0, 0);
+            stroke-width: 2;
+        }
+
+    .crossed textarea {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+    }

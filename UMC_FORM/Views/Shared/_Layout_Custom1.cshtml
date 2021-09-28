@@ -20,8 +20,9 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
-    <script src="~/Scripts/jquery-3.6.0.slim.min.js"></script>
-   
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+
     <style type="text/css">
         a, a:hover {
             color: #000000;
@@ -115,7 +116,7 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
 
-                        <a class="nav-link text-dark mt-4" href="./summary.html">
+                        <a class="nav-link text-dark mt-4" href="@Url.Action("Index","Summary")">
                             <div class="sb-nav-link-icon text-dark"><i class="fas fa-tachometer-alt"></i></div>
                             <label class=" lang" key="Summary">Tổng kết</label>
                         </a>
@@ -214,6 +215,7 @@
             </nav>
         </div>
         @RenderBody()
+
     </div>
     <div class="modal fade" id="findRequestForm" tabindex="-1" role="dialog" aria-labelledby="findRequestFormTitle"
          aria-hidden="true">
@@ -246,5 +248,9 @@
             </div>
         </div>
     </div>
+
+  
+    @RenderSection("scripts", required: false)
+    <script src="~/Content/js/lang.js"></script>
 </body>
 </html>

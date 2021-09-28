@@ -178,16 +178,18 @@ namespace UMC_FORM.Controllers
 
                                 List<LCA_QUOTE> lcaQuotes = new List<LCA_QUOTE>();
 
-                                // Khi sửa đổi quotes
-                                if (quotes != null)
+                                
+                                // không sửa giá
+                                if (string.IsNullOrEmpty(quotes))
                                 {
-                                    lcaQuotes = JsonConvert.DeserializeObject<List<LCA_QUOTE>>(quotes);
+                                    
+                                    lcaQuotes = db.LCA_QUOTE.Where(m => m.ID_TICKET == ID).ToList();
                                 }
 
-                                // không sửa giá
+                                // Khi sửa đổi quotes
                                 else
                                 {
-                                    lcaQuotes = db.LCA_QUOTE.Where(m => m.ID_TICKET == ID).ToList();
+                                    lcaQuotes = JsonConvert.DeserializeObject<List<LCA_QUOTE>>(quotes);
                                 }
                                 foreach (var quote in lcaQuotes)
                                 {
