@@ -2,11 +2,12 @@
 @using UMC_FORM.Models
 @using UMC_FORM.Business
 @{
+    ViewBag.Title = "Form Create";
     Layout = null;
     var _session = Session["user"] as Form_User;
 }
 
-<!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -15,11 +16,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Dashboard - SB Admin</title>
+    <title>Create Test</title>
     <link href="~/Content/css/styles.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <style>
+        .modal {
+            position: fixed;
+            z-index: 999;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            background-color: Black;
+            filter: alpha(opacity=60);
+            opacity: 0.6;
+            -moz-opacity: 0.8;
+            display: none;
+        }
+
+        .center {
+            z-index: 1000;
+            margin: 50px auto;
+            padding: 10px;
+            width: 130px;
+            background-color: White;
+            border-radius: 10px;
+            filter: alpha(opacity=100);
+            opacity: 1;
+            -moz-opacity: 1;
+        }
+
+        .centerimg {
+            height: 128px;
+            width: 128px;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed container-fluid">
@@ -28,7 +61,12 @@
     <div>
         <div>
             <div>
-                @using (Html.BeginForm("Create", "PurAccF06", FormMethod.Post, new { enctype = "multipart/form-data", id = "formCreate" }))
+                @using (Ajax.BeginForm("CreateAsync", "PurAccF06", new AjaxOptions
+                {
+                    OnSuccess = "OnSuccess",
+                    OnFailure = "OnFailure",
+                    LoadingElementId = "progress"
+                }))
                 {
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
@@ -362,6 +400,11 @@
                     </div>
                     <br>
                 }
+                <div id="progress" class="modal">
+                    <div class="center">
+                        <img src="~/Content/images/loader4.gif" />
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -370,6 +413,14 @@
         $("#btnCancel").click(function () {
             location.href = '@Url.Action("Index", "Home", new { type = @SendType.SENDTOME })'
         })
+
+        function OnSuccess(response) {
+            alert(response);
+            location.href = '@Url.Action("Index", "Home", new { type = @SendType.SENDTOME })'
+        }
+        function OnFailure(response) {
+            alert("Error occured.");
+        }
     </script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>

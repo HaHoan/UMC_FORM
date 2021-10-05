@@ -5,10 +5,10 @@
     ViewBag.Title = "Form Details";
     var _session = Session["user"] as Form_User;
     Form_Summary summary = ViewBag.summary as Form_Summary;
-    var userCreate = ViewBag.userCreate as Form_User;
     var keyState = summary.IS_REJECT ? "cancel-request" : summary.IS_FINISH ? "finish-request" : "waitting";
     bool edit = summary.CREATE_USER == _session.CODE && summary.IS_REJECT == true ? true : false;
     bool mng = ViewBag.isMng && summary.LAST_INDEX == 0;
+    var signatures = ViewBag.signature as List<SignatureEntity>;
 }
 <style type="text/css">
     .loadImg {
@@ -233,10 +233,10 @@
                                 </div>
                                 <div class="col-3">
                                     @*<p>Hà Thị Hoàn</p>*@
-                                    <p>@userCreate.NAME</p>
+                                    <p>@Model.author.fullname</p>
                                 </div>
                                 <div class="col-4">
-                                    <p class="text-muted"><span class="lang" key="staff_code"></span> <span class="text-dark">@userCreate.CODE</span></p>
+                                    <p class="text-muted"><span class="lang" key="staff_code"></span> <span class="text-dark">@Model.author.code</span></p>
                                 </div>
                             </div>
                             @*<div class="row">
@@ -265,7 +265,7 @@
                                     <span class="text-muted lang" key="dept">Bộ phận</span>
                                 </div>
                                 <div class="col-4">
-                                    <p>@userCreate.DEPT</p>
+                                    <p>@Model.author.dept</p>
                                 </div>
                             </div>
                         </div>
@@ -368,13 +368,13 @@
 
                                                         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                                                             <div class="btn-group" role="group">
-                                                                <button id=@("UNIT_PRICE_" + i + "_VIEW") type="button" class="btn btn-info dropdown-toggle type_number inputDefault" data-display="static" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <button id=@("UNIT_PRICE_" + i + "_VIEW") type="button" class="btn btn-info dropdown-toggle type_number inputDefault" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                     Dropdown
                                                                 </button>
                                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                                                     @foreach (var item in lst)
                                                                     {
-                                                                        <a class="dropdown-item" href="#">@item</a>
+                                                                        <a class="dropdown-item" href="#" style="color:white;background-color:red">@item</a>
                                                                     }
                                                                 </div>
                                                             </div>
@@ -488,10 +488,16 @@
                     @*}*@
                     <div class="table-responsive">
                         <table class="table table-bordered ">
+                            @*@if (summary.PROCESS_ID == "F06-PR-ACC-03-01")
+                                {*@
                             <thead>
                                 <tr>
                                     <th class="font-italic lang" key="apply" rowspan="2">Người đề xuất </th>
                                     <th class="font-italic lang" key="dept-manager" rowspan="2">Trưởng phòng</th>
+                                    @if (summary.PROCESS_ID == "F06-PR-ACC-03-01-BC")
+                                    {
+                                        <th class="font-italic lang" key="bc-dept" rowspan="2">Phòng BC</th>
+                                    }
                                     <th class="font-italic lang" key="asset-center" rowspan="2">Qly tài sản</th>
                                     <th class="font-italic lang" key="factory-manager" rowspan="2">Giám đốc xưởng</th>
                                     <th class="font-italic lang" key="general-director" rowspan="2">Tổng giám đốc</th>
@@ -509,55 +515,97 @@
                             </thead>
                             <tbody>
 
-
                                 <tr height="100px">
                                     @{
-                                        for (int i = 0; i < 5; i++)
+                                        foreach (var sig in signatures)
                                         {
                                             <td>
-                                                @if (!string.IsNullOrEmpty(@ViewBag.signature[i]))
+                                                @if (!string.IsNullOrEmpty(sig.signature))
                                                 {
                                                     <div class="rubber_stamp">
                                                         <p>UMC-VN</p>
-                                                        <p>@ViewBag.dateSignatures[i]</p>
-                                                        <p>@ViewBag.signature[i]</p>
+                                                        <p>@sig.signature</p>
+                                                        <p>@sig.date</p>
 
                                                     </div>
                                                 }
                                             </td>
-                                        }
-                                        for (int i = 5; i < 8; i++)
-                                        {
-
-                                            if (!string.IsNullOrEmpty(@ViewBag.signature[i]))
-                                            {
-                                                <td>
-                                                    <div class="rubber_stamp">
-                                                        <p>UMC-VN</p>
-                                                        <p>@ViewBag.dateSignatures[i]</p>
-                                                        <p>@ViewBag.signature[i]</p>
-
-                                                    </div>
-                                                </td>
-                                            }
-                                            else
-                                            {
-                                                <td class="p-2 text-center crossed" style="vertical-align: middle;">
-                                                    @*<i class="fas fa-times text-danger " style="font-size:70px;"></i>*@
-                                                        <svg>
-                                                            <line x1="0" y1="0" x2="100%" y2="100%" />
-                                                        </svg>
-                                                </td>
-
-                                            }
-
                                         }
 
                                     }
 
 
                                 </tr>
+                                @*<tr height="100px">
+                                        @{
+                                            for (int i = 0; i < 8; i++)
+                                            {
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(@ViewBag.signature[i]))
+                                                    {
+                                                        <div class="rubber_stamp">
+                                                            <p>UMC-VN</p>
+                                                            <p>@ViewBag.dateSignatures[i]</p>
+                                                            <p>@ViewBag.signature[i]</p>
+
+                                                        </div>
+                                                    }
+                                                </td>
+                                            }
+                                        }
+
+
+                                    </tr>*@
                             </tbody>
+                            @*}
+                                else
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th class="font-italic lang" key="apply" rowspan="2">Người đề xuất </th>
+                                            <th class="font-italic lang" key="dept-manager" rowspan="2">Trưởng phòng</th>
+                                            <th class="font-italic lang" key="bc-dept" rowspan="2">Phòng BC</th>
+                                            <th class="font-italic lang" key="asset-center" rowspan="2">Qly tài sản</th>
+                                            <th class="font-italic lang" key="factory-manager" rowspan="2">Giám đốc xưởng</th>
+                                            <th class="font-italic lang" key="general-director" rowspan="2">Tổng giám đốc</th>
+                                            <th class="font-italic lang" key="purchasing-dept">Người duyệt</th>
+                                            <th class="font-italic lang" key="Recieve_check" colspan="2">7. Receive Check</th>
+
+                                        </tr>
+                                        <tr>
+                                            <th class="font-italic lang" key="purchasing-dept-detail">Người duyệt</th>
+                                            <th class="font-italic lang" key="applicant">Applicant</th>
+                                            <th class="font-italic lang" key="asset-center-recive-check">
+                                                Asset Center
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+
+                                        <tr height="100px">
+                                            @{
+                                                foreach (var sig in signatures)
+                                                {
+                                                    <td>
+                                                        @if (!string.IsNullOrEmpty(sig.signature))
+                                                        {
+                                                            <div class="rubber_stamp">
+                                                                <p>UMC-VN</p>
+                                                                <p>@sig.signature</p>
+                                                                <p>@sig.date</p>
+
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                }
+
+                                            }
+
+
+                                        </tr>
+                                    </tbody>
+                                }*@
                         </table>
                     </div>
 
@@ -595,12 +643,19 @@
     </div>
 </div>
 
-@Scripts.Render("~/Content/js/mention.js")
-@Scripts.Render("~/Content/js/moment.js")
-@Scripts.Render("~/Content/js/jquery.simplePagination.js")
-@Scripts.Render("~/Content/js/bootstrap-typeahead.js")
-@Scripts.Render("~/Content/js/bootstrap-typeahead.js")
-@Scripts.Render("~/Content/js/form_common.js")
-@Scripts.Render("~/Content/js/form_detail.js")
-@Scripts.Render("~/Content/js/scripts.js")
-@Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+
+<script src="~/Scripts/jquery-3.6.0.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Content/js/mention.js"></script>
+<script src="~/Content/js/moment.js"></script>
+<script src="~/Content/js/jquery.simplePagination.js"></script>
+<script type="text/javascript" src="~/Content/js/bootstrap-typeahead.js"></script>
+<script type="text/javascript" src="~/Content/js/mention.js"></script>
+<script src="~/Content/js/form_common.js"></script>
+<script src="~/Content/js/form_detail.js"></script>
+<script src="~/Content/js/scripts.js"></script>
+<script src="~/Content/js/lang.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>

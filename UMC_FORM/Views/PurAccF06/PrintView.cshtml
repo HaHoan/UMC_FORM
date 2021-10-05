@@ -2,7 +2,9 @@
 @using UMC_FORM.Models
 @{
     Layout = null;
-    var user = ViewBag.createUser as Form_User;
+    //   var user = ViewBag.createUser as Form_User;
+    Form_Summary summary = ViewBag.summary as Form_Summary;
+    var signatures = ViewBag.signature as List<SignatureEntity>;
 }
 
 <!DOCTYPE html>
@@ -47,15 +49,15 @@
                 <div class="col">
                     <div class="row">
                         <div class="col-4">ISSUS DATE <span class="font-italic">(Ngày phát hành)</span></div>
-                        <div class="col">@ViewBag.createDate</div>
+                        <div class="col">@summary.UPD_DATE.ToString("dd/MM/yyyy")</div>
                     </div>
                     <div class="row">
                         <div class="col-4">DEPT <span class="font-italic">(Bộ phận)</span></div>
-                        <div class="col">@user.DEPT</div>
+                        <div class="col">@Model.author.dept</div>
                     </div>
                     <div class="row">
                         <div class="col-4">NAME <span class="font-italic">(Họ tên)</span></div>
-                        <div class="col">@user.CODE</div>
+                        <div class="col">@Model.author.code</div>
                     </div>
                 </div>
             </div>
@@ -197,7 +199,7 @@
                         Remark&nbsp;<span class="font-italic">(Ghi chú):</span>
                         <span>@Html.DisplayFor(m => m.REMARK)</span>
                     </p>
-                    
+
                 </div>
                 <div class="col-4">
                     @if (Model.IS_ROUND_ROBIN)
@@ -218,6 +220,10 @@
                             <tr>
                                 <td>1. Apply </td>
                                 <td>2. Dept Manager</td>
+                                @if (summary.PROCESS_ID == "F06-PR-ACC-03-01-BC")
+                                {
+                                    <td>BC Dept</td>
+                                }
                                 <td>3. Asset Center</td>
                                 <td>4. Factory Manager</td>
                                 <td>5. General Director</td>
@@ -227,6 +233,10 @@
                             <tr>
                                 <td class="font-italic">Người đề xuất </td>
                                 <td class="font-italic">Trưởng phòng</td>
+                                @if (summary.PROCESS_ID == "F06-PR-ACC-03-01-BC")
+                                {
+                                    <td class="font-italic">Phòng BC</td>
+                                }
                                 <td class="font-italic">Qly tài sản</td>
                                 <td class="font-italic">Giám đốc xưởng</td>
                                 <td class="font-italic">Tổng giám đốc</td>
@@ -236,114 +246,21 @@
                             </tr>
                             <tr height="100px">
                                 @{
-                                    for (int i = 0; i < 8; i++)
+                                    foreach (var sig in signatures)
                                     {
                                         <td>
-                                            @if (!string.IsNullOrEmpty(@ViewBag.signature[i]))
+                                            @if (!string.IsNullOrEmpty(sig.signature))
                                             {
                                                 <div class="rubber_stamp">
                                                     <p>UMC-VN</p>
-                                                    <p>@ViewBag.dateSignatures[i]</p>
-                                                    <p>@ViewBag.signature[i]</p>
-
+                                                    <p>@sig.signature</p>
+                                                    <p>@sig.date</p>
                                                 </div>
                                             }
                                         </td>
                                     }
+
                                 }
-                                @*<td>
-                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[0]))
-                                        {
-                                            <div class="rubber_stamp">
-                                                <p>UMC-VN</p>
-                                                <p>22-6-2020</p>
-                                                <p>@ViewBag.signature[0]</p>
-                                            </div>
-                                        }
-                                    </td>
-
-                                    <td class="">
-                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[1]))
-                                        {
-                                            <div class="rubber_stamp">
-                                                <p>UMC-VN</p>
-                                                <p>22-6-2020</p>
-                                                <p>@ViewBag.signature[1]</p>
-                                            </div>
-                                        }
-                                    </td>
-
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[2]))
-                                        {
-                                            <div class="rubber_stamp">
-                                                <p>UMC-VN</p>
-                                                <p>22-6-2020</p>
-                                                <p>@ViewBag.signature[2]</p>
-
-                                            </div>
-                                        }
-                                    </td>
-
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[3]))
-                                        {
-                                            <div class="rubber_stamp">
-                                                <p>UMC-VN</p>
-                                                <p>22-6-2020</p>
-                                                <p>@ViewBag.signature[3]</p>
-
-                                            </div>
-                                        }
-                                    </td>
-
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[4]))
-                                        {
-                                            <div class="rubber_stamp">
-                                                <p>UMC-VN</p>
-                                                <p>22-6-2020</p>
-                                                <p>@ViewBag.signature[4]</p>
-
-                                            </div>
-                                        }
-                                    </td>
-
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[5]))
-                                        {
-                                            <div class="rubber_stamp">
-                                                <p>UMC-VN</p>
-                                                <p>22-6-2020</p>
-                                                <p>@ViewBag.signature[5]</p>
-
-                                            </div>
-                                        }
-                                    </td>
-
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[6]))
-                                        {
-                                            <div class="rubber_stamp">
-                                                <p>UMC-VN</p>
-                                                <p>22-6-2020</p>
-                                                <p>@ViewBag.signature[6]</p>
-
-                                            </div>
-                                        }
-                                    </td>
-
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(@ViewBag.signature[7]))
-                                        {
-                                            <div class="rubber_stamp">
-                                                <p>UMC-VN</p>
-                                                <p>22-6-2020</p>
-                                                <p>@ViewBag.signature[7]</p>
-
-                                            </div>
-                                        }
-                                    </td>*@
 
                             </tr>
                         </tbody>

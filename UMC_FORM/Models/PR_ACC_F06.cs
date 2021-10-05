@@ -81,7 +81,7 @@
         public decimal? AMOUNT_1 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_1 { get; set; }
+        public string OWNER_OF_ITEM_1 { get; set; } = "U";
 
         public string COST_CENTER_1 { get; set; }
 
@@ -118,7 +118,7 @@
         public decimal? AMOUNT_2 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_2 { get; set; }
+        public string OWNER_OF_ITEM_2 { get; set; } = "U";
 
         public string COST_CENTER_2 { get; set; }
 
@@ -155,7 +155,7 @@
         public decimal? AMOUNT_3 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_3 { get; set; }
+        public string OWNER_OF_ITEM_3 { get; set; } = "U";
 
         public string COST_CENTER_3 { get; set; }
 
@@ -192,7 +192,7 @@
         public decimal? AMOUNT_4 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_4 { get; set; }
+        public string OWNER_OF_ITEM_4 { get; set; } = "U";
 
         public string COST_CENTER_4 { get; set; }
 
@@ -229,7 +229,7 @@
         public decimal? AMOUNT_5 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_5 { get; set; }
+        public string OWNER_OF_ITEM_5 { get; set; } = "U";
 
         public string COST_CENTER_5 { get; set; }
 
@@ -266,7 +266,7 @@
         public decimal? AMOUNT_6 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_6 { get; set; }
+        public string OWNER_OF_ITEM_6 { get; set; } = "U";
 
         public string COST_CENTER_6 { get; set; }
 
@@ -303,7 +303,7 @@
         public decimal? AMOUNT_7 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_7 { get; set; }
+        public string OWNER_OF_ITEM_7 { get; set; } = "U";
 
         public string COST_CENTER_7 { get; set; }
 
@@ -340,7 +340,7 @@
         public decimal? AMOUNT_8 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_8 { get; set; }
+        public string OWNER_OF_ITEM_8 { get; set; } = "U";
 
         public string COST_CENTER_8 { get; set; }
 
@@ -377,7 +377,7 @@
         public decimal? AMOUNT_9 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_9 { get; set; }
+        public string OWNER_OF_ITEM_9 { get; set; } = "U";
 
         public string COST_CENTER_9 { get; set; }
 
@@ -414,7 +414,7 @@
         public decimal? AMOUNT_10 { get; set; }
 
         [StringLength(50)]
-        public string OWNER_OF_ITEM_10 { get; set; }
+        public string OWNER_OF_ITEM_10 { get; set; } = "U";
 
         public string COST_CENTER_10 { get; set; }
 
@@ -488,6 +488,9 @@
 
         [NotMapped]
         public List<CostChangeEntity> histories { get; set; }
+
+        [NotMapped]
+        public AuthorEntity author { get; set; }
         #endregion
     }
 }

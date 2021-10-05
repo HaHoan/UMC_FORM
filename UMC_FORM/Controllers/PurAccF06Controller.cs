@@ -25,7 +25,7 @@ namespace UMC_FORM.Controllers
         private DataContext db = new DataContext();
         private Form_User _sess = new Form_User();
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        // GET: PurAccF06/Details/5
+
         public ActionResult Details(string ticket)
         {
             try
@@ -51,22 +51,14 @@ namespace UMC_FORM.Controllers
                     return RedirectToAction("AssetEdit", new { ticket = ticket });
                 }
                 _sess = Session["user"] as Form_User;
-                var signatures = new string[8];
-                var dateSignatures = new string[8];
                 var allForm = PurAccF06Repository.GetForms(entity.TICKET);
-                for (int i = 0; i < 8; i++)
-                {
-                    var formStep = allForm.FirstOrDefault(r => r.PROCEDURE_INDEX == i && r.IS_SIGNATURE == true);
-                    signatures[i] = formStep != null ? db.Form_User.FirstOrDefault(r => r.CODE == formStep.CREATE_USER).SIGNATURE : "";
-                    dateSignatures[i] = formStep != null ? formStep.UPD_DATE.ToString("dd-M-yyyy") : "";
-                }
                 JavaScriptSerializer js = new JavaScriptSerializer();
-                ViewBag.signature = signatures;
+                ViewBag.signature = Common.GetSignatures(allForm);
                 ViewBag.users = js.Serialize(db.Form_User.Select(r => new { name = r.CODE, username = r.NAME }).ToList());
                 ViewBag.accept = IsAccept(summary);
                 ViewBag.summary = summary;
-                ViewBag.userCreate = db.Form_User.FirstOrDefault(r => r.CODE == summary.CREATE_USER);
-                ViewBag.dateSignatures = dateSignatures;
+                var author = UserRepository.GetUser(summary.CREATE_USER);
+                entity.author = new AuthorEntity() { code = author.CODE, fullname = author.NAME, dept = author.DEPT };
                 //Kiểm tra xem có phải trưởng phòng và đã ký rồi hay chưa
                 var mngSignature = PurAccF06Repository.IsSignature(ticket, 1);
                 ViewBag.isMng = DeptRepository.IsMng(_sess.CODE) && !mngSignature;
@@ -78,61 +70,102 @@ namespace UMC_FORM.Controllers
                 {
 
                     unitPrice = "UNIT_PRICE_1",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_1).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_1)).ToList()
+                    //prices = temp.GroupBy(r => r.UNIT_PRICE_1).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_1)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_1)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_1)
+                    .Where(r => r != entity.UNIT_PRICE_1)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
+
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_2",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_2).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_2)).ToList()
+                    //prices = temp.GroupBy(r => r.UNIT_PRICE_2).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_2)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_2)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_2)
+                    .Where(r => r != entity.UNIT_PRICE_2)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_3",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_3).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_3)).ToList()
+                    //prices = temp.GroupBy(r => r.UNIT_PRICE_3).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_3)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_3)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_3)
+                    .Where(r => r != entity.UNIT_PRICE_3)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_4",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_4).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_4)).ToList()
+                    //prices = temp.GroupBy(r => r.UNIT_PRICE_4).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_4)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_4)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_4)
+                    .Where(r => r != entity.UNIT_PRICE_4)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_5",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_5).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_5)).ToList()
+                    // prices = temp.GroupBy(r => r.UNIT_PRICE_5).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_5)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_5)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_5)
+                    .Where(r => r != entity.UNIT_PRICE_5)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_6",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_6).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_6)).ToList()
+                    //prices = temp.GroupBy(r => r.UNIT_PRICE_6).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_6)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_6)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_6)
+                    .Where(r => r != entity.UNIT_PRICE_6)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_7",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_7).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_7)).ToList()
+                    //prices = temp.GroupBy(r => r.UNIT_PRICE_7).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_7)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_7)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_7)
+                    .Where(r => r != entity.UNIT_PRICE_7)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_8",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_8).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_8)).ToList()
+                    //prices = temp.GroupBy(r => r.UNIT_PRICE_8).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_8)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_8)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_8)
+                    .Where(r => r != entity.UNIT_PRICE_8)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_9",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_9).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_9)).ToList()
+                    // prices = temp.GroupBy(r => r.UNIT_PRICE_9).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_9)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_9)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_9)
+                    .Where(r => r != entity.UNIT_PRICE_9)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
                 });
                 lst.Add(new CostChangeEntity()
                 {
 
                     unitPrice = "UNIT_PRICE_10",
-                    prices = temp.GroupBy(r => r.UNIT_PRICE_10).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_10)).ToList()
+                    //prices = temp.GroupBy(r => r.UNIT_PRICE_10).Select(h => String.Format("{0:n0}", h.FirstOrDefault().UNIT_PRICE_10)).ToList()
+                    prices = temp.GroupBy(r => r.UNIT_PRICE_10)
+                    .Select(h => h.FirstOrDefault().UNIT_PRICE_10)
+                    .Where(r => r != entity.UNIT_PRICE_10)
+                    .Select(h => String.Format("{0:n0}", h)).ToList()
                 });
                 #endregion
                 entity.histories = lst;
@@ -161,27 +194,15 @@ namespace UMC_FORM.Controllers
             {
                 return HttpNotFound();
             }
-            //var session = Session["user"] as Form_User;
-            var signatures = new string[8];
-            var dateSignatures = new string[8];
-            //var allForm = db.PR_ACC_F06.Where(r => r.TICKET == entity.TICKET);
+
             var allForm = PurAccF06Repository.GetForms(ticket);
             var users = UserRepository.GetUsers();
-            for (int i = 0; i < 8; i++)
-            {
-                var formStep = allForm.FirstOrDefault(r => r.PROCEDURE_INDEX == i);
-                // var user = UserRepository.GetUser(formStep.CREATE_USER);
-                //var user = users.FirstOrDefault(r => r.CODE == formStep.CREATE_USER);
-                signatures[i] = formStep != null ? users.FirstOrDefault(r => r.CODE == formStep.CREATE_USER).SIGNATURE : "";
-                dateSignatures[i] = formStep != null ? formStep.UPD_DATE.ToString("dd-M-yyyy") : "";
-            }
+            ViewBag.summary = summary;
             JavaScriptSerializer js = new JavaScriptSerializer();
-            ViewBag.signature = signatures;
+            ViewBag.signature = Common.GetSignatures(allForm);
             ViewBag.users = js.Serialize(users.Select(r => new { name = r.CODE, username = r.NAME }).ToList());
-            //ViewBag.accept = IsAccept(summary);
-            ViewBag.createDate = summary.UPD_DATE.ToString("dd/MM/yyyy");
-            ViewBag.createUser = users.FirstOrDefault(r => r.CODE == summary.CREATE_USER);
-            ViewBag.dateSignatures = dateSignatures;
+            var author = UserRepository.GetUser(summary.CREATE_USER);
+            entity.author = new AuthorEntity() { code = author.CODE, fullname = author.NAME, dept = author.DEPT };
             return View(entity);
         }
         public bool IsAccept(Form_Summary summary)
@@ -192,7 +213,9 @@ namespace UMC_FORM.Controllers
             }
 
             var index = summary.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
-            var processNext = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, index);
+
+            var processNext = ProcessRepository.GetProcess(summary.PROCESS_ID, index);
+
             if (processNext != null)
             {
                 var stationNoNext = processNext.STATION_NO;
@@ -217,7 +240,7 @@ namespace UMC_FORM.Controllers
             var sess = Session["user"] as Form_User;
             var index = summary.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
             var dept = DeptRepository.GetDept(sess.DEPT);
-            var processNext = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, index);
+            var processNext = ProcessRepository.GetProcess(summary.PROCESS_ID, index);
             if (processNext != null)
             {
                 var stationNoNext = processNext.STATION_NO;
@@ -376,7 +399,7 @@ namespace UMC_FORM.Controllers
                                 transaction.Commit();
                                 msg = "OK";
                             }
-                            var process = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, f.PROCEDURE_INDEX + 1);
+                            var process = ProcessRepository.GetProcess(formSummary.PROCESS_ID, f.PROCEDURE_INDEX + 1);
                             var stations = StationRepository.GetStations(process.STATION_NO);
                             var userID = stations.Select(r => r.USER_ID).ToList();
                             var userMails = UserRepository.GetUsers(userID);
@@ -794,8 +817,9 @@ namespace UMC_FORM.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AjaxMethod(PR_ACC_F06 entity)
+        public async Task<JsonResult> CreateAsync(PR_ACC_F06 entity)
         {
+
             int validate = PurAccF06Repository.Validate(entity);
             string message = "";
 
@@ -815,7 +839,8 @@ namespace UMC_FORM.Controllers
                     var dateTimeNow = DateTime.Now;
                     var ticket = dateTimeNow.ToString("yyyyMMddHHmmss");
                     PurAccF06Repository.SetAmounts(entity);
-                    var a = ModelState.Values.Where(r => r.Errors.Count > 0).ToList();
+                    string formName = PurAccF06Repository.ChooseFormProcess(entity);
+                    //  var tmp = ModelState.Values.Where(r => r.Errors.Count > 0).ToList();
                     string virtualPath = "";
                     string[] virtualPaths = new string[5];
                     HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
@@ -851,7 +876,8 @@ namespace UMC_FORM.Controllers
                                         TICKET = ticket,
                                         CREATE_USER = _sess.CODE,
                                         UPD_DATE = dateTimeNow,
-                                        TITLE = Constant.PR_ACC_F06_TITLE
+                                        TITLE = Constant.PR_ACC_F06_TITLE,
+                                        PROCESS_ID = formName
                                     };
                                     db.Form_Summary.Add(summary);
                                     db.SaveChanges();
@@ -861,8 +887,8 @@ namespace UMC_FORM.Controllers
                                     entity.UPD_DATE = dateTimeNow;
                                     entity.ISSUE_DATE = dateTimeNow;
                                     entity.CREATE_USER = _sess.CODE;
-                                    entity.FORM_NAME = Constant.PR_ACC_F06_NAME;
-                                    entity.STATION_NO = $"{Constant.PR_ACC_F06_NAME}_0";
+                                    entity.FORM_NAME = formName;
+                                    entity.STATION_NO = $"{formName}_0";
                                     for (int file = 0; file < files.Count; file++)
                                     {
                                         HttpPostedFile filedata = files[file];
@@ -976,8 +1002,10 @@ namespace UMC_FORM.Controllers
                                 }
 
                                 transaction.Commit();
+                                var dept = DeptRepository.GetDept(_sess.DEPT);
+                                var userApproval = UserRepository.GetUser(dept.CODE_MNG);
                                 string body = $@"
-                                                <h3>Dear Quyet san!</h3>
+                                                <h3>Dear {userApproval.SHORT_NAME} san!</h3>
                                                 <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
 	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={entity.TICKET}'>Click to approval</a>
                                                 <br />
@@ -987,21 +1015,21 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                                message = $"Create ticket {ticket} success !";
-                                await Business.MailHelper.SenMailOutlook("quyetpv@umcvn.com", body);
+                                Task sendMail = Business.MailHelper.SenMailOutlook(userApproval.EMAIL, body);
+                                await sendMail;
+                                //return RedirectToAction("Index", "Home", new { type = SendType.SENDTOME });
                             }
                             catch (Exception ex)
                             {
                                 Debug.WriteLine("Error occurred " + ex.Message);
                                 transaction.Rollback();
-                                message = "Error";
                             }
                         }
                     }
+                    message = $"Create Ticket: {ticket} sucess!";
                     break;
             }
             ViewBag.message = message;
-
 
             //System.Threading.Thread.Sleep(1000);
             return Json(message);
@@ -1036,77 +1064,80 @@ namespace UMC_FORM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AssetEdit(PR_ACC_F06 pR_ACC_F06)
         {
+            var sess = Session["user"] as Form_User;
             var entities = PurAccF06Repository.GetForms(pR_ACC_F06.TICKET);
             var first = entities.OrderBy(o => o.ORDER_HISTORY).FirstOrDefault();
             var last = entities.OrderByDescending(o => o.ORDER_HISTORY).FirstOrDefault();
-            var entity = last.CloneObject() as PR_ACC_F06;
-            entity.COST_CENTER_1 = pR_ACC_F06.COST_CENTER_1;
-            entity.COST_CENTER_2 = pR_ACC_F06.COST_CENTER_2;
-            entity.COST_CENTER_3 = pR_ACC_F06.COST_CENTER_3;
-            entity.COST_CENTER_4 = pR_ACC_F06.COST_CENTER_4;
-            entity.COST_CENTER_5 = pR_ACC_F06.COST_CENTER_5;
-            entity.COST_CENTER_6 = pR_ACC_F06.COST_CENTER_6;
-            entity.COST_CENTER_7 = pR_ACC_F06.COST_CENTER_7;
-            entity.COST_CENTER_8 = pR_ACC_F06.COST_CENTER_8;
-            entity.COST_CENTER_9 = pR_ACC_F06.COST_CENTER_9;
-            entity.COST_CENTER_10 = pR_ACC_F06.COST_CENTER_10;
-            entity.AK_1 = pR_ACC_F06.AK_1;
-            entity.AK_2 = pR_ACC_F06.AK_2;
-            entity.AK_3 = pR_ACC_F06.AK_3;
-            entity.AK_4 = pR_ACC_F06.AK_4;
-            entity.AK_5 = pR_ACC_F06.AK_5;
-            entity.AK_6 = pR_ACC_F06.AK_6;
-            entity.AK_7 = pR_ACC_F06.AK_7;
-            entity.AK_8 = pR_ACC_F06.AK_8;
-            entity.AK_9 = pR_ACC_F06.AK_9;
-            entity.AK_10 = pR_ACC_F06.AK_10;
-
-            entity.ACOUNT_CODE_1 = pR_ACC_F06.ACOUNT_CODE_1;
-            entity.ACOUNT_CODE_2 = pR_ACC_F06.ACOUNT_CODE_2;
-            entity.ACOUNT_CODE_3 = pR_ACC_F06.ACOUNT_CODE_3;
-            entity.ACOUNT_CODE_4 = pR_ACC_F06.ACOUNT_CODE_4;
-            entity.ACOUNT_CODE_5 = pR_ACC_F06.ACOUNT_CODE_5;
-            entity.ACOUNT_CODE_6 = pR_ACC_F06.ACOUNT_CODE_6;
-            entity.ACOUNT_CODE_7 = pR_ACC_F06.ACOUNT_CODE_7;
-            entity.ACOUNT_CODE_8 = pR_ACC_F06.ACOUNT_CODE_8;
-            entity.ACOUNT_CODE_9 = pR_ACC_F06.ACOUNT_CODE_9;
-            entity.ACOUNT_CODE_10 = pR_ACC_F06.ACOUNT_CODE_10;
-
-            entity.ASSET_NO_1 = pR_ACC_F06.ASSET_NO_1;
-            entity.ASSET_NO_2 = pR_ACC_F06.ASSET_NO_2;
-            entity.ASSET_NO_3 = pR_ACC_F06.ASSET_NO_3;
-            entity.ASSET_NO_4 = pR_ACC_F06.ASSET_NO_4;
-            entity.ASSET_NO_5 = pR_ACC_F06.ASSET_NO_5;
-            entity.ASSET_NO_6 = pR_ACC_F06.ASSET_NO_6;
-            entity.ASSET_NO_7 = pR_ACC_F06.ASSET_NO_7;
-            entity.ASSET_NO_8 = pR_ACC_F06.ASSET_NO_8;
-            entity.ASSET_NO_9 = pR_ACC_F06.ASSET_NO_9;
-            entity.ASSET_NO_10 = pR_ACC_F06.ASSET_NO_10;
-            entity.ID = Guid.NewGuid().ToString();
-            entity.ORDER_HISTORY = last.ORDER_HISTORY + 1;
-            entity.PROCEDURE_INDEX = entity.PROCEDURE_INDEX + 1;
-            var sess = Session["user"] as Form_User;
-            entity.CREATE_USER = sess.CODE;
-            entity.UPD_DATE = DateTime.Now;
-            var a = ModelState.Values.Where(r => r.Errors.Count > 0).ToList();
-            var flag = PurAccF06Repository.Update(entity);
-            if (flag)
+            if (last.CREATE_USER != sess.CODE)
             {
-                var isFn = ProcessRepository.MaxIndex(Constant.PR_ACC_F06_NAME) == entity.PROCEDURE_INDEX;
-                #region Send Email
-                if (!isFn) //Nếu là người cuối cùng xác nhận thì k gửi mail
+                var entity = last.CloneObject() as PR_ACC_F06;
+                entity.COST_CENTER_1 = pR_ACC_F06.COST_CENTER_1;
+                entity.COST_CENTER_2 = pR_ACC_F06.COST_CENTER_2;
+                entity.COST_CENTER_3 = pR_ACC_F06.COST_CENTER_3;
+                entity.COST_CENTER_4 = pR_ACC_F06.COST_CENTER_4;
+                entity.COST_CENTER_5 = pR_ACC_F06.COST_CENTER_5;
+                entity.COST_CENTER_6 = pR_ACC_F06.COST_CENTER_6;
+                entity.COST_CENTER_7 = pR_ACC_F06.COST_CENTER_7;
+                entity.COST_CENTER_8 = pR_ACC_F06.COST_CENTER_8;
+                entity.COST_CENTER_9 = pR_ACC_F06.COST_CENTER_9;
+                entity.COST_CENTER_10 = pR_ACC_F06.COST_CENTER_10;
+                entity.AK_1 = pR_ACC_F06.AK_1;
+                entity.AK_2 = pR_ACC_F06.AK_2;
+                entity.AK_3 = pR_ACC_F06.AK_3;
+                entity.AK_4 = pR_ACC_F06.AK_4;
+                entity.AK_5 = pR_ACC_F06.AK_5;
+                entity.AK_6 = pR_ACC_F06.AK_6;
+                entity.AK_7 = pR_ACC_F06.AK_7;
+                entity.AK_8 = pR_ACC_F06.AK_8;
+                entity.AK_9 = pR_ACC_F06.AK_9;
+                entity.AK_10 = pR_ACC_F06.AK_10;
+
+                entity.ACOUNT_CODE_1 = pR_ACC_F06.ACOUNT_CODE_1;
+                entity.ACOUNT_CODE_2 = pR_ACC_F06.ACOUNT_CODE_2;
+                entity.ACOUNT_CODE_3 = pR_ACC_F06.ACOUNT_CODE_3;
+                entity.ACOUNT_CODE_4 = pR_ACC_F06.ACOUNT_CODE_4;
+                entity.ACOUNT_CODE_5 = pR_ACC_F06.ACOUNT_CODE_5;
+                entity.ACOUNT_CODE_6 = pR_ACC_F06.ACOUNT_CODE_6;
+                entity.ACOUNT_CODE_7 = pR_ACC_F06.ACOUNT_CODE_7;
+                entity.ACOUNT_CODE_8 = pR_ACC_F06.ACOUNT_CODE_8;
+                entity.ACOUNT_CODE_9 = pR_ACC_F06.ACOUNT_CODE_9;
+                entity.ACOUNT_CODE_10 = pR_ACC_F06.ACOUNT_CODE_10;
+
+                entity.ASSET_NO_1 = pR_ACC_F06.ASSET_NO_1;
+                entity.ASSET_NO_2 = pR_ACC_F06.ASSET_NO_2;
+                entity.ASSET_NO_3 = pR_ACC_F06.ASSET_NO_3;
+                entity.ASSET_NO_4 = pR_ACC_F06.ASSET_NO_4;
+                entity.ASSET_NO_5 = pR_ACC_F06.ASSET_NO_5;
+                entity.ASSET_NO_6 = pR_ACC_F06.ASSET_NO_6;
+                entity.ASSET_NO_7 = pR_ACC_F06.ASSET_NO_7;
+                entity.ASSET_NO_8 = pR_ACC_F06.ASSET_NO_8;
+                entity.ASSET_NO_9 = pR_ACC_F06.ASSET_NO_9;
+                entity.ASSET_NO_10 = pR_ACC_F06.ASSET_NO_10;
+                entity.ID = Guid.NewGuid().ToString();
+                entity.ORDER_HISTORY = last.ORDER_HISTORY + 1;
+                entity.PROCEDURE_INDEX = entity.PROCEDURE_INDEX + 1;
+                entity.CREATE_USER = sess.CODE;
+                entity.UPD_DATE = DateTime.Now;
+                var a = ModelState.Values.Where(r => r.Errors.Count > 0).ToList();
+                var summary = FormSummaryRepository.GetSummary(pR_ACC_F06.TICKET);
+                var flag = PurAccF06Repository.Update(entity);
+                if (flag)
                 {
-                    var process = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, entity.PROCEDURE_INDEX + 1);
-                    var stations = StationRepository.GetStations(process.STATION_NO);
-                    var userID = stations.Select(r => r.USER_ID).ToList();
-                    var userMails = UserRepository.GetUsers(userID);
-                    var dear = "Dear All !";
-                    if (userMails.Count == 1)
+                    var isFn = ProcessRepository.MaxIndex(summary.PROCESS_ID) == entity.PROCEDURE_INDEX;
+                    #region Send Email
+                    if (!isFn) //Nếu là người cuối cùng xác nhận thì k gửi mail
                     {
-                        var userApproval = UserRepository.GetUser(userID.FirstOrDefault());
-                        dear = $"Dear {userApproval.SHORT_NAME} san !";
-                    }
-                    string body = $@"
+                        var process = ProcessRepository.GetProcess(summary.PROCESS_ID, entity.PROCEDURE_INDEX + 1);
+                        var stations = StationRepository.GetStations(process.STATION_NO);
+                        var userID = stations.Select(r => r.USER_ID).ToList();
+                        var userMails = UserRepository.GetUsers(userID);
+                        var dear = "Dear All !";
+                        if (userMails.Count == 1)
+                        {
+                            var userApproval = UserRepository.GetUser(userID.FirstOrDefault());
+                            dear = $"Dear {userApproval.SHORT_NAME} san !";
+                        }
+                        string body = $@"
                                                 <h3>{dear}</h3>
                                                 <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
 	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={entity.TICKET}'>Click to approval</a>
@@ -1117,12 +1148,112 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                    await Business.MailHelper.SenMailOutlook(userMails, body);
+                        await Business.MailHelper.SenMailOutlook(userMails, body);
+                    }
+                    #endregion
+                    return RedirectToAction("Index", "Home");
                 }
-                #endregion
-                return RedirectToAction("Index", "Home");
             }
-            return View(entity);
+
+
+
+            return View(pR_ACC_F06);
+        }
+        public async Task<JsonResult> AssetEditAsync(PR_ACC_F06 pR_ACC_F06)
+        {
+            string message = "";
+            var sess = Session["user"] as Form_User;
+            var entities = PurAccF06Repository.GetForms(pR_ACC_F06.TICKET);
+            var first = entities.OrderBy(o => o.ORDER_HISTORY).FirstOrDefault();
+            var last = entities.OrderByDescending(o => o.ORDER_HISTORY).FirstOrDefault();
+            if (last.CREATE_USER != sess.CODE)
+            {
+                var entity = last.CloneObject() as PR_ACC_F06;
+                entity.COST_CENTER_1 = pR_ACC_F06.COST_CENTER_1;
+                entity.COST_CENTER_2 = pR_ACC_F06.COST_CENTER_2;
+                entity.COST_CENTER_3 = pR_ACC_F06.COST_CENTER_3;
+                entity.COST_CENTER_4 = pR_ACC_F06.COST_CENTER_4;
+                entity.COST_CENTER_5 = pR_ACC_F06.COST_CENTER_5;
+                entity.COST_CENTER_6 = pR_ACC_F06.COST_CENTER_6;
+                entity.COST_CENTER_7 = pR_ACC_F06.COST_CENTER_7;
+                entity.COST_CENTER_8 = pR_ACC_F06.COST_CENTER_8;
+                entity.COST_CENTER_9 = pR_ACC_F06.COST_CENTER_9;
+                entity.COST_CENTER_10 = pR_ACC_F06.COST_CENTER_10;
+                entity.AK_1 = pR_ACC_F06.AK_1;
+                entity.AK_2 = pR_ACC_F06.AK_2;
+                entity.AK_3 = pR_ACC_F06.AK_3;
+                entity.AK_4 = pR_ACC_F06.AK_4;
+                entity.AK_5 = pR_ACC_F06.AK_5;
+                entity.AK_6 = pR_ACC_F06.AK_6;
+                entity.AK_7 = pR_ACC_F06.AK_7;
+                entity.AK_8 = pR_ACC_F06.AK_8;
+                entity.AK_9 = pR_ACC_F06.AK_9;
+                entity.AK_10 = pR_ACC_F06.AK_10;
+
+                entity.ACOUNT_CODE_1 = pR_ACC_F06.ACOUNT_CODE_1;
+                entity.ACOUNT_CODE_2 = pR_ACC_F06.ACOUNT_CODE_2;
+                entity.ACOUNT_CODE_3 = pR_ACC_F06.ACOUNT_CODE_3;
+                entity.ACOUNT_CODE_4 = pR_ACC_F06.ACOUNT_CODE_4;
+                entity.ACOUNT_CODE_5 = pR_ACC_F06.ACOUNT_CODE_5;
+                entity.ACOUNT_CODE_6 = pR_ACC_F06.ACOUNT_CODE_6;
+                entity.ACOUNT_CODE_7 = pR_ACC_F06.ACOUNT_CODE_7;
+                entity.ACOUNT_CODE_8 = pR_ACC_F06.ACOUNT_CODE_8;
+                entity.ACOUNT_CODE_9 = pR_ACC_F06.ACOUNT_CODE_9;
+                entity.ACOUNT_CODE_10 = pR_ACC_F06.ACOUNT_CODE_10;
+
+                entity.ASSET_NO_1 = pR_ACC_F06.ASSET_NO_1;
+                entity.ASSET_NO_2 = pR_ACC_F06.ASSET_NO_2;
+                entity.ASSET_NO_3 = pR_ACC_F06.ASSET_NO_3;
+                entity.ASSET_NO_4 = pR_ACC_F06.ASSET_NO_4;
+                entity.ASSET_NO_5 = pR_ACC_F06.ASSET_NO_5;
+                entity.ASSET_NO_6 = pR_ACC_F06.ASSET_NO_6;
+                entity.ASSET_NO_7 = pR_ACC_F06.ASSET_NO_7;
+                entity.ASSET_NO_8 = pR_ACC_F06.ASSET_NO_8;
+                entity.ASSET_NO_9 = pR_ACC_F06.ASSET_NO_9;
+                entity.ASSET_NO_10 = pR_ACC_F06.ASSET_NO_10;
+                entity.ID = Guid.NewGuid().ToString();
+                entity.ORDER_HISTORY = last.ORDER_HISTORY + 1;
+                entity.PROCEDURE_INDEX = entity.PROCEDURE_INDEX + 1;
+                entity.CREATE_USER = sess.CODE;
+                entity.UPD_DATE = DateTime.Now;
+                var a = ModelState.Values.Where(r => r.Errors.Count > 0).ToList();
+                var summary = FormSummaryRepository.GetSummary(pR_ACC_F06.TICKET);
+                var flag = PurAccF06Repository.Update(entity);
+                if (flag)
+                {
+                    var isFn = ProcessRepository.MaxIndex(summary.PROCESS_ID) == entity.PROCEDURE_INDEX;
+                    #region Send Email
+                    if (!isFn) //Nếu là người cuối cùng xác nhận thì k gửi mail
+                    {
+                        var process = ProcessRepository.GetProcess(summary.PROCESS_ID, entity.PROCEDURE_INDEX + 1);
+                        var stations = StationRepository.GetStations(process.STATION_NO);
+                        var userID = stations.Select(r => r.USER_ID).ToList();
+                        var userMails = UserRepository.GetUsers(userID);
+                        var dear = "Dear All !";
+                        if (userMails.Count == 1)
+                        {
+                            var userApproval = UserRepository.GetUser(userID.FirstOrDefault());
+                            dear = $"Dear {userApproval.SHORT_NAME} san !";
+                        }
+                        string body = $@"
+                                                <h3>{dear}</h3>
+                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
+	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={entity.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+                        await Business.MailHelper.SenMailOutlook(userMails, body);
+                        message = "OK";
+                    }
+                    #endregion
+                    //  return RedirectToAction("Index", "Home");
+                }
+            }
+            return Json(message);
         }
         // GET: PurAccF06/Edit/5
         public ActionResult Edit(string ticket)
@@ -1280,12 +1411,12 @@ namespace UMC_FORM.Controllers
                     }
                 }
             }
-            // var summary = FormSummaryRepository.GetSummary(entity.TICKET);
+            var summary = FormSummaryRepository.GetSummary(entity.TICKET);
             var flag = PurAccF06Repository.Update(entity, entity.PROCEDURE_INDEX, false, false);
             if (flag)
             {
                 //var process = ProcessRepository.GetProcess(summary.RETURN_TO);
-                var process = ProcessRepository.GetProcess(Constant.PR_ACC_F06_NAME, entity.PROCEDURE_INDEX + 1);
+                var process = ProcessRepository.GetProcess(summary.PROCESS_ID, entity.PROCEDURE_INDEX + 1);
                 var station = StationRepository.GetStations(process.STATION_NO);
                 var userApproval = UserRepository.GetUser(station.FirstOrDefault().USER_ID);
                 string body = $@"
@@ -1304,6 +1435,25 @@ namespace UMC_FORM.Controllers
                 return RedirectToAction("Index", "Home");
             }
             return View(entity);
+        }
+
+        public void SaveFiles(HttpFileCollection files)
+        {
+            string virtualPath = "";
+            string[] virtualPaths = new string[5];
+            for (int file = 0; file < files.Count; file++)
+            {
+                HttpPostedFile filedata = files[file];
+                string fileName = filedata.FileName;
+                virtualPath = string.Format("/UploadedFiles/{0}", fileName);
+                virtualPaths[file] = virtualPath;
+                string fullPath = Server.MapPath(virtualPath);
+                if (fileName != "")
+                {
+                    filedata.SaveAs(fullPath);
+                }
+
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -140,6 +140,7 @@
     <Compile Include="Authentication\CustomAuthorizeAttribute.cs" />
     <Compile Include="Authentication\NoCacheAttribute.cs" />
     <Compile Include="Business\AdminConfig.cs" />
+    <Compile Include="Business\Common.cs" />
     <Compile Include="Business\Constant.cs" />
     <Compile Include="Business\DeptRepository.cs" />
     <Compile Include="Business\FormSummaryRepository.cs" />
@@ -168,6 +169,7 @@
     </Compile>
     <Compile Include="Models\ApprovalEntity.cs" />
     <Compile Include="Models\AssetEntity.cs" />
+    <Compile Include="Models\AuthorEntity.cs" />
     <Compile Include="Models\CostChangeEntity.cs" />
     <Compile Include="Models\DataContext.cs" />
     <Compile Include="Models\FormProcessJsonEntity.cs" />
@@ -186,6 +188,7 @@
     <Compile Include="Models\LCA_PERMISSION.cs" />
     <Compile Include="Models\LCA_QUOTE.cs" />
     <Compile Include="Models\PR_ACC_F06.cs" />
+    <Compile Include="Models\SignatureEntity.cs" />
     <Compile Include="Models\StationMemberModel.cs" />
     <Compile Include="Models\Summary\QuoteChart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
