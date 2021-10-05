@@ -1,0 +1,40 @@
+﻿@using UMC_FORM.Models
+@model List<UMC_FORM.Models.LCA.StationApproveModel>
+<div class="table-responsive">
+    <table class="table table-bordered ">
+        <thead>
+            <tr>
+              
+                @foreach (var station in Model)
+                {
+                    <th class="font-italic lang" key="GD_approve" rowspan="2">@station.STATION_NAME</th>
+                }
+            </tr>
+
+        </thead>
+        <tbody>
+            <tr height="100px">
+                @foreach (var station in Model)
+                {
+                    if (station.IS_APPROVED)
+                    {
+                        <td>
+                            <div class="rubber_stamp">
+                                <p>@station.COMPANY</p>
+                                <p>@station.APPROVE_DATE.ToShortDateString()</p>
+                                <p>@station.APPROVER</p>
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+
+                }
+
+            </tr>
+        </tbody>
+    </table>
+
+</div>

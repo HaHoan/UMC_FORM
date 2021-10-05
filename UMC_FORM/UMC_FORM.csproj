@@ -180,6 +180,8 @@
     <Compile Include="Models\Form_Summary.cs" />
     <Compile Include="Models\Form_User.cs" />
     <Compile Include="Models\LCA\LCADetailModel.cs" />
+    <Compile Include="Models\LCA\StationApproveModel.cs" />
+    <Compile Include="Models\LCA_FILE.cs" />
     <Compile Include="Models\LCA_FORM_01.cs" />
     <Compile Include="Models\LCA_PERMISSION.cs" />
     <Compile Include="Models\LCA_QUOTE.cs" />
@@ -659,6 +661,7 @@
     <Content Include="Views\LCA\PrintView.cshtml" />
     <Content Include="Views\LCA\Details.cshtml" />
     <Content Include="Views\Summary\Index.cshtml" />
+    <Content Include="Views\LCA\_StationApprove.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

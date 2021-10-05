@@ -98,5 +98,8 @@ namespace UMC_FORM.Models
 
         [NotMapped]
         public List<LCA_QUOTE> LCA_QUOTEs { get; set; }
+
+        [NotMapped]
+        public List<LCA_FILE> FILES { get; set; }
     }
 }

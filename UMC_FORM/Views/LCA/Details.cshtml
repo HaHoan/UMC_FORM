@@ -18,7 +18,7 @@
                     {
                         @Html.AntiForgeryToken()
                         <br>
-                        <a href="@Url.Action("Index","Home")" style="text-decoration: none;">
+                        <a href="@Url.Action("Index", "Home")" style="text-decoration: none;">
                             <i class="fas fa-angle-left font-title text-muted"></i>
                             <span class="font-weight-bold ml-2 text-muted lang text-uppercase" key="title-lca-req" style="font-size: 18px;">YÊU CẦU CUNG CẤP</span>
                         </a>
@@ -28,7 +28,7 @@
                                 <span class="badge badge-pill badge-primary ml-2 lang font-italic" key="@keyState">...</span>
                             </div>
                             <div class="col-1">
-                                <a href="@Url.Action("PrintView","LCA")" class="text-dark" target="_blank">
+                                <a href="@Url.Action("PrintView", "LCA")" class="text-dark" target="_blank">
                                     <i class="fas fa-print"></i>
                                 </a>
 
@@ -284,12 +284,12 @@
                                                         {
                                                             <tr class="row-info">
                                                                 <td>@(i)</td>
-                                                                <td><input class="form-input inputDefault" name=@("ITEM_NAME_"+i) id=@("ITEM_NAME_"+i) /></td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("QTY_"+i) /> </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_"+i) /> </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_"+i) disabled />  </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_"+i) /> </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_"+i) disabled /></td>
+                                                                <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) /> </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) /> </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
                                                             </tr>
                                                         }
 
@@ -373,12 +373,12 @@
                                                         {
                                                             <tr class="row-info">
                                                                 <td>@(i)</td>
-                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_"+i) id=@("ITEM_NAME_"+i) value="@quote.REQUEST_ITEM" readonly /></td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_"+i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_"+i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_"+i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_"+i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_"+i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
+                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
                                                             </tr>
                                                             i++;
                                                         }
@@ -446,12 +446,12 @@
                                                         {
                                                             <tr class="row-info">
                                                                 <td>@(i)</td>
-                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_"+i) id=@("ITEM_NAME_"+i) value="@quote.REQUEST_ITEM" readonly /></td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_"+i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_"+i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")"readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_"+i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_"+i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly/> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_"+i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
+                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
                                                             </tr>
                                                             i++;
                                                         }
@@ -508,53 +508,39 @@
 
                             </p>
                             <br />
-                            <div class="row mt-2">
-                                <div class="form-inline">
-                                    @*<p class="font-weight-bold lang" key="attach">File đính kèm</p>*@
-                                    <button type="button" class="btn btn-warning font-weight-bold lang" key="attach">**File đính kèm**</button>
-                                    <input type="file" name="fileAttach" class="ml-3" multiple>
+
+                            @{
+                                if (Model.PERMISSION.Contains(PERMISSION.ATTACH_FILE))
+                                {
+                                    <div class="row mt-2">
+                                        <div class="form-inline">
+                                            <button type="button" class="btn btn-warning font-weight-bold lang" key="attach">**File đính kèm**</button>
+                                            <input type="file" name="fileAttach" id="fileAttach" class="ml-3" multiple>
+                                        </div>
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <p class="btn btn-warning font-weight-bold lang" key="attach">**File đính kèm**</p>
+                                }
+                                <div class=" mt-2">
+
+                                    @foreach (var file in Model.TICKET.FILES)
+                                    {
+                                        <a target="_blank" href="@file.FILE_URL" class="badge badge-danger">@file.FILE_NAME</a>
+                                        <br />
+                                    }
                                 </div>
-                            </div>
+                                <div class=" mt-2 files">
+                                </div>
+                            }
+
                         </div>
                         <br />
 
+                        @Html.Partial("~/Views/LCA/_StationApprove.cshtml", Model.STATION_APPROVE)
 
-                        <div class="table-responsive">
-                            <table class="table table-bordered ">
-                                <thead>
-                                    <tr>
-                                        <th class="font-italic lang" key="nguoi_yeu_cau" rowspan="2">Người đề xuất </th>
-                                        <th class="font-italic lang" key="phe_duyet" rowspan="2">Trưởng phòng</th>
-                                        <th class="font-italic lang" key="lca_approve" rowspan="2">LCA Approve</th>
-                                        <th class="font-italic lang" key="request_approve" rowspan="2">Request Approve</th>
-                                        <th class="font-italic lang" key="BC_approve" rowspan="2">BC Approve</th>
-                                        <th class="font-italic lang" key="FM_approve" rowspan="2">FM Approve</th>
-                                        <th class="font-italic lang" key="GD_approve" rowspan="2">GD Approve</th>
-
-
-                                    </tr>
-
-                                </thead>
-                                <tbody>
-                                    <tr height="100px">
-                                        <td>
-                                            <div class="rubber_stamp">
-                                                <p>UMCVN</p>
-                                                <p>06-09-2021</p>
-                                                <p>TEST</p>
-                                            </div>
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
                     }
                 </div>
 

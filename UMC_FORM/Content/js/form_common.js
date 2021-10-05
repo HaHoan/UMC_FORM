@@ -59,3 +59,20 @@ function getTotalAmount() {
     else
         return addCommas(total.toString());
 }
+
+$("#fileAttach").change(function () {
+    var file = $(this)[0].files;
+    if (file) {
+        $('.files').empty()
+        for (var i = 0; i < file.length; i++) {
+            var a = $('<a/>', {
+                class: 'badge badge-danger bg-success',
+                target: '_blank',
+                text:file[i].name
+            })
+            var br = $('<br/>')
+            $('.files').append(a)
+            $('.files').append(br)
+        }
+    }
+})

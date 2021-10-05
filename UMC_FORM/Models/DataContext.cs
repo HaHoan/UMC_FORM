@@ -24,6 +24,7 @@
         public virtual DbSet<LCA_FORM_01> LCA_FORM_01 { get; set; }
         public virtual DbSet<LCA_PERMISSION> LCA_PERMISSION { get; set; }
         public virtual DbSet<LCA_QUOTE> LCA_QUOTE { get; set; }
+        public virtual DbSet<LCA_FILE> LCA_FILE { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Form_Process>()

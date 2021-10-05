@@ -34,5 +34,6 @@ namespace UMC_FORM.Business
     {
         public static string QUOTE = "QUOTE";
         public static string EDIT_QUOTE = "EDIT_QUOTE";
+        public static string ATTACH_FILE = "ATTACH_FILE";
     }
 }

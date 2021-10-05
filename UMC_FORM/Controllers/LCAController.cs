@@ -56,7 +56,27 @@ namespace UMC_FORM.Controllers
                             ticket.UPD_DATE = DateTime.Now;
 
                             db.LCA_FORM_01.Add(ticket);
+                            #region FILES
+                            HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
+                            for (int file = 0; file < files.Count; file++)
+                            {
+                                HttpPostedFile filedata = files[file];
+                                string fileName = filedata.FileName;
+                                var lcaFile = new LCA_FILE();
+                                lcaFile.TICKET = ticket.TICKET;
+                                lcaFile.ID_TICKET = ticket.ID;
+                                lcaFile.FILE_URL = string.Format("/UploadedFiles/{0}-{1}", DateTime.Now.ToString("yyyyMMddHHmmss"), fileName);
+                                lcaFile.FILE_NAME = fileName;
+                                string fullPath = Server.MapPath(lcaFile.FILE_URL);
+                                if (fileName != "")
+                                {
+                                    filedata.SaveAs(fullPath);
+                                }
+                                db.LCA_FILE.Add(lcaFile);
+                            }
 
+                            #endregion
+                            #region SUMARY
                             Form_Summary summary = new Form_Summary()
                             {
                                 ID = Guid.NewGuid().ToString(),
@@ -72,6 +92,8 @@ namespace UMC_FORM.Controllers
                                 LAST_INDEX = db.Form_Process.Where(m => m.FORM_NAME == Constant.LCA_FORM_01_NAME).Count() - 1
                             };
                             db.Form_Summary.Add(summary);
+                            #endregion
+
                             db.SaveChanges();
                             transaction.Commit();
                         }
@@ -102,8 +124,9 @@ namespace UMC_FORM.Controllers
                 using (var db = new DataContext())
                 {
                     var modelDetail = new LCADetailModel();
-
-                    modelDetail.TICKET = db.LCA_FORM_01.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();
+                    var list = db.LCA_FORM_01.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).ToList();
+                    modelDetail.TICKET = list.FirstOrDefault();
+                    modelDetail.TICKET.FILES = db.LCA_FILE.Where(m => m.TICKET == modelDetail.TICKET.TICKET).ToList();
                     if (modelDetail.TICKET == null)
                     {
                         return HttpNotFound();
@@ -125,6 +148,26 @@ namespace UMC_FORM.Controllers
                     foreach (var permission in listPermission)
                     {
                         modelDetail.PERMISSION.Add(permission.ITEM_COLUMN);
+                    }
+                    var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.LCA_FORM_01_NAME).OrderBy(m => m.FORM_INDEX).ToList();
+                    modelDetail.STATION_APPROVE = new List<StationApproveModel>();
+                    foreach (var pro in process)
+                    {
+                        var station = new StationApproveModel()
+                        {
+                            STATION_NAME = pro.STATION_NAME,
+                            IS_APPROVED = false
+
+                        };
+                        var lca = list.Where(m => m.PROCEDURE_INDEX == pro.FORM_INDEX).FirstOrDefault();
+                        if (lca != null && lca.IS_SIGNATURE == 1)
+                        {
+                            station.IS_APPROVED = true;
+                            station.APPROVE_DATE = lca.UPD_DATE;
+                            station.APPROVER = lca.SUBMIT_USER;
+                            station.COMPANY = "UMCVN";
+                        }
+                        modelDetail.STATION_APPROVE.Add(station);
                     }
 
                     return View(modelDetail);
@@ -159,7 +202,7 @@ namespace UMC_FORM.Controllers
                             {
                                 var form = formDb.CloneObject() as LCA_FORM_01;
                                 _sess = Session["user"] as Form_User;
-
+                                #region FORM
                                 form.ORDER_HISTORY += 1;
                                 form.IS_SIGNATURE = 1;
                                 form.PROCEDURE_INDEX += 1;
@@ -175,14 +218,14 @@ namespace UMC_FORM.Controllers
                                     form.COMMENT = infoTicket.COMMENT;
                                 }
 
-
+                                #region Quote
                                 List<LCA_QUOTE> lcaQuotes = new List<LCA_QUOTE>();
 
-                                
+
                                 // không sửa giá
                                 if (string.IsNullOrEmpty(quotes))
                                 {
-                                    
+
                                     lcaQuotes = db.LCA_QUOTE.Where(m => m.ID_TICKET == ID).ToList();
                                 }
 
@@ -207,8 +250,31 @@ namespace UMC_FORM.Controllers
                                     db.LCA_QUOTE.Add(quoteDb);
                                 }
 
-                                db.LCA_FORM_01.Add(form);
+                                #endregion
+                                #region Files
+                                HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
+                                for (int file = 0; file < files.Count; file++)
+                                {
+                                    HttpPostedFile filedata = files[file];
+                                    string fileName = filedata.FileName;
+                                    var lcaFile = new LCA_FILE();
+                                    lcaFile.TICKET = form.TICKET;
+                                    lcaFile.ID_TICKET = form.ID;
+                                    lcaFile.FILE_URL = string.Format("/UploadedFiles/{0}-{1}", DateTime.Now.ToString("yyyyMMddHHmmss"), fileName);
+                                    lcaFile.FILE_NAME = fileName;
+                                    string fullPath = Server.MapPath(lcaFile.FILE_URL);
+                                    if (fileName != "")
+                                    {
+                                        filedata.SaveAs(fullPath);
+                                    }
+                                    db.LCA_FILE.Add(lcaFile);
+                                }
 
+                                #endregion
+                                db.LCA_FORM_01.Add(form);
+                                #endregion
+
+                                #region SUMARY
                                 var summary = db.Form_Summary.Where(m => m.TICKET == ticket).FirstOrDefault();
                                 summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
                                 summary.CREATE_USER = _sess.CODE;
@@ -218,6 +284,8 @@ namespace UMC_FORM.Controllers
                                 {
                                     summary.IS_FINISH = true;
                                 }
+                                #endregion
+
                                 db.SaveChanges();
                                 transaction.Commit();
                             }
