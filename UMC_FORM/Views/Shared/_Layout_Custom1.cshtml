@@ -115,11 +115,20 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+                        @{
+                            var user = (Form_User)HttpContext.Current.Session["user"];
+                            if (user != null && user.CODE == Constant.GD.ToLower())
+                            {
+                                <a class="nav-link text-dark mt-4" href="@Url.Action("Index","Summary")">
+                                    <div class="sb-nav-link-icon text-dark"><i class="fas fa-tachometer-alt"></i></div>
+                                    <label class=" lang" key="Summary">Tổng kết</label>
+                                </a>
+                            }
+                        }
 
-                        <a class="nav-link text-dark mt-4" href="@Url.Action("Index","Summary")">
-                            <div class="sb-nav-link-icon text-dark"><i class="fas fa-tachometer-alt"></i></div>
-                            <label class=" lang" key="Summary">Tổng kết</label>
-                        </a>
+
+
+
                         <button class="btn btn-light ml-3 mr-5 mt-3" data-toggle="modal"
                                 data-target="#findRequestForm">
                             <i class="fas fa-plus text-dark"></i>

@@ -64,8 +64,8 @@ function loadData() {
             endDate: $('#filter_date_to').val()
         },
         success: function (response) {
-            createChartMonthly(response.monthly,"chartMonthly","BIỂU ĐỒ TIỀN CHI THEO THÁNG")
-            createChartMonthly(response.daily, "chartDaily", "BIỂU ĐỒ TIỀN CHI THEO NGÀY")
+            createChartMonthly(response.monthly, "chartMonthly","MONTHLY CHART")
+            createChartMonthly(response.daily, "chartDaily", "DAILY CHART")
             var totalMoney = addCommas(response.totalMoney.toString())
             $("#totalMoney").text(totalMoney)
 
@@ -94,17 +94,19 @@ function createChartMonthly(list, name,title) {
             fontSize: 15
         },
         axisY: {
-            title: "VNĐ",
+            title: "",
             lineColor: "#4F81BC",
             tickColor: "#4F81BC",
-            labelFontColor: "#4F81BC"
+            labelFontColor: "#4F81BC",
+            minimum: 0
         },
         axisY2: {
-            title: "VNĐ",
-            suffix: "VNĐ",
+            title: "",
+            suffix: "",
             lineColor: "#C0504E",
             tickColor: "#C0504E",
-            labelFontColor: "#C0504E"
+            labelFontColor: "#C0504E",
+            minimum: 0
         },
         data: [{
             type: "column",
@@ -124,8 +126,8 @@ function createChartMonthly(list, name,title) {
         dps.push({ label: chart.data[0].dataPoints[i].label, y: y });
     }
 
-    chart.addTo("data", { type: "line", yValueFormatString: "#,###.00VNĐ", dataPoints: dps });
+    chart.addTo("data", { type: "line", yValueFormatString: "#,###.00 VNĐ", dataPoints: dps });
     chart.data[1].set("axisYType", "secondary", false);
-    chart.axisY[0].set("maximum", yTotal);
-    chart.axisY2[0].set("maximum", yTotal);
+    chart.axisY[0].set("maximum", yTotal*1.1);
+    chart.axisY2[0].set("maximum", yTotal*1.1);
 }

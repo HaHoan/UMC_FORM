@@ -517,6 +517,7 @@
 
                                 <tr height="100px">
                                     @{
+
                                         foreach (var sig in signatures)
                                         {
                                             <td>
@@ -529,83 +530,29 @@
 
                                                     </div>
                                                 }
+
                                             </td>
+                                        }
+                                        if (signatures.Count < 7)
+                                        {
+                                            for (var i = signatures.Count; i < 8; i++)
+                                            {
+                                                <td class="p-2 text-center crossed" style="vertical-align: middle;">
+                                                    @*<i class="fas fa-times text-danger " style="font-size:70px;"></i>*@
+                                                    <svg>
+                                                        <line x1="0" y1="0" x2="100%" y2="100%" />
+                                                    </svg>
+                                                </td>
+                                            }
                                         }
 
                                     }
 
 
                                 </tr>
-                                @*<tr height="100px">
-                                        @{
-                                            for (int i = 0; i < 8; i++)
-                                            {
-                                                <td>
-                                                    @if (!string.IsNullOrEmpty(@ViewBag.signature[i]))
-                                                    {
-                                                        <div class="rubber_stamp">
-                                                            <p>UMC-VN</p>
-                                                            <p>@ViewBag.dateSignatures[i]</p>
-                                                            <p>@ViewBag.signature[i]</p>
-
-                                                        </div>
-                                                    }
-                                                </td>
-                                            }
-                                        }
-
-
-                                    </tr>*@
+                             
                             </tbody>
-                            @*}
-                                else
-                                {
-                                    <thead>
-                                        <tr>
-                                            <th class="font-italic lang" key="apply" rowspan="2">Người đề xuất </th>
-                                            <th class="font-italic lang" key="dept-manager" rowspan="2">Trưởng phòng</th>
-                                            <th class="font-italic lang" key="bc-dept" rowspan="2">Phòng BC</th>
-                                            <th class="font-italic lang" key="asset-center" rowspan="2">Qly tài sản</th>
-                                            <th class="font-italic lang" key="factory-manager" rowspan="2">Giám đốc xưởng</th>
-                                            <th class="font-italic lang" key="general-director" rowspan="2">Tổng giám đốc</th>
-                                            <th class="font-italic lang" key="purchasing-dept">Người duyệt</th>
-                                            <th class="font-italic lang" key="Recieve_check" colspan="2">7. Receive Check</th>
-
-                                        </tr>
-                                        <tr>
-                                            <th class="font-italic lang" key="purchasing-dept-detail">Người duyệt</th>
-                                            <th class="font-italic lang" key="applicant">Applicant</th>
-                                            <th class="font-italic lang" key="asset-center-recive-check">
-                                                Asset Center
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-
-                                        <tr height="100px">
-                                            @{
-                                                foreach (var sig in signatures)
-                                                {
-                                                    <td>
-                                                        @if (!string.IsNullOrEmpty(sig.signature))
-                                                        {
-                                                            <div class="rubber_stamp">
-                                                                <p>UMC-VN</p>
-                                                                <p>@sig.signature</p>
-                                                                <p>@sig.date</p>
-
-                                                            </div>
-                                                        }
-                                                    </td>
-                                                }
-
-                                            }
-
-
-                                        </tr>
-                                    </tbody>
-                                }*@
+                           
                         </table>
                     </div>
 

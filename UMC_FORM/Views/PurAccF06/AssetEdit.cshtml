@@ -15,11 +15,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Dashboard - SB Admin</title>
+    <title>PUR Update</title>
     <link href="~/Content/css/styles.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <style type="text/css">
+        .loadImg {
+            position: fixed;
+            z-index: 999;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            background-color: Black;
+            filter: alpha(opacity=60);
+            opacity: 0.6;
+            display: none;
+            -moz-opacity: 0.8;
+        }
+
+        .center {
+            z-index: 1000;
+            margin: 50px auto;
+            padding: 10px;
+            width: 130px;
+            background-color: White;
+            border-radius: 10px;
+            filter: alpha(opacity=100);
+            opacity: 1;
+            -moz-opacity: 1;
+        }
+
+        .centerimg {
+            height: 128px;
+            width: 128px;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed container-fluid">
@@ -28,10 +60,18 @@
     <div>
         <div>
             <div>
-                @using (Html.BeginForm("Edit", "PurAccF06", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @*@using (Html.BeginForm("AssetEdit", "PurAccF06", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {*@
+                @using (Ajax.BeginForm("AssetEditAsync", "PurAccF06", new AjaxOptions
+                {
+                    OnSuccess = "OnSuccess",
+                    OnFailure = "OnFailure",
+                    LoadingElementId = "progress"
+                }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(m => m.TICKET)
+
                     <div class="modal-body">
                         <div>
                             <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
@@ -212,7 +252,7 @@
 
                                                 <td>
                                                     @Html.Hidden("UNIT_PRICE_" + i)
-                                                    <input id=@("UNIT_PRICE_"+i+"_VIEW") name=@("UNIT_PRICE_"+i+"_VIEW") class="form-input type_number inputDefault" />
+                                                    <input id=@("UNIT_PRICE_"+i+"_VIEW") name=@("UNIT_PRICE_"+i+"_VIEW") class="form-input type_number inputDefault" readonly />
                                                 </td>
                                                 <td>
                                                     @*<input class="form-input type_number text-center" name=@("QTY_"+i) id=@("QTY_"+i) />*@
@@ -230,16 +270,16 @@
 
                                                 <td>
                                                     <div class="form-inline">
-                                                        <input type="radio" name=@("OWNER_OF_ITEM_"+i) value="u" checked>
-                                                        <label for="u">U</label>
-                                                        <input type="radio" name=@("OWNER_OF_ITEM_"+i) value="c" class="ml-2">
-                                                        <label for="c">C</label>
+                                                        @Html.RadioButton("OWNER_OF_ITEM_" + i, "u")
+                                                        <label for="u" class="ml-2">U</label>
+                                                        @Html.RadioButton("OWNER_OF_ITEM_" + i, "c", new { @class = "ml-4" })
+                                                        <label for="c" class="ml-1">C</label>
                                                     </div>
                                                 </td>
 
                                                 <td>
                                                     @*<input name=@("COST_CENTER_"+i) id=@("COST_CENTER_"+i) class="form-input" readonly="readonly" />*@
-                                                    @Html.TextBox("COST_CENTER_" + i, null, new { @class = "form-input inputDefault", @readonly = "readonly" })
+                                                    @Html.TextBox("COST_CENTER_" + i, null, new { @class = "form-input inputDefault" })
                                                 </td>
 
                                                 <td>
@@ -249,15 +289,15 @@
                                                             <input type="radio" name=@("AK_"+i) value="k" class="ml-2">
                                                             <label for="k">K</label>
                                                         </div>*@
-                                                    @Html.TextBox("AK_" + i, null, new { @class = "form-input text-uppercase inputDefault", @readonly = "readonly" })
+                                                    @Html.TextBox("AK_" + i, null, new { @class = "form-input text-uppercase inputDefault" })
                                                 </td>
                                                 <td>
                                                     @* <input name=@("ACOUNT_CODE_"+i) id=@("ACOUNT_CODE_"+i) class="form-input" />*@
-                                                    @Html.TextBox("ACOUNT_CODE_" + i, null, new { @class = "form-input inputDefault", @readonly = "readonly" })
+                                                    @Html.TextBox("ACOUNT_CODE_" + i, null, new { @class = "form-input inputDefault" })
                                                 </td>
                                                 <td>
                                                     @*<input name=@("ASSET_NO_"+i) id=@("ACOUNT_CODE_"+i) class="form-input" />*@
-                                                    @Html.TextBox("ASSET_NO_" + i, null, new { @class = "form-input inputDefault", @readonly = "readonly" })
+                                                    @Html.TextBox("ASSET_NO_" + i, null, new { @class = "form-input inputDefault" })
                                                 </td>
 
                                                 <td></td>
@@ -337,49 +377,48 @@
                                 </div>
                             </div>
                             <div class="col-7 " id="customer-checkout-info">
-                                Yêu cầu như thế nào ( cho vào đơn giá bán hàng , hay yêu cầu DN …)
+                                Yêu cầu như thế nào (cho vào đơn giá bán hàng, hay yêu cầu DN …)
                                 <br>
                                 @*<textarea class="form-control" rows="2"></textarea>*@
                                 @Html.TextAreaFor(m => m.CUS_PAY_REMARK, new { @class = "form-control", @rows = "2", @readonly = "readonly" })
                             </div>
                         </div>
+                        <div class="row mt-2">
+
+                            @*<p class="font-weight-bold lang" key="attach">File đính kèm. </p>*@
+                            <button type="button" class="btn btn-warning font-weight-bold lang" key="attach">**File đính kèm**</button>
+
+                        </div>
                         @if (Model.FILE_PATH_1 != null)
                         {
                             <div class="row mt-2">
-                                <a target="_blank" href="@Model.FILE_PATH_1">@Html.DisplayFor(m => m.FILE_NAME_1)</a>
+                                <a target="_blank" class="badge badge-danger" href="@Model.FILE_PATH_1">@Html.DisplayFor(m => m.FILE_NAME_1)</a>
                             </div>
                         }
                         @if (Model.FILE_PATH_2 != null)
                         {
                             <div class="row mt-2">
-                                <a target="_blank" href="@Model.FILE_PATH_2">@Html.DisplayFor(m => m.FILE_NAME_2)</a>
+                                <a target="_blank" class="badge badge-danger" href="@Model.FILE_PATH_2">@Html.DisplayFor(m => m.FILE_NAME_2)</a>
                             </div>
                         }
                         @if (Model.FILE_PATH_3 != null)
                         {
                             <div class="row mt-2">
-                                <a target="_blank" href="@Model.FILE_PATH_3">@Html.DisplayFor(m => m.FILE_NAME_3)</a>
+                                <a target="_blank" class="badge badge-danger" href="@Model.FILE_PATH_3">@Html.DisplayFor(m => m.FILE_NAME_3)</a>
                             </div>
                         }
                         @if (Model.FILE_PATH_4 != null)
                         {
                             <div class="row mt-2">
-                                <a target="_blank" href="@Model.FILE_PATH_4">@Html.DisplayFor(m => m.FILE_NAME_4)</a>
+                                <a target="_blank" class="badge badge-danger" href="@Model.FILE_PATH_4">@Html.DisplayFor(m => m.FILE_NAME_4)</a>
                             </div>
                         }
                         @if (Model.FILE_PATH_5 != null)
                         {
                             <div class="row mt-2">
-                                <a target="_blank" href="@Model.FILE_PATH_5">@Html.DisplayFor(m => m.FILE_NAME_5)</a>
+                                <a target="_blank" class="badge badge-danger" href="@Model.FILE_PATH_5">@Html.DisplayFor(m => m.FILE_NAME_5)</a>
                             </div>
                         }
-                        <div class="row mt-2">
-                            <div class="form-inline">
-                                @*<p class="font-weight-bold lang" key="attach">File đính kèm</p>*@
-                                <button type="button" class="btn btn-warning font-weight-bold lang" key="attach">**File đính kèm**</button>
-                                <input type="file" name="fileAttach" class="ml-3" multiple>
-                            </div>
-                        </div>
                         <div id="contextMenu" class="dropdown clearfix">
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
                                 style="display:block;position:static;margin-bottom:5px;">
@@ -393,23 +432,25 @@
 
 
                     </div>
+
                     <div class="row">
                         <div class="col-3"></div>
                         <div class="col">
-                            <button class="btn btn-danger col lang" key="cancel" id="btnCancel">Hủy</button>
+                            <button class="btn btn-danger col lang" key="cancel" id="btnCancel">Từ chối</button>
                         </div>
                         <div class="col">
                             <button class="btn btn-success col lang" key="create" type="submit">Đề xuất</button>
                         </div>
+                        @*<button type="button" id="btnCancel" class="btn btn-danger col-3 lang" key="cancel" width="100px">Hủy</button>
+                            <button class="btn btn-success col-3 lang" key="create" type="submit">Đề xuất</button>*@
                     </div>
-                    @*<div class="row form-inline m-5">
-                            <div class="col-5"></div>
-                            <button type="button" id="btnCancel" class="btn btn-danger col-3 lang" key="cancel" width="100px">Hủy</button>
-                            <div class="col-1"></div>
-                            <button class="btn btn-success col-3 lang" key="create" type="submit">Đề xuất</button>
-                        </div>*@
                     <br>
                 }
+                <div id="progress" class="loadImg">
+                    <div class="center">
+                        <img src="~/Content/images/loader4.gif" />
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -418,20 +459,43 @@
         $("#btnCancel").click(function () {
             location.href = '@Url.Action("Index", "Home", new { type = @SendType.SENDTOME })'
         })
+        function OnSuccess(response) {
+            //alert(response);
+            location.href = '@Url.Action("Index", "Home", new { type = @SendType.SENDTOME })'
+        }
+        function OnFailure(response) {
+            alert("Error occured.");
+        }
     </script>
-    <script src="~/Scripts/jquery-3.6.0.slim.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-            crossorigin="anonymous"></script>
+    @*<script src="~/Scripts/jquery-3.6.0.slim.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+                crossorigin="anonymous"></script>
+        <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+        <script src="~/Content/js/mention.js"></script>
+        <script src="~/Content/js/moment.js"></script>
+        <script src="~/Content/js/jquery.simplePagination.js"></script>
+        <script type="text/javascript" src="~/Content/js/bootstrap-typeahead.js"></script>
+        <script type="text/javascript" src="~/Content/js/mention.js"></script>
+        <script src="~/Content/js/form_common.js"></script>
+        <script src="~/Content/js/form_edit.js"></script>
+        <script src="~/Content/js/scripts.js"></script>
+        <script src="~/Content/js/lang.js"></script>*@
+
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-    <script src="~/Content/js/mention.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <script src="~/Content/js/moment.js"></script>
     <script src="~/Content/js/jquery.simplePagination.js"></script>
-    <script type="text/javascript" src="~/Content/js/bootstrap-typeahead.js"></script>
-    <script type="text/javascript" src="~/Content/js/mention.js"></script>
-    <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/form_edit.js"></script>
+    <script src="~/Content/js/pagination.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <script src="~/Content/assets/demo/datatables-demo.js"></script>
+    <script src="~/Content/js/bootstrap-typeahead.js"></script>
+    <script src="~/Content/js/mention.js"></script>
     <script src="~/Content/js/scripts.js"></script>
     <script src="~/Content/js/lang.js"></script>
+    <script src="~/Content/js/form_common.js"></script>
+    <script src="~/Content/js/form.js"></script>
+    <script src="~/Content/js/form_edit.js"></script>
 </body>
 
 </html>

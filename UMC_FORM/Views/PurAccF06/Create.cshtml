@@ -415,7 +415,6 @@
         })
 
         function OnSuccess(response) {
-            alert(response);
             location.href = '@Url.Action("Index", "Home", new { type = @SendType.SENDTOME })'
         }
         function OnFailure(response) {

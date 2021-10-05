@@ -16,15 +16,8 @@ namespace UMC_FORM.Controllers
         // GET: Summary
         public ActionResult Index()
         {
-            DateTime now = DateTime.Now;
-            var allForm = PurAccF06Repository.GetFormsByUser("YOKOUCHI", true);
-            var total = GetMoney(allForm);
-            DateTime timeBefore = new DateTime(now.Year, now.Month, 1);
-            DateTime timeAfter = timeBefore.AddMonths(1);
-            var allFormMonth = allForm.Where(r => r.UPD_DATE > timeBefore && r.UPD_DATE < timeAfter).ToList();
-            var totalMonth = GetMoney(allFormMonth);
-            ViewBag.total = string.Format("{0:n0}", total);
-            ViewBag.totalMonth = string.Format("{0:n0}", totalMonth);
+            var session = Session["user"] as Form_User;
+            if (session.CODE != Constant.GD.ToLower()) return RedirectToAction("Index", "Home");
             return View();
         }
         public decimal? GetMoney(List<PR_ACC_F06> lst)
