@@ -518,41 +518,47 @@
                                 <tr height="100px">
                                     @{
 
-                                        foreach (var sig in signatures)
+                                        var total = 8;
+                                        if (summary.PROCESS_ID == "F06-PR-ACC-03-01-BC")
                                         {
-                                            <td>
-                                                @if (!string.IsNullOrEmpty(sig.signature))
-                                                {
+                                            total = 9;
+                                        }
+                                        for (var i = 0; i < total; i++)
+                                        {
+                                            if (signatures.Count > i && !string.IsNullOrEmpty(signatures[i].signature))
+                                            {
+                                                <td>
                                                     <div class="rubber_stamp">
                                                         <p>UMC-VN</p>
-                                                        <p>@sig.signature</p>
-                                                        <p>@sig.date</p>
+                                                        <p>@signatures[i].signature</p>
+                                                        <p>@signatures[i].date</p>
 
                                                     </div>
-                                                }
-
-                                            </td>
-                                        }
-                                        if (signatures.Count < 7)
-                                        {
-                                            for (var i = signatures.Count; i < 8; i++)
+                                                </td>
+                                            }
+                                            else if (summary.LAST_INDEX == 4 && i > 4)
                                             {
                                                 <td class="p-2 text-center crossed" style="vertical-align: middle;">
-                                                    @*<i class="fas fa-times text-danger " style="font-size:70px;"></i>*@
                                                     <svg>
                                                         <line x1="0" y1="0" x2="100%" y2="100%" />
                                                     </svg>
                                                 </td>
                                             }
+                                            else
+                                            {
+                                                <td></td>
+                                            }
+
+
                                         }
 
                                     }
 
 
                                 </tr>
-                             
+
                             </tbody>
-                           
+
                         </table>
                     </div>
 
