@@ -492,18 +492,21 @@
                                 {*@
                             <thead>
                                 <tr>
-                                    <th class="font-italic lang" key="apply" rowspan="2">Người đề xuất </th>
-                                    <th class="font-italic lang" key="dept-manager" rowspan="2">Trưởng phòng</th>
+                                    @{
+                                        var index = 1;
+                                    }
+                                    <th class="font-italic" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="apply"></span></th>
+                                   
+                                    <th class="font-italic" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="dept-manager"></span></th>
                                     @if (summary.PROCESS_ID == "F06-PR-ACC-03-01-BC")
                                     {
-                                        <th class="font-italic lang" key="bc-dept" rowspan="2">Phòng BC</th>
+                                        <th class="font-italic lang" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="bc-dept"></span></th>
                                     }
-                                    <th class="font-italic lang" key="asset-center" rowspan="2">Qly tài sản</th>
-                                    <th class="font-italic lang" key="factory-manager" rowspan="2">Giám đốc xưởng</th>
-                                    <th class="font-italic lang" key="general-director" rowspan="2">Tổng giám đốc</th>
-                                    <th class="font-italic lang" key="purchasing-dept">Người duyệt</th>
-                                    <th class="font-italic lang" key="Recieve_check" colspan="2">7. Receive Check</th>
-
+                                    <th class="font-italic lang" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="asset-center"></span></th>
+                                    <th class="font-italic lang" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="factory-manager"></span></th>
+                                    <th class="font-italic lang" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="general-director"></span></th>
+                                    <th class="font-italic lang"><span>@(index++ + ". ")</span><span class="lang" key="purchasing-dept"></span></th>
+                                    <th class="font-italic lang" colspan="2"><span>@(index++ + ". ")</span><span class="lang" key="Receive_check"></span></th>
                                 </tr>
                                 <tr>
                                     <th class="font-italic lang" key="purchasing-dept-detail">Người duyệt</th>
@@ -536,7 +539,7 @@
                                                     </div>
                                                 </td>
                                             }
-                                            else if (summary.LAST_INDEX == 4 && i > 4)
+                                            else if (summary.LAST_INDEX == 4 && i > (total - 4))
                                             {
                                                 <td class="p-2 text-center crossed" style="vertical-align: middle;">
                                                     <svg>

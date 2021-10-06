@@ -233,7 +233,7 @@
                             <label class="font-weight-bold lang" key="received-date">Target date</label>
                         </div>
                         <div class="col-9">
-                            <input class="form-control" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                            <input class="form-control" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd") readonly>
                         </div>
                     </div>
                     <br />
@@ -243,7 +243,7 @@
                             <p class="font-italic">(After get approval from GD)</p>
                         </div>
                         <div class="col-9">
-                            <input class="form-control" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                            <input class="form-control" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd") readonly>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -270,25 +270,25 @@
                                     {
                                         <tr class="row-info">
                                             <td>@(i)</td>
-                                            <td>  <input class="form-input inputDefault" name=@("ITEM_NAME_"+i) /></td>
+                                            <td>  <input class="form-input inputDefault" name=@("ITEM_NAME_"+i) readonly/></td>
 
                                             <td>
                                                 <input class="form-input type_number inputDefault" type="hidden" name=@("QTY_"+i) id=@("QTY_HIDDEN_"+i) />
-                                                <input class="form-input type_number inputDefault" id=@("QTY_"+i) />
+                                                <input class="form-input type_number inputDefault" id=@("QTY_"+i) readonly/>
                                             </td>
                                             <td>
-                                                <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_"+i) />
+                                                <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_"+i) readonly/>
                                                 <input class="form-input type_number inputDefault" type="hidden" id=@("UNIT_PRICE_LCA_HIDDEN_"+i) />
                                             </td>
                                             <td>
-                                                <input class="form-input type_number inputDefault" id=@("TOTAL_LCA_"+i) />
+                                                <input class="form-input type_number inputDefault" id=@("TOTAL_LCA_"+i) readonly/>
                                                 <input class="form-input type_number inputDefault" type="hidden" id=@("TOTAL_LCA_HIDDEN_"+i) />
                                             </td>
                                             <td>
-                                                <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_"+i) />
+                                                <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_"+i) readonly/>
 
                                             </td>
-                                            <td> <input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_"+i) /></td>
+                                            <td> <input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_"+i) readonly/></td>
                                         </tr>
                                     }
                                 }
@@ -329,7 +329,7 @@
                     </div>
                     <div class="row ml-1">
                         <p class="font-italic text-underline">Comment</p>
-                        <textarea class="form-control" rows="3"></textarea>
+                        <textarea class="form-control" rows="3" readonly></textarea>
                     </div>
                     <br />
 

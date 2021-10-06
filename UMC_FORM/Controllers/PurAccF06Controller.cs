@@ -20,6 +20,7 @@ namespace UMC_FORM.Controllers
 {
     [CustomAuthFilter]
     [CustomAuthorize("Normal")]
+    [NoCache]
     public class PurAccF06Controller : Controller
     {
         private DataContext db = new DataContext();

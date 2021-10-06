@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
 
 namespace UMC_FORM.Authentication
@@ -12,14 +13,10 @@ namespace UMC_FORM.Authentication
         {
             if (filterContext == null) throw new ArgumentNullException("filterContext");
 
-            var cache = GetCache(filterContext);
-
-            cache.SetExpires(DateTime.UtcNow.AddDays(-1));
-            cache.SetValidUntilExpires(false);
-            cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
-            cache.SetCacheability(HttpCacheability.NoCache);
-            cache.SetNoStore();
-
+            foreach (System.Collections.DictionaryEntry entry in HttpContext.Current.Cache)
+            {
+                HttpContext.Current.Cache.Remove((string)entry.Key);
+            }
             base.OnResultExecuting(filterContext);
         }
 
