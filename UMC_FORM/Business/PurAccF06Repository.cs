@@ -98,9 +98,10 @@ namespace UMC_FORM.Business
                         context.Database.Log = Console.Write;
                         #region Save Summary
                         var summary = context.Form_Summary.FirstOrDefault(r => r.TICKET == entity.TICKET);
+                        var maxIndex = context.Form_Process.Where(r => r.FORM_NAME == summary.PROCESS_ID).Max(h => h.FORM_INDEX);
                         summary.PROCEDURE_INDEX = entity.PROCEDURE_INDEX;
                         summary.UPD_DATE = entity.UPD_DATE;
-                        summary.IS_FINISH = entity.PROCEDURE_INDEX == 7;
+                        summary.IS_FINISH = entity.PROCEDURE_INDEX == maxIndex;
                         context.Entry<Form_Summary>(summary).State = EntityState.Modified;
                         context.SaveChanges();
                         #endregion

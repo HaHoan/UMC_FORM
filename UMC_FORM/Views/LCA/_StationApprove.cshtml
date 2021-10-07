@@ -4,10 +4,12 @@
     <table class="table table-bordered ">
         <thead>
             <tr>
-              
+              @{ 
+                  var i = 1;
+              }
                 @foreach (var station in Model)
                 {
-                    <th class="font-italic lang" key="GD_approve" rowspan="2">@station.STATION_NAME</th>
+                    <th class="font-italic lang"  rowspan="2"><span>@(i++ + ". ")</span><span class="lang" key="@station.STATION_NAME">@station.STATION_NAME</span></th>
                 }
             </tr>
 

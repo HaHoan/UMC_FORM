@@ -45,186 +45,186 @@
                     <hr>
                     @Html.ValidationMessage("Error")
 
-                    @*<span class="field-validation-error" data-valmsg-for="Error" data-valmsg-replace="true"></span>*@
-
                     <h5 class="text-uppercase lang mb-4 font-weight-bold" key="req-dept">THÔNG TIN SẢN PHẨM</h5>
-                    <div class="row">
-                        <div class="col-3">
-                            <label class="font-weight-bold lang" key="request-date">Request date</label>
+                    <div class="info-edit">
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="request-date">Request date</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" type="date" name="REQUEST_DATE" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                            </div>
                         </div>
-                        <div class="col-9">
-                            <input class="form-control" type="date" name="REQUEST_DATE" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                        <br />
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="target-date">Target date</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" type="date" name="TARGET_DATE" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                            </div>
                         </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-3">
-                            <label class="font-weight-bold lang" key="target-date">Target date</label>
+                        <br>
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="request_dept">Request Dept</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="text" class="form-control" value="@_session.DEPT" name="DEPT" readonly="readonly" />
+                            </div>
                         </div>
-                        <div class="col-9">
-                            <input class="form-control" type="date" name="TARGET_DATE" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                        <br>
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="name">Name</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="text" class="form-control" value="@_session.NAME" readonly="readonly">
+                            </div>
                         </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-3">
-                            <label class="font-weight-bold lang" key="request_dept">Request Dept</label>
-                        </div>
-                        <div class="col-9">
-                            <input type="text" class="form-control" value="@_session.DEPT" name="DEPT" readonly="readonly" />
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-3">
-                            <label class="font-weight-bold lang" key="name">Name</label>
-                        </div>
-                        <div class="col-9">
-                            <input type="text" class="form-control" value="@_session.NAME" readonly="readonly">
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <table class="table table-bordered border ">
-                            <tr class="font-weight-bold">
-                                <td class="p-2"><label class="font-weight-bold lang text-left" key="target-supply">Loại Supply *</label></td>
-                                <td class="text-center p-2">活人</td>
-                                <td class="text-center p-2" colspan="2">必要物(ない場合、生産不可能）</td>
-                                <td class="text-center p-2" colspan="2">品質&５S改善</td>
-                                <td class="text-center p-2" colspan="2">NGチェンジ</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2" rowspan="2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="type-jip-supply">Phân loại Jip</label></td>
-                                <td class="text-center p-2 lang" key="increase_productivity">Tăng năng xuất</td>
-                                <td class="text-center p-2 lang" key="new_model">Model mới</td>
-                                <td class="text-center p-2 lang" key="incre_prod">Do tăng sản lượng</td>
-                                <td class="text-center p-2 lang" key="quantity">Cải tiếng chất lượng</td>
-                                <td class="text-center p-2 lang" key="5s">5S改善</td>
-                                <td class="text-center p-2 lang" key="ngjig" colspan="2">5S改善</td>
+                        <br>
+                        <div class="row">
+                            <table class="table table-bordered border ">
+                                <tr class="font-weight-bold">
+                                    <td class="p-2"><label class="font-weight-bold lang text-left" key="target-supply">Loại Supply *</label></td>
+                                    <td class="text-center p-2">活人</td>
+                                    <td class="text-center p-2" colspan="2">必要物(ない場合、生産不可能）</td>
+                                    <td class="text-center p-2" colspan="2">品質&５S改善</td>
+                                    <td class="text-center p-2" colspan="2">NGチェンジ</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2" rowspan="2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="type-jip-supply">Phân loại Jip</label></td>
+                                    <td class="text-center p-2 lang" key="increase_productivity">Tăng năng xuất</td>
+                                    <td class="text-center p-2 lang" key="new_model">Model mới</td>
+                                    <td class="text-center p-2 lang" key="incre_prod">Do tăng sản lượng</td>
+                                    <td class="text-center p-2 lang" key="quantity">Cải tiếng chất lượng</td>
+                                    <td class="text-center p-2 lang" key="5s">5S改善</td>
+                                    <td class="text-center p-2 lang" key="ngjig" colspan="2">5S改善</td>
 
-                            </tr>
-                            <tr>
-                                <td class="text-center p-2"><input type="checkbox" id="select_target_1" value="increase_productivity" /></td>
-                                <td class="text-center p-2"><input type="checkbox" id="select_target_2" value="new_model" /></td>
-                                <td class="text-center p-2"><input type="checkbox" id="select_target_3" value="incre_prod" /></td>
-                                <td class="text-center p-2"><input type="checkbox" id="select_target_4" value="quantity" /></td>
-                                <td class="text-center p-2"><input type="checkbox" id="select_target_5" value="5s" /></td>
-                                <td class="text-center p-2" colspan="2">
-                                    <input type="checkbox" id="select_target_6" value="ngjig" />
-                                    <input type="hidden" name="REQUEST_TARGET" />
-                                </td>
-                                <script>
-                                    $(function () {
-                                        $('input[id^="select_target_"').change(function () {
-                                            var target = "";
-                                            for (var i = 1; i <= 5; i++) {
-                                                if ($('#select_target_' + i).prop('checked') == true) {
-                                                    target += $('#select_target_' + i).val() + ','
+                                </tr>
+                                <tr>
+                                    <td class="text-center p-2"><input type="checkbox" id="select_target_1" value="increase_productivity" /></td>
+                                    <td class="text-center p-2"><input type="checkbox" id="select_target_2" value="new_model" /></td>
+                                    <td class="text-center p-2"><input type="checkbox" id="select_target_3" value="incre_prod" /></td>
+                                    <td class="text-center p-2"><input type="checkbox" id="select_target_4" value="quantity" /></td>
+                                    <td class="text-center p-2"><input type="checkbox" id="select_target_5" value="5s" /></td>
+                                    <td class="text-center p-2" colspan="2">
+                                        <input type="checkbox" id="select_target_6" value="ngjig" />
+                                        <input type="hidden" name="REQUEST_TARGET" />
+                                    </td>
+                                    <script>
+                                        $(function () {
+                                            $('input[id^="select_target_"').change(function () {
+                                                var target = "";
+                                                for (var i = 1; i <= 5; i++) {
+                                                    if ($('#select_target_' + i).prop('checked') == true) {
+                                                        target += $('#select_target_' + i).val() + ','
+                                                    }
                                                 }
-                                            }
-                                            if (target.length > 0) {
-                                                target = target.substring(0, target.length - 1)
-                                            }
+                                                if (target.length > 0) {
+                                                    target = target.substring(0, target.length - 1)
+                                                }
 
-                                            $('input[name="REQUEST_TARGET"').val(target)
+                                                $('input[name="REQUEST_TARGET"').val(target)
+                                            })
+
                                         })
 
+                                    </script>
+                                </tr>
+
+                                <tr class="font-weight-bold">
+                                    <td class="p-2" rowspan="5" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="uoc_luong_hieu_qua">Phân loại Jip</label></td>
+                                    <td class="text-center p-2 lang" colspan="2" key="reduce_staff">Tăng năng xuất</td>
+                                    <td class="text-center p-2 lang" colspan="3" key="hieu_qua_cai_tien_chat_luong">Tăng năng xuất</td>
+                                    <td class="text-center p-2 lang" key="tiet_kiem_chi_phi" colspan="2">Tăng năng xuất</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3" style="vertical-align: middle;"><input class="form-input type_number text-center" style="font-size:15px;" rows="4" name="DECREASE_PERSON" required></td>
+                                    <td style="vertical-align: middle;" class="text-center font-weight-bold" rowspan="3">人/月</td>
+                                    <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="noi_dung_loi">Phân loại Jip</label></td>
+                                    <td colspan="2" style="vertical-align: middle;"><input class="form-input" rows="4" name="CONTENT_ERROR" required></td>
+                                    <td rowspan="3" style="vertical-align: middle;"><input class="form-input type_number text-center" style="font-size:15px;" rows="4" name="COST_SAVING" required></td>
+                                    <td rowspan="3" style="vertical-align: middle;" class="text-center font-weight-bold">USD/月</td>
+
+                                </tr>
+                                <tr>
+                                    <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="ty_le_loi">Phân loại Jip</label></td>
+                                    <td colspan="2"><input class="form-input" rows="4" name="ERROR_RATE_CURRENT" required></td>
+
+                                </tr>
+                                <tr>
+                                    <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="hieu_qua_cai_tien">Phân loại Jip</label></td>
+                                    <td colspan="2"><input class="form-input" rows="4" name="IMPROVED_EFICIENCY" required></td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold text-center">Other:</td>
+                                    <td colspan="6"><input class="form-input" name="OTHER" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2">
+                                        <label class="font-weight-bold lang" key="chi_tra">Name</label>
+                                    </td>
+                                    <td colspan="7" class="p-2">
+                                        <label for="customer" class="lang mr-2" key="khach_hang"></label>
+                                        <input id="customer" type="checkbox" value="Customer">
+                                        <label for="umcvn" class="lang mr-2 ml-5" key="">UMCVN</label>
+                                        <input id="umcvn" type="checkbox" value="UMCVN">
+                                        <input type="hidden" name="PAYER" />
+                                    </td>
+
+                                </tr>
+
+                            </table>
+                            <script>
+                                $(function () {
+                                    $('#customer').change(function () {
+                                        if ($('#customer').prop('checked') == true) {
+                                            $('#umcvn').prop('checked', false);
+
+                                            $('input[name="PAYER"]').val($('#customer').val())
+                                        }
+                                    })
+                                    $('#umcvn').change(function () {
+                                        if ($('#umcvn').prop('checked') == true) {
+                                            $('#customer').prop('checked', false);
+                                            $('input[name="PAYER"]').val($('#umcvn').val())
+                                        }
                                     })
 
-                                </script>
-                            </tr>
-
-                            <tr class="font-weight-bold">
-                                <td class="p-2" rowspan="5" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="uoc_luong_hieu_qua">Phân loại Jip</label></td>
-                                <td class="text-center p-2 lang" colspan="2" key="reduce_staff">Tăng năng xuất</td>
-                                <td class="text-center p-2 lang" colspan="3" key="hieu_qua_cai_tien_chat_luong">Tăng năng xuất</td>
-                                <td class="text-center p-2 lang" key="tiet_kiem_chi_phi" colspan="2">Tăng năng xuất</td>
-                            </tr>
-                            <tr>
-                                <td rowspan="3" style="vertical-align: middle;"><input class="form-input type_number text-center" style="font-size:15px;" rows="4" name="DECREASE_PERSON" required></td>
-                                <td style="vertical-align: middle;" class="text-center font-weight-bold" rowspan="3">人/月</td>
-                                <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="noi_dung_loi">Phân loại Jip</label></td>
-                                <td colspan="2" style="vertical-align: middle;"><input class="form-input" rows="4" name="CONTENT_ERROR" required></td>
-                                <td rowspan="3" style="vertical-align: middle;"><input class="form-input type_number text-center" style="font-size:15px;" rows="4" name="COST_SAVING" required></td>
-                                <td rowspan="3" style="vertical-align: middle;" class="text-center font-weight-bold">USD/月</td>
-
-                            </tr>
-                            <tr>
-                                <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="ty_le_loi">Phân loại Jip</label></td>
-                                <td colspan="2"><input class="form-input" rows="4" name="ERROR_RATE_CURRENT" required></td>
-
-                            </tr>
-                            <tr>
-                                <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="hieu_qua_cai_tien">Phân loại Jip</label></td>
-                                <td colspan="2"><input class="form-input" rows="4" name="IMPROVED_EFFICIENCY" required></td>
-                            </tr>
-                            <tr>
-                                <td class="font-weight-bold text-center">Other:</td>
-                                <td colspan="6"><input class="form-input" name="OTHER" /></td>
-                            </tr>
-                            <tr>
-                                <td class="p-2">
-                                    <label class="font-weight-bold lang" key="chi_tra">Name</label>
-                                </td>
-                                <td colspan="7" class="p-2">
-                                    <label for="customer" class="lang mr-2" key="khach_hang"></label>
-                                    <input id="customer" type="checkbox" value="Customer">
-                                    <label for="umcvn" class="lang mr-2 ml-5" key="">UMCVN</label>
-                                    <input id="umcvn" type="checkbox" value="UMCVN">
-                                    <input type="hidden" name="PAYER" />
-                                </td>
-
-                            </tr>
-
-                        </table>
-                        <script>
-                            $(function () {
-                                $('#customer').change(function () {
-                                    if ($('#customer').prop('checked') == true) {
-                                        $('#umcvn').prop('checked', false);
-
-                                        $('input[name="PAYER"]').val($('#customer').val())
-                                    }
-                                })
-                                $('#umcvn').change(function () {
-                                    if ($('#umcvn').prop('checked') == true) {
-                                        $('#customer').prop('checked', false);
-                                        $('input[name="PAYER"]').val($('#umcvn').val())
-                                    }
                                 })
 
-                            })
-
-                        </script>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="lang" key="doi_tuong_ap_dung"></div>
-
+                            </script>
                         </div>
-                        <div class="col ">
-                            <span>PCB</span>
-                            <input class=" ml-2 border-bottom" style="border:none;" name="PCB" required />
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
+                        <div class="row">
+                            <div class="col">
+                                <div class="lang" key="doi_tuong_ap_dung"></div>
 
-                        <div class="col ">
-                            <span class="lang" key="khach_hang"></span>
-                            <input class=" ml-2 border-bottom" style="border:none;" name="CUSTOMER" required/>
+                            </div>
+                            <div class="col ">
+                                <span>PCB</span>
+                                <input class=" ml-2 border-bottom" style="border:none;" name="PCB" required />
+                            </div>
                         </div>
-                        <div class="col ">
-                            <span>Model</span>
-                            <input class=" ml-2 border-bottom" style="border:none;" name="MODEL" required/>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row ml-1">
-                        <p>内容■　Nội dung yêu cầu: (Phải thêm comment tiếng Anh/ tiếng Nhật)</p>
+                        <br />
+                        <div class="row">
 
-                        <p class="font-weight-bold">(MUST : Please add comment by English or Japanese)</p>
-                        <textarea class="form-control" rows="3" name="REQUEST_CONTENT" required></textarea>
+                            <div class="col ">
+                                <span class="lang" key="khach_hang"></span>
+                                <input class=" ml-2 border-bottom" style="border:none;" name="CUSTOMER" required />
+                            </div>
+                            <div class="col ">
+                                <span>Model</span>
+                                <input class=" ml-2 border-bottom" style="border:none;" name="MODEL" required />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row ml-1">
+                            <p>内容■　Nội dung yêu cầu: (Phải thêm comment tiếng Anh/ tiếng Nhật)</p>
+
+                            <p class="font-weight-bold">(MUST : Please add comment by English or Japanese)</p>
+                            <textarea class="form-control" rows="3" name="REQUEST_CONTENT" required></textarea>
+                        </div>
                     </div>
                     <hr>
                     <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">THÔNG TIN SẢN PHẨM</h5>

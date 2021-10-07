@@ -177,6 +177,7 @@
     <Compile Include="Models\Form_Dept.cs" />
     <Compile Include="Models\Form_Process.cs" />
     <Compile Include="Models\Form_ProcessName.cs" />
+    <Compile Include="Models\Form_Reject.cs" />
     <Compile Include="Models\Form_Role.cs" />
     <Compile Include="Models\Form_Stations.cs" />
     <Compile Include="Models\Form_Summary.cs" />
@@ -665,6 +666,8 @@
     <Content Include="Views\LCA\Details.cshtml" />
     <Content Include="Views\Summary\Index.cshtml" />
     <Content Include="Views\LCA\_StationApprove.cshtml" />
+    <Content Include="Views\LCA\_TicketView.cshtml" />
+    <Content Include="Views\LCA\_TicketEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

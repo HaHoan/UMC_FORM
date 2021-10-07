@@ -550,44 +550,7 @@ namespace UMC_FORM.Controllers
             return View(accept);
         }
 
-        [HttpPost]
-        public JsonResult SaveComments(string ticket, string comments)
-        {
-            var sess = Session["user"] as Form_User;
-            Form_Comment formcmt = new Form_Comment();
-            formcmt.COMMENT_DETAIL = comments;
-            formcmt.ID = Guid.NewGuid().ToString();
-            formcmt.TICKET = ticket;
-            formcmt.COMMENT_USER = sess.NAME;
-            formcmt.UPD_DATE = DateTime.Now;
-            var cmtExist = db.Form_Comment.Where(r => r.TICKET == ticket).OrderByDescending(h => h.ORDER_HISTORY).FirstOrDefault();
-            formcmt.ORDER_HISTORY = cmtExist is null ? 0 : cmtExist.ORDER_HISTORY + 1;
-            string msg = "";
-            try
-            {
-                db.Form_Comment.Add(formcmt);
-                db.SaveChanges();
-                msg = "OK";
-            }
-            catch (Exception ex)
-            {
-                msg = "Err";
-                Debug.WriteLine(ex.Message);
-            }
-
-
-
-            return Json(new { msg = msg }, JsonRequestBehavior.AllowGet);
-            //return RedirectToAction("Index", "Home");
-        }
-
-        [ActionName("GetAllComment")]
-        public JsonResult LoadComments(string ticket)
-        {
-            var formcmt = db.Form_Comment.Where(r => r.TICKET == ticket).OrderBy(t => t.ORDER_HISTORY);
-            return Json(formcmt, JsonRequestBehavior.AllowGet);
-        }
-
+     
         // GET: PurAccF06/Create
         public ActionResult Create()
         {
@@ -1167,8 +1130,8 @@ namespace UMC_FORM.Controllers
             var entities = PurAccF06Repository.GetForms(pR_ACC_F06.TICKET);
             var first = entities.OrderBy(o => o.ORDER_HISTORY).FirstOrDefault();
             var last = entities.OrderByDescending(o => o.ORDER_HISTORY).FirstOrDefault();
-            if (last.CREATE_USER != sess.CODE)
-            {
+            //if (last.CREATE_USER != sess.CODE)
+            //{
                 var entity = last.CloneObject() as PR_ACC_F06;
                 entity.COST_CENTER_1 = pR_ACC_F06.COST_CENTER_1;
                 entity.COST_CENTER_2 = pR_ACC_F06.COST_CENTER_2;
@@ -1252,7 +1215,7 @@ namespace UMC_FORM.Controllers
                     }
                     #endregion
                     //  return RedirectToAction("Index", "Home");
-                }
+                //}
             }
             return Json(message);
         }

@@ -83,7 +83,7 @@
 
                                     <!-- Modal -->
                                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
@@ -93,7 +93,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="usePur" value="false">
+                                                        <input type="checkbox" class="custom-control-input" id="usePur" value="true" checked>
                                                         <label class="custom-control-label" for="usePur">Through The PUR</label>
                                                     </div>
                                                 </div>
@@ -496,7 +496,7 @@
                                         var index = 1;
                                     }
                                     <th class="font-italic" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="apply"></span></th>
-                                   
+
                                     <th class="font-italic" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="dept-manager"></span></th>
                                     @if (summary.PROCESS_ID == "F06-PR-ACC-03-01-BC")
                                     {
@@ -599,19 +599,13 @@
     </div>
 </div>
 
+@Scripts.Render("~/Content/js/mention.js")
+@Scripts.Render("~/Content/js/moment.js")
+@Scripts.Render("~/Content/js/jquery.simplePagination.js")
+@Scripts.Render("~/Content/js/bootstrap-typeahead.js")
+@Scripts.Render("~/Content/js/form_common.js")
+@Scripts.Render("~/Content/js/form_detail.js")
+@Scripts.Render("~/Content/js/comment.js")
+@Scripts.Render("~/Content/js/scripts.js")
+@Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
 
-<script src="~/Scripts/jquery-3.6.0.slim.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-<script src="~/Scripts/jquery-3.6.0.min.js"></script>
-<script src="~/Scripts/bootstrap.min.js"></script>
-<script src="~/Content/js/mention.js"></script>
-<script src="~/Content/js/moment.js"></script>
-<script src="~/Content/js/jquery.simplePagination.js"></script>
-<script type="text/javascript" src="~/Content/js/bootstrap-typeahead.js"></script>
-<script type="text/javascript" src="~/Content/js/mention.js"></script>
-<script src="~/Content/js/form_common.js"></script>
-<script src="~/Content/js/form_detail.js"></script>
-<script src="~/Content/js/scripts.js"></script>
-<script src="~/Content/js/lang.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>

@@ -78,7 +78,10 @@
     "reconfirm": "Reconfirm",
     "lca_request": "GIẤY YÊU CẦU PHÒNG CƠ KHÍ",
     "monthly": "Monthly",
-    "daily": "Daily"
+    "daily": "Daily",
+    "Người yêu cầu": "Người yêu cầu",
+    "Phê duyệt": "Phê duyệt",
+    "reaccept": "Re-accept"
   },
   "vi": {
     "Home": "TRANG CHỦ",
@@ -185,12 +188,14 @@
     "received-date": "Ngày nhận:",
     "table-item-req": "Hạng mục yêu cầu",
     "title-lca-req": "GIẤY YÊU CẦU PHÒNG CƠ KHÍ ",
-    "nguoi_yeu_cau": "Người yêu cầu",
-    "phe_duyet": "Phê duyệt",
+    "Người yêu cầu": "Người yêu cầu",
+    "Phê duyệt": "Phê duyệt",
     "monthly": "Ngày",
-    "daily": "Tháng"
+    "daily": "Tháng",
+    "reaccept": "Xác nhận lại"
   },
   "ja": {
+    "reaccept": "Re-accept",
     "lca_request": "冶工具　加工依頼書",
     "target-date": "渡し希望日",
     "request-date": "依頼日",
@@ -219,8 +224,8 @@
     "table-item-req": "依頼項目",
     "table-qty": "数量",
     "title-lca-req": " 冶工具　加工依頼書",
-    "nguoi_yeu_cau": "担当",
-    "phe_duyet": "承認",
+    "Người yêu cầu": "担当",
+    "Phê duyệt": "承認",
     "monthly": "月",
     "daily": "日"
 

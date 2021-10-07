@@ -14,5 +14,6 @@ namespace UMC_FORM.Models.LCA
         public List<string> PERMISSION { get; set; }
         
         public List<StationApproveModel> STATION_APPROVE { get; set; }
+        public string  USERS { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace UMC_FORM.Models
 
     public partial class LCA_FORM_01
     {
-        
+
         [StringLength(50)]
         public string ID { get; set; }
 
@@ -32,6 +32,10 @@ namespace UMC_FORM.Models
         [Required]
         [StringLength(50)]
         public string SUBMIT_USER { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string CREATE_USER { get; set; }
 
         public DateTime UPD_DATE { get; set; }
 

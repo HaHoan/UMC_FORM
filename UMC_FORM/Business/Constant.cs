@@ -35,5 +35,14 @@ namespace UMC_FORM.Business
         public static string QUOTE = "QUOTE";
         public static string EDIT_QUOTE = "EDIT_QUOTE";
         public static string ATTACH_FILE = "ATTACH_FILE";
+        public static string EDIT_INFO = "EDIT_INFO";
+    }
+
+    public static class STATUS
+    {
+        public static string ACCEPT = "accept";
+        public static string REJECT = "reject";
+        public static string SUCCESS = "success";
+        public static string ERROR = "error";
     }
 }
