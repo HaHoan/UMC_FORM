@@ -31,24 +31,12 @@
             </tr>
             <tr>
 
-                <td class="text-center p-2">
-                    <i id="select_target_1" class="fas fa-check" name="increase_productivity"></i>
-                </td>
-                <td class="text-center p-2">
-                    <i id="select_target_2" class="fas fa-check" name="new_model"></i>
-                </td>
-                <td class="text-center p-2">
-                    <i id="select_target_3" class="fas fa-check" name="incre_prod"></i>
-                </td>
-                <td class="text-center p-2">
-                    <i id="select_target_4" class="fas fa-check" name="quantity"></i>
-                </td>
-                <td class="text-center p-2">
-                    <i id="select_target_5" class="fas fa-check" name="5s"></i>
-                </td>
-                <td class="text-center p-2" colspan="2">
-                    <i id="select_target_6" class="fas fa-check" name="ngjig"></i>
-                </td>
+                <td class="text-center p-2" name="increase_productivity" id="select_target_1"></td>
+                <td class="text-center p-2" name="new_model" id="select_target_2"></td>
+                <td class="text-center p-2" name="incre_prod" id="select_target_3"></td>
+                <td class="text-center p-2" name="quantity" id="select_target_4"></td>
+                <td class="text-center p-2" name="5s" id="select_target_5"></td>
+                <td class="text-center p-2" colspan="2" name="ngjig" id="select_target_5"></td>
                 @Html.HiddenFor(m => m.REQUEST_TARGET)
                 <script>
                     $(function () {
@@ -57,9 +45,12 @@
                         for (var i = 1; i <= 6; i++) {
                             var select = $('#select_target_' + i).attr('name')
                             if (arrTarget.includes(select)) {
-                                $('#select_target_' + i).removeClass('d-none')
+                                var icon = $('<i/>', {
+                                    class: 'fas fa-check'
+                                })
+                                $('#select_target_' + i).append(icon)
                             } else {
-                                $('#select_target_' + i).addClass('d-none')
+                                $('#select_target_' + i).empty()
                             }
                         }
                     })

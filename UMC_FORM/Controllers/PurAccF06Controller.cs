@@ -295,7 +295,7 @@ namespace UMC_FORM.Controllers
                 f.CREATE_USER = _sess.CODE;
                 f.UPD_DATE = DateTime.Now;
                 f.ID = Guid.NewGuid().ToString();
-
+                //xem lai
                 f.IS_SIGNATURE = true;
                 foreach (var item in assetEntity)
                 {
@@ -374,11 +374,15 @@ namespace UMC_FORM.Controllers
                             var modelState = ModelState.Values.Where(r => r.Errors.Count > 0).ToList();
                             if (modelState.Count == 0)
                             {
-
-                                if (!usePur && DeptRepository.IsMng(_sess.CODE))
+                                if(usePur == true)
+                                {
+                                    formSummary.USE_PUR = true;
+                                }
+                                if (!formSummary.USE_PUR && DeptRepository.IsMng(_sess.CODE))
                                 {
                                     formSummary.LAST_INDEX = 4;
                                 }
+                                
                                 if ((formSummary.PROCEDURE_INDEX == formSummary.LAST_INDEX - 1) && formSummary.RETURN_TO == 0)
                                 {
                                     formSummary.IS_FINISH = true;
@@ -444,6 +448,7 @@ namespace UMC_FORM.Controllers
         }
 
         [HttpPost]
+
         public async Task<JsonResult> Reject(string ticket)
         {
             string msg = "";

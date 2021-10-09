@@ -24,11 +24,14 @@
 
 <body class="sb-nav-fixed container-fluid">
 
+    <div class="loading middle">
+        <img src="~/Content/images/loader4.gif" />
+    </div>
     <!--Form nhập request-->
     <div>
         <div>
             <div>
-                @using (Html.BeginForm("Edit", "PurAccF06", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @using (Html.BeginForm("Edit", "PurAccF06", FormMethod.Post, new {id="form_edit", enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(m => m.TICKET)
@@ -244,11 +247,11 @@
 
                                                 <td>
                                                     @*<div class="form-inline">
-                                                <input type="radio" name=@("AK_"+i) value="a" checked>
-                                                <label for="a">A</label>
-                                                <input type="radio" name=@("AK_"+i) value="k" class="ml-2">
-                                                <label for="k">K</label>
-                                            </div>*@
+                                                            <input type="radio" name=@("AK_"+i) value="a" checked>
+                                                            <label for="a">A</label>
+                                                            <input type="radio" name=@("AK_"+i) value="k" class="ml-2">
+                                                            <label for="k">K</label>
+                                                        </div>*@
                                                     @Html.TextBox("AK_" + i, null, new { @class = "form-input text-uppercase inputDefault", @readonly = "readonly" })
                                                 </td>
                                                 <td>
@@ -307,8 +310,8 @@
                                 </div>
                             </div>
                             @*<div class="col-7">
-                        <input type="file" id="robinAttach" class="ml-4">
-                    </div>*@
+                                    <input type="file" id="robinAttach" class="ml-4">
+                                </div>*@
                         </div>
                         <div class="row mt-2">
                             <div class="col-3 lang" key="req-expenses-cus">Request expenses to Customer ?客先費用請求あり？　なし？ </div>
@@ -399,15 +402,15 @@
                             <button class="btn btn-danger col lang" key="cancel" id="btnCancel">Hủy</button>
                         </div>
                         <div class="col">
-                            <button class="btn btn-success col lang" key="create" type="submit">Đề xuất</button>
+                            <button class="btn btn-success col lang" id="btnEdit" key="create" type="button">Đề xuất</button>
                         </div>
                     </div>
                     @*<div class="row form-inline m-5">
-                        <div class="col-5"></div>
-                        <button type="button" id="btnCancel" class="btn btn-danger col-3 lang" key="cancel" width="100px">Hủy</button>
-                        <div class="col-1"></div>
-                        <button class="btn btn-success col-3 lang" key="create" type="submit">Đề xuất</button>
-                    </div>*@
+                            <div class="col-5"></div>
+                            <button type="button" id="btnCancel" class="btn btn-danger col-3 lang" key="cancel" width="100px">Hủy</button>
+                            <div class="col-1"></div>
+                            <button class="btn btn-success col-3 lang" key="create" type="submit">Đề xuất</button>
+                        </div>*@
                     <br>
                 }
             </div>

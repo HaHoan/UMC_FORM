@@ -155,7 +155,7 @@ function updateQuote() {
     } catch (e) {
         alert(e)
     }
-   
+
 }
 function addTd(name) {
     var col2 = $('<td/>');

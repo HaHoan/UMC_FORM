@@ -1,6 +1,4 @@
-﻿@model UMC_FORM.Models.PR_ACC_F06
-@using UMC_FORM.Models
-@using UMC_FORM.Business
+﻿@model UMC_FORM.Models.LCA.LCADetailModel
 @{
     Layout = null;
 }
@@ -20,6 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <link href="~/Content/css/pdf.css" rel="stylesheet" />
     <style>
         table, td, th {
             border: 1px solid black;
@@ -29,21 +28,24 @@
             width: 100%;
             border-collapse: collapse;
         }
+
+        body, html {
+            font-family: Arial;
+            font-size: 8px !important;
+        }
     </style>
 </head>
 
-<body class="container">
+<body class="container-fluid">
 
     <!--Form nhập request-->
     <div>
-        <h4 class="mt-3">GIẤY YÊU CẦU PHÒNG CƠ KHÍ  冶工具　加工依頼書</h4>
-        <div class="card-body border border-dark">
-
+        <h3 class="">GIẤY YÊU CẦU PHÒNG CƠ KHÍ  冶工具　加工依頼書</h3>
+        <div class="card-body border border-dark pt-1">
             <div class="row">
-                <p class="text-uppercase lang font-weight-bold mb-4" style="font-size:15px;">
+                <span class="text-uppercase lang font-weight-bold" style="font-size:10px;">
                     ①	Bộ phận yêu cầu 依頼部門
-
-                </p>
+                </span>
 
                 <table class=" ">
                     <tr class="">
@@ -52,19 +54,19 @@
                             <br />
                             依頼部門
                         </td>
-                        <td class="text-center " style="vertical-align: middle;" colspan="2">Hoan Ha Thi</td>
+                        <td class="text-center " style="vertical-align: middle;" colspan="2">@Model.TICKET.DEPT</td>
                         <td class="lang   text-center">
                             Ngày yêu cầu
                             <br />
                             依頼日
                         </td>
-                        <td class="text-center " style="vertical-align: middle;">2021/09/08</td>
+                        <td class="text-center " style="vertical-align: middle;">@Html.DisplayFor(m => m.TICKET.REQUEST_DATE)</td>
                         <td class="lang text-center">
                             Ngày mong muốn
                             <br />
                             渡し希望日
                         </td>
-                        <td class="text-center" style="vertical-align: middle;" colspan="2">2021/09/08</td>
+                        <td class="text-center" style="vertical-align: middle;" colspan="2">@Html.DisplayFor(m => m.TICKET.TARGET_DATE)</td>
                     </tr>
                     <tr class="">
                         <td class=""><label class=" lang text-left">Mục đích yêu cầu（目的）</label></td>
@@ -109,13 +111,33 @@
                         </td>
 
                     </tr>
+
                     <tr>
-                        <td class="text-center ">mmmm</td>
-                        <td class="text-center">mmmm</td>
-                        <td class="text-center ">mmmm</td>
-                        <td class="text-center ">mmmm</td>
-                        <td class="text-center ">mm</td>
-                        <td class="text-center " colspan="2"><input type="checkbox" /></td>
+                        <td class="text-center p-2" name="increase_productivity" id="select_target_1"></td>
+                        <td class="text-center p-2" name="new_model" id="select_target_2"></td>
+                        <td class="text-center p-2" name="incre_prod" id="select_target_3"></td>
+                        <td class="text-center p-2" name="quantity" id="select_target_4"></td>
+                        <td class="text-center p-2" name="5s" id="select_target_5"></td>
+                        <td class="text-center p-2" colspan="2" name="ngjig" id="select_target_5"></td>
+                        @Html.HiddenFor(m => m.TICKET.REQUEST_TARGET)
+                        <script>
+                            $(function () {
+                                var target = $('#TICKET_REQUEST_TARGET').val()
+                                var arrTarget = target.split(',')
+                                for (var i = 1; i <= 6; i++) {
+                                    var select = $('#select_target_' + i).attr('name')
+                                    if (arrTarget.includes(select)) {
+                                        var icon = $('<i/>', {
+                                            class: 'fas fa-check'
+                                        })
+                                        $('#select_target_' + i).append(icon)
+                                    } else {
+                                        $('#select_target_' + i).empty()
+                                    }
+                                }
+                            })
+
+                        </script>
                     </tr>
                     <tr class="font-weight-bold">
                         <td class="text-center" rowspan="5" style="vertical-align: middle;">
@@ -134,7 +156,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td rowspan="3" style="vertical-align: middle;" class="text-center">5</td>
+                        <td rowspan="3" style="vertical-align: middle;" class="text-center">@Html.DisplayFor(m => m.TICKET.DECREASE_PERSON)</td>
                         <td style="vertical-align: middle;" class="text-center font-weight-bold" rowspan="3">人/月</td>
                         <td class="" style="vertical-align: middle;">
                             <label class="font-weight-bold lang text-left center">
@@ -144,14 +166,14 @@
                             </label>
 
                         </td>
-                        <td colspan="2" style="vertical-align: middle;">abc</td>
-                        <td rowspan="3" style="vertical-align: middle;" class="text-center">20000</td>
+                        <td colspan="2" style="vertical-align: middle;">@Html.DisplayFor(m => m.TICKET.CONTENT_ERROR)</td>
+                        <td rowspan="3" style="vertical-align: middle;" class="text-center">@Html.DisplayFor(m => m.TICKET.COST_SAVING)</td>
                         <td rowspan="3" style="vertical-align: middle;" class="text-center font-weight-bold">USD/月</td>
 
                     </tr>
                     <tr>
                         <td class="" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center">Tỉ lệ lỗi hiện tại（現在不良率):</label></td>
-                        <td colspan="2">mmm</td>
+                        <td colspan="2">@Html.DisplayFor(m => m.TICKET.ERROR_RATE_CURRENT)</td>
 
                     </tr>
                     <tr>
@@ -160,22 +182,34 @@
                                 Hiệu quả cải tiến（改善効果):
                             </label>
                         </td>
-                        <td colspan="2">mmm</td>
+                        <td colspan="2">@Html.DisplayFor(m => m.TICKET.IMPROVED_EFICIENCY)</td>
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Other:</td>
-                        <td colspan="6">mmm</td>
+                        <td colspan="6">@Html.DisplayFor(m => m.TICKET.OTHER)</td>
                     </tr>
                     <tr>
                         <td class="">
                             <label class="font-weight-bold lang">5. 支払■Chi trả:</label>
                         </td>
-                        <td colspan="7">
-                            <label for="customer" class="lang mr-2">顧客■Khách hàng</label>
-                            <input id="customer" type="checkbox">
-                            <label for="customer" class="lang mr-2 ml-5" key="">UMCVN</label>
-                            <input id="customer" type="checkbox">
+                        <td colspan="7" class="p-2">
+                            <label class="lang mr-2" key="khach_hang"></label>
+                            <i id="customer" class="fas fa-check d-none"></i>
+                            <label class="lang mr-2 ml-5" key="">UMCVN</label>
+                            <i id="umcvn" class="fas fa-check d-none"></i>
+                            @Html.HiddenFor(m => m.TICKET.PAYER)
                         </td>
+                        <script>
+                            $(function () {
+                                var payer = $('#TICKET_PAYER').val()
+                                if (payer == "UMCVN") {
+                                    $('#umcvn').removeClass('d-none')
+                                } else if (payer == "Customer") {
+                                    $('#customer').removeClass('d-none')
+                                }
+                            })
+
+                        </script>
 
                     </tr>
 
@@ -190,20 +224,20 @@
 
                         </div>
                         <div class="col ">
-                            <span>PCB</span>
-                            <input class=" ml-2 border-bottom" style="border:none;" />
+                            <span>PCB: </span>
+                            @Html.DisplayFor(m => m.TICKET.PCB)
                         </div>
                     </div>
                     <br />
                     <div class="row">
 
                         <div class="col ">
-                            <span class="lang">顧客■Khách hàng:</span>
-                            <input class=" ml-2 border-bottom" style="border:none;" />
+                            <span class="lang">顧客■Khách hàng: </span>
+                            @Html.DisplayFor(m => m.TICKET.CUSTOMER)
                         </div>
                         <div class="col ">
-                            <span>Model</span>
-                            <input class=" ml-2 border-bottom" style="border:none;" />
+                            <span>Model: </span>
+                            @Html.DisplayFor(m => m.TICKET.MODEL)
                         </div>
                     </div>
                     <br />
@@ -213,10 +247,12 @@
                             <br />
                             <span class="font-weight-bold">(MUST : Please add comment by English or Japanese)</span>
                         <p></p>
-                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="row ml-1">
+                        <p style="white-space: pre-wrap"> @Html.DisplayFor(m => m.TICKET.REQUEST_CONTENT)</p>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <table class="mt-2 ">
                         <tr>
                             <td class="p-2">Người yêu cầu/担当 </td>
@@ -226,14 +262,26 @@
 
                         <tbody>
                             <tr height="100px">
-                                <td>
-                                    <div class="rubber_stamp">
-                                        <p>UMCVN</p>
-                                        <p>06-09-2021</p>
-                                        <p>TEST</p>
-                                    </div>
-                                </td>
-                                <td></td>
+
+                                @for (var a = 0; a < 2; a++)
+                                {
+                                    var station = Model.STATION_APPROVE[a];
+                                    if (station.IS_APPROVED)
+                                    {
+                                        <td>
+                                            <div class="rubber_stamp">
+                                                <p>@station.COMPANY</p>
+                                                <p>@station.APPROVE_DATE.ToShortDateString()</p>
+                                                <p>@station.APPROVER</p>
+                                            </div>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+
+                                }
 
                             </tr>
                         </tbody>
@@ -242,18 +290,18 @@
             </div>
         </div>
         <div class="border card-body border-dark">
+
             <div class="row">
-                <p class="text-uppercase lang font-weight-bold mb-4 col" style="font-size:15px;">
+                <p class="text-uppercase lang font-weight-bold mb-4 col-7" style="font-size:15px;">
                     ②LCA 「見積もり] /Báo giá, Leadtime
                     <br />
                     見積もり作成⇒Jig作成実施可能承認
                 </p>
-                <label class="col lang">受付日／Ngày nhận: <span>09/06/2021</span></label>
-                <label class="lang col">Lead time: <span>09/06/2021</span><br /><span class="font-italic">(After get approval from GD)</span></label>
+                <label class="col lang text-right">受付日／Ngày nhận: <span>@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
+                <label class="lang col text-right">Lead time: <span>@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
             </div>
-
             <div class="table-responsive">
-                <table class="table table-bordered mt-3">
+                <table class="table-border-dark">
                     <tr>
                         <th class="lang" key="table-no" rowspan="2" align="center">No</th>
                         <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
@@ -272,38 +320,28 @@
 
                     <tbody id="tableInfo">
                         @{
-                            for (int i = 1; i <= 5; i++)
+                            var i = 1;
+                            foreach (var quote in Model.TICKET.LCA_QUOTEs)
                             {
                                 <tr class="row-info">
                                     <td>@(i)</td>
-                                    <td>  <input class="form-input inputDefault" name=@("ITEM_NAME_"+i) /></td>
-
-                                    <td>
-                                        <input class="form-input type_number inputDefault" type="hidden" name=@("QTY_"+i) id=@("QTY_HIDDEN_"+i) />
-                                        <input class="form-input type_number inputDefault" id=@("QTY_"+i) />
-                                    </td>
-                                    <td>
-                                        <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_"+i) />
-                                        <input class="form-input type_number inputDefault" type="hidden" id=@("UNIT_PRICE_LCA_HIDDEN_"+i) />
-                                    </td>
-                                    <td>
-                                        <input class="form-input type_number inputDefault" id=@("TOTAL_LCA_"+i) />
-                                        <input class="form-input type_number inputDefault" type="hidden" id=@("TOTAL_LCA_HIDDEN_"+i) />
-                                    </td>
-                                    <td>
-                                        <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_"+i) />
-
-                                    </td>
-                                    <td> <input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_"+i) /></td>
+                                    <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
+                                    <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
+                                    <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
+                                    <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
+                                    <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
+                                    <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
                                 </tr>
+                                i++;
                             }
+
                         }
 
                         <tr class="p-3 summary">
-                            <td class="border-0 font-italic" colspan="4">
+                            <td class="border-0 font-italic" colspan="3">
                                 * If request Items are over 5, please issue more request sheet
                             </td>
-                            <td class="border-0 font-weight-bold">
+                            <td class="border-0 font-weight-bold" colspan="2">
                                 <div class="text-right">
                                     <span class="">Total:</span>
                                     <span class="totalLCA">100</span>
@@ -311,8 +349,7 @@
                                 </div>
 
                             </td>
-                            <td class="border-0"></td>
-                            <td class="border-0 font-weight-bold text-right">
+                            <td class="border-0 font-weight-bold text-right" colspan="2">
                                 <span class="">Total:</span>
                                 <span class="totalCustomer">100</span>
                                 <span class="">$</span>
@@ -323,47 +360,47 @@
                 </table>
 
             </div>
-            <div class="table-responsive">
-                <table class="table table-bordered ">
+            <div class="table-responsive mt-2">
+                <table class="table-border-dark">
                     <thead>
                         <tr>
-                            <th class="font-italic lang" key="nguoi_yeu_cau" rowspan="2">Người đề xuất </th>
-                            <th class="font-italic lang" key="phe_duyet" rowspan="2">Trưởng phòng</th>
-                            <th class="font-italic lang" key="lca_approve" rowspan="2">LCA Approve</th>
-                            <th class="font-italic lang" key="request_approve" rowspan="2">Request Approve</th>
-                            <th class="font-italic lang" key="BC_approve" rowspan="2">BC Approve</th>
-                            <th class="font-italic lang" key="FM_approve" rowspan="2">FM Approve</th>
-                            <th class="font-italic lang" key="GD_approve" rowspan="2">GD Approve</th>
+                            <th class=" lang" key="lca_approve" rowspan="2">LCA Approve</th>
+                            <th class=" lang" key="request_approve" rowspan="2">Request Approve</th>
+                            <th class=" lang" key="BC_approve" rowspan="2">BC Approve</th>
+                            <th class=" lang" key="FM_approve" rowspan="2">FM Approve</th>
+                            <th class=" lang" key="GD_approve" rowspan="2">GD Approve</th>
 
 
                         </tr>
 
                     </thead>
                     <tbody>
-                        <tr height="100px">
-                            <td>
-                                <div class="rubber_stamp">
-                                    <p>UMCVN</p>
-                                    <p>06-09-2021</p>
-                                    <p>TEST</p>
-                                </div>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                        <tr height="120px">
+                            @for (var a = 2; a < Model.STATION_APPROVE.Count(); a++)
+                            {
+                                var station = Model.STATION_APPROVE[a];
+                                if (station.IS_APPROVED)
+                                {
+                                    <td>
+                                        <div class="rubber_stamp">
+                                            <p>@station.COMPANY</p>
+                                            <p>@station.APPROVE_DATE.ToShortDateString()</p>
+                                            <p>@station.APPROVER</p>
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+
+                            }
                         </tr>
                     </tbody>
                 </table>
 
             </div>
-            <div class="row ml-1 mr-1">
-                <p class="font-italic text-underline mr-2 col-1">Comment</p>
-                <textarea class="form-control col" rows="3"></textarea>
-            </div>
-            <br />
+            
 
             <br />
             <div class="col">
@@ -390,16 +427,10 @@
 
 
     </div>
-
-    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <script src="~/Content/js/moment.js"></script>
-    <script src="~/Content/js/jquery.simplePagination.js"></script>
-    <script src="~/Content/js/pagination.js"></script>
-    <script src="~/Content/js/mention.js"></script>
-    <script src="~/Content/js/scripts.js"></script>
     <script src="~/Content/js/lang.js"></script>
-    <script src="~/Content/js/form_lca.js"></script>
+    <script src="~/Content/js/form_common.js"></script>
+    <script src="~/Content/js/lca/form_lca.js"></script>
 
 </body>
 

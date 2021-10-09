@@ -29,6 +29,7 @@
     });
 
     $("#accept").on("click", function (e) {
+        $('.loading').show()
         e.preventDefault();
         var base_url = window.location.origin;
         var ticket = $("#ticketNo").text();
@@ -43,7 +44,7 @@
 
                 var obj = {
                     assetIndex: rowIndex + 1,
-                    costCenter:costCenter,
+                    costCenter: costCenter,
                     assetType: assetType,
                     accountCode: accountCode,
                     assetNo: assetNo
@@ -52,36 +53,45 @@
             }
         });
         var listJson = JSON.stringify(list);
-        $('.loadImg').addClass('d-block')
         $.ajax({
             type: "POST",
             url: base_url + "/PurAccF06/Accept",
-            data: { ticket: ticket, list: listJson, usePur:usePur },
+            data: { ticket: ticket, list: listJson, usePur: usePur },
 
             success: function (data) {
-                //alert(data.msg);
                 window.location.href = base_url + '/Home?type=SENDTOME';
             },
             error: function (err) {
+                $('.loading').hide()
                 alert('error' + err.msg);
             }
         });
     });
+    $('.loading').hide()
+    $('#btnEdit').on('click', function (e) {
+        $('.loading').show()
+        $('#form_edit').submit()
+    })
     $("#reject").on("click", function (e) {
+    
+        $('.loading').show()
         e.preventDefault();
         var base_url = window.location.origin;
         var ticket = $("#ticketNo").text();
         $.ajax({
             type: "POST",
             url: base_url + "/PurAccF06/Reject",
-            data: { ticket: ticket },
+            data: {
+               
+                ticket: ticket
+            },
 
             success: function (data) {
                 //alert(data.msg);
                 window.location.href = base_url + '/Home?type=SENDTOME';
             },
             error: function (err) {
-                alert('error' + err.msg);
+                alert('ehihirror' + err.msg);
             }
         });
     });

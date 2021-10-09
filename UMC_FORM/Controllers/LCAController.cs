@@ -436,9 +436,65 @@ namespace UMC_FORM.Controllers
             }
         }
 
-        public ActionResult PrintView()
+        public ActionResult PrintView(string ticket)
         {
-            return View();
+            try
+            {
+                if (string.IsNullOrEmpty(ticket))
+                {
+                    return HttpNotFound();
+                }
+                using (var db = new DataContext())
+                {
+                    _sess = Session["user"] as Form_User;
+                    var modelDetail = new LCADetailModel();
+                    var list = db.LCA_FORM_01.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).ToList();
+                    modelDetail.TICKET = list.FirstOrDefault();
+
+                    if (modelDetail.TICKET == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    modelDetail.SUMARY = db.Form_Summary.Where(m => m.TICKET == ticket).FirstOrDefault();
+                    if (modelDetail.SUMARY == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    modelDetail.TICKET.FILES = db.LCA_FILE.Where(m => m.TICKET == modelDetail.TICKET.TICKET).ToList();
+                    modelDetail.TICKET.LCA_QUOTEs = db.LCA_QUOTE.Where(m => m.ID_TICKET == modelDetail.TICKET.ID).ToList();
+
+                    var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.LCA_FORM_01_NAME).OrderBy(m => m.FORM_INDEX).ToList();
+                    modelDetail.STATION_APPROVE = new List<StationApproveModel>();
+
+                    foreach (var pro in process)
+                    {
+                        var station = new StationApproveModel()
+                        {
+                            STATION_NAME = pro.STATION_NAME,
+                            IS_APPROVED = false
+
+                        };
+                        var lca = list.Where(m => m.PROCEDURE_INDEX == pro.FORM_INDEX && m.IS_SIGNATURE == 1).FirstOrDefault();
+                        if (lca != null)
+                        {
+                            station.IS_APPROVED = true;
+                            station.APPROVE_DATE = lca.UPD_DATE;
+                            station.APPROVER = lca.SUBMIT_USER;
+                            station.COMPANY = "UMCVN";
+                        }
+                        modelDetail.STATION_APPROVE.Add(station);
+                    }
+                    
+                    return View(modelDetail);
+                }
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("Error", e.Message.ToString());
+                return View();
+            }
         }
     }
 }

@@ -34,5 +34,6 @@ namespace UMC_FORM.Models
         public int? LAST_INDEX { get; set; } = 0;
         public int? TOTAL_MONEY { get; set; } = 0;
         public int? REJECT_INDEX { get; set; } = 0;
+        public bool USE_PUR { get; set; }
     }
 }
