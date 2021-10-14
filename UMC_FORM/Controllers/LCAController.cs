@@ -245,8 +245,8 @@ namespace UMC_FORM.Controllers
                     var summary = db.Form_Summary.Where(m => m.TICKET == formDb.TICKET).FirstOrDefault();
 
                     // để lưu lại bước reject
-                    summary.RETURN_TO = form.PROCEDURE_INDEX;
-                    var process = db.Form_Process.Where(m => m.FORM_INDEX == summary.RETURN_TO).FirstOrDefault();
+                    summary.REJECT_INDEX = form.PROCEDURE_INDEX;
+                    var process = db.Form_Process.Where(m => m.FORM_INDEX == summary.REJECT_INDEX).FirstOrDefault();
                     if (process == null)
                     {
                         ModelState.AddModelError("Error", "Error System!!!");
@@ -262,8 +262,7 @@ namespace UMC_FORM.Controllers
 
                     summary.IS_REJECT = true;
                     // Để lưu lại bước bị reject về
-                    summary.REJECT_INDEX = form.PROCEDURE_INDEX;
-                    summary.CREATE_USER = _sess.CODE;
+                    summary.RETURN_TO = form.PROCEDURE_INDEX;
                     summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
 
                     db.SaveChanges();
@@ -295,26 +294,26 @@ namespace UMC_FORM.Controllers
                     if (summary.IS_REJECT)
                     {
                         form.IS_SIGNATURE = 0;
-                        var processReject = db.Form_Reject.Where(m => m.PROCESS_NAME == Constant.LCA_FORM_01_NAME && m.START_INDEX == summary.REJECT_INDEX).ToList();
+                        var processReject = db.Form_Reject.Where(m => m.PROCESS_NAME == Constant.LCA_FORM_01_NAME && m.START_INDEX == summary.RETURN_TO).ToList();
                         var currentStep = processReject.Where(m => m.FORM_INDEX == summary.PROCEDURE_INDEX).FirstOrDefault();
                         if (currentStep != null)
                         {
 
                             if (currentStep.STEP_ORDER == currentStep.TOTAL_STEP)
                             {
-                                form.PROCEDURE_INDEX = summary.RETURN_TO;
+                                form.PROCEDURE_INDEX = summary.REJECT_INDEX;
                                 summary.IS_REJECT = false;
                             }
                             else
                             {
                                 var nextStep = processReject.Where(m => m.STEP_ORDER == currentStep.STEP_ORDER + 1).FirstOrDefault();
-                                if (nextStep != null && nextStep.FORM_INDEX < summary.RETURN_TO)
+                                if (nextStep != null && nextStep.FORM_INDEX < summary.REJECT_INDEX)
                                 {
                                     form.PROCEDURE_INDEX = nextStep.FORM_INDEX;
                                 }
                                 else
                                 {
-                                    form.PROCEDURE_INDEX = summary.RETURN_TO;
+                                    form.PROCEDURE_INDEX = summary.REJECT_INDEX;
                                     summary.IS_REJECT = false;
                                 }
 
@@ -322,7 +321,7 @@ namespace UMC_FORM.Controllers
                         }
                         else
                         {
-                            form.PROCEDURE_INDEX = summary.RETURN_TO;
+                            form.PROCEDURE_INDEX = summary.REJECT_INDEX;
                             summary.IS_REJECT = false;
                         }
                     }
@@ -414,7 +413,6 @@ namespace UMC_FORM.Controllers
                     #region SUMARY
 
                     summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
-                    summary.CREATE_USER = _sess.CODE;
                     summary.UPD_DATE = DateTime.Now;
                     if (form.PROCEDURE_INDEX == summary.LAST_INDEX)
                     {

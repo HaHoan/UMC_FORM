@@ -83,7 +83,15 @@
                                             </td>
                                             <td>
                                                 <a class="link request-item" href="@Url.Action("Details",controller, new {ticket = item.TICKET })" data-slide="next" name="1">
-                                                    <span class="badge badge-pill text-white font-medium badge-success mr-2">Work</span>
+
+                                                    @if (item.IS_REJECT)
+                                                    {
+                                                        <span class="badge badge-pill text-white font-medium badge-danger mr-2">Reject</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-pill text-white font-medium badge-success mr-2">Work</span>
+                                                    }
                                                     <span class="text-dark">@Html.DisplayFor(m => item.TITLE)</span>
                                                 </a>
                                             </td>

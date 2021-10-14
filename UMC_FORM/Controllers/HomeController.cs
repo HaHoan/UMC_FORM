@@ -14,7 +14,23 @@ namespace UMC_FORM.Controllers
     public class HomeController : Controller
     {
         private DataContext db = new DataContext();
-
+        private bool IsApprover(Form_Summary item, int index, string userCode)
+        {
+            var processNext = ProcessRepository.GetProcessName(item.PROCESS_ID).FirstOrDefault(r => r.FORM_INDEX == index);
+            if (processNext != null)
+            {
+                var stationNoNext = processNext.STATION_NO;
+                var users = db.Form_Stations.Where(r => r.STATION_NO == stationNoNext);// Tim users approval
+                foreach (var user in users)
+                {
+                    if (user.USER_ID == userCode)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         public ActionResult Index(SendType? type)
         {
             if (type is null)
@@ -23,31 +39,25 @@ namespace UMC_FORM.Controllers
             }
             var session = Session["user"] as Form_User;
             List<Form_Summary> formSummaries = new List<Form_Summary>();
+            var list = new List<Form_Summary>();
             switch (type)
             {
                 case SendType.SENDTOME:
-                    foreach (var item in db.Form_Summary.Where(r => r.IS_FINISH == false).Where(t => t.IS_REJECT == false))
+                    list = db.Form_Summary.Where(r => r.IS_FINISH == false).OrderByDescending(m => m.UPD_DATE).ToList();
+                    foreach (var item in list)
                     {
                         var index = item.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
-                        var processNext = ProcessRepository.GetProcessName(item.PROCESS_ID).FirstOrDefault(r => r.FORM_INDEX == index);
-                        if (processNext != null)
+                        if (IsApprover(item, index, session.CODE))
                         {
-                            var stationNoNext = processNext.STATION_NO;
-                            var users = db.Form_Stations.Where(r => r.STATION_NO == stationNoNext);// Tim users approval
-                            foreach (var user in users)
-                            {
-                                if (user.USER_ID == session.CODE)
-                                {
-                                    formSummaries.Add(item);
-                                }
-                            }
+                            formSummaries.Add(item);
                         }
 
                     }
                     ViewBag.type = 1;
                     break;
                 case SendType.MYREQUEST:
-                    foreach (var item in db.Form_Summary.Where(r => r.IS_FINISH == false).Where(t => t.IS_REJECT == false))
+                    list = db.Form_Summary.Where(r => r.IS_FINISH == false).Where(t => t.IS_REJECT == false).ToList();
+                    foreach (var item in list)
                     {
                         var form = db.PR_ACC_F06.FirstOrDefault(r => r.TICKET == item.TICKET && r.CREATE_USER.Contains(session.CODE));
                         if (form != null)
@@ -59,7 +69,16 @@ namespace UMC_FORM.Controllers
                     break;
                 case SendType.CANCEL:
                     ViewBag.type = 3;
-                    formSummaries = db.Form_Summary.Where(r => r.IS_REJECT == true).ToList();
+                    list = db.Form_Summary.Where(r => r.IS_REJECT == true).ToList();
+                    foreach (var item in list)
+                    {
+                        var index = item.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
+                        if (IsApprover(item, index, session.CODE))
+                        {
+                            formSummaries.Add(item);
+                        }
+
+                    }
                     break;
                 case SendType.FINISH:
                     ViewBag.type = 4;

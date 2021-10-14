@@ -91,23 +91,10 @@
                 </td>
 
                 <td colspan="7" class="p-2">
-                    <label class="lang mr-2" key="khach_hang"></label>
-                    <i id="customer" class="fas fa-check d-none"></i>
-                    <label class="lang mr-2 ml-5" key="">UMCVN</label>
-                    <i id="umcvn" class="fas fa-check d-none"></i>
+                    <label class="lang mr-2" key="@Model.PAYER">@Model.PAYER</label>
                     @Html.HiddenFor(m => m.PAYER)
                 </td>
-                <script>
-                    $(function () {
-                        var payer = $('#PAYER').val()
-                        if (payer == "UMCVN") {
-                            $('#umcvn').removeClass('d-none')
-                        } else if (payer == "Customer") {
-                            $('#customer').removeClass('d-none')
-                        }
-                    })
-
-                </script>
+               
             </tr>
 
         </table>
@@ -126,7 +113,7 @@
     <div class="row">
 
         <div class="col ">
-            <span class="lang font-weight-bold" key="khach_hang"></span>:
+            <span class="lang font-weight-bold" key="Customer"></span>:
             @Html.DisplayFor(m => m.CUSTOMER)
         </div>
         <div class="col ">
