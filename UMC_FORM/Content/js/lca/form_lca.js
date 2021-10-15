@@ -7,12 +7,12 @@
             return false;
         }
     });
-    $('#submitForm').keydown(function (e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            return false;
-        }
-    });
+    //$('#submitForm').keydown(function (e) {
+    //    if (e.keyCode == 13) {
+    //        e.preventDefault();
+    //        return false;
+    //    }
+    //});
     $('html').click(function () {
         $contextMenu.hide();
     });
@@ -62,11 +62,11 @@
 
     var $contextMenu = $("#contextMenu");
 
-    $("body").on("contextmenu", "table tr", function (e) {
+    $("body").on("contextmenu", "#tableInfo tr", function (e) {
         $contextMenu.css({
-            display: "block",
-            left: e.pageX - 200,
-            top: e.pageY - 100
+            display:'block',
+            left: e.pageX,
+            top: e.pageY
         });
         return false;
     });
@@ -126,6 +126,14 @@
     $('.totalLCA').text(getTotalAmountLCA())
     $('.totalCustomer').text(getTotalAmountCustomer())
     updateSTT()
+    $(".form-input").each(function () {
+        if ($(this).val() == '0')
+            $(this).val('')
+    });
+
+    $('[id^="QTY_"]').each(function () {
+        $(this).addClass('text-center')
+    })
 });
 function updateQuote() {
     try {
@@ -209,6 +217,7 @@ function addTdUnitPrice(name, rowIndex, length) {
             updateQuote()
         }
     })
+    input1.prop('readonly',true)
     col.append(input1);
     input1.attr('id', name + rowIndex);
     var input2 = $('<input/>', {

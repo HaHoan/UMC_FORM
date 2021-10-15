@@ -56,15 +56,8 @@ namespace UMC_FORM.Controllers
                     ViewBag.type = 1;
                     break;
                 case SendType.MYREQUEST:
-                    list = db.Form_Summary.Where(r => r.IS_FINISH == false).Where(t => t.IS_REJECT == false).ToList();
-                    foreach (var item in list)
-                    {
-                        var form = db.PR_ACC_F06.FirstOrDefault(r => r.TICKET == item.TICKET && r.CREATE_USER.Contains(session.CODE));
-                        if (form != null)
-                        {
-                            formSummaries.Add(item);
-                        }
-                    }
+                    formSummaries = db.Form_Summary.Where(r => r.IS_FINISH == false).Where(t => t.IS_REJECT == false && t.CREATE_USER == session.CODE).ToList();
+                    
                     ViewBag.type = 2;
                     break;
                 case SendType.CANCEL:

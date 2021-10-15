@@ -100,6 +100,9 @@ namespace UMC_FORM.Models
         [StringLength(50)]
         public string DEPT { get; set; }
 
+        [StringLength(50)]
+        public string LCA_ID { get; set; }
+
         [NotMapped]
         public List<LCA_QUOTE> LCA_QUOTEs { get; set; }
 

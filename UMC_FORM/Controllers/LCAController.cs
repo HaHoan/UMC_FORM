@@ -30,7 +30,7 @@ namespace UMC_FORM.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(LCA_FORM_01 ticket)
+        public ActionResult Create(LCA_FORM_01 ticket, string quotes)
         {
             if (ticket == null)
             {
@@ -78,6 +78,7 @@ namespace UMC_FORM.Controllers
                             }
 
                             #endregion
+                            AddQuotes(quotes, db, ticket, ticket);
                             #region SUMARY
                             Form_Summary summary = new Form_Summary()
                             {
@@ -258,9 +259,11 @@ namespace UMC_FORM.Controllers
                     form.IS_SIGNATURE = 0;
                     form.ID = Guid.NewGuid().ToString();
                     form.SUBMIT_USER = _sess.CODE;
+                    AddQuotes("", db, formDb, form);
                     db.LCA_FORM_01.Add(form);
 
                     summary.IS_REJECT = true;
+
                     // Để lưu lại bước bị reject về
                     summary.RETURN_TO = form.PROCEDURE_INDEX;
                     summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
@@ -278,7 +281,38 @@ namespace UMC_FORM.Controllers
 
             }
         }
+        private void AddQuotes(string quotes, DataContext db, LCA_FORM_01 prevTicket, LCA_FORM_01 currentTicket)
+        {
+            List<LCA_QUOTE> lcaQuotes = new List<LCA_QUOTE>();
+            // không sửa giá
+            if (string.IsNullOrEmpty(quotes))
+            {
 
+                lcaQuotes = db.LCA_QUOTE.Where(m => m.ID_TICKET == prevTicket.ID).ToList();
+            }
+
+            // Khi sửa đổi quotes
+            else
+            {
+                lcaQuotes = JsonConvert.DeserializeObject<List<LCA_QUOTE>>(quotes);
+            }
+            foreach (var quote in lcaQuotes)
+            {
+                var quoteDb = new LCA_QUOTE
+                {
+                    ID_TICKET = currentTicket.ID,
+                    NO = quote.NO,
+                    REQUEST_ITEM = quote.REQUEST_ITEM,
+                    LCA_UNIT_PRICE = quote.LCA_UNIT_PRICE,
+                    LCA_TOTAL_COST = quote.LCA_TOTAL_COST,
+                    CUSTOMER_UNIT_PRICE = quote.CUSTOMER_UNIT_PRICE,
+                    CUSTOMER_TOTAL_COST = quote.CUSTOMER_TOTAL_COST,
+                    QUANTITY = quote.QUANTITY
+                };
+                db.LCA_QUOTE.Add(quoteDb);
+            }
+
+        }
         private string Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
@@ -334,11 +368,20 @@ namespace UMC_FORM.Controllers
                     form.UPD_DATE = DateTime.Now;
                     form.SUBMIT_USER = _sess.CODE;
                     form.ID = Guid.NewGuid().ToString();
+                  
                     var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == form.PROCEDURE_INDEX.ToString()).ToList();
                     if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault() != null)
                     {
                         form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
                         form.LEAD_TIME = infoTicket.LEAD_TIME;
+                       
+                    }
+                    if(listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.ADD_ID).FirstOrDefault() != null)
+                    {
+                        form.LCA_ID = infoTicket.LCA_ID;
+                    }
+                    if(listPermission.Where(m => m.ITEM_COLUMN ==  PERMISSION.COMMENT).FirstOrDefault() != null)
+                    {
                         form.COMMENT = infoTicket.COMMENT;
                     }
                     if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.EDIT_INFO).FirstOrDefault() != null)
@@ -359,35 +402,7 @@ namespace UMC_FORM.Controllers
                         form.REQUEST_CONTENT = infoTicket.REQUEST_CONTENT;
                     }
                     #region Quote
-                    List<LCA_QUOTE> lcaQuotes = new List<LCA_QUOTE>();
-                    // không sửa giá
-                    if (string.IsNullOrEmpty(quotes))
-                    {
-
-                        lcaQuotes = db.LCA_QUOTE.Where(m => m.ID_TICKET == infoTicket.ID).ToList();
-                    }
-
-                    // Khi sửa đổi quotes
-                    else
-                    {
-                        lcaQuotes = JsonConvert.DeserializeObject<List<LCA_QUOTE>>(quotes);
-                    }
-                    foreach (var quote in lcaQuotes)
-                    {
-                        var quoteDb = new LCA_QUOTE
-                        {
-                            ID_TICKET = form.ID,
-                            NO = quote.NO,
-                            REQUEST_ITEM = quote.REQUEST_ITEM,
-                            LCA_UNIT_PRICE = quote.LCA_UNIT_PRICE,
-                            LCA_TOTAL_COST = quote.LCA_TOTAL_COST,
-                            CUSTOMER_UNIT_PRICE = quote.CUSTOMER_UNIT_PRICE,
-                            CUSTOMER_TOTAL_COST = quote.CUSTOMER_TOTAL_COST,
-                            QUANTITY = quote.QUANTITY
-                        };
-                        db.LCA_QUOTE.Add(quoteDb);
-                    }
-
+                    AddQuotes(quotes, db, infoTicket,form);
                     #endregion
                     #region Files
                     HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
@@ -484,7 +499,7 @@ namespace UMC_FORM.Controllers
                         }
                         modelDetail.STATION_APPROVE.Add(station);
                     }
-                    
+
                     return View(modelDetail);
                 }
             }

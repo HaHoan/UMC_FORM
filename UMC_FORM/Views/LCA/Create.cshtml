@@ -84,7 +84,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <table class="table table-bordered border ">
+                            <table class="table-border-dark ">
                                 <tr class="font-weight-bold">
                                     <td class="p-2"><label class="font-weight-bold lang text-left" key="target-supply">Loại Supply *</label></td>
                                     <td class="text-center p-2">活人</td>
@@ -196,7 +196,7 @@
 
                             </script>
                         </div>
-                        <div class="row">
+                        <div class="row mt-2">
                             <div class="col">
                                 <div class="lang" key="doi_tuong_ap_dung"></div>
 
@@ -227,111 +227,104 @@
                         </div>
                     </div>
                     <hr>
-                    <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">THÔNG TIN SẢN PHẨM</h5>
-                    <div class="row">
-                        <div class="col-3">
-                            <label class="font-weight-bold lang" key="received-date">Target date</label>
+                    <div class="create-quote">
+                        <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="received-date">Target date</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" name="RECEIVE_DATE" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                            </div>
                         </div>
-                        <div class="col-9">
-                            <input class="form-control" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd") readonly>
+                        <br />
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="">Lead time:</label>
+                                <p class="font-italic">(After get approval from GD)</p>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" name="LEAD_TIME" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                            </div>
                         </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-3">
-                            <label class="font-weight-bold lang" key="">Lead time:</label>
-                            <p class="font-italic">(After get approval from GD)</p>
-                        </div>
-                        <div class="col-9">
-                            <input class="form-control" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd") readonly>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-bordered mt-3">
-                            <tr>
-                                <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                                <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                                <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                            </tr>
-                            <tr>
+                        <div class="table-responsive">
+                            <table class="table-border-dark quote">
+                                <tr>
+                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                </tr>
+                                <tr>
 
-                                <td class="lang text-center" width="">Unit price</td>
-                                <td class="lang text-center" width="">Total cost</td>
-                                <td class="lang text-center" width="">Unit price</td>
-                                <td class="lang text-center" width="">Total cost</td>
+                                    <td class="lang text-center" width="">Unit price</td>
+                                    <td class="lang text-center" width="">Total cost</td>
+                                    <td class="lang text-center" width="">Unit price</td>
+                                    <td class="lang text-center" width="">Total cost</td>
 
-                            </tr>
-
-                            <tbody id="tableInfo">
-                                @{
-                                    for (int i = 1; i <= 5; i++)
-                                    {
-                                        <tr class="row-info">
-                                            <td>@(i)</td>
-                                            <td>  <input class="form-input inputDefault" name=@("ITEM_NAME_"+i) readonly/></td>
-
-                                            <td>
-                                                <input class="form-input type_number inputDefault" type="hidden" name=@("QTY_"+i) id=@("QTY_HIDDEN_"+i) />
-                                                <input class="form-input type_number inputDefault" id=@("QTY_"+i) readonly/>
-                                            </td>
-                                            <td>
-                                                <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_"+i) readonly/>
-                                                <input class="form-input type_number inputDefault" type="hidden" id=@("UNIT_PRICE_LCA_HIDDEN_"+i) />
-                                            </td>
-                                            <td>
-                                                <input class="form-input type_number inputDefault" id=@("TOTAL_LCA_"+i) readonly/>
-                                                <input class="form-input type_number inputDefault" type="hidden" id=@("TOTAL_LCA_HIDDEN_"+i) />
-                                            </td>
-                                            <td>
-                                                <input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_"+i) readonly/>
-
-                                            </td>
-                                            <td> <input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_"+i) readonly/></td>
-                                        </tr>
-                                    }
-                                }
-
-                                <tr class="p-3 summary">
-                                    <td class="border-0 font-italic" colspan="4">
-                                        * If request Items are over 5, please issue more request sheet
-                                    </td>
-                                    <td class="border-0 font-weight-bold">
-                                        <div class="text-right">
-                                            <span class="">Total:</span>
-                                            <span class="totalLCA">100</span>
-                                            <span class="">$</span>
-                                        </div>
-
-                                    </td>
-                                    <td class="border-0"></td>
-                                    <td class="border-0 font-weight-bold text-right">
-                                        <span class="">Total:</span>
-                                        <span class="totalCustomer">100</span>
-                                        <span class="">$</span>
-                                    </td>
                                 </tr>
 
-                            </tbody>
-                        </table>
-                        <div id="contextMenu" class="dropdown clearfix">
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
-                                style="display:block;position:static;margin-bottom:5px; color:red">
-                                <li>
-                                    <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                       class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
-                                </li>
+                                <tbody id="tableInfo">
+                                    @{
+                                        for (int i = 1; i <= 5; i++)
+                                        {
+                                            <tr class="row-info">
+                                                <td>@(i)</td>
+                                                <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
+                                                <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
+                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
+                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
+                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly/> </td>
+                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
+                                            </tr>
+                                        }
 
-                            </ul>
+                                    }
+
+                                    <tr class="p-3 summary">
+                                        <td class="border-0 font-italic" colspan="4">
+                                            * If request Items are over 5, please issue more request sheet
+                                        </td>
+                                        <td class="border-0 font-weight-bold">
+                                            <div class="text-right">
+                                                <span class="">Total:</span>
+                                                <span class="totalLCA">100</span>
+                                                <span class="">$</span>
+                                            </div>
+
+                                        </td>
+                                        <td class="border-0"></td>
+                                        <td class="border-0 font-weight-bold text-right">
+                                            <span class="">Total:</span>
+                                            <span class="totalCustomer">100</span>
+                                            <span class="">$</span>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <input type="hidden" name="quotes" id="quotes" />
+
+                            <div id="contextMenu" class="dropdown clearfix">
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
+                                    style="display:block;position:static;margin-bottom:5px; color:red">
+                                    <li>
+                                        <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
+                                           class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
+                                    </li>
+
+                                </ul>
+                            </div>
                         </div>
-                        <div></div>
+                        <br />
+                        <div class="row ml-1">
+                            <p class="font-italic text-underline">Comment</p>
+                            <textarea class="form-control" rows="3" name="COMMENT"></textarea>
+                        </div>
+                        <br />
+
                     </div>
-                    <div class="row ml-1">
-                        <p class="font-italic text-underline">Comment</p>
-                        <textarea class="form-control" rows="3" readonly></textarea>
-                    </div>
-                    <br />
 
                     <br />
                     <div class="col">
@@ -358,10 +351,10 @@
                             <button type="button" class="btn btn-warning font-weight-bold lang" key="attach">**File đính kèm**</button>
                             <input type="file" name="fileAttach" id="fileAttach" class="ml-3" multiple>
                         </div>
-                       
+
                     </div>
                     <div class=" mt-2 files">
-                        
+
 
                     </div>
                 </div>
@@ -391,7 +384,6 @@
     <script src="~/Content/js/scripts.js"></script>
     <script src="~/Content/js/lang.js"></script>
     <script src="~/Content/js/form_common.js"></script>
-
     <script src="~/Content/js/lca/form_lca.js"></script>
 
 </body>

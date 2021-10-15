@@ -9,7 +9,7 @@
 
 
 <div id="layoutSidenav_content">
-    <div class="container-fluid ">
+    <div class="container-fluid content">
         <div class="">
             <div class=" row">
 
@@ -97,9 +97,10 @@
                             <hr>
 
                             @{
-                                if (Model.PERMISSION.Contains(PERMISSION.QUOTE))
+
+                                if (Model.PERMISSION.Contains(PERMISSION.EDIT_INFO))
                                 {
-                                    <div class="create-quote">
+                                    <div class="create-quote-info">
                                         <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
                                         <div class="row">
                                             <div class="col-3">
@@ -139,17 +140,35 @@
 
                                                 <tbody id="tableInfo">
                                                     @{
-                                                        for (int i = 1; i <= 5; i++)
+                                                        var i = 1;
+                                                        foreach (var quote in Model.TICKET.LCA_QUOTEs)
                                                         {
                                                             <tr class="row-info">
                                                                 <td>@(i)</td>
-                                                                <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) /> </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) /> </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
+                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" /></td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
                                                             </tr>
+                                                            i++;
+                                                        }
+                                                        if (Model.TICKET.LCA_QUOTEs.Count < 5)
+                                                        {
+                                                            while (i < 6)
+                                                            {
+                                                                <tr class="row-info">
+                                                                    <td>@(i)</td>
+                                                                    <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly /> </td>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
+                                                                </tr>
+                                                                i++;
+                                                            }
                                                         }
 
                                                     }
@@ -189,10 +208,95 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="row ml-1">
-                                            <p class="font-italic text-underline">Comment</p>
-                                            <textarea class="form-control" rows="3" name="COMMENT"></textarea>
+
+                                    </div>
+                                }
+                                else if (Model.PERMISSION.Contains(PERMISSION.QUOTE))
+                                {
+                                    <div class="create-quote">
+                                        <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label class="font-weight-bold lang" key="received-date">Target date</label>
+                                            </div>
+                                            <div class="col-9">
+                                                <input class="form-control" name="RECEIVE_DATE" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            </div>
                                         </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label class="font-weight-bold lang" key="">Lead time:</label>
+                                                <p class="font-italic">(After get approval from GD)</p>
+                                            </div>
+                                            <div class="col-9">
+                                                <input class="form-control" name="LEAD_TIME" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            </div>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table-border-dark">
+                                                <tr>
+                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                                </tr>
+                                                <tr>
+
+                                                    <td class="lang text-center" width="">Unit price</td>
+                                                    <td class="lang text-center" width="">Total cost</td>
+                                                    <td class="lang text-center" width="">Unit price</td>
+                                                    <td class="lang text-center" width="">Total cost</td>
+
+                                                </tr>
+
+                                                <tbody id="tableInfo">
+                                                    @{
+                                                        var i = 1;
+                                                        foreach (var quote in Model.TICKET.LCA_QUOTEs)
+                                                        {
+                                                            <tr class="row-info">
+                                                                <td>@(i)</td>
+                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
+                                                            </tr>
+                                                            i++;
+                                                        }
+
+                                                    }
+
+                                                    <tr class="p-3 summary">
+                                                        <td class="border-0 font-italic" colspan="4">
+                                                            * If request Items are over 5, please issue more request sheet
+                                                        </td>
+                                                        <td class="border-0 font-weight-bold">
+                                                            <div class="text-right">
+                                                                <span class="">Total:</span>
+                                                                <span class="totalLCA">100</span>
+                                                                <span class="">$</span>
+                                                            </div>
+
+                                                        </td>
+                                                        <td class="border-0"></td>
+                                                        <td class="border-0 font-weight-bold text-right">
+                                                            <span class="">Total:</span>
+                                                            <span class="totalCustomer">100</span>
+                                                            <span class="">$</span>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                            <input type="hidden" name="quotes" id="quotes" />
+
+                                        </div>
+
                                         <br />
 
                                     </div>
@@ -269,6 +373,7 @@
                                             <input type="hidden" name="quotes" id="quotes" />
 
                                         </div>
+
                                     </div>
                                 }
                                 else
@@ -341,11 +446,40 @@
                                             </table>
 
                                         </div>
+
                                     </div>
                                 }
 
 
                             }
+
+
+                            <div class="row form-inline">
+                                <p class="font-weight-bold m-3">ID<span class="font-weight-normal font-italic">(Do LCA nhập)</span></p>
+                                @if (Model.PERMISSION.Contains(PERMISSION.ADD_ID))
+                                {
+                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control" })
+                                }
+                                else
+                                {
+                                    <span class="font-weight-bold">
+                                        @Html.DisplayFor(m => m.TICKET.LCA_ID)
+                                    </span>
+
+                                }
+                            </div>
+                            <div class="row ml-1">
+                                <p class="font-weight-bold text-underline ">Comment</p>
+                                @if (Model.PERMISSION.Contains(PERMISSION.COMMENT))
+                                {
+                                    @Html.TextAreaFor(m => m.TICKET.COMMENT, new { @Name = "COMMENT", @class = "form-control", rows = 4 })
+                                }
+                                else
+                                {
+                                    @Html.TextAreaFor(m => m.TICKET.COMMENT, new { @Name = "COMMENT", @class = "form-control bg-white", rows = 4, @readonly = "readonly" })
+
+                                }
+                            </div>
 
                             <br />
                             <div class="col">

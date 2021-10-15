@@ -31,7 +31,7 @@
 
         body, html {
             font-family: Arial;
-            font-size: 8px !important;
+            font-size: 9px !important;
         }
     </style>
 </head>
@@ -400,8 +400,24 @@
                 </table>
 
             </div>
-            
 
+
+            <div class="row form-inline">
+                <p class="font-weight-bold m-3">ID<span class="font-weight-normal font-italic">(Do LCA nhập):</span></p>
+
+
+                <span class="font-weight-bold">
+                    @Html.DisplayFor(m => m.TICKET.LCA_ID)
+                </span>
+
+
+            </div>
+            <div class="row ml-1">
+                <p class="font-weight-bold text-underline ">Comment:</p>
+                <span class="ml-1" style="white-space: pre-wrap">@Model.TICKET.COMMENT</span>
+
+
+            </div>
             <br />
             <div class="col">
                 <p class="font-italic font-weight-bold row text-underline">Note</p>
@@ -421,11 +437,8 @@
                 治工具運用前のチェックシートを使う：F06-PR.ACC.01-**
 
             </p>
-            <br />
 
         </div>
-
-
     </div>
     <script src="~/Content/js/moment.js"></script>
     <script src="~/Content/js/lang.js"></script>
