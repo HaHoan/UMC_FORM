@@ -22,8 +22,6 @@ namespace UMC_FORM.Models
 
         public int PROCEDURE_INDEX { get; set; }
 
-        [StringLength(50)]
-        public string FORM_NAME { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -102,6 +100,9 @@ namespace UMC_FORM.Models
 
         [StringLength(50)]
         public string LCA_ID { get; set; }
+
+        [StringLength(50)]
+        public string PROCESS { get; set; }
 
         [NotMapped]
         public List<LCA_QUOTE> LCA_QUOTEs { get; set; }

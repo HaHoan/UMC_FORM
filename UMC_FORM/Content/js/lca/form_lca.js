@@ -1,12 +1,15 @@
 ﻿$(function () {
 
     var $contextMenu = $("#contextMenu");
-    $('#formCreate').keydown(function (e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            return false;
-        }
-    });
+    $('#create').click(function (e) {
+        $('#formCreate').submit();
+    })
+    //$('#formCreate').keydown(function (e) {
+    //    if (e.keyCode == 13) {
+    //        e.preventDefault();
+    //        return false;
+    //    }
+    //});
     //$('#submitForm').keydown(function (e) {
     //    if (e.keyCode == 13) {
     //        e.preventDefault();

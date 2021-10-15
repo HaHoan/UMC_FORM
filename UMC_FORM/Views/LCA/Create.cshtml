@@ -365,7 +365,7 @@
                             <button class="btn btn-danger col lang" key="cancel" id="cancel">Từ chối</button>
                         </div>
                         <div class="col">
-                            <button class="btn btn-success col lang" key="create" type="submit">Đề xuất</button>
+                            <button class="btn btn-success col lang" key="create" id="create">Đề xuất</button>
                         </div>
                     </div>
                     <br>
@@ -378,6 +378,7 @@
         $("#btnCancel").click(function () {
             location.href = '@Url.Action("Index", "Home", new { type = @SendType.SENDTOME })'
         })
+
     </script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>

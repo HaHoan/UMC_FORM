@@ -20,7 +20,7 @@ namespace UMC_FORM.Controllers
             if (processNext != null)
             {
                 var stationNoNext = processNext.STATION_NO;
-                var users = db.Form_Stations.Where(r => r.STATION_NO == stationNoNext);// Tim users approval
+                var users = db.Form_Stations.Where(r => r.STATION_NO == stationNoNext && r.PROCESS == item.PROCESS_ID);// Tim users approval
                 foreach (var user in users)
                 {
                     if (user.USER_ID == userCode)

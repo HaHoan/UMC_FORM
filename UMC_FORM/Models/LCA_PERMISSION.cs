@@ -15,5 +15,7 @@ namespace UMC_FORM.Models
 
         [StringLength(50)]
         public string ITEM_COLUMN_PERMISSION { get; set; }
+        [StringLength(50)]
+        public string PROCESS { get; set; }
     }
 }

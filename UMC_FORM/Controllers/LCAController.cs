@@ -28,6 +28,30 @@ namespace UMC_FORM.Controllers
             }
 
         }
+        private List<StationApproveModel> getListApproved(string formName, DataContext db, List<LCA_FORM_01> list)
+        {
+            var listApproved = new List<StationApproveModel>();
+            var process = db.Form_Process.Where(m => m.FORM_NAME == formName).OrderBy(m => m.FORM_INDEX).ToList();
+            foreach (var pro in process)
+            {
+                var station = new StationApproveModel()
+                {
+                    STATION_NAME = pro.STATION_NAME,
+                    IS_APPROVED = false
+
+                };
+                var lca = list.Where(m => m.PROCEDURE_INDEX == pro.FORM_INDEX && m.IS_SIGNATURE == 1 && m.PROCESS == formName).FirstOrDefault();
+                if (lca != null)
+                {
+                    station.IS_APPROVED = true;
+                    station.APPROVE_DATE = lca.UPD_DATE;
+                    station.APPROVER = lca.SUBMIT_USER;
+                    station.COMPANY = "UMCVN";
+                }
+                listApproved.Add(station);
+            }
+            return listApproved;
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(LCA_FORM_01 ticket, string quotes)
@@ -56,6 +80,7 @@ namespace UMC_FORM.Controllers
                             ticket.TICKET = DateTime.Now.ToString("yyyyMMddHHmmss");
                             ticket.TITLE = Constant.LCA_FORM_01_TITLE;
                             ticket.UPD_DATE = DateTime.Now;
+                            ticket.PROCESS = (ticket.PAYER == PAYER.UMCVN) ? Constant.LCA_01 : Constant.LCA_Process;
 
                             db.LCA_FORM_01.Add(ticket);
                             #region FILES
@@ -90,10 +115,13 @@ namespace UMC_FORM.Controllers
                                 CREATE_USER = _sess.CODE,
                                 UPD_DATE = DateTime.Now,
                                 TITLE = Constant.LCA_FORM_01_TITLE,
-
-                                PROCESS_ID = Constant.LCA_FORM_01_NAME,
-                                LAST_INDEX = db.Form_Process.Where(m => m.FORM_NAME == Constant.LCA_FORM_01_NAME).Count() - 1
+                                PROCESS_ID = ticket.PROCESS,
+                                LAST_INDEX = db.Form_Process.Where(m => m.FORM_NAME == ticket.PROCESS).Count() - 1
                             };
+
+                            summary.PROCESS_ID = ticket.PROCESS;
+                            summary.LAST_INDEX = db.Form_Process.Where(m => m.FORM_NAME == ticket.PROCESS).Count() - 1;
+
                             db.Form_Summary.Add(summary);
                             #endregion
 
@@ -145,37 +173,21 @@ namespace UMC_FORM.Controllers
                         return HttpNotFound();
                     }
                     _sess = Session["user"] as Form_User;
-                    var userApprover = db.Form_Stations.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1)).ToList();
+                    var userApprover = db.Form_Stations.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1) && m.PROCESS == modelDetail.SUMARY.PROCESS_ID).ToList();
                     if (userApprover.Where(m => m.USER_ID == _sess.CODE).FirstOrDefault() != null)
                     {
                         modelDetail.IS_APPROVER = true;
                     }
                     modelDetail.PERMISSION = new List<string>();
-                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (modelDetail.SUMARY.PROCEDURE_INDEX + 1).ToString()).ToList();
+                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (modelDetail.SUMARY.PROCEDURE_INDEX + 1).ToString()
+                    && m.PROCESS == modelDetail.SUMARY.PROCESS_ID).ToList();
                     foreach (var permission in listPermission)
                     {
                         modelDetail.PERMISSION.Add(permission.ITEM_COLUMN);
                     }
-                    var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.LCA_FORM_01_NAME).OrderBy(m => m.FORM_INDEX).ToList();
-                    modelDetail.STATION_APPROVE = new List<StationApproveModel>();
-                    foreach (var pro in process)
-                    {
-                        var station = new StationApproveModel()
-                        {
-                            STATION_NAME = pro.STATION_NAME,
-                            IS_APPROVED = false
 
-                        };
-                        var lca = list.Where(m => m.PROCEDURE_INDEX == pro.FORM_INDEX && m.IS_SIGNATURE == 1).FirstOrDefault();
-                        if (lca != null)
-                        {
-                            station.IS_APPROVED = true;
-                            station.APPROVE_DATE = lca.UPD_DATE;
-                            station.APPROVER = lca.SUBMIT_USER;
-                            station.COMPANY = "UMCVN";
-                        }
-                        modelDetail.STATION_APPROVE.Add(station);
-                    }
+                    modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY.PROCESS_ID, db, list);
+
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     modelDetail.USERS = js.Serialize(db.Form_User.Select(r => new { name = r.CODE, username = r.NAME }).ToList());
 
@@ -247,7 +259,7 @@ namespace UMC_FORM.Controllers
 
                     // để lưu lại bước reject
                     summary.REJECT_INDEX = form.PROCEDURE_INDEX;
-                    var process = db.Form_Process.Where(m => m.FORM_INDEX == summary.REJECT_INDEX).FirstOrDefault();
+                    var process = db.Form_Process.Where(m => m.FORM_INDEX == summary.REJECT_INDEX && m.FORM_NAME == summary.PROCESS_ID).FirstOrDefault();
                     if (process == null)
                     {
                         ModelState.AddModelError("Error", "Error System!!!");
@@ -328,7 +340,7 @@ namespace UMC_FORM.Controllers
                     if (summary.IS_REJECT)
                     {
                         form.IS_SIGNATURE = 0;
-                        var processReject = db.Form_Reject.Where(m => m.PROCESS_NAME == Constant.LCA_FORM_01_NAME && m.START_INDEX == summary.RETURN_TO).ToList();
+                        var processReject = db.Form_Reject.Where(m => m.PROCESS_NAME == summary.PROCESS_ID && m.START_INDEX == summary.RETURN_TO).ToList();
                         var currentStep = processReject.Where(m => m.FORM_INDEX == summary.PROCEDURE_INDEX).FirstOrDefault();
                         if (currentStep != null)
                         {
@@ -368,19 +380,20 @@ namespace UMC_FORM.Controllers
                     form.UPD_DATE = DateTime.Now;
                     form.SUBMIT_USER = _sess.CODE;
                     form.ID = Guid.NewGuid().ToString();
-                  
-                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == form.PROCEDURE_INDEX.ToString()).ToList();
+
+                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == form.PROCEDURE_INDEX.ToString()
+                    && m.PROCESS == summary.PROCESS_ID).ToList();
                     if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault() != null)
                     {
                         form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
                         form.LEAD_TIME = infoTicket.LEAD_TIME;
-                       
+
                     }
-                    if(listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.ADD_ID).FirstOrDefault() != null)
+                    if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.ADD_ID).FirstOrDefault() != null)
                     {
                         form.LCA_ID = infoTicket.LCA_ID;
                     }
-                    if(listPermission.Where(m => m.ITEM_COLUMN ==  PERMISSION.COMMENT).FirstOrDefault() != null)
+                    if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.COMMENT).FirstOrDefault() != null)
                     {
                         form.COMMENT = infoTicket.COMMENT;
                     }
@@ -402,7 +415,7 @@ namespace UMC_FORM.Controllers
                         form.REQUEST_CONTENT = infoTicket.REQUEST_CONTENT;
                     }
                     #region Quote
-                    AddQuotes(quotes, db, infoTicket,form);
+                    AddQuotes(quotes, db, infoTicket, form);
                     #endregion
                     #region Files
                     HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
@@ -422,6 +435,8 @@ namespace UMC_FORM.Controllers
                     }
 
                     #endregion
+                    form.PROCESS = form.PAYER == PAYER.CUSTOMER ? Constant.LCA_Process : Constant.LCA_01;
+
                     db.LCA_FORM_01.Add(form);
                     #endregion
 
@@ -433,6 +448,9 @@ namespace UMC_FORM.Controllers
                     {
                         summary.IS_FINISH = true;
                     }
+                    summary.PROCESS_ID = form.PROCESS;
+                    summary.LAST_INDEX = db.Form_Process.Where(m => m.FORM_NAME == form.PROCESS).Count() - 1;
+
                     #endregion
 
                     db.SaveChanges();
@@ -478,27 +496,7 @@ namespace UMC_FORM.Controllers
                     modelDetail.TICKET.FILES = db.LCA_FILE.Where(m => m.TICKET == modelDetail.TICKET.TICKET).ToList();
                     modelDetail.TICKET.LCA_QUOTEs = db.LCA_QUOTE.Where(m => m.ID_TICKET == modelDetail.TICKET.ID).ToList();
 
-                    var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.LCA_FORM_01_NAME).OrderBy(m => m.FORM_INDEX).ToList();
-                    modelDetail.STATION_APPROVE = new List<StationApproveModel>();
-
-                    foreach (var pro in process)
-                    {
-                        var station = new StationApproveModel()
-                        {
-                            STATION_NAME = pro.STATION_NAME,
-                            IS_APPROVED = false
-
-                        };
-                        var lca = list.Where(m => m.PROCEDURE_INDEX == pro.FORM_INDEX && m.IS_SIGNATURE == 1).FirstOrDefault();
-                        if (lca != null)
-                        {
-                            station.IS_APPROVED = true;
-                            station.APPROVE_DATE = lca.UPD_DATE;
-                            station.APPROVER = lca.SUBMIT_USER;
-                            station.COMPANY = "UMCVN";
-                        }
-                        modelDetail.STATION_APPROVE.Add(station);
-                    }
+                    modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY.PROCESS_ID, db, list);
 
                     return View(modelDetail);
                 }
