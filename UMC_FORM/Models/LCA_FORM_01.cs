@@ -4,7 +4,6 @@ namespace UMC_FORM.Models
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class LCA_FORM_01
     {
@@ -102,7 +101,7 @@ namespace UMC_FORM.Models
         public string LCA_ID { get; set; }
 
         [StringLength(50)]
-        public string PROCESS { get; set; }
+        public string STATION_NAME { get; set; }
 
         [NotMapped]
         public List<LCA_QUOTE> LCA_QUOTEs { get; set; }

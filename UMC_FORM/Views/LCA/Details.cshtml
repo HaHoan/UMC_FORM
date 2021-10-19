@@ -149,7 +149,7 @@
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly/> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
                                                             </tr>
                                                             i++;
@@ -381,8 +381,8 @@
                                     <div class="view-quote">
                                         <div class="row">
                                             <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
-                                            <label class="col lang text-right">受付日／Ngày nhận: <span>@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
-                                            <label class="lang col text-right">Lead time: <span>@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
+                                            <label class="col lang text-right">受付日／Ngày nhận: <span name="RECEIVE_DATE">@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
+                                            <label class="lang col text-right">Lead time: <span name="LEAD_TIME">@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
                                         </div>
 
                                         <div class="table-responsive">
@@ -464,6 +464,7 @@
                                 {
                                     <span class="font-weight-bold">
                                         @Html.DisplayFor(m => m.TICKET.LCA_ID)
+                                        @Html.HiddenFor(m => m.TICKET.LCA_ID, new { @Name="LCA_ID"})
                                     </span>
 
                                 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -40,8 +41,8 @@ namespace UMC_FORM.Controllers
                     IS_APPROVED = false
 
                 };
-                var lca = list.Where(m => m.PROCEDURE_INDEX == pro.FORM_INDEX && m.IS_SIGNATURE == 1 && m.PROCESS == formName).FirstOrDefault();
-                if (lca != null)
+                var lca = list.Where(m => m.PROCEDURE_INDEX == pro.FORM_INDEX && m.IS_SIGNATURE == 1).FirstOrDefault();
+                if (lca != null && lca.STATION_NAME.Trim() == station.STATION_NAME.Trim())
                 {
                     station.IS_APPROVED = true;
                     station.APPROVE_DATE = lca.UPD_DATE;
@@ -80,8 +81,9 @@ namespace UMC_FORM.Controllers
                             ticket.TICKET = DateTime.Now.ToString("yyyyMMddHHmmss");
                             ticket.TITLE = Constant.LCA_FORM_01_TITLE;
                             ticket.UPD_DATE = DateTime.Now;
-                            ticket.PROCESS = (ticket.PAYER == PAYER.UMCVN) ? Constant.LCA_01 : Constant.LCA_Process;
-
+                            var processName = (ticket.PAYER == PAYER.UMCVN) ? Constant.LCA_01 : Constant.LCA_Process;
+                            var process = db.Form_Process.Where(m => m.FORM_NAME == processName).ToList();
+                            ticket.STATION_NAME = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                             db.LCA_FORM_01.Add(ticket);
                             #region FILES
                             HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
@@ -98,8 +100,9 @@ namespace UMC_FORM.Controllers
                                 if (fileName != "")
                                 {
                                     filedata.SaveAs(fullPath);
+                                    db.LCA_FILE.Add(lcaFile);
                                 }
-                                db.LCA_FILE.Add(lcaFile);
+
                             }
 
                             #endregion
@@ -115,12 +118,9 @@ namespace UMC_FORM.Controllers
                                 CREATE_USER = _sess.CODE,
                                 UPD_DATE = DateTime.Now,
                                 TITLE = Constant.LCA_FORM_01_TITLE,
-                                PROCESS_ID = ticket.PROCESS,
-                                LAST_INDEX = db.Form_Process.Where(m => m.FORM_NAME == ticket.PROCESS).Count() - 1
+                                PROCESS_ID = processName
                             };
-
-                            summary.PROCESS_ID = ticket.PROCESS;
-                            summary.LAST_INDEX = db.Form_Process.Where(m => m.FORM_NAME == ticket.PROCESS).Count() - 1;
+                            summary.LAST_INDEX = process.Count() - 1;
 
                             db.Form_Summary.Add(summary);
                             #endregion
@@ -335,7 +335,8 @@ namespace UMC_FORM.Controllers
 
                     _sess = Session["user"] as Form_User;
                     var summary = db.Form_Summary.Where(m => m.TICKET == formDb.TICKET).FirstOrDefault();
-
+                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (form.PROCEDURE_INDEX + 1).ToString()
+                 && m.PROCESS == summary.PROCESS_ID).ToList();
                     #region FORM
                     if (summary.IS_REJECT)
                     {
@@ -381,8 +382,6 @@ namespace UMC_FORM.Controllers
                     form.SUBMIT_USER = _sess.CODE;
                     form.ID = Guid.NewGuid().ToString();
 
-                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == form.PROCEDURE_INDEX.ToString()
-                    && m.PROCESS == summary.PROCESS_ID).ToList();
                     if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault() != null)
                     {
                         form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
@@ -430,31 +429,47 @@ namespace UMC_FORM.Controllers
                         lcaFile.FILE_URL = string.Format("/UploadedFiles/{0}-{1}", DateTime.Now.ToString("yyyyMMddHHmmss"), fileName);
                         lcaFile.FILE_NAME = fileName;
                         string fullPath = Server.MapPath(lcaFile.FILE_URL);
-                        filedata.SaveAs(fullPath);
-                        db.LCA_FILE.Add(lcaFile);
+                        if (string.IsNullOrEmpty(fileName))
+                        {
+                            filedata.SaveAs(fullPath);
+                            db.LCA_FILE.Add(lcaFile);
+                        }
+
                     }
 
                     #endregion
-                    form.PROCESS = form.PAYER == PAYER.CUSTOMER ? Constant.LCA_Process : Constant.LCA_01;
+                    // Nếu UMC trả tiền sẽ dùng process ko qua BC
+                    var processName = form.PAYER == PAYER.CUSTOMER ? Constant.LCA_Process : Constant.LCA_01;
 
+                    var process = db.Form_Process.Where(m => m.FORM_NAME == processName).ToList();
+                    form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                     db.LCA_FORM_01.Add(form);
                     #endregion
 
                     #region SUMARY
+                    if (summary.IS_REJECT && processName != summary.PROCESS_ID)
+                    {
+                        var oldStationReject = db.Form_Process.Where(m => m.FORM_INDEX == (summary.REJECT_INDEX + 1) && m.FORM_NAME == summary.PROCESS_ID).FirstOrDefault();
+                        if (oldStationReject != null)
+                        {
+                            var stationReject = process.Where(m => m.STATION_NAME.Trim() == oldStationReject.STATION_NAME.Trim() && m.FORM_NAME == processName).FirstOrDefault();
+                            summary.REJECT_INDEX = stationReject.FORM_INDEX - 1;
+                        }
 
+                    }
                     summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
                     summary.UPD_DATE = DateTime.Now;
                     if (form.PROCEDURE_INDEX == summary.LAST_INDEX)
                     {
                         summary.IS_FINISH = true;
                     }
-                    summary.PROCESS_ID = form.PROCESS;
-                    summary.LAST_INDEX = db.Form_Process.Where(m => m.FORM_NAME == form.PROCESS).Count() - 1;
+                    summary.PROCESS_ID = processName;
+                    summary.LAST_INDEX = process.Count() - 1;
 
                     #endregion
-
                     db.SaveChanges();
                     transaction.Commit();
+                    
                     return STATUS.SUCCESS;
                 }
                 catch (Exception e)
@@ -466,7 +481,53 @@ namespace UMC_FORM.Controllers
 
             }
         }
+        private void sendMailApprove(Form_Summary summary)
+        {
+            var process = ProcessRepository.GetProcess(summary.PROCESS_ID, summary.PROCEDURE_INDEX + 1);
+            var stations = StationRepository.GetStations(process.STATION_NO);
+            var userID = stations.Select(r => r.USER_ID).ToList();
+            var userMails = UserRepository.GetUsers(userID);
 
+            var dear = "Dear All !";
+            if (userMails.Count == 1)
+            {
+                var userApproval = UserRepository.GetUser(userID.FirstOrDefault());
+                dear = $"Dear {userApproval.SHORT_NAME} san !";
+            }
+
+            string body = $@"
+                                                <h3>{dear}</h3>
+                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
+	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={summary.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+            MailHelper.SenMailOutlook(userMails, body);
+        }
+
+        private void sendMailReject(Form_Summary summary)
+        {
+            var userCreate = UserRepository.GetUser(summary.CREATE_USER);
+            List<string> listEmails = new List<string>();
+            listEmails.Add(userCreate.EMAIL);
+            string body = $@"
+                                                <h3>Dear {userCreate.SHORT_NAME} san !</h3>
+                                                <h3 style='color: red' >Request reject. Please click below link view details:</h3>
+	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={summary.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+            MailHelper.SenMailOutlook(listEmails, body);
+
+        }
         public ActionResult PrintView(string ticket)
         {
             try

@@ -10,7 +10,7 @@ namespace UMC_FORM.Business
 {
     public static class MailHelper
     {
-        public static async Task SenMailOutlook(string to, string body)
+        public static async Task SenMailOutlookAsync(string to, string body)
         {
             MailMessage mailMessage = new MailMessage();
             var maiAccount = Bet.Util.Config.GetValue("mail_account");
@@ -34,7 +34,7 @@ namespace UMC_FORM.Business
             mailMessage.IsBodyHtml = true;
             await smtpClient.SendMailAsync(mailMessage);
         }
-        public static async Task SenMailOutlook(List<string> to, string body)
+        public static async Task SenMailOutlookAsync(List<string> to, string body)
         {
             MailMessage mailMessage = new MailMessage();
             var maiAccount = Bet.Util.Config.GetValue("mail_account");
@@ -61,5 +61,36 @@ namespace UMC_FORM.Business
             mailMessage.IsBodyHtml = true;
             await smtpClient.SendMailAsync(mailMessage);
         }
+
+        public static void SenMailOutlook(List<string> to, string body)
+        {
+            MailMessage mailMessage = new MailMessage();
+            var maiAccount = Bet.Util.Config.GetValue("mail_account");
+            var maiPass = Bet.Util.Config.GetValue("mail_password");
+            SmtpClient smtpClient = new SmtpClient
+            {
+                EnableSsl = true,
+                Host = "smtp.office365.com",
+                Port = 587,
+                UseDefaultCredentials = false,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+
+                TargetName = "STARTTLS/smtp.office365.com",
+                Credentials = new NetworkCredential(maiAccount, maiPass)
+            };
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            mailMessage.From = new MailAddress(maiAccount);
+            foreach (var item in to)
+            {
+                mailMessage.To.Add(item);
+            }
+            mailMessage.Subject = Constant.SUBJECT;
+            mailMessage.Body = body;
+            mailMessage.IsBodyHtml = true;
+            smtpClient.SendMailAsync(mailMessage);
+        }
+
+
+
     }
 }

@@ -4,18 +4,7 @@
     $('#create').click(function (e) {
         $('#formCreate').submit();
     })
-    //$('#formCreate').keydown(function (e) {
-    //    if (e.keyCode == 13) {
-    //        e.preventDefault();
-    //        return false;
-    //    }
-    //});
-    //$('#submitForm').keydown(function (e) {
-    //    if (e.keyCode == 13) {
-    //        e.preventDefault();
-    //        return false;
-    //    }
-    //});
+    
     $('html').click(function () {
         $contextMenu.hide();
     });

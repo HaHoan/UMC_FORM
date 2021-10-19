@@ -166,7 +166,10 @@ namespace UMC_FORM.Controllers
                             STATION_NO = stationNo,
                             STATION_NAME = item.name,
                             USER_ID = u.code,
-                            USER_NAME = u.name
+                            USER_NAME = u.name,
+                            FORM_INDEX = item.index,
+                            PROCESS = selectedForm
+                           
                         });
                     }
 
@@ -179,7 +182,10 @@ namespace UMC_FORM.Controllers
                         STATION_NO = stationNo,
                         STATION_NAME = item.name,
                         USER_ID = "",
-                        USER_NAME = ""
+                        USER_NAME = "",
+                        FORM_INDEX = item.index,
+                        PROCESS = selectedForm
+
                     });
                 }
             }

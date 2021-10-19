@@ -427,7 +427,7 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                            await Business.MailHelper.SenMailOutlook(userMails, body);
+                            await Business.MailHelper.SenMailOutlookAsync(userMails, body);
                         }
                         catch (Exception ex)
                         {
@@ -501,7 +501,7 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                            Task t = Business.MailHelper.SenMailOutlook(userCreate.EMAIL, body);
+                            Task t = Business.MailHelper.SenMailOutlookAsync(userCreate.EMAIL, body);
                             await t;
                             #endregion
                         }
@@ -761,7 +761,7 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                                Task sendMail = Business.MailHelper.SenMailOutlook(userApproval.EMAIL, body);
+                                Task sendMail = Business.MailHelper.SenMailOutlookAsync(userApproval.EMAIL, body);
                                 await sendMail;
                                 return RedirectToAction("Index", "Home", new { type = SendType.SENDTOME });
                             }
@@ -984,7 +984,7 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                                Task sendMail = Business.MailHelper.SenMailOutlook(userApproval.EMAIL, body);
+                                Task sendMail = Business.MailHelper.SenMailOutlookAsync(userApproval.EMAIL, body);
                                 await sendMail;
                                 //return RedirectToAction("Index", "Home", new { type = SendType.SENDTOME });
                             }
@@ -1117,7 +1117,7 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                        await Business.MailHelper.SenMailOutlook(userMails, body);
+                        await Business.MailHelper.SenMailOutlookAsync(userMails, body);
                     }
                     #endregion
                     return RedirectToAction("Index", "Home");
@@ -1215,7 +1215,7 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                        await Business.MailHelper.SenMailOutlook(userMails, body);
+                        await Business.MailHelper.SenMailOutlookAsync(userMails, body);
                         message = "OK";
                     }
                     #endregion
@@ -1399,7 +1399,7 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                Task t = Business.MailHelper.SenMailOutlook(userApproval.EMAIL, body);
+                Task t = Business.MailHelper.SenMailOutlookAsync(userApproval.EMAIL, body);
                 await t;
                 return RedirectToAction("Index", "Home");
             }

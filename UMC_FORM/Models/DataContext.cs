@@ -28,10 +28,7 @@
         public virtual DbSet<Form_Reject> Form_Reject { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Form_Process>()
-                .Property(e => e.RETURN_STATION_NO)
-                .IsUnicode(false);
-
+           
             modelBuilder.Entity<PR_ACC_F06>()
                 .Property(e => e.AMOUNT_1)
                 .HasPrecision(18, 0);
