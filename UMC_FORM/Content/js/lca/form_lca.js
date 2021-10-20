@@ -1,10 +1,52 @@
-﻿$(function () {
+﻿function disableButtonWhenSubmit(btn) {
+    $('#lca_create').prop("disabled", true);
+    $('#lca_cancel').prop("disabled", true);
+    $('#lca_accept').prop("disabled", true);
+    $('#lca_reject').prop("disabled", true);
+  
+    $(btn).html(
+        '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
+    );
+}
+
+$(function () {
 
     var $contextMenu = $("#contextMenu");
-    $('#create').click(function (e) {
+    //var validator = $("#formCreate").validate({
+
+    //    success: function () {
+    //        if (validator.numberOfInvalids() == 0) {
+    //            $('#lca_create').prop("disabled", true);
+    //            $('#lca_create').html(
+    //                '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
+    //            );
+    //        }
+
+    //    }
+    //});
+    $('#lca_create').click(function (e) {
+        disableButtonWhenSubmit(this)
         $('#formCreate').submit();
+
     })
-    
+    $('#lca_accept').click(function (e) {
+        disableButtonWhenSubmit(this)
+        $('#status').val("accept")
+        $('#submitForm').submit();
+
+    })
+    $('#lca_reject').click(function (e) {
+        disableButtonWhenSubmit(this)
+        $('#status').val("reject")
+        $('#submitForm').submit();
+
+    })
+
+    $('#lca_cancel').click(function (e) {
+        window.location.href = $("#RedirectTo").val()
+    })
+
+
     $('html').click(function () {
         $contextMenu.hide();
     });
@@ -56,7 +98,7 @@
 
     $("body").on("contextmenu", "#tableInfo tr", function (e) {
         $contextMenu.css({
-            display:'block',
+            display: 'block',
             left: e.pageX,
             top: e.pageY
         });
@@ -127,6 +169,17 @@
         $(this).addClass('text-center')
     })
 });
+function OnSuccess(response) {
+    if (response.result == 'success') {
+        sendMail(response.ticket, response.typeMail)
+       window.location.href = $("#RedirectTo").val()
+    } else {
+        alert(response.result)
+    }
+}
+function OnFailure(response) {
+    alert("Error occured.")
+}
 function updateQuote() {
     try {
         quotes = []
@@ -209,7 +262,7 @@ function addTdUnitPrice(name, rowIndex, length) {
             updateQuote()
         }
     })
-    input1.prop('readonly',true)
+    input1.prop('readonly', true)
     col.append(input1);
     input1.attr('id', name + rowIndex);
     var input2 = $('<input/>', {
@@ -372,5 +425,21 @@ function updateSTT() {
             index++;
         }
 
+    });
+}
+function sendMail(ticket, typeMail) {
+    $.ajax({
+        url: "/LCA/SendMail",
+        type: "Post",
+        data: {
+            ticket: ticket,
+            typeMail: typeMail
+        },
+        success: function (response) {
+            
+        },
+        error: function (e) {
+            console.log(e);
+        }
     });
 }

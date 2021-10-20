@@ -15,7 +15,13 @@
 
                 <div class="col-md-10 border-right">
                     <input type="hidden" id="users" value="@Model.USERS" />
-                    @using (Html.BeginForm("Details", "LCA", FormMethod.Post, new { enctype = "multipart/form-data", id = "submitForm" }))
+
+                    @using (Ajax.BeginForm("Details", "LCA", new AjaxOptions
+                    {
+                        OnSuccess = "OnSuccess",
+                        OnFailure = "OnFailure",
+                        LoadingElementId = "progress"
+                    }, new { enctype = "multipart/form-data", id = "submitForm" }))
                     {
                         @Html.AntiForgeryToken()
                         <br>
@@ -44,32 +50,23 @@
                             <input id="status" name="status" type="hidden" />
                             if (Model.SUMARY.IS_REJECT)
                             {
-                                <button class="btn btn-danger col lang" key="reaccept" id="accept">Chấp thuận</button>
+
+                                <button class="spinner-button btn btn-danger mb-2 lang col" key="reaccept" id="lca_accept" type="button">Chấp thuận</button>
                             }
                             else
                             {
                                 <div class="row">
                                     <div class="col">
-                                        <button class="btn btn-danger col lang" key="reject" id="reject">Từ chối</button>
+                                        <button class="spinner-button btn btn-danger mb-2 lang col" key="reject" id="lca_reject" type="button">Từ chối</button>
                                     </div>
                                     <div class="col">
-                                        <button class="btn btn-success col lang" key="accept" id="accept">Chấp thuận</button>
+                                        <button class="spinner-button btn btn-success mb-2 lang col" key="accept" id="lca_accept" type="button">Chấp thuận</button>
                                     </div>
 
                                 </div>
                             }
 
-                            <script>
-                                $(function () {
-                                    $('#accept').click(function () {
-                                        $('#status').val("accept")
-                                    });
-                                    $('#reject').click(function () {
-                                        $('#status').val("reject")
-                                    });
 
-                                })
-                            </script>
                         }
 
                         <div class="row mt-4">
@@ -464,7 +461,7 @@
                                 {
                                     <span class="font-weight-bold">
                                         @Html.DisplayFor(m => m.TICKET.LCA_ID)
-                                        @Html.HiddenFor(m => m.TICKET.LCA_ID, new { @Name="LCA_ID"})
+                                        @Html.HiddenFor(m => m.TICKET.LCA_ID, new { @Name = "LCA_ID" })
                                     </span>
 
                                 }
@@ -570,6 +567,8 @@
         </div>
     </div>
 </div>
+@Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }));
+@Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
 @Scripts.Render("~/Content/js/mention.js")
 @Scripts.Render("~/Content/js/moment.js")
 @Scripts.Render("~/Content/js/jquery.simplePagination.js")

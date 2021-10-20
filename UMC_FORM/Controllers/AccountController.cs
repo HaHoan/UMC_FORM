@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -24,12 +25,13 @@ namespace UMC_FORM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(Form_User user, string ReturnUrl)
+        public async Task<ActionResult> Index(Form_User user, string ReturnUrl)
         {
-            int userId = UserRepository.ValidateUser(user);
-            var session = UserRepository.GetUser(user.CODE);
             string message = string.Empty;
-
+            var t1 = UserRepository.ValidateUserAsync(user);
+            var t2 = UserRepository.GetUserAsync(user.CODE);
+            int userId = await t1;
+            var session = await t2;
             switch (userId)
             {
                 case -2:// Sử dụng Pass mặc định, yêu cầu đổi pass

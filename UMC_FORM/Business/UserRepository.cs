@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using UMC_FORM.Models;
 
@@ -30,11 +31,39 @@ namespace UMC_FORM.Business
             }
             return 0;
         }
+        public static async Task<int> ValidateUserAsync(Form_User user)
+        {
+            using (DataContext context = new DataContext())
+            {
+                var userExist = context.Form_User.FirstOrDefault(r => r.CODE == user.CODE && r.PASSWORD == user.PASSWORD);
+                if (userExist is null)
+                {
+                    return -1;
+                }
+                if (userExist.PASSWORD.ToUpper() == "UMCVN")
+                {
+                    return -2;
+                }
+                var role = await context.Form_Roles.FindAsync(userExist.ROLE_ID);
+                if (role.NAME.ToUpper() == "ADMIN")// Admin
+                {
+                    return 1;
+                }
+            }
+            return 0;
+        }
         public static Form_User GetUser(string username)
         {
             using (DataContext context = new DataContext())
             {
                 return context.Form_User.Find(username);
+            }
+        }
+        public static async Task<Form_User> GetUserAsync(string username)
+        {
+            using (DataContext context = new DataContext())
+            {
+                return await context.Form_User.FindAsync(username);
             }
         }
         public static void Update(string code, string newPass)
@@ -47,24 +76,24 @@ namespace UMC_FORM.Business
                 context.SaveChanges();
             }
         }
-        public static bool Update(string code,Form_User user)
+        public static bool Update(string code, Form_User user)
         {
             try
             {
-            using (DataContext context = new DataContext())
-            {
-                var userId = context.Form_User.Find(code);
-                userId.CODE = user.CODE;
-                userId.DEPT = user.DEPT;
-                userId.EMAIL = user.EMAIL;
-                userId.ROLE_ID = user.ROLE_ID;
-                userId.NAME = user.NAME;
-                userId.PASSWORD = user.PASSWORD;
-                userId.SIGNATURE = user.SIGNATURE;
-                context.Entry<Form_User>(userId).State = System.Data.Entity.EntityState.Modified;
-                context.SaveChanges();
+                using (DataContext context = new DataContext())
+                {
+                    var userId = context.Form_User.Find(code);
+                    userId.CODE = user.CODE;
+                    userId.DEPT = user.DEPT;
+                    userId.EMAIL = user.EMAIL;
+                    userId.ROLE_ID = user.ROLE_ID;
+                    userId.NAME = user.NAME;
+                    userId.PASSWORD = user.PASSWORD;
+                    userId.SIGNATURE = user.SIGNATURE;
+                    context.Entry<Form_User>(userId).State = System.Data.Entity.EntityState.Modified;
+                    context.SaveChanges();
                     return true;
-            }
+                }
 
             }
             catch (Exception ex)

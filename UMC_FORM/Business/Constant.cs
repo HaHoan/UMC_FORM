@@ -29,6 +29,7 @@ namespace UMC_FORM.Business
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
+        public static string ERROR_NOTICE = "Có lỗi xảy ra";
     }
 
     public static class PERMISSION

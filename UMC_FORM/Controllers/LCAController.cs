@@ -55,11 +55,11 @@ namespace UMC_FORM.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(LCA_FORM_01 ticket, string quotes)
+        public JsonResult Create(LCA_FORM_01 ticket, string quotes)
         {
             if (ticket == null)
             {
-                return HttpNotFound();
+                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
             }
             try
             {
@@ -127,12 +127,18 @@ namespace UMC_FORM.Controllers
 
                             db.SaveChanges();
                             transaction.Commit();
+                            return Json(new
+                            {
+                                result = STATUS.SUCCESS,
+                                ticket = summary.TICKET,
+                                typeMail = STATUS.ACCEPT
+                            }, JsonRequestBehavior.AllowGet);
                         }
                         catch (Exception e)
                         {
                             transaction.Rollback();
                             ModelState.AddModelError("Error", e.Message.ToString());
-                            return View();
+                            return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -143,9 +149,9 @@ namespace UMC_FORM.Controllers
             {
 
                 ModelState.AddModelError("Error", e.Message.ToString());
-                return View();
+                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
             }
-            return RedirectToAction("Index", "Home", new { type = SendType.MYREQUEST });
+
         }
 
         public ActionResult Details(string ticket)
@@ -204,7 +210,7 @@ namespace UMC_FORM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Details(string status, string quotes, LCA_FORM_01 infoTicket)
+        public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket)
         {
             try
             {
@@ -213,7 +219,7 @@ namespace UMC_FORM.Controllers
                     var formDb = db.LCA_FORM_01.Where(m => m.TICKET == infoTicket.TICKET).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();
                     if (formDb == null)
                     {
-                        return HttpNotFound();
+                        return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
@@ -222,18 +228,40 @@ namespace UMC_FORM.Controllers
                             string result = Accept(formDb, db, infoTicket, quotes);
                             if (result == STATUS.ERROR)
                             {
-                                return View();
+                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                            }
+                            else
+                            {
+                                return Json(new
+                                {
+                                    result = STATUS.SUCCESS,
+                                    ticket = formDb.TICKET,
+                                    typeMail = STATUS.ACCEPT
+                                }, JsonRequestBehavior.AllowGet);
                             }
                         }
                         else if (status == STATUS.REJECT)
                         {
                             string result = Reject(formDb, db);
+                            if (result == STATUS.ERROR)
+                            {
+                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                            }
+                            else
+                            {
+                                return Json(new
+                                {
+                                    result = STATUS.SUCCESS,
+                                    ticket = formDb.TICKET,
+                                    typeMail = STATUS.REJECT
+                                }, JsonRequestBehavior.AllowGet);
+                            }
                         }
                         else
                         {
-                            return View();
+                            return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
                         }
-
+                        
                     }
                 }
             }
@@ -241,9 +269,8 @@ namespace UMC_FORM.Controllers
             {
 
                 ModelState.AddModelError("Error", e.Message.ToString());
-                return View();
+                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
             }
-            return RedirectToAction("Index", "Home", new { type = SendType.SENDTOME });
         }
 
         private string Reject(LCA_FORM_01 formDb, DataContext db)
@@ -469,7 +496,7 @@ namespace UMC_FORM.Controllers
                     #endregion
                     db.SaveChanges();
                     transaction.Commit();
-                    
+
                     return STATUS.SUCCESS;
                 }
                 catch (Exception e)
@@ -481,53 +508,8 @@ namespace UMC_FORM.Controllers
 
             }
         }
-        private void sendMailApprove(Form_Summary summary)
-        {
-            var process = ProcessRepository.GetProcess(summary.PROCESS_ID, summary.PROCEDURE_INDEX + 1);
-            var stations = StationRepository.GetStations(process.STATION_NO);
-            var userID = stations.Select(r => r.USER_ID).ToList();
-            var userMails = UserRepository.GetUsers(userID);
+        
 
-            var dear = "Dear All !";
-            if (userMails.Count == 1)
-            {
-                var userApproval = UserRepository.GetUser(userID.FirstOrDefault());
-                dear = $"Dear {userApproval.SHORT_NAME} san !";
-            }
-
-            string body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-            MailHelper.SenMailOutlook(userMails, body);
-        }
-
-        private void sendMailReject(Form_Summary summary)
-        {
-            var userCreate = UserRepository.GetUser(summary.CREATE_USER);
-            List<string> listEmails = new List<string>();
-            listEmails.Add(userCreate.EMAIL);
-            string body = $@"
-                                                <h3>Dear {userCreate.SHORT_NAME} san !</h3>
-                                                <h3 style='color: red' >Request reject. Please click below link view details:</h3>
-	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-            MailHelper.SenMailOutlook(listEmails, body);
-
-        }
         public ActionResult PrintView(string ticket)
         {
             try
@@ -567,6 +549,79 @@ namespace UMC_FORM.Controllers
                 ModelState.AddModelError("Error", e.Message.ToString());
                 return View();
             }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SendMail(string ticket, string typeMail)
+        {
+            try
+            {
+                using (var db = new DataContext())
+                {
+                    var summary = db.Form_Summary.Where(m => m.TICKET == ticket).FirstOrDefault();
+                    List<string> userMails = new List<string>();
+                    var dear = "Dear All !";
+                    if (summary.PROCEDURE_INDEX == -1)
+                    {
+                        var userCreate = UserRepository.GetUser(summary.CREATE_USER);
+                        userMails.Add(userCreate.EMAIL);
+                        dear = $"Dear {userCreate.SHORT_NAME} san !";
+                    }
+                    else
+                    {
+                        var process = ProcessRepository.GetProcess(summary.PROCESS_ID, summary.PROCEDURE_INDEX + 1);
+                        var stations = StationRepository.GetStations(process.STATION_NO);
+                        var userID = stations.Select(r => r.USER_ID).ToList();
+                        userMails = UserRepository.GetUsers(userID);
+                        if (userMails.Count == 1)
+                        {
+                            var userApproval = db.Form_User.Where(m => m.CODE == userID.FirstOrDefault()).FirstOrDefault();
+                            dear = $"Dear {userApproval.SHORT_NAME} san !";
+                        }
+                    }
+                    
+                   
+                    string body = "";
+                    if (typeMail == STATUS.REJECT)
+                    {
+                        body = $@"
+                                                <h3>{dear}</h3>
+                                                <h3 style='color: red' >Request reject. Please click below link view details:</h3>
+	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={summary.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+                    }
+                    else
+                    {
+                        body = $@"
+                                                <h3>{dear}</h3>
+                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
+	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={summary.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+                    }
+
+                    Task t = MailHelper.SenMailOutlookAsync(userMails, body);
+                    await t;
+
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+
+            }
+            return Json(new { result = STATUS.SUCCESS }, JsonRequestBehavior.AllowGet);
         }
     }
 }
