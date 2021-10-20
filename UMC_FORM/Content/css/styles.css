@@ -11315,56 +11315,7 @@ input[type='radio']:checked:after {
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-    .rubber_stamp {
-        font-family: 'Times New Roman';
-        text-transform: uppercase;
-        font-weight: bold;
-        color: red;
-        border: 5px solid red;
-        float: left;
-        padding: 7px 5px;
-        border-radius: 50%;
-        height: 90px;
-        width: 90px;
-        line-height: 100px;
-        text-align: center;
-        opacity: 0.8;
-        transform: rotate(-10deg);
-        -o-transform: rotate(-10deg);
-        -moz-transform: rotate(-10deg);
-        -ms-transform: rotate(-10deg);
-    }
 
-        .rubber_stamp::after {
-            position: absolute;
-            content: " ";
-            width: 100%;
-            height: auto;
-            min-height: 100%;
-            top: -2px;
-            left: -2px;
-            padding: 7px;
-            background: url(https://raw.github.com/domenicosolazzo/css3/master/img/noise.png) repeat;
-        }
-
-        .rubber_stamp p {
-            line-height: 5px;
-            font-size: 10px;
-            border-bottom: 1px solid #f00;
-            margin-top: 9px;
-            margin-bottom: 0;
-            padding-bottom: 7px;
-        }
-
-            .rubber_stamp p:last-child {
-                border-bottom: none;
-            }
-
-    .centered {
-        margin: 0 auto;
-    }
-}
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
@@ -11397,18 +11348,18 @@ input[type='radio']:checked:after {
     font-weight: bold;
     color: red;
     border: 5px solid red;
-    float: left;
     padding: 7px 5px;
     border-radius: 50%;
-    height: 90px;
+    height: auto;
     width: 90px;
+    margin:0 auto;
     line-height: 100px;
-    text-align: center;
     opacity: 0.8;
     -webkit-transform: rotate(-10deg);
     -o-transform: rotate(-10deg);
     -moz-transform: rotate(-10deg);
     -ms-transform: rotate(-10deg);
+     text-align:center;
 }
 
     .rubber_stamp::after {

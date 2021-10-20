@@ -261,8 +261,8 @@
                 <div class="col-4">
                     <table class="mt-2 ">
                         <tr>
-                            <td class="p-2">Người yêu cầu/担当 </td>
-                            <td class="p-2">Phê duyệt/承認</td>
+                            <td class="p-2">1. Người yêu cầu/担当 </td>
+                            <td class="p-2">2. Phê duyệt/承認</td>
 
                         </tr>
 
@@ -366,25 +366,37 @@
                 </table>
 
             </div>
-            <div class="table-responsive mt-2">
-                <table class="table-border-dark">
+            <div class="table-responsive">
+                <table class="table table-bordered ">
                     <thead>
                         <tr>
-                            <th class=" lang" key="lca_approve" rowspan="2">LCA Approve</th>
-                            <th class=" lang" key="request_approve" rowspan="2">Request Approve</th>
-                            <th class=" lang" key="BC_approve" rowspan="2">BC Approve</th>
-                            <th class=" lang" key="FM_approve" rowspan="2">FM Approve</th>
-                            <th class=" lang" key="GD_approve" rowspan="2">GD Approve</th>
-
-
+                            @{
+                                var index = 1;
+                            }
+                            @foreach (var station in Model.STATION_APPROVE)
+                            {
+                                if(index < 3)
+                                {
+                                    index++;
+                                    continue;
+                                }
+                                <th class="font-italic lang" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="@station.STATION_NAME">@station.STATION_NAME</span></th>
+                            }
                         </tr>
 
                     </thead>
                     <tbody>
-                        <tr height="120px">
-                            @for (var a = 2; a < Model.STATION_APPROVE.Count(); a++)
+                        <tr height="100px">
+                            @{
+                                index = 1;
+                            }
+                            @foreach (var station in Model.STATION_APPROVE)
                             {
-                                var station = Model.STATION_APPROVE[a];
+                                if (index < 3)
+                                {
+                                    index++;
+                                    continue;
+                                }
                                 if (station.IS_APPROVED)
                                 {
                                     <td>
@@ -401,12 +413,12 @@
                                 }
 
                             }
+
                         </tr>
                     </tbody>
                 </table>
 
             </div>
-
 
             
             <div class="row ml-1">

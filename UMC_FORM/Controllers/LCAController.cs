@@ -587,7 +587,7 @@ namespace UMC_FORM.Controllers
                         body = $@"
                                                 <h3>{dear}</h3>
                                                 <h3 style='color: red' >Request reject. Please click below link view details:</h3>
-	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={summary.TICKET}'>Click to approval</a>
+	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
                                                 <br />
                                                 <h3>Thanks & Best regards</h3>
                                                 <h4>*********************</h4>
@@ -601,7 +601,7 @@ namespace UMC_FORM.Controllers
                         body = $@"
                                                 <h3>{dear}</h3>
                                                 <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='http://172.28.10.17:90/PurAccF06/Details?ticket={summary.TICKET}'>Click to approval</a>
+	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
                                                 <br />
                                                 <h3>Thanks & Best regards</h3>
                                                 <h4>*********************</h4>
