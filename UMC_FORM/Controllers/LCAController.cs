@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -214,6 +215,14 @@ namespace UMC_FORM.Controllers
         {
             try
             {
+                if (Request.Form["reject"] != null)
+                {
+                    status = STATUS.REJECT;
+                }
+                else if (Request.Form["accept"] != null)
+                {
+                    status = STATUS.ACCEPT;
+                }
                 using (var db = new DataContext())
                 {
                     var formDb = db.LCA_FORM_01.Where(m => m.TICKET == infoTicket.TICKET).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();
@@ -261,7 +270,7 @@ namespace UMC_FORM.Controllers
                         {
                             return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
                         }
-                        
+
                     }
                 }
             }
@@ -476,13 +485,18 @@ namespace UMC_FORM.Controllers
                     #region SUMARY
                     if (summary.IS_REJECT && processName != summary.PROCESS_ID)
                     {
-                        var oldStationReject = db.Form_Process.Where(m => m.FORM_INDEX == (summary.REJECT_INDEX + 1) && m.FORM_NAME == summary.PROCESS_ID).FirstOrDefault();
-                        if (oldStationReject != null)
+                        var ticketApproves = db.LCA_FORM_01.Where(m => m.TICKET == form.TICKET && m.IS_SIGNATURE == 1).OrderByDescending(m => m.ORDER_HISTORY).ToList();
+                        var newProcess = db.Form_Process.Where(m => m.FORM_NAME == processName).OrderBy(m => m.FORM_INDEX).ToList();
+                        foreach(var pro in newProcess)
                         {
-                            var stationReject = process.Where(m => m.STATION_NAME.Trim() == oldStationReject.STATION_NAME.Trim() && m.FORM_NAME == processName).FirstOrDefault();
-                            summary.REJECT_INDEX = stationReject.FORM_INDEX - 1;
+                            var lastTicket = ticketApproves.Where(m => m.STATION_NAME == pro.STATION_NAME).FirstOrDefault();
+                            if (lastTicket != null)
+                            {
+                                summary.REJECT_INDEX = lastTicket.PROCEDURE_INDEX;
+                            }
                         }
-
+                        
+                       
                     }
                     summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
                     summary.UPD_DATE = DateTime.Now;
@@ -508,7 +522,7 @@ namespace UMC_FORM.Controllers
 
             }
         }
-        
+
 
         public ActionResult PrintView(string ticket)
         {
@@ -579,8 +593,8 @@ namespace UMC_FORM.Controllers
                             dear = $"Dear {userApproval.SHORT_NAME} san !";
                         }
                     }
-                    
-                   
+
+
                     string body = "";
                     if (typeMail == STATUS.REJECT)
                     {

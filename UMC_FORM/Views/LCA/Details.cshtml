@@ -51,16 +51,16 @@
                             if (Model.SUMARY.IS_REJECT)
                             {
 
-                                <button class="spinner-button btn btn-danger mb-2 lang col" key="reaccept" id="lca_accept" type="button">Chấp thuận</button>
+                                <button class="spinner-button btn btn-danger mb-2 lang col" key="reaccept" id="lca_accept" type="submit" value="accept">Chấp thuận</button>
                             }
                             else
                             {
                                 <div class="row">
                                     <div class="col">
-                                        <button class="spinner-button btn btn-danger mb-2 lang col" key="reject" id="lca_reject" type="button">Từ chối</button>
+                                        <button class="spinner-button btn btn-danger mb-2 lang col" key="reject" id="lca_reject" value="reject" type="submit">Từ chối</button>
                                     </div>
                                     <div class="col">
-                                        <button class="spinner-button btn btn-success mb-2 lang col" key="accept" id="lca_accept" type="button">Chấp thuận</button>
+                                        <button class="spinner-button btn btn-success mb-2 lang col" key="accept" id="lca_accept" value="accept" type="submit">Chấp thuận</button>
                                     </div>
 
                                 </div>
@@ -142,8 +142,17 @@
                                                         {
                                                             <tr class="row-info">
                                                                 <td>@(i)</td>
-                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" /></td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" /> </td>
+                                                                @if (i == 1)
+                                                                {
+                                                                    <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" required /></td>
+                                                                    <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" required /> </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" /></td>
+                                                                    <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" /> </td>
+                                                                }
+
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
@@ -258,7 +267,7 @@
                                                                 <td>@(i)</td>
                                                                 <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white requiredValue" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" re/> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
@@ -337,7 +346,7 @@
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white requiredValue" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
                                                             </tr>
                                                             i++;
@@ -455,7 +464,7 @@
                                 <p class="font-weight-bold m-3">ID<span class="font-weight-normal font-italic">(Do LCA nhập)</span></p>
                                 @if (Model.PERMISSION.Contains(PERMISSION.ADD_ID))
                                 {
-                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control" })
+                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control requiredValue" })
                                 }
                                 else
                                 {
@@ -569,6 +578,7 @@
 </div>
 @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }));
 @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+@Scripts.Render("~/Scripts/jquery.validate.min.js")
 @Scripts.Render("~/Content/js/mention.js")
 @Scripts.Render("~/Content/js/moment.js")
 @Scripts.Render("~/Content/js/jquery.simplePagination.js")

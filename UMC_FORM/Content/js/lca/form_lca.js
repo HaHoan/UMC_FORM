@@ -3,42 +3,126 @@
     $('#lca_cancel').prop("disabled", true);
     $('#lca_accept').prop("disabled", true);
     $('#lca_reject').prop("disabled", true);
-  
+
     $(btn).html(
         '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
     );
 }
-
 $(function () {
 
-    var $contextMenu = $("#contextMenu");
-    //var validator = $("#formCreate").validate({
+    $('input').keyup(function (e) {
+        $('#isChange').val('yes')
+    });
+    $('textarea').keyup(function (e) {
+        $('#isChange').val('yes')
+    })
+    $('textarea[name="REQUEST_CONTENT"').keyup(function (e) {
+        var text = $(this).val();
+        if (text != '') {
+            if (checkUnicode(text) == false) {
+                $('.awarm-unicode').removeClass('d-none')
+            } else {
+                $('.awarm-unicode').addClass('d-none')
+            }
+        } else {
+            $('.awarm-unicode').addClass('d-none')
 
-    //    success: function () {
-    //        if (validator.numberOfInvalids() == 0) {
-    //            $('#lca_create').prop("disabled", true);
-    //            $('#lca_create').html(
-    //                '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
-    //            );
-    //        }
-
-    //    }
-    //});
-    $('#lca_create').click(function (e) {
-        disableButtonWhenSubmit(this)
-        $('#formCreate').submit();
+        }
 
     })
-    $('#lca_accept').click(function (e) {
-        disableButtonWhenSubmit(this)
-        $('#status').val("accept")
-        $('#submitForm').submit();
+    var $contextMenu = $("#contextMenu");
+    $("#formCreate").validate({
+        rules: {
+            "payer[]": {
+                required: true,
+                minlength: 1
+            },
+            "request_target[]": {
+                required: true,
+                minlength: 1
+            }
+        },
+        messages: {
+            "payer[]": "Please select at least one checkbox",
+            "request_target[]": "Please select at least one checkbox"
+        },
+        submitHandler: function (form) {
 
+            disableButtonWhenSubmit('#lca_create')
+            form.ajax.submit()
+        }
+
+    });
+    $('.requiredValue').keyup(function () {
+        $('#' + $(this).attr('id') + '-error').remove()
+    })
+    $("#submitForm").validate({
+        rules: {
+            "payer[]": {
+                required: true,
+                minlength: 1
+            },
+            "request_target[]": {
+                required: true,
+                minlength: 1
+            }
+        },
+        messages: {
+            "payer[]": "Please select at least one checkbox",
+            "request_target[]": "Please select at least one checkbox"
+        },
+        submitHandler: function (form) {
+            var status = $('#status').val();
+            if (status == 'reject') {
+                if (confirm('Bạn có muốn ' + status + ' không?')) {
+                    disableButtonWhenSubmit('#lca_' + status)
+                    form.ajax.submit()
+                }
+                return true;
+            } 
+            var isValid = true;
+            $('.requiredValue').each(function (e) {
+                if ($(this).val() == '') {
+
+                    var label = $('<label />',
+                        {
+                            id: $(this).attr('id') + '-error',
+                            class: 'error',
+                            text: 'This field is required.'
+                        }
+                    )
+                   
+                    $(this).parent().append(label)
+                    $(this).focus()
+                    isValid = false;
+                }
+            })
+            if (isValid) {
+                var val = $('#isChange').val();
+               
+                if (val == 'no') {
+                    if (confirm('Bạn có muốn thay đổi gì trước khi ' + status + ' không?')) {
+                        disableButtonWhenSubmit('#lca_' + status)
+                        form.ajax.submit()
+                    }
+                } else {
+                    if (confirm('Bạn có muốn ' + status + ' không?')) {
+                        disableButtonWhenSubmit('#lca_' + status)
+                        form.ajax.submit()
+                    }
+                }
+
+            }
+
+        }
+
+    });
+
+    $('#lca_accept').click(function (e) {
+        $('#status').val("accept")
     })
     $('#lca_reject').click(function (e) {
-        disableButtonWhenSubmit(this)
         $('#status').val("reject")
-        $('#submitForm').submit();
 
     })
 
@@ -171,8 +255,8 @@ $(function () {
 });
 function OnSuccess(response) {
     if (response.result == 'success') {
-        sendMail(response.ticket, response.typeMail)
-       window.location.href = $("#RedirectTo").val()
+        //sendMail(response.ticket, response.typeMail)
+        window.location.href = $("#RedirectTo").val()
     } else {
         alert(response.result)
     }
@@ -436,7 +520,7 @@ function sendMail(ticket, typeMail) {
             typeMail: typeMail
         },
         success: function (response) {
-            
+
         },
         error: function (e) {
             console.log(e);

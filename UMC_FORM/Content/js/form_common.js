@@ -76,3 +76,12 @@ $("#fileAttach").change(function () {
         }
     }
 })
+
+function checkUnicode(text) {
+    regex = /^[a-zA-Z0-9_ ぁ-んァ-ン一-龥\.０-９@\n]+$/; // Chỉ chấp nhận ký tự alphabet thường hoặc ký tự hoa
+    if (regex.test(text)) { // true nếu text chỉ chứa ký tự alphabet thường hoặc hoa, false trong trường hợp còn lại. 
+        return true
+    } else {
+        return false
+    }
+}

@@ -28,7 +28,7 @@
     <div>
         <div>
             <div>
-
+               
                 @using (Ajax.BeginForm("Create", "LCA", new AjaxOptions
                 {
                     OnSuccess = "OnSuccess",
@@ -48,7 +48,7 @@
                         </div>
 
                         <hr>
-                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                         <h5 class="text-uppercase lang mb-4 font-weight-bold" key="req-dept">THÔNG TIN SẢN PHẨM</h5>
                         <div class="info-edit">
@@ -108,13 +108,13 @@
 
                                     </tr>
                                     <tr>
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_1" value="increase_productivity" /></td>
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_2" value="new_model" /></td>
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_3" value="incre_prod" /></td>
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_4" value="quantity" /></td>
-                                        <td class="text-center p-2"><input type="checkbox" id="select_target_5" value="5s" /></td>
+                                        <td class="text-center p-2"><input type="checkbox" id="select_target_1" name="request_target[]" value="increase_productivity" /></td>
+                                        <td class="text-center p-2"><input type="checkbox" id="select_target_2" name="request_target[]" value="new_model" /></td>
+                                        <td class="text-center p-2"><input type="checkbox" id="select_target_3" name="request_target[]" value="incre_prod" /></td>
+                                        <td class="text-center p-2"><input type="checkbox" id="select_target_4" name="request_target[]" value="quantity" /></td>
+                                        <td class="text-center p-2"><input type="checkbox" id="select_target_5" name="request_target[]" value="5s" /></td>
                                         <td class="text-center p-2" colspan="2">
-                                            <input type="checkbox" id="select_target_6" value="ngjig" />
+                                            <input type="checkbox" id="select_target_6" value="ngjig"  name="request_target[]"/>
                                             <input type="hidden" name="REQUEST_TARGET" />
                                         </td>
                                         <script>
@@ -172,9 +172,9 @@
                                         </td>
                                         <td colspan="7" class="p-2">
                                             <label for="customer" class="lang mr-2" key="Customer"></label>
-                                            <input id="customer" type="checkbox" value="Customer">
+                                            <input id="customer" type="checkbox" value="Customer" name="payer[]" class="payer-group">
                                             <label for="umcvn" class="lang mr-2 ml-5" key="">UMCVN</label>
-                                            <input id="umcvn" type="checkbox" value="UMCVN">
+                                            <input id="umcvn" type="checkbox" value="UMCVN" name="payer[]" class="payer-group">
                                             <input type="hidden" name="PAYER" />
                                         </td>
 
@@ -228,6 +228,7 @@
                                 <p>内容■　Nội dung yêu cầu: (Phải thêm comment tiếng Anh/ tiếng Nhật)</p>
 
                                 <p class="font-weight-bold">(MUST : Please add comment by English or Japanese)</p>
+                                <p class="text-danger font-weight-bold ml-2 d-none awarm-unicode lang" key="need_enter_english">Bạn cần nhập Tiếng Anh hoặc Tiếng Nhật</p>
                                 <textarea class="form-control" rows="3" name="REQUEST_CONTENT" required></textarea>
                             </div>
                         </div>
@@ -274,15 +275,25 @@
                                         @{
                                             for (int i = 1; i <= 5; i++)
                                             {
-                                                <tr class="row-info">
-                                                    <td>@(i)</td>
-                                                    <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
-                                                    <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
-                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
-                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
-                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly /> </td>
-                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
-                                                </tr>
+                                        <tr class="row-info">
+                                            <td>@(i)</td>
+                                            @if (i == 1)
+                                            {
+                                                <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required /></td>
+                                                <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required/> </td>
+
+                                            }
+                                            else
+                                            {
+                                                <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
+                                                <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
+                                            }
+
+                                            <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
+                                            <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
+                                            <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly /> </td>
+                                            <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
+                                        </tr>
                                             }
 
                                         }
@@ -370,7 +381,7 @@
                             <button class="btn btn-danger col lang" key="cancel" id='lca_cancel' type="button" formnovalidate>Từ chối</button>
                         </div>
                         <div class="col">
-                            <button type="button" class="spinner-button btn btn-success mb-2 lang col" key="create" id="lca_create">
+                            <button type="submit" class="spinner-button btn btn-success mb-2 lang col" key="create" id="lca_create">
                                 Đề xuất
                             </button>
 
@@ -385,6 +396,7 @@
     </div>
     @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }));
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Content/js/scripts.js"></script>

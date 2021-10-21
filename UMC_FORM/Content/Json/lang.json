@@ -81,7 +81,8 @@
     "daily": "Daily",
     "Người yêu cầu": "Người yêu cầu",
     "Phê duyệt": "Phê duyệt",
-    "reaccept": "Re-accept"
+    "reaccept": "Re-accept",
+    "need_enter_english": "Please add comment by English or Japanese"
   },
   "vi": {
     "Home": "TRANG CHỦ",
@@ -192,7 +193,8 @@
     "Phê duyệt": "Phê duyệt",
     "monthly": "Ngày",
     "daily": "Tháng",
-    "reaccept": "Xác nhận lại"
+    "reaccept": "Xác nhận lại",
+    "need_enter_english": "Please add comment by English or Japanese"
   },
   "ja": {
     "reaccept": "Re-accept",
@@ -227,7 +229,8 @@
     "Người yêu cầu": "担当",
     "Phê duyệt": "承認",
     "monthly": "月",
-    "daily": "日"
+    "daily": "日",
+    "need_enter_english": "Please add comment by English or Japanese"
 
   }
 }

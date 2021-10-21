@@ -1,4 +1,5 @@
 ﻿@model UMC_FORM.Models.LCA_FORM_01
+    <input type="hidden" id="isChange" value="no"/>
 <div class="row">
     <div class="col-3">
         <label class="font-weight-bold lang" key="request-date">Request date</label>
@@ -61,13 +62,13 @@
 
         </tr>
         <tr>
-            <td class="text-center p-2"><input type="checkbox" id="select_target_1" value="increase_productivity" /></td>
-            <td class="text-center p-2"><input type="checkbox" id="select_target_2" value="new_model" /></td>
-            <td class="text-center p-2"><input type="checkbox" id="select_target_3" value="incre_prod" /></td>
-            <td class="text-center p-2"><input type="checkbox" id="select_target_4" value="quantity" /></td>
-            <td class="text-center p-2"><input type="checkbox" id="select_target_5" value="5s" /></td>
+            <td class="text-center p-2"><input type="checkbox" id="select_target_1" value="increase_productivity" name="request_target[]" /></td>
+            <td class="text-center p-2"><input type="checkbox" id="select_target_2" value="new_model" name="request_target[]" /></td>
+            <td class="text-center p-2"><input type="checkbox" id="select_target_3" value="incre_prod" name="request_target[]" /></td>
+            <td class="text-center p-2"><input type="checkbox" id="select_target_4" value="quantity" name="request_target[]" /></td>
+            <td class="text-center p-2"><input type="checkbox" id="select_target_5" value="5s" name="request_target[]" /></td>
             <td class="text-center p-2" colspan="2">
-                <input type="checkbox" id="select_target_6" value="ngjig" />
+                <input type="checkbox" id="select_target_6" value="ngjig" name="request_target[]" />
                 
             </td>
             @Html.HiddenFor(m => m.REQUEST_TARGET)
@@ -111,18 +112,15 @@
         </tr>
         <tr>
             <td rowspan="3" style="vertical-align: middle;">
-                @Html.TextBoxFor(m => m.DECREASE_PERSON, new { @class = "form-input type_number text-center", style = "font-size:15px;" })
-                @*<input class="form-input type_number text-center" style="font-size:15px;" rows="4" name="DECREASE_PERSON" required>*@
+                @Html.TextBoxFor(m => m.DECREASE_PERSON, new { @class = "form-input type_number text-center", style = "font-size:15px;" , @required = "required" })
             </td>
             <td style="vertical-align: middle;" class="text-center font-weight-bold" rowspan="3">人/月</td>
             <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="noi_dung_loi">Phân loại Jip</label></td>
             <td colspan="2" style="vertical-align: middle;">
-                @Html.TextBoxFor(m => m.CONTENT_ERROR, new { @class = "form-input" })
-                @*<input class="form-input" rows="4" name="CONTENT_ERROR" required>*@
+                @Html.TextBoxFor(m => m.CONTENT_ERROR, new { @class = "form-input", @required = "required" })
             </td>
             <td rowspan="3" style="vertical-align: middle;">
-                @Html.TextBoxFor(m => m.COST_SAVING, new { @class = "form-input type_number text-center", style = "font-size:15px;" })
-                @*<input class="form-input type_number text-center" style="font-size:15px;" rows="4" name="COST_SAVING" required>*@
+                @Html.TextBoxFor(m => m.COST_SAVING, new { @class = "form-input type_number text-center", style = "font-size:15px;" , @required = "required" })
             </td>
             <td rowspan="3" style="vertical-align: middle;" class="text-center font-weight-bold">USD/月</td>
 
@@ -130,23 +128,20 @@
         <tr>
             <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="ty_le_loi">Phân loại Jip</label></td>
             <td colspan="2">
-                @Html.TextBoxFor(m => m.ERROR_RATE_CURRENT, new { @class = "form-input" })
-                @*<input class="form-input" rows="4" name="ERROR_RATE_CURRENT" required>*@
+                @Html.TextBoxFor(m => m.ERROR_RATE_CURRENT, new { @class = "form-input", @required = "required"})
             </td>
 
         </tr>
         <tr>
             <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="hieu_qua_cai_tien">Phân loại Jip</label></td>
             <td colspan="2">
-                @Html.TextBoxFor(m => m.IMPROVED_EFICIENCY, new { @class = "form-input" })
-                @*<input class="form-input" rows="4" name="IMPROVED_EFICIENCY" required>*@
+                @Html.TextBoxFor(m => m.IMPROVED_EFICIENCY, new { @class = "form-input", @required = "required" })
             </td>
         </tr>
         <tr>
             <td class="font-weight-bold text-center">Other:</td>
             <td colspan="6">
                 @Html.TextBoxFor(m => m.OTHER, new { @class = "form-input" })
-                @*<input class="form-input" name="OTHER" />*@
             </td>
         </tr>
         <tr>
@@ -156,9 +151,9 @@
             <td colspan="7" class="p-2">
 
                 <label for="customer" class="lang mr-2" key="Customer"></label>
-                <input id="customer" type="checkbox" value="Customer">
-                <label for="umcvn" class="lang mr-2 ml-5" key="">UMCVN</label>
-                <input id="umcvn" type="checkbox" value="UMCVN">
+                <input id="customer" type="checkbox" value="Customer" name="payer[]">
+                <label for="umcvn" class="lang mr-2 ml-5" key="" >UMCVN</label>
+                <input id="umcvn" type="checkbox" value="UMCVN" name="payer[]">
                 @Html.HiddenFor(m => m.PAYER)
             </td>
 
@@ -200,8 +195,7 @@
     </div>
     <div class="col ">
         <span>PCB</span>
-        @Html.TextBoxFor(m => m.PCB, new { @class = " ml-2 border-bottom", style = "border:none;" })
-        @*<input class=" ml-2 border-bottom" style="border:none;" name="PCB" required />*@
+        @Html.TextBoxFor(m => m.PCB, new { @class = " ml-2 border-bottom", style = "border:none;", @required = "required" })
     </div>
 </div>
 <br />
@@ -209,13 +203,11 @@
 
     <div class="col ">
         <span class="lang" key="Customer"></span>
-        @Html.TextBoxFor(m => m.CUSTOMER, new { @class = " ml-2 border-bottom", style = "border:none;" })
-        @*<input class=" ml-2 border-bottom" style="border:none;" name="CUSTOMER" required />*@
+        @Html.TextBoxFor(m => m.CUSTOMER, new { @class = " ml-2 border-bottom", style = "border:none;" , @required = "required" })
     </div>
     <div class="col ">
         <span>Model</span>
-        @Html.TextBoxFor(m => m.MODEL, new { @class = " ml-2 border-bottom", style = "border:none;" })
-        @*<input class=" ml-2 border-bottom" style="border:none;" name="MODEL" required />*@
+        @Html.TextBoxFor(m => m.MODEL, new { @class = " ml-2 border-bottom", style = "border:none;",  @required = "required" })
     </div>
 </div>
 <br />
@@ -223,8 +215,9 @@
     <p>内容■　Nội dung yêu cầu: (Phải thêm comment tiếng Anh/ tiếng Nhật)</p>
 
     <p class="font-weight-bold">(MUST : Please add comment by English or Japanese)</p>
-    @Html.TextAreaFor(m => m.REQUEST_CONTENT, new { @class = "form-control" })
-    @*<textarea class="form-control" rows="3" name="REQUEST_CONTENT" required></textarea>*@
+    <p class="text-danger font-weight-bold ml-2 d-none awarm-unicode lang" key="need_enter_english">Bạn cần nhập Tiếng Anh hoặc Tiếng Nhật</p>
+
+    @Html.TextAreaFor(m => m.REQUEST_CONTENT, new { @class = "form-control", @required = "required" })
 </div>
 @Html.HiddenFor(m => m.TICKET)
 @Html.HiddenFor(m => m.ID)

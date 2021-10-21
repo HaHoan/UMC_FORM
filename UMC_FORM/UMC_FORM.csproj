@@ -672,6 +672,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\js\utils\" />
     <Folder Include="UploadedFiles\" />
     <Folder Include="Views\Comment\" />
     <Folder Include="Views\EmaiApproval\" />
