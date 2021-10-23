@@ -42,8 +42,8 @@ namespace UMC_FORM.Controllers
                     IS_APPROVED = false
 
                 };
-                var lca = list.Where(m => m.PROCEDURE_INDEX == pro.FORM_INDEX && m.IS_SIGNATURE == 1).FirstOrDefault();
-                if (lca != null && lca.STATION_NAME.Trim() == station.STATION_NAME.Trim())
+                var lca = list.Where(m => m.STATION_NAME.Trim() == pro.STATION_NAME.Trim() && m.IS_SIGNATURE == 1).FirstOrDefault();
+                if (lca != null)
                 {
                     station.IS_APPROVED = true;
                     station.APPROVE_DATE = lca.UPD_DATE;
@@ -487,16 +487,16 @@ namespace UMC_FORM.Controllers
                     {
                         var ticketApproves = db.LCA_FORM_01.Where(m => m.TICKET == form.TICKET && m.IS_SIGNATURE == 1).OrderByDescending(m => m.ORDER_HISTORY).ToList();
                         var newProcess = db.Form_Process.Where(m => m.FORM_NAME == processName).OrderBy(m => m.FORM_INDEX).ToList();
-                        foreach(var pro in newProcess)
+                        int indexMax = 0;
+                        foreach (var pro in newProcess)
                         {
-                            var lastTicket = ticketApproves.Where(m => m.STATION_NAME == pro.STATION_NAME).FirstOrDefault();
-                            if (lastTicket != null)
+                            var lastTicket = ticketApproves.Where(m => m.STATION_NAME.Trim() == pro.STATION_NAME.Trim()).FirstOrDefault();
+                            if (lastTicket != null && indexMax < lastTicket.PROCEDURE_INDEX)
                             {
-                                summary.REJECT_INDEX = lastTicket.PROCEDURE_INDEX;
+                                indexMax = lastTicket.PROCEDURE_INDEX;
                             }
                         }
-                        
-                       
+                        summary.REJECT_INDEX = indexMax;
                     }
                     summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
                     summary.UPD_DATE = DateTime.Now;

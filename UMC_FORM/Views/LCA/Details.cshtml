@@ -164,15 +164,24 @@
                                                         {
                                                             while (i < 6)
                                                             {
-                                                                <tr class="row-info">
-                                                                    <td>@(i)</td>
+                                                            <tr class="row-info">
+                                                                <td>@(i)</td>
+                                                                @if (i == 1)
+                                                                {
+                                                                    <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required/></td>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required/> </td>
+                                                                }
+                                                                else
+                                                                {
                                                                     <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
                                                                     <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
-                                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
-                                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
-                                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly /> </td>
-                                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
-                                                                </tr>
+                                                                }
+
+                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
+                                                            </tr>
                                                                 i++;
                                                             }
                                                         }
