@@ -22,9 +22,9 @@ namespace UMC_FORM.Models
         [StringLength(50)]
         public string USER_NAME { get; set; }
 
+        public int? FORM_INDEX { get; set; }
+
         [StringLength(50)]
         public string PROCESS { get; set; }
-
-        public int? FORM_INDEX { get; set; }
     }
 }

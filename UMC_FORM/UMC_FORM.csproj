@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UMC_FORM</RootNamespace>
     <AssemblyName>UMC_FORM</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -27,6 +27,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,7 +49,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bet.Util">
-      <HintPath>..\..\..\13. Projects\UMC Global\Libs\Bet.Util.dll</HintPath>
+      <HintPath>D:\u16354 (cuongpv)\13. Projects\UMC Global\Libs\Bet.Util.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -62,6 +63,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -69,12 +71,9 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -118,6 +117,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -175,6 +175,7 @@
     <Compile Include="Models\FormProcessJsonEntity.cs" />
     <Compile Include="Models\Form_Comment.cs" />
     <Compile Include="Models\Form_Dept.cs" />
+    <Compile Include="Models\Form_Procedures.cs" />
     <Compile Include="Models\Form_Process.cs" />
     <Compile Include="Models\Form_ProcessName.cs" />
     <Compile Include="Models\Form_Reject.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Models\Form_User.cs" />
     <Compile Include="Models\LCA\LCADetailModel.cs" />
     <Compile Include="Models\LCA\StationApproveModel.cs" />
+    <Compile Include="Models\LCA_F01.cs" />
     <Compile Include="Models\LCA_FILE.cs" />
     <Compile Include="Models\LCA_FORM_01.cs" />
     <Compile Include="Models\LCA_PERMISSION.cs" />

@@ -4,10 +4,10 @@ namespace UMC_FORM.Models
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     public partial class LCA_FORM_01
     {
-
         [StringLength(50)]
         public string ID { get; set; }
 
@@ -21,7 +21,6 @@ namespace UMC_FORM.Models
 
         public int PROCEDURE_INDEX { get; set; }
 
-
         [Required]
         [StringLength(50)]
         public string TITLE { get; set; }
@@ -29,10 +28,6 @@ namespace UMC_FORM.Models
         [Required]
         [StringLength(50)]
         public string SUBMIT_USER { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string CREATE_USER { get; set; }
 
         public DateTime UPD_DATE { get; set; }
 
@@ -97,12 +92,16 @@ namespace UMC_FORM.Models
         [StringLength(50)]
         public string DEPT { get; set; }
 
+        [Required]
+        [StringLength(50)]
+        public string CREATE_USER { get; set; }
+
         [StringLength(50)]
         public string LCA_ID { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string STATION_NAME { get; set; }
-
         [NotMapped]
         public List<LCA_QUOTE> LCA_QUOTEs { get; set; }
 

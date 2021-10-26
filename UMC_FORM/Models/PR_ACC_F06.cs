@@ -1,26 +1,24 @@
-﻿namespace UMC_FORM.Models
+namespace UMC_FORM.Models
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
-    using System.Web;
-    using Bet.Util;
     using UMC_FORM.Business;
 
     public partial class PR_ACC_F06
     {
-        #region Property
+        [StringLength(50)]
         public string ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(50)]
         public string TICKET { get; set; }
 
         [StringLength(50)]
         public string STATION_NO { get; set; }
 
-        public int PROCEDURE_INDEX { get; set; } = 0;
+        public int PROCEDURE_INDEX { get; set; }
 
         [StringLength(50)]
         public string FORM_NAME { get; set; }
@@ -49,7 +47,7 @@
         public bool IS_S10 { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime ISSUE_DATE { get; set; }
+        public DateTime? ISSUE_DATE { get; set; }
 
         [StringLength(50)]
         public string DEPT { get; set; }
@@ -76,6 +74,7 @@
 
         public int? QTY_1 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_1 { get; set; }
 
         public decimal? AMOUNT_1 { get; set; }
@@ -83,6 +82,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_1 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_1 { get; set; }
 
         [StringLength(50)]
@@ -113,6 +113,7 @@
 
         public int? QTY_2 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_2 { get; set; }
 
         public decimal? AMOUNT_2 { get; set; }
@@ -120,6 +121,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_2 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_2 { get; set; }
 
         [StringLength(50)]
@@ -150,6 +152,7 @@
 
         public int? QTY_3 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_3 { get; set; }
 
         public decimal? AMOUNT_3 { get; set; }
@@ -157,6 +160,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_3 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_3 { get; set; }
 
         [StringLength(50)]
@@ -187,6 +191,7 @@
 
         public int? QTY_4 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_4 { get; set; }
 
         public decimal? AMOUNT_4 { get; set; }
@@ -194,6 +199,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_4 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_4 { get; set; }
 
         [StringLength(50)]
@@ -224,6 +230,7 @@
 
         public int? QTY_5 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_5 { get; set; }
 
         public decimal? AMOUNT_5 { get; set; }
@@ -231,6 +238,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_5 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_5 { get; set; }
 
         [StringLength(50)]
@@ -261,6 +269,7 @@
 
         public int? QTY_6 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_6 { get; set; }
 
         public decimal? AMOUNT_6 { get; set; }
@@ -268,6 +277,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_6 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_6 { get; set; }
 
         [StringLength(50)]
@@ -298,6 +308,7 @@
 
         public int? QTY_7 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_7 { get; set; }
 
         public decimal? AMOUNT_7 { get; set; }
@@ -305,6 +316,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_7 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_7 { get; set; }
 
         [StringLength(50)]
@@ -335,6 +347,7 @@
 
         public int? QTY_8 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_8 { get; set; }
 
         public decimal? AMOUNT_8 { get; set; }
@@ -342,6 +355,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_8 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_8 { get; set; }
 
         [StringLength(50)]
@@ -372,6 +386,7 @@
 
         public int? QTY_9 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_9 { get; set; }
 
         public decimal? AMOUNT_9 { get; set; }
@@ -379,6 +394,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_9 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_9 { get; set; }
 
         [StringLength(50)]
@@ -409,6 +425,7 @@
 
         public int? QTY_10 { get; set; }
 
+        [StringLength(50)]
         public string UNIT_10 { get; set; }
 
         public decimal? AMOUNT_10 { get; set; }
@@ -416,6 +433,7 @@
         [StringLength(50)]
         public string OWNER_OF_ITEM_10 { get; set; } = "U";
 
+        [StringLength(50)]
         public string COST_CENTER_10 { get; set; }
 
         [StringLength(50)]
@@ -441,56 +459,52 @@
         [StringLength(100)]
         public string REMARK { get; set; }
 
-        public bool IS_ROUND_ROBIN { get; set; }
+        public bool? IS_ROUND_ROBIN { get; set; }
 
-        public bool IS_REQ_CUS { get; set; }
+        public bool? IS_REQ_CUS { get; set; }
 
-        public bool IS_CUS_PAY { get; set; }
+        public bool? IS_CUS_PAY { get; set; }
 
         [StringLength(200)]
         public string CUS_PAY_REMARK { get; set; }
 
-        [StringLength(150, ErrorMessage = "Max Length 150")]
+        [StringLength(150)]
         public string FILE_PATH_1 { get; set; }
 
         [StringLength(50)]
         public string FILE_NAME_1 { get; set; }
 
-        [StringLength(150, ErrorMessage = "Max Length 150")]
+        [StringLength(150)]
         public string FILE_PATH_2 { get; set; }
 
         [StringLength(50)]
         public string FILE_NAME_2 { get; set; }
 
-        [StringLength(150, ErrorMessage = "Max Length 150")]
+        [StringLength(150)]
         public string FILE_PATH_3 { get; set; }
 
         [StringLength(50)]
         public string FILE_NAME_3 { get; set; }
 
-        [StringLength(150, ErrorMessage = "Max Length 150")]
+        [StringLength(150)]
         public string FILE_PATH_4 { get; set; }
+
         [StringLength(50)]
         public string FILE_NAME_4 { get; set; }
 
-        [StringLength(150, ErrorMessage = "Max Length 150")]
+        [StringLength(150)]
         public string FILE_PATH_5 { get; set; }
 
         [StringLength(50)]
         public string FILE_NAME_5 { get; set; }
 
-        public bool IS_SIGNATURE { get; set; }
+        public bool? IS_SIGNATURE { get; set; }
 
-        public int ORDER_HISTORY { get; set; }
-
-        //[NotMapped]
-        //public HttpPostedFileBase ImageFile { get; set; }
-
+        public int? ORDER_HISTORY { get; set; }
         [NotMapped]
         public List<CostChangeEntity> histories { get; set; }
 
         [NotMapped]
         public AuthorEntity author { get; set; }
-        #endregion
     }
 }

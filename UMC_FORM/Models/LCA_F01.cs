@@ -6,23 +6,17 @@ namespace UMC_FORM.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class LCA_FILE
+    public partial class LCA_F01
     {
-        public int ID { get; set; }
+        [StringLength(50)]
+        public string ID { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string TICKET { get; set; }
 
-        [Required]
-        public string FILE_URL { get; set; }
-
-        [Required]
         [StringLength(50)]
-        public string ID_TICKET { get; set; }
+        public string STATION_NO { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string FILE_NAME { get; set; }
+        public int? PROCEDURE_INDEX { get; set; }
     }
 }

@@ -30,6 +30,13 @@ namespace UMC_FORM.Business
                 return context.Form_Process.FirstOrDefault(r => r.FORM_NAME == processId && r.FORM_INDEX == index);
             }
         }
+        public static List<Form_Process> GetProcess(string processId)
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.Form_Process.Where(r => r.FORM_NAME == processId).ToList();
+            }
+        }
 
         public static bool SaveProcessName(Form_ProcessName entity)
         {
