@@ -8,6 +8,7 @@ namespace UMC_FORM.Models
 
     public partial class Form_Summary
     {
+        [Key]
         [StringLength(50)]
         public string ID { get; set; }
 
@@ -40,14 +41,10 @@ namespace UMC_FORM.Models
         public int? LAST_INDEX { get; set; }
 
         public int? TOTAL_MONEY { get; set; }
-
-        [Key]
-        [Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        
         public int REJECT_INDEX { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
+       
         public bool USE_PUR { get; set; }
 
         [StringLength(50)]

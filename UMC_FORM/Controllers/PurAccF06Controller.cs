@@ -559,7 +559,7 @@ namespace UMC_FORM.Controllers
         // GET: PurAccF06/Create
         public ActionResult Create()
         {
-            var mng = UserRepository.GetUsers().Where(r => r.IS_MNG == true);
+            var mng = UserRepository.GetUsers().Where(r => r.POSITION == POSITION.MANAGER);
             var selectList = new SelectList(mng, "CODE", "NAME");
             ViewBag.listMng = selectList;
             return View();

@@ -28,7 +28,7 @@
     <div>
         <div>
             <div>
-               
+
                 @using (Ajax.BeginForm("Create", "LCA", new AjaxOptions
                 {
                     OnSuccess = "OnSuccess",
@@ -87,6 +87,26 @@
                                     <input type="text" class="form-control" value="@_session.NAME" readonly="readonly">
                                 </div>
                             </div>
+
+                            @if (ViewBag.listManager != null)
+                            {
+                                <br />
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <select class="custom-select" id="deptManager" name="deptManager">
+                                            @foreach (var mng in ViewBag.listManager)
+                                            {
+                                                <option value="@mng.CODE">@mng.NAME</option>
+                                                
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+
                             <br>
                             <div class="row">
                                 <table class="table-border-dark ">
@@ -114,7 +134,7 @@
                                         <td class="text-center p-2"><input type="checkbox" id="select_target_4" name="request_target[]" value="quantity" /></td>
                                         <td class="text-center p-2"><input type="checkbox" id="select_target_5" name="request_target[]" value="5s" /></td>
                                         <td class="text-center p-2" colspan="2">
-                                            <input type="checkbox" id="select_target_6" value="ngjig"  name="request_target[]"/>
+                                            <input type="checkbox" id="select_target_6" value="ngjig" name="request_target[]" />
                                             <input type="hidden" name="REQUEST_TARGET" />
                                         </td>
                                         <script>
@@ -275,25 +295,25 @@
                                         @{
                                             for (int i = 1; i <= 5; i++)
                                             {
-                                        <tr class="row-info">
-                                            <td>@(i)</td>
-                                            @if (i == 1)
-                                            {
-                                                <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required /></td>
-                                                <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required/> </td>
+                                                <tr class="row-info">
+                                                    <td>@(i)</td>
+                                                    @if (i == 1)
+                                                    {
+                                                        <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required /></td>
+                                                        <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required /> </td>
 
-                                            }
-                                            else
-                                            {
-                                                <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
-                                                <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
-                                            }
+                                                    }
+                                                    else
+                                                    {
+                                                        <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
+                                                        <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
+                                                    }
 
-                                            <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
-                                            <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
-                                            <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly /> </td>
-                                            <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
-                                        </tr>
+                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
+                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
+                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly /> </td>
+                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
+                                                </tr>
                                             }
 
                                         }
