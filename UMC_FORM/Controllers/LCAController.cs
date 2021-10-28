@@ -25,7 +25,7 @@ namespace UMC_FORM.Controllers
         {
             using (var db = new DataContext())
             {
-                var list = db.LCA_FORM_01.ToList();
+                ViewBag.listManager = db.Form_User.Where(m => m.POSITION == POSITION.MANAGER).ToList();
                 return View();
             }
 
@@ -56,7 +56,7 @@ namespace UMC_FORM.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Create(LCA_FORM_01 ticket, string quotes)
+        public JsonResult Create(LCA_FORM_01 ticket, string quotes, string deptManager)
         {
             if (ticket == null)
             {
@@ -84,6 +84,61 @@ namespace UMC_FORM.Controllers
                             ticket.UPD_DATE = DateTime.Now;
                             var processName = (ticket.PAYER == PAYER.UMCVN) ? Constant.LCA_01 : Constant.LCA_Process;
                             var process = db.Form_Process.Where(m => m.FORM_NAME == processName).ToList();
+                            var formStation = db.Form_Stations.Where(m => m.PROCESS == processName).ToList();
+                            foreach (var pro in process)
+                            {
+                                if (pro.FORM_INDEX == 1 || pro.FORM_INDEX == 3)
+                                {
+                                    var proceduce = new Form_Procedures()
+                                    {
+                                        ID = Guid.NewGuid().ToString(),
+                                        TICKET = ticket.TICKET,
+                                        FORM_NAME = processName,
+                                        STATION_NO = pro.STATION_NO,
+                                        STATION_NAME = pro.STATION_NAME,
+                                        FORM_INDEX = pro.FORM_INDEX,
+                                        RETURN_INDEX = pro.RETURN_INDEX,
+                                        CREATER_NAME = pro.CREATER_NAME,
+                                        CREATE_DATE = pro.CREATE_DATE,
+                                        UPDATER_NAME = pro.UPDATER_NAME,
+                                        UPDATE_DATE = pro.UPDATE_DATE,
+                                        DES = pro.DES,
+                                        RETURN_STATION_NO = pro.RETURN_STATION_NO,
+                                        APPROVAL_NAME = deptManager
+                                    };
+                                    db.Form_Procedures.Add(proceduce);
+
+                                }
+                                else
+                                {
+                                    var listUserApprover = formStation.Where(m => m.FORM_INDEX == pro.FORM_INDEX).ToList();
+                                    foreach (var userApprover in listUserApprover)
+                                    {
+                                        var proceduce = new Form_Procedures()
+                                        {
+                                            ID = Guid.NewGuid().ToString(),
+                                            TICKET = ticket.TICKET,
+                                            FORM_NAME = processName,
+                                            STATION_NO = pro.STATION_NO,
+                                            STATION_NAME = pro.STATION_NAME,
+                                            FORM_INDEX = pro.FORM_INDEX,
+                                            RETURN_INDEX = pro.RETURN_INDEX,
+                                            CREATER_NAME = pro.CREATER_NAME,
+                                            CREATE_DATE = pro.CREATE_DATE,
+                                            UPDATER_NAME = pro.UPDATER_NAME,
+                                            UPDATE_DATE = pro.UPDATE_DATE,
+                                            DES = pro.DES,
+                                            RETURN_STATION_NO = pro.RETURN_STATION_NO,
+                                            APPROVAL_NAME = userApprover.USER_ID
+                                        };
+                                        db.Form_Procedures.Add(proceduce);
+                                    }
+
+                                }
+
+
+                            }
+
                             ticket.STATION_NAME = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                             db.LCA_FORM_01.Add(ticket);
                             #region FILES
@@ -180,8 +235,9 @@ namespace UMC_FORM.Controllers
                         return HttpNotFound();
                     }
                     _sess = Session["user"] as Form_User;
-                    var userApprover = db.Form_Stations.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1) && m.PROCESS == modelDetail.SUMARY.PROCESS_ID).ToList();
-                    if (userApprover.Where(m => m.USER_ID == _sess.CODE).FirstOrDefault() != null)
+                    var userApprover = db.Form_Procedures.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1)
+                    && m.FORM_NAME == modelDetail.SUMARY.PROCESS_ID && m.TICKET == modelDetail.TICKET.TICKET).ToList();
+                    if (userApprover.Where(m => m.APPROVAL_NAME == _sess.CODE).FirstOrDefault() != null)
                     {
                         modelDetail.IS_APPROVER = true;
                     }
@@ -295,6 +351,7 @@ namespace UMC_FORM.Controllers
 
                     // để lưu lại bước reject
                     summary.REJECT_INDEX = form.PROCEDURE_INDEX;
+
                     var process = db.Form_Process.Where(m => m.FORM_INDEX == summary.REJECT_INDEX && m.FORM_NAME == summary.PROCESS_ID).FirstOrDefault();
                     if (process == null)
                     {
@@ -331,34 +388,42 @@ namespace UMC_FORM.Controllers
         }
         private void AddQuotes(string quotes, DataContext db, LCA_FORM_01 prevTicket, LCA_FORM_01 currentTicket)
         {
-            List<LCA_QUOTE> lcaQuotes = new List<LCA_QUOTE>();
-            // không sửa giá
-            if (string.IsNullOrEmpty(quotes))
+            try
             {
-
-                lcaQuotes = db.LCA_QUOTE.Where(m => m.ID_TICKET == prevTicket.ID).ToList();
-            }
-
-            // Khi sửa đổi quotes
-            else
-            {
-                lcaQuotes = JsonConvert.DeserializeObject<List<LCA_QUOTE>>(quotes);
-            }
-            foreach (var quote in lcaQuotes)
-            {
-                var quoteDb = new LCA_QUOTE
+                List<LCA_QUOTE> lcaQuotes = new List<LCA_QUOTE>();
+                // không sửa giá
+                if (string.IsNullOrEmpty(quotes))
                 {
-                    ID_TICKET = currentTicket.ID,
-                    NO = quote.NO,
-                    REQUEST_ITEM = quote.REQUEST_ITEM,
-                    LCA_UNIT_PRICE = quote.LCA_UNIT_PRICE,
-                    LCA_TOTAL_COST = quote.LCA_TOTAL_COST,
-                    CUSTOMER_UNIT_PRICE = quote.CUSTOMER_UNIT_PRICE,
-                    CUSTOMER_TOTAL_COST = quote.CUSTOMER_TOTAL_COST,
-                    QUANTITY = quote.QUANTITY
-                };
-                db.LCA_QUOTE.Add(quoteDb);
+
+                    lcaQuotes = db.LCA_QUOTE.Where(m => m.ID_TICKET == prevTicket.ID).ToList();
+                }
+
+                // Khi sửa đổi quotes
+                else
+                {
+                    lcaQuotes = JsonConvert.DeserializeObject<List<LCA_QUOTE>>(quotes);
+                }
+                foreach (var quote in lcaQuotes)
+                {
+                    var quoteDb = new LCA_QUOTE
+                    {
+                        ID_TICKET = currentTicket.ID,
+                        NO = quote.NO,
+                        REQUEST_ITEM = quote.REQUEST_ITEM,
+                        LCA_UNIT_PRICE = quote.LCA_UNIT_PRICE,
+                        LCA_TOTAL_COST = quote.LCA_TOTAL_COST,
+                        CUSTOMER_UNIT_PRICE = quote.CUSTOMER_UNIT_PRICE,
+                        CUSTOMER_TOTAL_COST = quote.CUSTOMER_TOTAL_COST,
+                        QUANTITY = quote.QUANTITY
+                    };
+                    db.LCA_QUOTE.Add(quoteDb);
+                }
             }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+
 
         }
         private string Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
@@ -372,7 +437,7 @@ namespace UMC_FORM.Controllers
                     _sess = Session["user"] as Form_User;
                     var summary = db.Form_Summary.Where(m => m.TICKET == formDb.TICKET).FirstOrDefault();
                     var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (form.PROCEDURE_INDEX + 1).ToString()
-                 && m.PROCESS == summary.PROCESS_ID).ToList();
+                                                                 && m.PROCESS == summary.PROCESS_ID).ToList();
                     #region FORM
                     if (summary.IS_REJECT)
                     {
@@ -474,38 +539,21 @@ namespace UMC_FORM.Controllers
                     }
 
                     #endregion
-                    // Nếu UMC trả tiền sẽ dùng process ko qua BC
-                    var processName = form.PAYER == PAYER.CUSTOMER ? Constant.LCA_Process : Constant.LCA_01;
 
-                    var process = db.Form_Process.Where(m => m.FORM_NAME == processName).ToList();
+
+                    var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
                     form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                     db.LCA_FORM_01.Add(form);
                     #endregion
 
                     #region SUMARY
-                    if (summary.IS_REJECT && processName != summary.PROCESS_ID)
-                    {
-                        var ticketApproves = db.LCA_FORM_01.Where(m => m.TICKET == form.TICKET && m.IS_SIGNATURE == 1).OrderByDescending(m => m.ORDER_HISTORY).ToList();
-                        var newProcess = db.Form_Process.Where(m => m.FORM_NAME == processName).OrderBy(m => m.FORM_INDEX).ToList();
-                        int indexMax = 0;
-                        foreach (var pro in newProcess)
-                        {
-                            var lastTicket = ticketApproves.Where(m => m.STATION_NAME.Trim() == pro.STATION_NAME.Trim()).FirstOrDefault();
-                            if (lastTicket != null && indexMax < lastTicket.PROCEDURE_INDEX)
-                            {
-                                indexMax = lastTicket.PROCEDURE_INDEX;
-                            }
-                        }
-                        summary.REJECT_INDEX = indexMax;
-                    }
+
                     summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
                     summary.UPD_DATE = DateTime.Now;
                     if (form.PROCEDURE_INDEX == summary.LAST_INDEX)
                     {
                         summary.IS_FINISH = true;
                     }
-                    summary.PROCESS_ID = processName;
-                    summary.LAST_INDEX = process.Count() - 1;
 
                     #endregion
                     db.SaveChanges();

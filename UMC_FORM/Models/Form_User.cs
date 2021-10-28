@@ -34,12 +34,8 @@ namespace UMC_FORM.Models
         [StringLength(20)]
         public string SHORT_NAME { get; set; }
 
-        public bool? IS_MNG { get; set; }
+        public int POSITION { get; set; }
 
-        public bool? IS_GD { get; set; }
-
-        public bool? IS_FM { get; set; }
-
-        public bool? IS_READ_ONLY { get; set; }
+      
     }
 }

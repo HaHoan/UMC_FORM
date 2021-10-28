@@ -31,6 +31,15 @@ namespace UMC_FORM.Controllers
             }
             return false;
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
         public ActionResult Index(SendType? type)
         {
             if (type is null)
@@ -43,7 +52,7 @@ namespace UMC_FORM.Controllers
             switch (type)
             {
                 case SendType.SENDTOME:
-                    list = db.Form_Summary.Where(r => r.IS_FINISH == false).OrderByDescending(m => m.UPD_DATE).ToList();
+                    list = db.Form_Summary.Where(r => r.IS_FINISH == false).ToList();
                     foreach (var item in list)
                     {
                         var index = item.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
@@ -56,8 +65,9 @@ namespace UMC_FORM.Controllers
                     ViewBag.type = 1;
                     break;
                 case SendType.MYREQUEST:
-                    formSummaries = db.Form_Summary.Where(r => r.IS_FINISH == false).Where(t => t.IS_REJECT == false && t.CREATE_USER == session.CODE).ToList();
-                    
+                    formSummaries = db.Form_Summary.Where(r => r.CREATE_USER == session.CODE && r.IS_FINISH == false && r.IS_REJECT == false)
+                       .ToList();
+
                     ViewBag.type = 2;
                     break;
                 case SendType.CANCEL:
@@ -75,13 +85,13 @@ namespace UMC_FORM.Controllers
                     break;
                 case SendType.FINISH:
                     ViewBag.type = 4;
-                    formSummaries = db.Form_Summary.Where(r => r.IS_FINISH == true).ToList();
+                    formSummaries = db.Form_Summary.Where(r => r.IS_FINISH == true && r.CREATE_USER == session.CODE).ToList();
                     break;
 
                 default:
                     break;
             }
-            return View(formSummaries.OrderByDescending(r => r.UPD_DATE));
+            return View(formSummaries.OrderByDescending(m => m.UPD_DATE));
         }
         public ActionResult Search(string search)
         {

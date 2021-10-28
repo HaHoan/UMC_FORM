@@ -8,6 +8,7 @@ namespace UMC_FORM.Models
 
     public partial class LCA_FORM_01
     {
+        [Key]
         [StringLength(50)]
         public string ID { get; set; }
 
