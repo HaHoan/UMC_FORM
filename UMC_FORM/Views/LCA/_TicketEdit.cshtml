@@ -7,7 +7,6 @@
     <div class="col-9">
 
         @Html.TextBoxFor(m => m.REQUEST_DATE, "{0:dd/MM/yyyy}", new { @Value = Model.REQUEST_DATE.ToString("yyyy-MM-dd"), @class = "form-control", type = "date" })
-        @*<input class="form-control" type="date" name="REQUEST_DATE" value=@DateTime.Now.ToString("yyyy-MM-dd")>*@
     </div>
 </div>
 <br />
@@ -18,7 +17,6 @@
     <div class="col-9">
         @Html.TextBoxFor(m => m.TARGET_DATE, "{0:dd/MM/yyyy}", new { @Value = Model.TARGET_DATE.ToString("yyyy-MM-dd"), @class = "form-control", type = "date" })
 
-        @*<input class="form-control" type="date" name="TARGET_DATE" value=@DateTime.Now.ToString("yyyy-MM-dd")>*@
     </div>
 </div>
 <br>
@@ -28,7 +26,6 @@
     </div>
     <div class="col-9">
         @Html.TextBoxFor(m => m.DEPT, new { @class = "form-control" })
-        @*<input type="text" class="form-control" value="@_session.DEPT" name="DEPT" readonly="readonly" />*@
     </div>
 </div>
 <br>
@@ -38,7 +35,6 @@
     </div>
     <div class="col-9">
         @Html.TextBoxFor(m => m.CREATE_USER, new { @class = "form-control" })
-        @*<input type="text" class="form-control" value="@_session.NAME" readonly="readonly">*@
     </div>
 </div>
 <br>
@@ -150,43 +146,14 @@
             </td>
             <td colspan="7" class="p-2">
 
-                <label for="customer" class="lang mr-2" key="Customer"></label>
-                <input id="customer" type="checkbox" value="Customer" name="payer[]">
-                <label for="umcvn" class="lang mr-2 ml-5" key="" >UMCVN</label>
-                <input id="umcvn" type="checkbox" value="UMCVN" name="payer[]">
+                <label class="lang mr-2" key="@Model.PAYER">@Model.PAYER</label>
                 @Html.HiddenFor(m => m.PAYER)
             </td>
 
         </tr>
 
     </table>
-    <script>
-        $(function () {
-            $(function () {
-                var payer = $('#PAYER').val()
-                if (payer == "UMCVN") {
-                    $('#umcvn').prop('checked',true)
-                } else if (payer == "Customer") {
-                    $('#customer').prop('checked', true)
-                }
-            })
-            $('#customer').change(function () {
-                if ($('#customer').prop('checked') == true) {
-                    $('#umcvn').prop('checked', false);
-
-                    $('input[name="PAYER"]').val($('#customer').val())
-                }
-            })
-            $('#umcvn').change(function () {
-                if ($('#umcvn').prop('checked') == true) {
-                    $('#customer').prop('checked', false);
-                    $('input[name="PAYER"]').val($('#umcvn').val())
-                }
-            })
-
-        })
-
-    </script>
+  
 </div>
 <div class="row">
     <div class="col">
