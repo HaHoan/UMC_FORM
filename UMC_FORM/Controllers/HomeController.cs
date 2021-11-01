@@ -16,20 +16,18 @@ namespace UMC_FORM.Controllers
         private DataContext db = new DataContext();
         private bool IsApprover(Form_Summary item, int index, string userCode)
         {
-            var processNext = ProcessRepository.GetProcessName(item.PROCESS_ID).FirstOrDefault(r => r.FORM_INDEX == index);
-            if (processNext != null)
+            using (var db = new DataContext())
             {
-                var stationNoNext = processNext.STATION_NO;
-                var users = db.Form_Stations.Where(r => r.STATION_NO == stationNoNext && r.PROCESS == item.PROCESS_ID);// Tim users approval
-                foreach (var user in users)
+                var processNext = db.Form_Procedures.Where(m => m.TICKET == item.TICKET && m.FORM_INDEX == index).ToList();
+                foreach (var process in processNext)
                 {
-                    if (user.USER_ID == userCode)
-                    {
-                        return true;
-                    }
+                    if (process.APPROVAL_NAME == userCode) return true;
                 }
+
+
+                return false;
             }
-            return false;
+
         }
 
         protected override void Dispose(bool disposing)
