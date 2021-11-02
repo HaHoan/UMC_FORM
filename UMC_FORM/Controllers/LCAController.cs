@@ -235,13 +235,9 @@ namespace UMC_FORM.Controllers
                         return HttpNotFound();
                     }
                     _sess = Session["user"] as Form_User;
-                    var userApprover = db.Form_Procedures.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1)
-                    && m.FORM_NAME == modelDetail.SUMARY.PROCESS_ID && m.TICKET == modelDetail.TICKET.TICKET).ToList();
-                    if (userApprover.Where(m => m.APPROVAL_NAME == _sess.CODE).FirstOrDefault() != null)
-                    {
-                        modelDetail.IS_APPROVER = true;
-                    }
+
                     modelDetail.PERMISSION = new List<string>();
+                    modelDetail.SUBMITS = new List<string>();
                     var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (modelDetail.SUMARY.PROCEDURE_INDEX + 1).ToString()
                     && m.PROCESS == modelDetail.SUMARY.PROCESS_ID).ToList();
                     foreach (var permission in listPermission)
@@ -249,6 +245,25 @@ namespace UMC_FORM.Controllers
                         modelDetail.PERMISSION.Add(permission.ITEM_COLUMN);
                     }
 
+                    var userApprover = db.Form_Procedures.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1)
+                                       && m.FORM_NAME == modelDetail.SUMARY.PROCESS_ID && m.TICKET == modelDetail.TICKET.TICKET).ToList();
+                    if (userApprover.Where(m => m.APPROVAL_NAME == _sess.CODE).FirstOrDefault() != null)
+                    {
+                        if (modelDetail.SUMARY.IS_REJECT)
+                        {
+                            modelDetail.SUBMITS.Add(SUBMIT.RE_APPROVE);
+                        }
+                        else
+                        {
+                            modelDetail.SUBMITS.Add(SUBMIT.APPROVE);
+                        }
+                      
+                    }
+                    if(listPermission.Where(m => m.DEPT == _sess.DEPT).FirstOrDefault() != null)
+                    {
+                        modelDetail.SUBMITS.Add(SUBMIT.EDIT_QUOTE);
+                        
+                    }
                     modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY.PROCESS_ID, db, list);
 
                     JavaScriptSerializer js = new JavaScriptSerializer();
@@ -264,30 +279,36 @@ namespace UMC_FORM.Controllers
             }
 
         }
-
+        public bool IsChangeConflict(DateTime startTime)
+        {
+            TimeSpan span = DateTime.Now.Subtract(startTime);
+            if(span.Seconds < Constant.TIME_SLEEP)
+            {
+                return true;
+            }
+            return false;
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket)
         {
             try
             {
-                if (Request.Form["reject"] != null)
-                {
-                    status = STATUS.REJECT;
-                }
-                else if (Request.Form["accept"] != null)
-                {
-                    status = STATUS.ACCEPT;
-                }
+                
                 using (var db = new DataContext())
                 {
                     var formDb = db.LCA_FORM_01.Where(m => m.TICKET == infoTicket.TICKET).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();
+
                     if (formDb == null)
                     {
                         return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
+                        if (IsChangeConflict(formDb.UPD_DATE))
+                        {
+                            return Json(new { result = STATUS.WAIT }, JsonRequestBehavior.AllowGet);
+                        }
                         if (status == STATUS.ACCEPT)
                         {
                             string result = Accept(formDb, db, infoTicket, quotes);
@@ -322,6 +343,23 @@ namespace UMC_FORM.Controllers
                                 }, JsonRequestBehavior.AllowGet);
                             }
                         }
+                        else if (status == STATUS.EDIT_QUOTE)
+                        {
+                            string result = EditQuote(formDb, db,infoTicket,quotes);
+                            if (result == STATUS.ERROR)
+                            {
+                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                            }
+                            else
+                            {
+                                return Json(new
+                                {
+                                    result = STATUS.SUCCESS,
+                                    ticket = formDb.TICKET,
+                                    typeMail = STATUS.REJECT
+                                }, JsonRequestBehavior.AllowGet);
+                            }
+                        }
                         else
                         {
                             return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
@@ -337,7 +375,7 @@ namespace UMC_FORM.Controllers
                 return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
             }
         }
-
+        
         private string Reject(LCA_FORM_01 formDb, DataContext db)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
@@ -571,6 +609,53 @@ namespace UMC_FORM.Controllers
             }
         }
 
+        private string EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
+        {
+            using (DbContextTransaction transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var form = formDb.CloneObject() as LCA_FORM_01;
+
+                    _sess = Session["user"] as Form_User;
+                    var summary = db.Form_Summary.Where(m => m.TICKET == formDb.TICKET).FirstOrDefault();
+                  
+                    #region FORM
+                  
+                    form.ORDER_HISTORY += 1;
+                    form.UPD_DATE = DateTime.Now;
+                    form.SUBMIT_USER = _sess.CODE;
+                    form.IS_SIGNATURE = 0;
+                    form.ID = Guid.NewGuid().ToString();
+                   
+                    #region Quote
+                    AddQuotes(quotes, db, infoTicket, form);
+                    #endregion
+                   
+                    var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
+                    form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
+                    db.LCA_FORM_01.Add(form);
+                    #endregion
+
+                    #region SUMARY
+
+                    summary.UPD_DATE = DateTime.Now;
+                    
+                    #endregion
+                    db.SaveChanges();
+                    transaction.Commit();
+
+                    return STATUS.SUCCESS;
+                }
+                catch (Exception e)
+                {
+                    transaction.Rollback();
+                    ModelState.AddModelError("Error", e.Message.ToString());
+                    return STATUS.ERROR;
+                }
+
+            }
+        }
 
         public ActionResult PrintView(string ticket)
         {
@@ -685,5 +770,7 @@ namespace UMC_FORM.Controllers
             }
             return Json(new { result = STATUS.SUCCESS }, JsonRequestBehavior.AllowGet);
         }
+
+
     }
 }

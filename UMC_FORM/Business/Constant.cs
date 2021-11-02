@@ -30,6 +30,7 @@ namespace UMC_FORM.Business
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
         public static string ERROR_NOTICE = "Có lỗi xảy ra";
+        public static int TIME_SLEEP = 5;
     }
 
     public static class PERMISSION
@@ -42,12 +43,21 @@ namespace UMC_FORM.Business
         public static string COMMENT = "COMMENT";
     }
 
+    public static class SUBMIT
+    {
+        public static string APPROVE = "APPROVE";
+        public static string RE_APPROVE = "RE_APPROVE";
+        public static string EDIT_QUOTE = "EDIT_QUOTE";
+    }
+
     public static class STATUS
     {
         public static string ACCEPT = "accept";
         public static string REJECT = "reject";
+        public static string EDIT_QUOTE = "edit_quote";
         public static string SUCCESS = "success";
         public static string ERROR = "error";
+        public static string WAIT = "wait";
     }
 
     public static class PAYER

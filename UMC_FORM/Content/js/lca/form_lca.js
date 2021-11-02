@@ -73,8 +73,8 @@ $(function () {
         },
         submitHandler: function (form) {
             var status = $('#status').val();
-            if (status == 'reject') {
-                if (confirm('Bạn có muốn ' + status + ' không?')) {
+            if (status == 'reject' || status == 'edit_quote') {
+                if (confirm('Bạn có muốn submit không?')) {
                     disableButtonWhenSubmit('#lca_' + status)
                     form.ajax.submit()
                 }
@@ -123,6 +123,10 @@ $(function () {
     })
     $('#lca_reject').click(function (e) {
         $('#status').val("reject")
+
+    })
+    $('#lca_edit_quote').click(function (e) {
+        $('#status').val("edit_quote")
 
     })
 
@@ -257,7 +261,14 @@ function OnSuccess(response) {
     if (response.result == 'success') {
         //sendMail(response.ticket, response.typeMail)
         window.location.href = $("#RedirectTo").val()
-    } else {
+    } else if (response.result == 'wait') {
+        if (confirm('Ticket vừa có người thay đổi,Nếu muốn tiếp tục thì hãy nhấn OK để load lại ticket để cập nhật?')) {
+            window.location.href = $("#LoadTicket").val()
+        } else {
+            window.location.href = $("#RedirectTo").val()
+        }
+    }
+    else {
         alert(response.result)
     }
 }

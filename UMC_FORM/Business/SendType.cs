@@ -10,6 +10,6 @@ namespace UMC_FORM.Business
     /// </summary>
     public  enum SendType
     {
-        SENDTOME, MYREQUEST,CANCEL,FINISH, ALL
+        SENDTOME, MYREQUEST,CANCEL,FINISH,FOLLOW, ALL
     }
 }

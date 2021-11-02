@@ -83,7 +83,9 @@
     "Phê duyệt": "Phê duyệt",
     "reaccept": "Re-accept",
     "need_enter_english": "Please add comment by English or Japanese",
-    "dept_manager": "Dept Manager"
+    "dept_manager": "Dept Manager",
+    "edit_quote": "Quote Edit",
+    "follow-request": "Following"
   },
   "vi": {
     "Home": "TRANG CHỦ",
@@ -196,7 +198,9 @@
     "daily": "Tháng",
     "reaccept": "Xác nhận lại",
     "need_enter_english": "Please add comment by English or Japanese",
-    "dept_manager": "Trưởng phòng"
+    "dept_manager": "Trưởng phòng",
+    "edit_quote": "Sửa Báo Giá",
+    "follow-request": "Đang theo dõi"
   },
   "ja": {
     "reaccept": "Re-accept",
@@ -233,6 +237,8 @@
     "monthly": "月",
     "daily": "日",
     "need_enter_english": "Please add comment by English or Japanese",
-    "dept_manager": "部長"
+    "dept_manager": "部長",
+    "edit_quote": "Quote Edit",
+    "follow-request": "Following"
   }
 }

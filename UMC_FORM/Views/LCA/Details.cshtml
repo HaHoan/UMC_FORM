@@ -44,29 +44,30 @@
 
                         <hr>
                         @Html.ValidationMessage("Error")
-                        if (Model.IS_APPROVER)
+
+
+                        <input id="status" name="status" type="hidden" />
+                        if (Model.SUBMITS.Contains(SUBMIT.RE_APPROVE))
                         {
 
-                            <input id="status" name="status" type="hidden" />
-                            if (Model.SUMARY.IS_REJECT)
-                            {
-
-                                <button class="spinner-button btn btn-danger mb-2 lang col" key="reaccept" id="lca_accept" type="submit" value="accept">Chấp thuận</button>
-                            }
-                            else
-                            {
-                                <div class="row">
-                                    <div class="col">
-                                        <button class="spinner-button btn btn-danger mb-2 lang col" key="reject" id="lca_reject" value="reject" type="submit">Từ chối</button>
-                                    </div>
-                                    <div class="col">
-                                        <button class="spinner-button btn btn-success mb-2 lang col" key="accept" id="lca_accept" value="accept" type="submit">Chấp thuận</button>
-                                    </div>
-
+                            <button class="spinner-button btn btn-danger mb-2 lang col" key="reaccept" id="lca_accept" type="submit" value="accept">Chấp thuận</button>
+                        }
+                        else if (Model.SUBMITS.Contains(SUBMIT.APPROVE))
+                        {
+                            <div class="row">
+                                <div class="col">
+                                    <button class="spinner-button btn btn-danger mb-2 lang col" key="reject" id="lca_reject" value="reject" type="submit">Từ chối</button>
                                 </div>
-                            }
+                                <div class="col">
+                                    <button class="spinner-button btn btn-success mb-2 lang col" key="accept" id="lca_accept" value="accept" type="submit">Chấp thuận</button>
+                                </div>
 
+                            </div>
+                        }
 
+                        else if (Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE))
+                        {
+                            <button class="spinner-button btn btn-success mb-2 lang col" key="edit_quote" id="lca_edit_quote" type="submit" value="edit_quote">Chấp thuận</button>
                         }
 
                         <div class="row mt-4">
@@ -164,24 +165,24 @@
                                                         {
                                                             while (i < 6)
                                                             {
-                                                            <tr class="row-info">
-                                                                <td>@(i)</td>
-                                                                @if (i == 1)
-                                                                {
-                                                                    <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required/></td>
-                                                                    <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required/> </td>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
-                                                                    <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
-                                                                }
+                                                                <tr class="row-info">
+                                                                    <td>@(i)</td>
+                                                                    @if (i == 1)
+                                                                    {
+                                                                        <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required /></td>
+                                                                        <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required /> </td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
+                                                                        <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
+                                                                    }
 
-                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
-                                                            </tr>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_LCA_" + i) readonly /> </td>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_LCA_" + i) disabled />  </td>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("UNIT_PRICE_CUSTOMER_" + i) readonly /> </td>
+                                                                    <td><input class="form-input type_number inputDefault" id=@("TOTAL_CUSTOMER_" + i) disabled /></td>
+                                                                </tr>
                                                                 i++;
                                                             }
                                                         }
@@ -270,15 +271,17 @@
                                                 <tbody id="tableInfo">
                                                     @{
                                                         var i = 1;
+                                                        var required = Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE) ? "" : "requiredValue";
+
                                                         foreach (var quote in Model.TICKET.LCA_QUOTEs)
                                                         {
                                                             <tr class="row-info">
                                                                 <td>@(i)</td>
                                                                 <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white requiredValue" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" re/> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white @(required)" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white @(required)" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
                                                             </tr>
                                                             i++;
@@ -317,80 +320,6 @@
                                     </div>
                                 }
 
-                                else if (Model.PERMISSION.Contains(PERMISSION.EDIT_QUOTE))
-                                {
-                                    <div class="edit-quote">
-                                        <div class="row">
-                                            <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
-                                            <label class="col lang text-right">受付日／Ngày nhận: <span>@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
-                                            <label class="lang col text-right">Lead time: <span>@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
-                                        </div>
-
-                                        <div class="table-responsive">
-                                            <table class="table-border-dark">
-                                                <tr>
-                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                                                </tr>
-                                                <tr>
-
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
-
-                                                </tr>
-
-                                                <tbody id="tableInfo">
-                                                    @{
-                                                        var i = 1;
-                                                        foreach (var quote in Model.TICKET.LCA_QUOTEs)
-                                                        {
-                                                            <tr class="row-info">
-                                                                <td>@(i)</td>
-                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white requiredValue" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
-                                                            </tr>
-                                                            i++;
-                                                        }
-
-                                                    }
-
-                                                    <tr class="p-3 summary">
-                                                        <td class="border-0 font-italic" colspan="4">
-                                                            * If request Items are over 5, please issue more request sheet
-                                                        </td>
-                                                        <td class="border-0 font-weight-bold">
-                                                            <div class="text-right">
-                                                                <span class="">Total:</span>
-                                                                <span class="totalLCA">100</span>
-                                                                <span class="">$</span>
-                                                            </div>
-
-                                                        </td>
-                                                        <td class="border-0"></td>
-                                                        <td class="border-0 font-weight-bold text-right">
-                                                            <span class="">Total:</span>
-                                                            <span class="totalCustomer">100</span>
-                                                            <span class="">$</span>
-                                                        </td>
-                                                    </tr>
-
-                                                </tbody>
-                                            </table>
-                                            <input type="hidden" name="quotes" id="quotes" />
-
-                                        </div>
-
-                                    </div>
-                                }
                                 else
                                 {
                                     <div class="view-quote">
@@ -465,7 +394,6 @@
                                     </div>
                                 }
 
-
                             }
 
 
@@ -473,7 +401,7 @@
                                 <p class="font-weight-bold m-3">ID<span class="font-weight-normal font-italic">(Do LCA nhập)</span></p>
                                 @if (Model.PERMISSION.Contains(PERMISSION.ADD_ID))
                                 {
-                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control requiredValue" })
+                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control " + (Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE) ? "" : "requiredValue") })
                                 }
                                 else
                                 {
@@ -586,6 +514,7 @@
     </div>
 </div>
 @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }));
+@Html.Hidden("LoadTicket", Url.Action("Details", "LCA", new { ticket = Model.TICKET.TICKET }));
 @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
 @Scripts.Render("~/Scripts/jquery.validate.min.js")
 @Scripts.Render("~/Content/js/mention.js")

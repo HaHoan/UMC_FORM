@@ -85,7 +85,19 @@ namespace UMC_FORM.Controllers
                     ViewBag.type = 4;
                     formSummaries = db.Form_Summary.Where(r => r.IS_FINISH == true && r.CREATE_USER == session.CODE).ToList();
                     break;
-
+                case SendType.FOLLOW:
+                    ViewBag.type = 5;
+                    list = db.Form_Summary.Where(r => r.IS_FINISH == false).ToList();
+                    foreach (var item in list)
+                    {
+                        var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (item.PROCEDURE_INDEX + 1).ToString()
+                                             && m.PROCESS == item.PROCESS_ID).ToList();
+                        if (listPermission.Where(m => m.DEPT == session.DEPT).FirstOrDefault() != null)
+                        {
+                            formSummaries.Add(item);
+                        }
+                    }
+                    break;
                 default:
                     break;
             }

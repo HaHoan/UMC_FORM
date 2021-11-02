@@ -179,16 +179,19 @@
                                                         document.getElementById("myRequest").checked = false;
                                                         document.getElementById("myCancel").checked = false;
                                                         document.getElementById("myFinish").checked = false;
+                                                        document.getElementById("myFollow").checked = false;
                                                         } else if(@ViewBag.type == 2){ //Tôi cần phê duyệt
                 $("#sendToMe").prop('checked', false);
                 $("#myRequest").prop('checked', true);
                 $("#myCancel").prop('checked', false);
                 $("#myFinish").prop('checked', false);
+                $("#myFollow").prop('checked', false);
                                                         } else if (@ViewBag.type == 3) { //Bị từ chối
                 $("#sendToMe").prop('checked', false);
                 $("#myRequest").prop('checked', false);
                 $("#myCancel").prop('checked', true);
                 $("#myFinish").prop('checked', false);
+                $("#myFollow").prop('checked', false);
                 $(".badge").text("Reject");
                 $(".badge").addClass("badge-danger").removeClass("badge-success");
                                                         }
@@ -196,10 +199,18 @@
                 $("#sendToMe").prop('checked', false);
                 $("#myRequest").prop('checked', false);
                 $("#myCancel").prop('checked', false);
-                $("#myFinish").prop('checked', true);
+                                                        $("#myFinish").prop('checked', true);
+                                                        $("#myFollow").prop('checked', false);
                 $(".badge").text("Finish");
-                                                        }
-                                                        else {
+                                                    } else if (@ViewBag.type == 5) { // Tôi cần hoàn thành
+                                                        $("#sendToMe").prop('checked', false);
+                                                        $("#myRequest").prop('checked', false);
+                                                        $("#myCancel").prop('checked', false);
+                                                        $("#myFinish").prop('checked', false);
+                                                        $("#myFollow").prop('checked', true);
+                                                    }
+                                                    else {
+
                                                         }
                                                         });
 
