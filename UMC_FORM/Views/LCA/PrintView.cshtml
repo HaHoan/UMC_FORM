@@ -46,7 +46,7 @@
             <label class="col text-right font-weight-bold">ID :  @Model.TICKET.LCA_ID</label>
         </div>
 
-       
+
         <div class="card-body border border-dark pt-1">
             <div class="row">
                 <span class="text-uppercase lang font-weight-bold" style="font-size:10px;">
@@ -375,7 +375,7 @@
                             }
                             @foreach (var station in Model.STATION_APPROVE)
                             {
-                                if(index < 3)
+                                if (index < 3)
                                 {
                                     index++;
                                     continue;
@@ -420,10 +420,26 @@
 
             </div>
 
-            
+
             <div class="row ml-1">
                 <p class="font-weight-bold text-underline ">Comment:</p>
-                <span class="ml-1" style="white-space: pre-wrap">@Model.TICKET.COMMENT</span>
+                @if (Model.LIST_COMMENT != null && Model.LIST_COMMENT.Count() > 0)
+                {
+                    <div class="list-group">
+                        @foreach (var comment in Model.LIST_COMMENT)
+                        {
+                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">@comment.COMMENT_USER</h5>
+                                </div>
+                                <p class="mb-1">@comment.COMMENT_DETAIL</p>
+                            </a>
+
+                        }
+
+
+                    </div>
+                }
 
 
             </div>

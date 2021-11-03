@@ -15,5 +15,6 @@ namespace UMC_FORM.Models.LCA
         
         public List<StationApproveModel> STATION_APPROVE { get; set; }
         public string  USERS { get; set; }
+        public List<Form_Comment> LIST_COMMENT { get; set; }
     }
 }
