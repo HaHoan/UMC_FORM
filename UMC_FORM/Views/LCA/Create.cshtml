@@ -100,13 +100,22 @@
                                             @foreach (var mng in ViewBag.listManager)
                                             {
                                                 <option value="@mng.CODE">@mng.NAME</option>
-                                                
+
                                             }
                                         </select>
                                     </div>
                                 </div>
                             }
 
+                            <br>
+                            <div class="row">
+                                <div class="col-3">
+                                    <label class="font-weight-bold lang" key="title_request">Title</label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" name="PURPOSE" />
+                                </div>
+                            </div>
                             <br>
                             <div class="row">
                                 <table class="table-border-dark ">

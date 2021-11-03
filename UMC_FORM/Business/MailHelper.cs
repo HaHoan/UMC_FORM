@@ -57,7 +57,7 @@ namespace UMC_FORM.Business
                 mailMessage.From = new MailAddress(maiAccount);
                 foreach (var item in to)
                 {
-                    mailMessage.To.Add(item);
+                    mailMessage.To.Add("hoanht@umcvn.com");
                 }
                 mailMessage.Subject = Constant.SUBJECT;
                 mailMessage.Body = body;

@@ -174,7 +174,8 @@ namespace UMC_FORM.Controllers
                                 CREATE_USER = _sess.CODE,
                                 UPD_DATE = DateTime.Now,
                                 TITLE = Constant.LCA_FORM_01_TITLE,
-                                PROCESS_ID = processName
+                                PROCESS_ID = processName,
+                                PURPOSE = ticket.PURPOSE
                             };
                             summary.LAST_INDEX = process.Count() - 1;
 
