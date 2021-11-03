@@ -69,5 +69,8 @@ namespace UMC_FORM.Business
     public static class POSITION
     {
         public static int MANAGER = 1;
+        public static int FM = 2;
+        public static int GD = 3;
+
     }
 }

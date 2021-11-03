@@ -83,7 +83,17 @@ namespace UMC_FORM.Controllers
                     break;
                 case SendType.FINISH:
                     ViewBag.type = 4;
-                    formSummaries = db.Form_Summary.Where(r => r.IS_FINISH == true && r.CREATE_USER == session.CODE).ToList();
+                    if(session.POSITION == POSITION.FM || session.POSITION == POSITION.GD)
+                    {
+                        formSummaries = db.Form_Summary.Where(r => r.IS_FINISH == true).ToList();
+                    }
+                    else
+                    {
+                        var tickets = (List<string>)db.Form_Procedures.Where(m => m.APPROVAL_NAME == session.CODE).Select(m => m.TICKET).ToList();
+                        formSummaries = db.Form_Summary.Where(m => m.IS_FINISH == true && tickets.Contains(m.TICKET)).ToList();
+
+                    }
+                 
                     break;
                 case SendType.FOLLOW:
                     ViewBag.type = 5;
