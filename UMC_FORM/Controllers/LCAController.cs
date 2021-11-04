@@ -258,12 +258,12 @@ namespace UMC_FORM.Controllers
                         {
                             modelDetail.SUBMITS.Add(SUBMIT.APPROVE);
                         }
-                      
+
                     }
-                    if(listPermission.Where(m => m.DEPT == _sess.DEPT).FirstOrDefault() != null)
+                    if (listPermission.Where(m => m.DEPT == _sess.DEPT).FirstOrDefault() != null)
                     {
                         modelDetail.SUBMITS.Add(SUBMIT.EDIT_QUOTE);
-                        
+
                     }
                     modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY.PROCESS_ID, db, list);
 
@@ -283,7 +283,7 @@ namespace UMC_FORM.Controllers
         public bool IsChangeConflict(DateTime startTime)
         {
             TimeSpan span = DateTime.Now.Subtract(startTime);
-            if(span.Seconds < Constant.TIME_SLEEP)
+            if (span.Seconds < Constant.TIME_SLEEP)
             {
                 return true;
             }
@@ -295,7 +295,7 @@ namespace UMC_FORM.Controllers
         {
             try
             {
-                
+
                 using (var db = new DataContext())
                 {
                     var formDb = db.LCA_FORM_01.Where(m => m.TICKET == infoTicket.TICKET).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();
@@ -346,7 +346,7 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.EDIT_QUOTE)
                         {
-                            string result = EditQuote(formDb, db,infoTicket,quotes);
+                            string result = EditQuote(formDb, db, infoTicket, quotes);
                             if (result == STATUS.ERROR)
                             {
                                 return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
@@ -376,7 +376,7 @@ namespace UMC_FORM.Controllers
                 return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
         private string Reject(LCA_FORM_01 formDb, DataContext db)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
@@ -620,19 +620,19 @@ namespace UMC_FORM.Controllers
 
                     _sess = Session["user"] as Form_User;
                     var summary = db.Form_Summary.Where(m => m.TICKET == formDb.TICKET).FirstOrDefault();
-                  
+
                     #region FORM
-                  
+
                     form.ORDER_HISTORY += 1;
                     form.UPD_DATE = DateTime.Now;
                     form.SUBMIT_USER = _sess.CODE;
                     form.IS_SIGNATURE = 0;
                     form.ID = Guid.NewGuid().ToString();
-                   
+
                     #region Quote
                     AddQuotes(quotes, db, infoTicket, form);
                     #endregion
-                   
+
                     var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
                     form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                     db.LCA_FORM_01.Add(form);
@@ -641,7 +641,7 @@ namespace UMC_FORM.Controllers
                     #region SUMARY
 
                     summary.UPD_DATE = DateTime.Now;
-                    
+
                     #endregion
                     db.SaveChanges();
                     transaction.Commit();
@@ -717,13 +717,13 @@ namespace UMC_FORM.Controllers
                     }
                     else
                     {
-                        var process = ProcessRepository.GetProcess(summary.PROCESS_ID, summary.PROCEDURE_INDEX + 1);
-                        var stations = StationRepository.GetStations(process.STATION_NO);
-                        var userID = stations.Select(r => r.USER_ID).ToList();
-                        userMails = UserRepository.GetUsers(userID);
+                        var stations = db.Form_Procedures.Where(m => m.TICKET == ticket &&
+                        m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1) &&
+                        m.FORM_NAME == summary.PROCESS_ID).Select(m => m.APPROVAL_NAME).ToList();
+                        userMails = UserRepository.GetUsers((List<string>) stations);
                         if (userMails.Count == 1)
                         {
-                            var userApproval = db.Form_User.Where(m => m.CODE == userID.FirstOrDefault()).FirstOrDefault();
+                            var userApproval = db.Form_User.Where(m => m.CODE == stations.FirstOrDefault()).FirstOrDefault();
                             dear = $"Dear {userApproval.SHORT_NAME} san !";
                         }
                     }

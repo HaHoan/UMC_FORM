@@ -259,7 +259,7 @@ $(function () {
 });
 function OnSuccess(response) {
     if (response.result == 'success') {
-        //sendMail(response.ticket, response.typeMail)
+        sendMail(response.ticket, response.typeMail)
         window.location.href = $("#RedirectTo").val()
     } else if (response.result == 'wait') {
         if (confirm('Ticket vừa có người thay đổi,Nếu muốn tiếp tục thì hãy nhấn OK để load lại ticket để cập nhật?')) {
