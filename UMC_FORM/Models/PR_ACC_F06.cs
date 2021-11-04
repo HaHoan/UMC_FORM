@@ -459,11 +459,11 @@ namespace UMC_FORM.Models
         [StringLength(100)]
         public string REMARK { get; set; }
 
-        public bool? IS_ROUND_ROBIN { get; set; }
+        public bool IS_ROUND_ROBIN { get; set; }
 
-        public bool? IS_REQ_CUS { get; set; }
+        public bool IS_REQ_CUS { get; set; }
 
-        public bool? IS_CUS_PAY { get; set; }
+        public bool IS_CUS_PAY { get; set; }
 
         [StringLength(200)]
         public string CUS_PAY_REMARK { get; set; }
@@ -506,5 +506,10 @@ namespace UMC_FORM.Models
 
         [NotMapped]
         public AuthorEntity author { get; set; }
+
+        [StringLength(50)]
+        public string EXCHANGE { get; set; }
+
+
     }
 }

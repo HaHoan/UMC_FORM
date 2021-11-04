@@ -77,47 +77,48 @@
                     @if (@ViewBag.accept == true)
                     {
 
-                        <div class="row">
-                            <div class="col">
-                                @if (mng)
-                                {
-                                    <button type="button" class="btn btn-success col lang" data-toggle="modal" data-target="#exampleModal" key="accept">
-                                        Chấp thuận
-                                    </button>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-danger col lang" key="reject" id="reject">Từ chối</button>
+                        </div>
+                        <div class="col">
+                            @if (mng)
+                            {
+                                <button type="button" class="btn btn-success col lang" data-toggle="modal" data-target="#exampleModal" key="accept">
+                                    Chấp thuận
+                                </button>
 
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="usePur" value="true" checked>
+                                                    <label class="custom-control-label" for="usePur">Through The PUR</label>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="usePur" value="true" checked>
-                                                        <label class="custom-control-label" for="usePur">Through The PUR</label>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary" id="accept">Submit</button>
-                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary" id="accept">Submit</button>
                                             </div>
                                         </div>
                                     </div>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-success col lang" key="accept" id="accept">Chấp thuận</button>
-                                }
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-danger col lang" key="reject" id="reject">Từ chối</button>
-                            </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <button class="btn btn-success col lang" key="accept" id="accept">Chấp thuận</button>
+                            }
                         </div>
+
+                    </div>
                         <div id="progress" class="loadImg">
                             <div class="center">
                                 <img src="~/Content/images/loader4.gif" />
@@ -288,7 +289,7 @@
                                     <th class="lang" key="table-unit-price" rowspan="2">Unit_Price</th>
                                     <th class="lang" key="table-qty" rowspan="2">Qty</th>
                                     <th rowspan="2"><p class="lang" key="table-unit">Unit</p><p class="lang" key="table-unit-detail">(kg•pcs)</p></th>
-                                    <th width="100px" rowspan="2"><p class="lang" key="table-amount">Amount</p><p class="lang" key="table-amount-detail">(USD or VND)</p></th>
+                                    <th width="100px" rowspan="2"><p class="lang" key="table-amount">Amount</p><p>(@Html.DisplayFor(m => m.EXCHANGE))</p></th>
                                     <th class="lang" key="table-owner-of-item" width="50px">Owner of Item</th>
                                     <th class="lang" key="table-cost-center" width="50px">Cost Center</th>
                                     <th width="50px" rowspan="2">
@@ -406,7 +407,7 @@
                                         TOTAL
                                     </td>
                                     <td class="font-weight-bold total type_number">0</td>
-                                    <td colspan="2" class="font-weight-bold">（USD or VND）</td>
+                                    <td colspan="2" class="font-weight-bold">（@Html.DisplayFor(m => m.EXCHANGE)）</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>

@@ -65,7 +65,7 @@
                             <th>Unit_Price</th>
                             <th>Qty</th>
                             <th>Unit<span class="font-italic">(kg*pcs)</span></th>
-                            <th>Amount<span class="font-italic">(USD or VND)</span></th>
+                            <th>Amount<span class="font-italic">(@Html.DisplayFor(m => m.EXCHANGE))</span></th>
                             <th>Owner of Item</th>
                             <th>Cost Center</th>
                             <th width="50px">
@@ -172,7 +172,7 @@
                                 TOTAL
                             </td>
                             <td class="font-weight-bold total type_number">0</td>
-                            <td colspan="2" class="font-weight-bold">（USD or VND）</td>
+                            <td colspan="2" class="font-weight-bold">（@Html.DisplayFor(m => m.EXCHANGE)）</td>
                             <td></td>
                             <td></td>
                             <td></td>

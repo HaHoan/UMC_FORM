@@ -177,7 +177,7 @@
                                     <th class="lang" key="table-unit-price" rowspan="2">Unit_Price</th>
                                     <th class="lang" key="table-qty" rowspan="2">Qty</th>
                                     <th rowspan="2"><p class="lang" key="table-unit">Unit</p><p class="lang" key="table-unit-detail">(kg • pcs)</p></th>
-                                    <th width="100px" rowspan="2"><p class="lang" key="table-amount">Amount</p><p class="lang" key="table-amount-detail">(USD or VND)</p></th>
+                                    <th width="100px" rowspan="2"><p class="lang" key="table-amount">Amount</p><p>(@Html.DisplayFor(m => m.EXCHANGE))</p></th>
                                     <th class="lang" key="table-owner-of-item" width="50px">Owner of Item</th>
                                     <th class="lang" key="table-cost-center" width="50px">Cost Center</th>
                                     <th width="50px" rowspan="2">
@@ -272,7 +272,7 @@
                                         <td colspan="6"><textarea class="form-input" cols="30" rows="2"></textarea></td>
                                         <td colspan="2" class="lang text-uppercase font-weight-bold" key="table-total">TOTAL</td>
                                         <td class="font-weight-bold total">0</td>
-                                        <td class="font-weight-bold" colspan="2">（USD or VND）</td>
+                                        <td class="font-weight-bold" colspan="2">(@Html.DisplayFor(m => m.EXCHANGE))</td>
                                         <td colspan="3"></td>
                                     </tr>
 
