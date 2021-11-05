@@ -47,7 +47,7 @@ namespace UMC_FORM.Models
        
         public bool USE_PUR { get; set; }
 
-        [StringLength(50)]
+        [StringLength(100)]
         public string PURPOSE { get; set; }
     }
 }

@@ -40,11 +40,16 @@ $(function () {
             "request_target[]": {
                 required: true,
                 minlength: 1
+            },
+            "PURPOSE": {
+                required: true,
+                maxlength: 100
             }
         },
         messages: {
             "payer[]": "Please select at least one checkbox",
-            "request_target[]": "Please select at least one checkbox"
+            "request_target[]": "Please select at least one checkbox",
+            "PURPOSE": "Require 50 character!"
         },
         submitHandler: function (form) {
 

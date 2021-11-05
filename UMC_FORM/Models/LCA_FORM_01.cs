@@ -109,7 +109,7 @@ namespace UMC_FORM.Models
         [NotMapped]
         public List<LCA_FILE> FILES { get; set; }
 
-        [StringLength(50)]
+        [StringLength(100)]
         [Required]
         public string PURPOSE { get; set; }
     }
