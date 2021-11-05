@@ -1,5 +1,6 @@
 ﻿@model UMC_FORM.Models.Form_User
 @using UMC_FORM.Models
+@using UMC_FORM.Business
 @{
     ViewBag.Title = "UserCreate";
     Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
@@ -49,23 +50,15 @@
                             <label for="exampleInputPassword1">Password</label>
                             <input type="password" name="PASSWORD" class="form-control" id="exampleInputPassword1" placeholder="Password">
                         </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="IS_MNG">
-                            <label class="form-check-label" for="exampleCheck1">MNG</label>
-                        </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck2" name="IS_FM">
-                            <label class="form-check-label" for="exampleCheck2">FM</label>
-                        </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck3" name="IS_GD">
-                            <label class="form-check-label" for="exampleCheck3">GD</label>
-                        </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck4" name="IS_READ_ONLY">
-                            <label class="form-check-label" for="exampleCheck4">Read Only</label>
-                        </div>
-                        <div class="form-group">
+                        <label>Chọn chức vụ</label>
+                        <select class="form-control" name="POSITION">
+                            <option value="0" selected>Read Only</option>
+                            <option value="@POSITION.MANAGER" >MNG</option>
+                            <option value="@POSITION.FM">FM</option>
+                            <option value="@POSITION.GD">GD</option>
+                        </select>
+                    
+                        <div class="form-group mt-3">
                             <label for="role">Role</label>
                             <select class="form-control" name="ROLE_ID">
                                 @foreach (var item in roles)
