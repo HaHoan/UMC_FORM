@@ -45,7 +45,7 @@
                         <hr>
                         @Html.ValidationMessage("Error")
 
-
+                       
                         <input id="status" name="status" type="hidden" />
                         if (Model.SUBMITS.Contains(SUBMIT.RE_APPROVE))
                         {
@@ -271,7 +271,7 @@
                                                 <tbody id="tableInfo">
                                                     @{
                                                         var i = 1;
-                                                        var required = Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE) ? "" : "requiredValue";
+                                                        var required = (Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE) && Model.SUBMITS.Contains(SUBMIT.APPROVE)) ? "requiredValue" : "";
 
                                                         foreach (var quote in Model.TICKET.LCA_QUOTEs)
                                                         {
@@ -281,7 +281,7 @@
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white @(required)" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white @(required)" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white " id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly/> </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
                                                             </tr>
                                                             i++;
@@ -401,7 +401,7 @@
                                 <p class="font-weight-bold m-3">ID<span class="font-weight-normal font-italic">(Do LCA nhập)</span></p>
                                 @if (Model.PERMISSION.Contains(PERMISSION.ADD_ID))
                                 {
-                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control " + (Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE) ? "" : "requiredValue") })
+                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control " + ((Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE) && Model.SUBMITS.Contains(SUBMIT.APPROVE)) ? "requiredValue" : "") })
                                 }
                                 else
                                 {

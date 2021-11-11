@@ -55,6 +55,90 @@ namespace UMC_FORM.Controllers
             }
             return listApproved;
         }
+        private void setUpFormProceduce(string processName, DataContext db, string ticket, string deptManager, List<Form_Process> process)
+        {
+            var formStation = db.Form_Stations.Where(m => m.PROCESS == processName).ToList();
+            var oldProcess = db.Form_Procedures.Where(m => m.TICKET == ticket).ToList();
+            foreach (var pro in process)
+            {
+                if (pro.FORM_INDEX == 1 || pro.FORM_INDEX == 3)
+                {
+                    var proceduce = oldProcess.Where(m => m.TICKET == ticket && m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == pro.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")).FirstOrDefault();
+                    if (proceduce != null)
+                    {
+                        proceduce.FORM_INDEX = pro.FORM_INDEX;
+                        proceduce.FORM_NAME = pro.FORM_NAME;
+                        proceduce.STATION_NO = pro.STATION_NO;
+                    }
+                    else
+                    {
+                        proceduce = new Form_Procedures()
+                        {
+                            ID = Guid.NewGuid().ToString(),
+                            TICKET = ticket,
+                            FORM_NAME = processName,
+                            STATION_NO = pro.STATION_NO,
+                            STATION_NAME = pro.STATION_NAME,
+                            FORM_INDEX = pro.FORM_INDEX,
+                            RETURN_INDEX = pro.RETURN_INDEX,
+                            CREATER_NAME = pro.CREATER_NAME,
+                            CREATE_DATE = pro.CREATE_DATE,
+                            UPDATER_NAME = pro.UPDATER_NAME,
+                            UPDATE_DATE = pro.UPDATE_DATE,
+                            DES = pro.DES,
+                            RETURN_STATION_NO = pro.RETURN_STATION_NO,
+                            APPROVAL_NAME = deptManager
+                        };
+                        db.Form_Procedures.Add(proceduce);
+                    }
+
+
+                }
+                else
+                {
+                    var listUserApprover = formStation.Where(m => m.FORM_INDEX == pro.FORM_INDEX).ToList();
+                    foreach (var userApprover in listUserApprover)
+                    {
+                        var proceduce = oldProcess.Where(m => m.TICKET == ticket && m.APPROVAL_NAME == userApprover.USER_ID && m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == pro.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")).FirstOrDefault();
+                        if (proceduce != null)
+                        {
+                            proceduce.FORM_INDEX = pro.FORM_INDEX;
+                            proceduce.FORM_NAME = pro.FORM_NAME;
+                            proceduce.STATION_NO = pro.STATION_NO;
+                        }
+                        else
+                        {
+                            proceduce = new Form_Procedures()
+                            {
+                                ID = Guid.NewGuid().ToString(),
+                                TICKET = ticket,
+                                FORM_NAME = processName,
+                                STATION_NO = pro.STATION_NO,
+                                STATION_NAME = pro.STATION_NAME,
+                                FORM_INDEX = pro.FORM_INDEX,
+                                RETURN_INDEX = pro.RETURN_INDEX,
+                                CREATER_NAME = pro.CREATER_NAME,
+                                CREATE_DATE = pro.CREATE_DATE,
+                                UPDATER_NAME = pro.UPDATER_NAME,
+                                UPDATE_DATE = pro.UPDATE_DATE,
+                                DES = pro.DES,
+                                RETURN_STATION_NO = pro.RETURN_STATION_NO,
+                                APPROVAL_NAME = userApprover.USER_ID
+                            };
+                            db.Form_Procedures.Add(proceduce);
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+            // Trường hợp thay đổi proceduce thì phải xóa các trạm không dùng
+
+
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult Create(LCA_FORM_01 ticket, string quotes, string deptManager)
@@ -85,60 +169,7 @@ namespace UMC_FORM.Controllers
                             ticket.UPD_DATE = DateTime.Now;
                             var processName = (ticket.PAYER == PAYER.UMCVN) ? Constant.LCA_01 : Constant.LCA_Process;
                             var process = db.Form_Process.Where(m => m.FORM_NAME == processName).ToList();
-                            var formStation = db.Form_Stations.Where(m => m.PROCESS == processName).ToList();
-                            foreach (var pro in process)
-                            {
-                                if (pro.FORM_INDEX == 1 || pro.FORM_INDEX == 3)
-                                {
-                                    var proceduce = new Form_Procedures()
-                                    {
-                                        ID = Guid.NewGuid().ToString(),
-                                        TICKET = ticket.TICKET,
-                                        FORM_NAME = processName,
-                                        STATION_NO = pro.STATION_NO,
-                                        STATION_NAME = pro.STATION_NAME,
-                                        FORM_INDEX = pro.FORM_INDEX,
-                                        RETURN_INDEX = pro.RETURN_INDEX,
-                                        CREATER_NAME = pro.CREATER_NAME,
-                                        CREATE_DATE = pro.CREATE_DATE,
-                                        UPDATER_NAME = pro.UPDATER_NAME,
-                                        UPDATE_DATE = pro.UPDATE_DATE,
-                                        DES = pro.DES,
-                                        RETURN_STATION_NO = pro.RETURN_STATION_NO,
-                                        APPROVAL_NAME = deptManager
-                                    };
-                                    db.Form_Procedures.Add(proceduce);
-
-                                }
-                                else
-                                {
-                                    var listUserApprover = formStation.Where(m => m.FORM_INDEX == pro.FORM_INDEX).ToList();
-                                    foreach (var userApprover in listUserApprover)
-                                    {
-                                        var proceduce = new Form_Procedures()
-                                        {
-                                            ID = Guid.NewGuid().ToString(),
-                                            TICKET = ticket.TICKET,
-                                            FORM_NAME = processName,
-                                            STATION_NO = pro.STATION_NO,
-                                            STATION_NAME = pro.STATION_NAME,
-                                            FORM_INDEX = pro.FORM_INDEX,
-                                            RETURN_INDEX = pro.RETURN_INDEX,
-                                            CREATER_NAME = pro.CREATER_NAME,
-                                            CREATE_DATE = pro.CREATE_DATE,
-                                            UPDATER_NAME = pro.UPDATER_NAME,
-                                            UPDATE_DATE = pro.UPDATE_DATE,
-                                            DES = pro.DES,
-                                            RETURN_STATION_NO = pro.RETURN_STATION_NO,
-                                            APPROVAL_NAME = userApprover.USER_ID
-                                        };
-                                        db.Form_Procedures.Add(proceduce);
-                                    }
-
-                                }
-
-
-                            }
+                            setUpFormProceduce(processName, db, ticket.TICKET, deptManager, process);
 
                             ticket.STATION_NAME = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                             db.LCA_FORM_01.Add(ticket);
@@ -281,15 +312,7 @@ namespace UMC_FORM.Controllers
             }
 
         }
-        public bool IsChangeConflict(DateTime startTime)
-        {
-            TimeSpan span = DateTime.Now.Subtract(startTime);
-            if (span.Seconds < Constant.TIME_SLEEP)
-            {
-                return true;
-            }
-            return false;
-        }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket)
@@ -307,10 +330,12 @@ namespace UMC_FORM.Controllers
                     }
                     else
                     {
-                        if (IsChangeConflict(formDb.UPD_DATE))
+                       
+                        if(formDb.ID != infoTicket.ID)
                         {
-                            return Json(new { result = STATUS.WAIT }, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.WAIT}, JsonRequestBehavior.AllowGet);
                         }
+
                         if (status == STATUS.ACCEPT)
                         {
                             string result = Accept(formDb, db, infoTicket, quotes);
@@ -389,7 +414,7 @@ namespace UMC_FORM.Controllers
                     _sess = Session["user"] as Form_User;
                     var summary = db.Form_Summary.Where(m => m.TICKET == formDb.TICKET).FirstOrDefault();
 
-                    // để lưu lại bước reject
+                    // để lưu lại bước sẽ quay lại sau khi luồng reject được thực hiện xong
                     summary.REJECT_INDEX = form.PROCEDURE_INDEX;
 
                     var process = db.Form_Process.Where(m => m.FORM_INDEX == summary.REJECT_INDEX && m.FORM_NAME == summary.PROCESS_ID).FirstOrDefault();
@@ -481,7 +506,24 @@ namespace UMC_FORM.Controllers
                     #region FORM
                     if (summary.IS_REJECT)
                     {
-                        form.IS_SIGNATURE = 0;
+                        var stationByIndex = db.Form_Process.Where(m => m.FORM_INDEX == (form.PROCEDURE_INDEX + 1)).FirstOrDefault();
+                        if(stationByIndex != null)
+                        {
+                            var stationIsSinging = db.LCA_FORM_01.Where(m => m.TICKET == form.TICKET 
+                            && m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == stationByIndex.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")
+                            && m.IS_SIGNATURE == 1).FirstOrDefault();
+                            if (stationIsSinging == null)
+                            {
+                                form.IS_SIGNATURE = 1;
+                            }
+                            else form.IS_SIGNATURE = 0;
+                        }
+                        else
+                        {
+                            return STATUS.ERROR;
+                        }
+                      
+                      
                         var processReject = db.Form_Reject.Where(m => m.PROCESS_NAME == summary.PROCESS_ID && m.START_INDEX == summary.RETURN_TO).ToList();
                         var currentStep = processReject.Where(m => m.FORM_INDEX == summary.PROCEDURE_INDEX).FirstOrDefault();
                         if (currentStep != null)
@@ -582,7 +624,7 @@ namespace UMC_FORM.Controllers
 
 
                     var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
-                    form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
+                    form.STATION_NAME = process.Where(m => m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1)).FirstOrDefault().STATION_NAME;
                     db.LCA_FORM_01.Add(form);
                     #endregion
 
@@ -596,6 +638,20 @@ namespace UMC_FORM.Controllers
                     }
 
                     #endregion
+
+                    // Thay đổi payer => change process
+                    if (formDb.PAYER != form.PAYER)
+                    {
+                        summary = changeProcessWhenChangePayer(formDb.PAYER, form.PAYER, db, summary);
+                        if (summary == null)
+                        {
+                            transaction.Rollback();
+                            ModelState.AddModelError("Error", "Bạn không thể thay đổi thành chi trả theo " + form.PAYER + " được!");
+                            return STATUS.ERROR;
+
+                        }
+
+                    }
                     db.SaveChanges();
                     transaction.Commit();
 
@@ -610,7 +666,31 @@ namespace UMC_FORM.Controllers
 
             }
         }
+        private Form_Summary changeProcessWhenChangePayer(string payerOld, string payerNew, DataContext db, Form_Summary summary)
+        {
+            try
+            {
+                var processOld = db.Form_Process.Where(m => m.FORM_NAME == (payerOld == PAYER.CUSTOMER ? Constant.LCA_Process : Constant.LCA_01)).ToList();
+                var processNew = db.Form_Process.Where(m => m.FORM_NAME == (payerNew == PAYER.CUSTOMER ? Constant.LCA_Process : Constant.LCA_01)).ToList();
+                var stationReturnToOld = processOld.Where(m => m.FORM_INDEX == (summary.RETURN_TO + 1)).FirstOrDefault();
+                var stationReTurnToNew = processNew.Where(m => m.STATION_NAME == stationReturnToOld.STATION_NAME).FirstOrDefault();
+                var stationRejectOld = processOld.Where(m => m.FORM_INDEX == (summary.REJECT_INDEX + 1)).FirstOrDefault();
+                var stationRejectNew = processNew.Where(m => m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == stationRejectOld.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")).FirstOrDefault();
+                summary.RETURN_TO = stationReTurnToNew.FORM_INDEX - 1;
+                summary.REJECT_INDEX = stationRejectNew.FORM_INDEX - 1;
+                summary.PROCESS_ID = stationRejectNew.FORM_NAME;
+                summary.LAST_INDEX = processNew.Count() - 1;
+                var proceduce = db.Form_Procedures.Where(m => m.TICKET == summary.TICKET).ToList();
+                setUpFormProceduce(stationRejectNew.FORM_NAME, db, summary.TICKET, "", processNew);
+                return summary;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
 
+
+        }
         private string EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
@@ -721,7 +801,7 @@ namespace UMC_FORM.Controllers
                         var stations = db.Form_Procedures.Where(m => m.TICKET == ticket &&
                         m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1) &&
                         m.FORM_NAME == summary.PROCESS_ID).Select(m => m.APPROVAL_NAME).ToList();
-                        userMails = UserRepository.GetUsers((List<string>) stations);
+                        userMails = UserRepository.GetUsers((List<string>)stations);
                         if (userMails.Count == 1)
                         {
                             var userApproval = db.Form_User.Where(m => m.CODE == stations.FirstOrDefault()).FirstOrDefault();

@@ -65,8 +65,9 @@
             <td class="text-center p-2"><input type="checkbox" id="select_target_5" value="5s" name="request_target[]" /></td>
             <td class="text-center p-2" colspan="2">
                 <input type="checkbox" id="select_target_6" value="ngjig" name="request_target[]" />
-                
+
             </td>
+            @Html.HiddenFor(m => m.ID)
             @Html.HiddenFor(m => m.REQUEST_TARGET)
             <script>
                 $(function () {
@@ -76,9 +77,9 @@
                         var select = $('#select_target_' + i).val()
 
                         if (arrTarget.includes(select)) {
-                            $('#select_target_' + i).prop('checked',true)
+                            $('#select_target_' + i).prop('checked', true)
                         } else {
-                            $('#select_target_' + i).prop('checked',false)
+                            $('#select_target_' + i).prop('checked', false)
                         }
                     }
                     $('input[id^="select_target_"').change(function () {
@@ -145,11 +146,40 @@
                 <label class="font-weight-bold lang" key="chi_tra">Name</label>
             </td>
             <td colspan="7" class="p-2">
-
-                <label class="lang mr-2" key="@Model.PAYER">@Model.PAYER</label>
+                <label for="customer" class="lang mr-2" key="Customer"></label>
+                <input id="customer" type="checkbox" value="Customer" name="payer[]" class="payer-group">
+                <label for="umcvn" class="lang mr-2 ml-5" key="">UMCVN</label>
+                <input id="umcvn" type="checkbox" value="UMCVN" name="payer[]" class="payer-group">
                 @Html.HiddenFor(m => m.PAYER)
             </td>
+            <script>
+                $(function () {
+                    var payer = $('#PAYER').val();
+                    
+                    if (payer == 'UMCVN') {
+                        $('#customer').prop('checked', false);
+                        $('#umcvn').prop('checked', true);
+                    } else if (payer == 'Customer') {
+                        $('#customer').prop('checked', true);
+                        $('#umcvn').prop('checked', false);
+                    }
+                    $('#customer').change(function () {
+                        if ($('#customer').prop('checked') == true) {
+                            $('#umcvn').prop('checked', false);
 
+                            $('input[name="PAYER"]').val($('#customer').val())
+                        }
+                    })
+                    $('#umcvn').change(function () {
+                        if ($('#umcvn').prop('checked') == true) {
+                            $('#customer').prop('checked', false);
+                            $('input[name="PAYER"]').val($('#umcvn').val())
+                        }
+                    })
+
+                })
+
+            </script>
         </tr>
 
     </table>

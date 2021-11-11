@@ -31,7 +31,7 @@ namespace UMC_FORM.Business
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
         public static string ERROR_NOTICE = "Có lỗi xảy ra";
-        public static int TIME_SLEEP = 5;
+        public static int TIME_SLEEP = 10;
     }
 
     public static class PERMISSION

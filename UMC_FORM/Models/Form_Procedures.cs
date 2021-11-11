@@ -44,5 +44,7 @@ namespace UMC_FORM.Models
 
         [StringLength(50)]
         public string APPROVAL_NAME { get; set; }
+
+      
     }
 }

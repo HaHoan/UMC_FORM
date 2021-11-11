@@ -38,6 +38,7 @@
                 <td class="text-center p-2" name="5s" id="select_target_5"></td>
                 <td class="text-center p-2" colspan="2" name="ngjig" id="select_target_5"></td>
                 @Html.HiddenFor(m => m.REQUEST_TARGET)
+                @Html.HiddenFor(m => m.ID)
                 <script>
                     $(function () {
                         var target = $('#REQUEST_TARGET').val()
