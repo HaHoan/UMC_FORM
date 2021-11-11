@@ -52,9 +52,15 @@ $(function () {
             "PURPOSE": "Require 50 character!"
         },
         submitHandler: function (form) {
-
-            disableButtonWhenSubmit('#lca_create')
-            form.ajax.submit()
+            var requestContent = $('textarea[name="REQUEST_CONTENT"]').val();
+            if (!checkUnicode(requestContent)) {
+                $('textarea[name="REQUEST_CONTENT"]').focus();
+                
+            } else {
+                disableButtonWhenSubmit('#lca_create')
+                form.ajax.submit()
+            }
+          
         }
 
     });
@@ -85,6 +91,7 @@ $(function () {
                 }
                 return true;
             } 
+          
             var isValid = true;
             $('.requiredValue').each(function (e) {
                 if ($(this).val() == '') {
