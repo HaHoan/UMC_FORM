@@ -423,24 +423,34 @@
 
             <div class="row ml-1">
                 <p class="font-weight-bold text-underline ">Comment:</p>
-                @if (Model.LIST_COMMENT != null && Model.LIST_COMMENT.Count() > 0)
-                {
-                    <p>
-                        @foreach (var comment in Model.LIST_COMMENT)
+                <p>
+                    @if (Model.LIST_COMMENT != null && Model.LIST_COMMENT.Count() > 0)
+                    {
+
+                        foreach (var comment in Model.LIST_COMMENT)
                         {
 
-                        <span class=" font-weight-bold">@comment.COMMENT_USER</span>
-                        <br />
-                        @comment.COMMENT_DETAIL
-                        <br />
-                        <br />
+                            <span class=" font-weight-bold">@comment.COMMENT_USER</span>
+                            <br />
+                            @comment.COMMENT_DETAIL
+                            <br />
+                            <br />
 
                         }
-                    </p>
-                }
+                        if (!string.IsNullOrEmpty(Model.TICKET.COMMENT))
+                        {
+                            <span class=" font-weight-bold">@Model.TICKET.SUBMIT_USER</span>
+                            <br />
+                            @Model.TICKET.COMMENT
+                            <br />
+                            <br />
+                        }
+
+                    }
+                </p>
 
 
-            </div>
+                </div>
             <br />
             <div class="col">
                 <p class="font-italic font-weight-bold row text-underline">Note</p>
