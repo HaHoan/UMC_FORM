@@ -769,7 +769,7 @@ namespace UMC_FORM.Controllers
                     modelDetail.TICKET.LCA_QUOTEs = db.LCA_QUOTE.Where(m => m.ID_TICKET == modelDetail.TICKET.ID).ToList();
 
                     modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY.PROCESS_ID, db, list);
-                    modelDetail.LIST_COMMENT = db.Form_Comment.Where(m => m.TICKET == modelDetail.TICKET.TICKET).OrderByDescending(m => m.UPD_DATE).ToList();
+                    modelDetail.LIST_COMMENT = db.Form_Comment.Where(m => m.TICKET == modelDetail.TICKET.TICKET).OrderBy(m => m.UPD_DATE).ToList();
                     return View(modelDetail);
                 }
             }

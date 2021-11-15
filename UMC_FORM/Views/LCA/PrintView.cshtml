@@ -437,15 +437,17 @@
                             <br />
 
                         }
-                        if (!string.IsNullOrEmpty(Model.TICKET.COMMENT))
-                        {
-                            <span class=" font-weight-bold">@Model.TICKET.SUBMIT_USER</span>
-                            <br />
-                            @Model.TICKET.COMMENT
-                            <br />
-                            <br />
-                        }
 
+
+
+                    }
+                    @if (!string.IsNullOrEmpty(Model.TICKET.COMMENT))
+                    {
+                    <span class=" font-weight-bold">@Model.TICKET.SUBMIT_USER</span>
+                    <br />
+                    @Model.TICKET.COMMENT
+                    <br />
+                    <br />
                     }
                 </p>
 

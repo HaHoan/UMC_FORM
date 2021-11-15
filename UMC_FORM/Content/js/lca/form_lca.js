@@ -54,6 +54,7 @@ $(function () {
         submitHandler: function (form) {
             var requestContent = $('textarea[name="REQUEST_CONTENT"]').val();
             if (!checkUnicode(requestContent)) {
+                alert("Please add comment by English or Japanese!")
                 $('textarea[name="REQUEST_CONTENT"]').focus();
                 
             } else {
