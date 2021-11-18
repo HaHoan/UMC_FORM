@@ -109,15 +109,15 @@
         </tr>
         <tr>
             <td rowspan="3" style="vertical-align: middle;">
-                @Html.TextBoxFor(m => m.DECREASE_PERSON, new { @class = "form-input type_number text-center", style = "font-size:15px;" , @required = "required" })
+                @Html.TextBoxFor(m => m.DECREASE_PERSON, new { @class = "form-input type_number text-center", style = "font-size:15px;" })
             </td>
             <td style="vertical-align: middle;" class="text-center font-weight-bold" rowspan="3">人/月</td>
             <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="noi_dung_loi">Phân loại Jip</label></td>
             <td colspan="2" style="vertical-align: middle;">
-                @Html.TextBoxFor(m => m.CONTENT_ERROR, new { @class = "form-input", @required = "required" })
+                @Html.TextBoxFor(m => m.CONTENT_ERROR, new { @class = "form-input"})
             </td>
             <td rowspan="3" style="vertical-align: middle;">
-                @Html.TextBoxFor(m => m.COST_SAVING, new { @class = "form-input type_number text-center", style = "font-size:15px;" , @required = "required" })
+                @Html.TextBoxFor(m => m.COST_SAVING, new { @class = "form-input type_number text-center", style = "font-size:15px;" })
             </td>
             <td rowspan="3" style="vertical-align: middle;" class="text-center font-weight-bold">USD/月</td>
 
@@ -125,14 +125,14 @@
         <tr>
             <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="ty_le_loi">Phân loại Jip</label></td>
             <td colspan="2">
-                @Html.TextBoxFor(m => m.ERROR_RATE_CURRENT, new { @class = "form-input", @required = "required"})
+                @Html.TextBoxFor(m => m.ERROR_RATE_CURRENT, new { @class = "form-input"})
             </td>
 
         </tr>
         <tr>
             <td class="p-2" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center" key="hieu_qua_cai_tien">Phân loại Jip</label></td>
             <td colspan="2">
-                @Html.TextBoxFor(m => m.IMPROVED_EFICIENCY, new { @class = "form-input", @required = "required" })
+                @Html.TextBoxFor(m => m.IMPROVED_EFICIENCY, new { @class = "form-input" })
             </td>
         </tr>
         <tr>
@@ -192,7 +192,7 @@
     </div>
     <div class="col ">
         <span>PCB</span>
-        @Html.TextBoxFor(m => m.PCB, new { @class = " ml-2 border-bottom", style = "border:none;", @required = "required" })
+        @Html.TextBoxFor(m => m.PCB, new { @class = " ml-2 border-bottom", style = "border:none;" })
     </div>
 </div>
 <br />
@@ -200,11 +200,11 @@
 
     <div class="col ">
         <span class="lang" key="Customer"></span>
-        @Html.TextBoxFor(m => m.CUSTOMER, new { @class = " ml-2 border-bottom", style = "border:none;" , @required = "required" })
+        @Html.TextBoxFor(m => m.CUSTOMER, new { @class = " ml-2 border-bottom", style = "border:none;"  })
     </div>
     <div class="col ">
         <span>Model</span>
-        @Html.TextBoxFor(m => m.MODEL, new { @class = " ml-2 border-bottom", style = "border:none;",  @required = "required" })
+        @Html.TextBoxFor(m => m.MODEL, new { @class = " ml-2 border-bottom", style = "border:none;" })
     </div>
 </div>
 <br />

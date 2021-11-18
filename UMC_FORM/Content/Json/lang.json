@@ -112,8 +112,9 @@
     "lca_bao_gia": "② LCA 「見積もり] /Báo giá, Leadtime",
     "received-date": "Ngày nhận:",
     "table-item-req": "Hạng mục yêu cầu",
-    "title-lca-req": "GIẤY YÊU CẦU PHÒNG CƠ KHÍ "
-    
+    "title-lca-req": "GIẤY YÊU CẦU PHÒNG CƠ KHÍ ",
+    "form_bieu": "Form List"
+
   },
   "vi": {
     "Home": "TRANG CHỦ",
@@ -229,7 +230,8 @@
     "dept_manager": "Trưởng phòng",
     "edit_quote": "Sửa Báo Giá",
     "follow-request": "Đang theo dõi",
-    "title_request": "Tiêu đề"
+    "title_request": "Tiêu đề",
+    "form_bieu": "Form Biểu"
   },
   "ja": {
     "reaccept": "Re-accept",
@@ -269,6 +271,7 @@
     "dept_manager": "部長",
     "edit_quote": "Quote Edit",
     "follow-request": "Following",
-    "title_request": "Title"
+    "title_request": "Title",
+    "form_bieu": "Form List"
   }
 }

@@ -1,36 +1,61 @@
-﻿@using UMC_FORM.Models;
+﻿
+@model IEnumerable<UMC_FORM.Models.Form_User>
+
 @{
     ViewBag.Title = "Process Create";
     Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
 }
-
+@Styles.Render("https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css")
 <div id="layoutSidenav_content">
     <div class="container-fluid ">
-        <div class="">
-            <div class="">
-                <div class="card-body">
-                    @using (Html.BeginForm())
-                    {
-                        @Html.AntiForgeryToken()
-                        <div class="form-group">
-                            <label class="err">@ViewBag.message</label>
-                        </div>
+        <div class=" container mt-5">
 
-                        <div class="form-group">
-                            <label for="code">Process</label>
-                            <input class="form-control" id="code" name="PROCESS_ID" placeholder="Enter Process Id">
-                        </div>
-                        <div class="form-group">
-                            <label for="code">Process</label>
-                            <input class="form-control" id="code" name="PROCESS_NAME" placeholder="Enter Process Name">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+            <svg xmlns:svg="http://www.w3.org/2000/svg" class=" steps-form mt-5">
+            </svg>
+            <div id="submitors" class="container">
+                <input class="form-control" id="searchUser" style="width:40%" type="text" placeholder="Tìm kiếm">
+                <br>
+                <ul class="list-group" style="width:50%" id="listUser">
+                    @foreach (var item in Model)
+                    {
+                        <li class="list-group-item form-check-inline">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="@Html.DisplayFor(m => item.CODE)" value="@Html.DisplayFor(m => item.NAME)">@Html.DisplayFor(m => item.NAME)
+                            </label>
+                        </li>
                     }
-                </div>
+                </ul>
             </div>
 
+            <button class="btn btn-success mt-5 ml-2 lang" key="save_change" onclick="saveChange();">Lưu thay đổi</button>
+            <button class="btn btn-info mt-5 ml-2 lang" key="back" onclick="GoBack();">Back</button>
+
+        </div>
+   
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
         </div>
     </div>
+
+    @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js")
+    @Scripts.Render("~/Content/js/PR_ACC_F06.js")
+
+
 </div>
 
 

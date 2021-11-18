@@ -128,6 +128,8 @@ var listStep = [];
 //        returnTo: 0
 //    }
 //];
+
+
 $(function () {
     var current_step = 0;
     $("#searchUser").on("keydown", function (e) {
@@ -141,19 +143,7 @@ $(function () {
     });
     $('#submitors').hide();
 
-    function resetList() {
-        $('#listUser .form-check-input').prop('checked', false);
-        var step = users.findIndex(obj => obj.index == current_step);
-        if (step >= 0) {
-            var member_in_step = users[step].member;
-            $("#listUser li label input").each(function (index) {
-                var member = member_in_step.findIndex(obj => obj.code == this.name);
-                if (member >= 0)
-                    $(this).prop('checked', true);
-            });
-        }
 
-    }
     $('#listUser .form-check-input').change(function () {
         var step = users.findIndex((obj => obj.index == current_step));
         var user = {
@@ -188,117 +178,156 @@ $(function () {
             }
         }
     });
+    var processId = $('#process').val();
+    if (processId != null) {
+        $.ajax({
+            type: "GET",
+            url: "/Process/LoadProcess",
+            data: {
+                processId: processId
+            },
+            success: function (msg) {
 
-    $.ajax({
-        type: "GET",
-        url: "/Process/LoadProcess",
-        data: {
-            processId: $('#process').val() },
-        success: function (msg) {
-
-            $.each(msg.data, function (index, value) {
-                var items = "{"
-                for (var i = 0; i < index; i++) {
-                    if (i == index - 1) {
-                        items += '"step-' + (i + 1) + '":{"name":"' + msg.data[i].STATION_NAME.trim() + '"}'
-                    } else {
-                        items += '"step-' + (i + 1) + '":{"name":"' + msg.data[i].STATION_NAME.trim() + '"},'
-                    }
-                }
-                items += "}"
-                var itemsObj = JSON.parse(items)
-                var back = {
-                    "name": "Back to",
-                    "items": itemsObj
-                }
-                var obj = {
-                    index: value.FORM_INDEX,
-                    key: 'step-' + (value.FORM_INDEX + 1),
-                    name: value.STATION_NAME,
-                    return: back,
-                    returnTo: value.RETURN_INDEX
-                }
-                listStep.push(obj)
-            });
-            users =  msg.stations;
-            //$.each(msg.stations, function (index, value) {
-                
-            //    users.push(value);
-            //});
-            var startX = 30;
-            var startY = 100;
-            var pi = 15;
-
-            $.each(listStep, function (index, value) {
-
-                var step = makeSVG('circle', { cx: startX, cy: startY, r: 15, fill: '#43a047', stroke: 'white', 'stroke-width': 2, class: "steps-step context-menu-" + (index + 1) });
-                var step_text = makeSVG('text', { x: startX - 4, y: startY + 5, fill: 'white', class: "context-menu-" + (index + 1) })
-                step_text.appendChild(document.createTextNode(index + 1));
-                if (index < listStep.length - 1) {
-                    var line = makeSVG('line', { x1: startX + pi, y1: startY, x2: 100 + startX + pi, y2: startY, style: "stroke:rgb(141, 132, 132);stroke-width:0.5" })
-                    $('svg').append(line);
-                }
-                var step_name = makeSVG('text', { x: startX - pi * 2, y: startY + 30, fill: 'gray' })
-                step_name.appendChild(document.createTextNode(value.name));
-                $('svg').append(step);
-                $('svg').append(step_text);
-                $('svg').append(step_name);
-
-                startX = startX + pi + 100;
-                if (value.returnTo != null)
-                    drawReturnLine(index, value.returnTo);
-                if (value.return != null) {
-                    $.contextMenu({
-                        selector: '.context-menu-' + (index + 1),
-                        callback: function (key, options) {
-                            var stepStart = listStep.find(x => x.index === index);
-                            if (key == "exit") {
-                                for (var i = 0; i < 7; i++) {
-                                    $('.context-menu-' + (i + 1)).css({ stroke: "white" });
-                                }
-                                $('#submitors').hide();
-
-                            } else if (key == "selectUser") {
-                                //show list user
-                                current_step = stepStart.index + 1;
-                                resetList();
-                                for (var i = 0; i < 7; i++) {
-                                    $('.context-menu-' + (i + 1)).css({ stroke: "white" });
-                                }
-                                $('.context-menu-' + (index + 1)).css({ stroke: "#003d00" });
-
-                                $("#submitors").fadeOut(1);
-                                $("#submitors").fadeIn();
-                            } else {
-                                var step = listStep.find(x => x.key === key);
-
-                                if (stepStart.returnTo != null) {
-                                    removeReturnLine(stepStart.index, stepStart.returnTo);
-                                }
-                                stepStart.returnTo = step.index;
-                                drawReturnLine(index, step.index);
-                            }
-
-                        },
-                        items: {
-
-                            "Return": value.return,
-                            "selectUser": { "name": "Select approval" },
-                            "exit": { "name": "Exit" }
+                $.each(msg.data, function (index, value) {
+                    var items = "{"
+                    for (var i = 0; i < index; i++) {
+                        if (i == index - 1) {
+                            items += '"step-' + (i + 1) + '":{"name":"' + msg.data[i].STATION_NAME.trim() + '"}'
+                        } else {
+                            items += '"step-' + (i + 1) + '":{"name":"' + msg.data[i].STATION_NAME.trim() + '"},'
                         }
-                    });
+                    }
+                    items += "}"
+                    var itemsObj = JSON.parse(items)
+                    var back = {
+                        "name": "Back to",
+                        "items": itemsObj
+                    }
+                    var obj = {
+                        index: value.FORM_INDEX,
+                        key: 'step-' + (value.FORM_INDEX + 1),
+                        name: value.STATION_NAME,
+                        return: back,
+                        returnTo: value.RETURN_INDEX
+                    }
+                    listStep.push(obj)
+                });
+                users = msg.stations;
+                //$.each(msg.stations, function (index, value) {
+
+                //    users.push(value);
+                //});
+
+                drawStation()
+
+
+            },
+            error: function (msg) {
+                alert('error: ' + msg.d);
+            }
+        });
+
+
+    } else {
+
+        listStep = [
+
+            {
+                index: 0,
+                key: 'step-1',
+                name: 'Applicant',
+                return: {
+
                 }
 
-            })
-        },
-        error: function (msg) {
-            alert('error: ' + msg.d);
-        }
-    });
-
+            }]
+        drawStation()
+    }
 
 
 });
+function resetList() {
+    $('#listUser .form-check-input').prop('checked', false);
+    var step = users.findIndex(obj => obj.index == current_step);
+    if (step >= 0) {
+        var member_in_step = users[step].member;
+        $("#listUser li label input").each(function (index) {
+            var member = member_in_step.findIndex(obj => obj.code == this.name);
+            if (member >= 0)
+                $(this).prop('checked', true);
+        });
+    }
+
+}
+function drawStation() {
+    var startX = 30;
+    var startY = 100;
+    var pi = 15;
+    $.each(listStep, function (index, value) {
+
+        var step = makeSVG('circle', { cx: startX, cy: startY, r: 15, fill: '#43a047', stroke: 'white', 'stroke-width': 2, class: "steps-step context-menu-" + (index + 1) });
+        var step_text = makeSVG('text', { x: startX - 4, y: startY + 5, fill: 'white', class: "context-menu-" + (index + 1) })
+        step_text.appendChild(document.createTextNode(index + 1));
+        if (index < listStep.length - 1) {
+            var line = makeSVG('line', { x1: startX + pi, y1: startY, x2: 100 + startX + pi, y2: startY, style: "stroke:rgb(141, 132, 132);stroke-width:0.5" })
+            $('svg').append(line);
+        }
+        var step_name = makeSVG('text', { x: startX - pi * 2, y: startY + 30, fill: 'gray' })
+        step_name.appendChild(document.createTextNode(value.name));
+        $('svg').append(step);
+        $('svg').append(step_text);
+        $('svg').append(step_name);
+
+        startX = startX + pi + 100;
+        if (value.returnTo != null)
+            drawReturnLine(index, value.returnTo);
+        if (value.return != null) {
+            $.contextMenu({
+                selector: '.context-menu-' + (index + 1),
+                callback: function (key, options) {
+                    var stepStart = listStep.find(x => x.index === index);
+                    if (key == "exit") {
+                        for (var i = 0; i < 7; i++) {
+                            $('.context-menu-' + (i + 1)).css({ stroke: "white" });
+                        }
+                        $('#submitors').hide();
+
+                    } else if (key == "selectUser") {
+                        //show list user
+                        current_step = stepStart.index + 1;
+                        resetList();
+                        for (var i = 0; i < 7; i++) {
+                            $('.context-menu-' + (i + 1)).css({ stroke: "white" });
+                        }
+                        $('.context-menu-' + (index + 1)).css({ stroke: "#003d00" });
+
+                        $("#submitors").fadeOut(1);
+                        $("#submitors").fadeIn();
+                    } else if ( key == "Return") {
+                        var step = listStep.find(x => x.key === key);
+
+                        if (stepStart.returnTo != null) {
+                            removeReturnLine(stepStart.index, stepStart.returnTo);
+                        }
+                        stepStart.returnTo = step.index;
+                        drawReturnLine(index, step.index);
+                    } else if (key == "nextStation") {
+                        $('#exampleModal').modal('show')
+                    }
+
+                },
+                items: {
+
+                    "Return": value.return,
+                    "selectUser": { "name": "Select approval" },
+                    "nextStation": { "name": "Next Station" },
+                    "exit": { "name": "Exit" }
+                }
+            });
+        }
+
+    })
+}
 function saveChange() {
     var selectedForm = $("#process").val();
     var data = JSON.stringify(listStep);

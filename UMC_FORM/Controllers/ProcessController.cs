@@ -46,8 +46,8 @@ namespace UMC_FORM.Controllers
         // GET: Process/Create
         public ActionResult Create()
         {
-            // var users = UserRepository.GetUsers();
-            return View();
+             var users = UserRepository.GetUsers();
+            return View(users);
         }
         [HttpPost]
         public ActionResult Create(Form_ProcessName entity)
