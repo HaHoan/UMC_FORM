@@ -312,7 +312,7 @@ namespace UMC_FORM.Controllers
             }
 
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket)
@@ -330,10 +330,10 @@ namespace UMC_FORM.Controllers
                     }
                     else
                     {
-                       
-                        if(formDb.ID != infoTicket.ID)
+
+                        if (formDb.ID != infoTicket.ID)
                         {
-                            return Json(new { result = STATUS.WAIT}, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.WAIT }, JsonRequestBehavior.AllowGet);
                         }
 
                         if (status == STATUS.ACCEPT)
@@ -507,9 +507,9 @@ namespace UMC_FORM.Controllers
                     if (summary.IS_REJECT)
                     {
                         var stationByIndex = db.Form_Process.Where(m => m.FORM_INDEX == (form.PROCEDURE_INDEX + 1)).FirstOrDefault();
-                        if(stationByIndex != null)
+                        if (stationByIndex != null)
                         {
-                            var stationIsSinging = db.LCA_FORM_01.Where(m => m.TICKET == form.TICKET 
+                            var stationIsSinging = db.LCA_FORM_01.Where(m => m.TICKET == form.TICKET
                             && m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == stationByIndex.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")
                             && m.IS_SIGNATURE == 1).FirstOrDefault();
                             if (stationIsSinging == null)
@@ -522,8 +522,8 @@ namespace UMC_FORM.Controllers
                         {
                             return STATUS.ERROR;
                         }
-                      
-                      
+
+
                         var processReject = db.Form_Reject.Where(m => m.PROCESS_NAME == summary.PROCESS_ID && m.START_INDEX == summary.RETURN_TO).ToList();
                         var currentStep = processReject.Where(m => m.FORM_INDEX == summary.PROCEDURE_INDEX).FirstOrDefault();
                         if (currentStep != null)
@@ -809,6 +809,23 @@ namespace UMC_FORM.Controllers
                         }
                     }
 
+                    var cc = new List<string>();
+                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (summary.PROCEDURE_INDEX + 1).ToString()
+                 && m.PROCESS == summary.PROCESS_ID).ToList();
+                    var deptSubmit = listPermission.Where(m =>!string.IsNullOrEmpty(m.DEPT)).FirstOrDefault();
+                    if (deptSubmit != null)
+                    {
+                        var userCC = UserRepository.GetUsersByDept(deptSubmit.DEPT);
+                        foreach(var user in userCC)
+                        {
+                            if (!userMails.Contains(user.EMAIL))
+                            {
+                                cc.Add(user.EMAIL);
+                            }
+                        }
+
+                    }
+
 
                     string body = "";
                     if (typeMail == STATUS.REJECT)
@@ -840,7 +857,7 @@ namespace UMC_FORM.Controllers
                                              ";
                     }
 
-                    Task t = MailHelper.SenMailOutlookAsync(userMails, body);
+                    Task t = MailHelper.SenMailOutlookAsync(userMails, body,cc);
                     await t;
 
                 }

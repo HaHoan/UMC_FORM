@@ -110,6 +110,14 @@ namespace UMC_FORM.Business
                 return context.Form_User.ToList();
             }
         }
+
+        public static List<Form_User> GetUsersByDept(string dept)
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.Form_User.Where(m => m.DEPT == dept).ToList();
+            }
+        }
         public static List<Form_User> GetUsersEx(string code)
         {
             using (DataContext context = new DataContext())

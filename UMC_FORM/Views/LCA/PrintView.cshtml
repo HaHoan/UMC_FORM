@@ -173,230 +173,115 @@
 
                         </td>
                         <td colspan="2" style="vertical-align: middle;">@Html.DisplayFor(m => m.TICKET.CONTENT_ERROR)</td>
-                        <td rowspan="3" style="vertical-align: middle;" class="text-center">@Html.DisplayFor(m => m.TICKET.COST_SAVING)</td>
-                        <td rowspan="3" style="vertical-align: middle;" class="text-center font-weight-bold">USD/月</td>
+                        <td rowspan="3" style="vertical-align: middle;" class="text-center">
+                            @if (string.IsNullOrEmpty(Model.TICKET.COST_SAVING))
+                            {
+                                <span class="text-white">0000</span>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(m => m.TICKET.COST_SAVING)
+                            }
 
-                    </tr>
-                    <tr>
-                        <td class="" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center">Tỉ lệ lỗi hiện tại（現在不良率):</label></td>
-                        <td colspan="2">@Html.DisplayFor(m => m.TICKET.ERROR_RATE_CURRENT)</td>
-
-                    </tr>
-                    <tr>
-                        <td class="" style="vertical-align: middle;">
-                            <label class="font-weight-bold lang text-left center">
-                                Hiệu quả cải tiến（改善効果):
-                            </label>
                         </td>
-                        <td colspan="2">@Html.DisplayFor(m => m.TICKET.IMPROVED_EFICIENCY)</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Other:</td>
-                        <td colspan="6">@Html.DisplayFor(m => m.TICKET.OTHER)</td>
-                    </tr>
-                    <tr>
-                        <td class="">
-                            <label class="font-weight-bold lang">5. 支払■Chi trả:</label>
-                        </td>
-                        <td colspan="7" class="p-2">
-                            <label class="lang mr-2" key="Customer"></label>
-                            <i id="customer" class="fas fa-check d-none"></i>
-                            <label class="lang mr-2 ml-5" key="">UMCVN</label>
-                            <i id="umcvn" class="fas fa-check d-none"></i>
-                            @Html.HiddenFor(m => m.TICKET.PAYER)
-                        </td>
-                        <script>
-                            $(function () {
-                                var payer = $('#TICKET_PAYER').val()
-                                if (payer == "UMCVN") {
-                                    $('#umcvn').removeClass('d-none')
-                                } else if (payer == "Customer") {
-                                    $('#customer').removeClass('d-none')
-                                }
-                            })
+                    <td rowspan="3" style="vertical-align: middle;" class="text-center font-weight-bold">USD/月</td>
 
-                        </script>
+                </tr>
+                <tr>
+                    <td class="" style="vertical-align: middle;"><label class="font-weight-bold lang text-left center">Tỉ lệ lỗi hiện tại（現在不良率):</label></td>
+                    <td colspan="2">@Html.DisplayFor(m => m.TICKET.ERROR_RATE_CURRENT)</td>
 
-                    </tr>
+                </tr>
+                <tr>
+                    <td class="" style="vertical-align: middle;">
+                        <label class="font-weight-bold lang text-left center">
+                            Hiệu quả cải tiến（改善効果):
+                        </label>
+                    </td>
+                    <td colspan="2">@Html.DisplayFor(m => m.TICKET.IMPROVED_EFICIENCY)</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Other:</td>
+                    <td colspan="6">@Html.DisplayFor(m => m.TICKET.OTHER)</td>
+                </tr>
+                <tr>
+                    <td class="">
+                        <label class="font-weight-bold lang">5. 支払■Chi trả:</label>
+                    </td>
+                    <td colspan="7" class="p-2">
+                        <label class="lang mr-2" key="Customer"></label>
+                        <i id="customer" class="fas fa-check d-none"></i>
+                        <label class="lang mr-2 ml-5" key="">UMCVN</label>
+                        <i id="umcvn" class="fas fa-check d-none"></i>
+                        @Html.HiddenFor(m => m.TICKET.PAYER)
+                    </td>
+                    <script>
+                        $(function () {
+                            var payer = $('#TICKET_PAYER').val()
+                            if (payer == "UMCVN") {
+                                $('#umcvn').removeClass('d-none')
+                            } else if (payer == "Customer") {
+                                $('#customer').removeClass('d-none')
+                            }
+                        })
 
-                </table>
-            </div>
-            <br />
-            <div class="row">
-                <div class="col">
-                    <div class="row">
-                        <div class="col">
-                            <div class="lang">1. 利用■Đối tượng áp dụng:</div>
+                    </script>
 
-                        </div>
-                        <div class="col ">
-                            <span>PCB: </span>
-                            @Html.DisplayFor(m => m.TICKET.PCB)
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
+                </tr>
 
-                        <div class="col ">
-                            <span class="lang">顧客■Khách hàng: </span>
-                            @Html.DisplayFor(m => m.TICKET.CUSTOMER)
-                        </div>
-                        <div class="col ">
-                            <span>Model: </span>
-                            @Html.DisplayFor(m => m.TICKET.MODEL)
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row ml-1">
-                        <p>
-                            内容■　Nội dung yêu cầu: (Phải thêm comment tiếng Anh/ tiếng Nhật)
-                            <br />
-                            <span class="font-weight-bold">(MUST : Please add comment by English or Japanese)</span>
-                        <p></p>
-                    </div>
-                    <div class="row ml-1">
-                        <p style="white-space: pre-wrap"> @Html.DisplayFor(m => m.TICKET.REQUEST_CONTENT)</p>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <table class="mt-2 ">
-                        <tr>
-                            <td class="p-2">1. Người yêu cầu/担当 </td>
-                            <td class="p-2">2. Phê duyệt/承認</td>
-
-                        </tr>
-
-                        <tbody>
-                            <tr height="100px">
-
-                                @for (var a = 0; a < 2; a++)
-                                {
-                                    var station = Model.STATION_APPROVE[a];
-                                    if (station.IS_APPROVED)
-                                    {
-                                        <td>
-                                            <div class="rubber_stamp">
-                                                <p>@station.COMPANY</p>
-                                                <p>@station.APPROVE_DATE.ToShortDateString()</p>
-                                                <p>@station.APPROVER</p>
-                                            </div>
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td></td>
-                                    }
-
-                                }
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            </table>
         </div>
-        <div class="border card-body border-dark">
+        <br />
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <div class="lang">1. 利用■Đối tượng áp dụng:</div>
 
-            <div class="row">
-                <p class="text-uppercase lang font-weight-bold mb-4 col-7" style="font-size:15px;">
-                    ②LCA 「見積もり] /Báo giá, Leadtime
-                    <br />
-                    見積もり作成⇒Jig作成実施可能承認
-                </p>
-                <label class="col lang text-right">受付日／Ngày nhận: <span>@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
-                <label class="lang col text-right">Lead time: <span>@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
+                    </div>
+                    <div class="col ">
+                        <span>PCB: </span>
+                        @Html.DisplayFor(m => m.TICKET.PCB)
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+
+                    <div class="col ">
+                        <span class="lang">顧客■Khách hàng: </span>
+                        @Html.DisplayFor(m => m.TICKET.CUSTOMER)
+                    </div>
+                    <div class="col ">
+                        <span>Model: </span>
+                        @Html.DisplayFor(m => m.TICKET.MODEL)
+                    </div>
+                </div>
+                <br />
+                <div class="row ml-1">
+                    <p>
+                        内容■　Nội dung yêu cầu: (Phải thêm comment tiếng Anh/ tiếng Nhật)
+                        <br />
+                        <span class="font-weight-bold">(MUST : Please add comment by English or Japanese)</span>
+                    <p></p>
+                </div>
+                <div class="row ml-1">
+                    <p style="white-space: pre-wrap"> @Html.DisplayFor(m => m.TICKET.REQUEST_CONTENT)</p>
+                </div>
             </div>
-            <div class="table-responsive">
-                <table class="table-border-dark">
+            <div class="col-4">
+                <table class="mt-2 ">
                     <tr>
-                        <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                        <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                        <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                        <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                        <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                    </tr>
-                    <tr>
-
-                        <td class="lang text-center" width="">Unit price</td>
-                        <td class="lang text-center" width="">Total cost</td>
-                        <td class="lang text-center" width="">Unit price</td>
-                        <td class="lang text-center" width="">Total cost</td>
+                        <td class="p-2">1. Người yêu cầu/担当 </td>
+                        <td class="p-2">2. Phê duyệt/承認</td>
 
                     </tr>
 
-                    <tbody id="tableInfo">
-                        @{
-                            var i = 1;
-                            foreach (var quote in Model.TICKET.LCA_QUOTEs)
-                            {
-                                <tr class="row-info">
-                                    <td>@(i)</td>
-                                    <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
-                                    <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
-                                    <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
-                                    <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                    <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
-                                    <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
-                                </tr>
-                                i++;
-                            }
-
-                        }
-
-                        <tr class="p-3 summary">
-                            <td class="border-0 font-italic" colspan="3">
-                                * If request Items are over 5, please issue more request sheet
-                            </td>
-                            <td class="border-0 font-weight-bold" colspan="2">
-                                <div class="text-right">
-                                    <span class="">Total:</span>
-                                    <span class="totalLCA">100</span>
-                                    <span class="">$</span>
-                                </div>
-
-                            </td>
-                            <td class="border-0 font-weight-bold text-right" colspan="2">
-                                <span class="">Total:</span>
-                                <span class="totalCustomer">100</span>
-                                <span class="">$</span>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
-            </div>
-            <div class="table-responsive">
-                <table class="table table-bordered ">
-                    <thead>
-                        <tr>
-                            @{
-                                var index = 1;
-                            }
-                            @foreach (var station in Model.STATION_APPROVE)
-                            {
-                                if (index < 3)
-                                {
-                                    index++;
-                                    continue;
-                                }
-                                <th class="font-italic lang" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="@station.STATION_NAME">@station.STATION_NAME</span></th>
-                            }
-                        </tr>
-
-                    </thead>
                     <tbody>
                         <tr height="100px">
-                            @{
-                                index = 1;
-                            }
-                            @foreach (var station in Model.STATION_APPROVE)
+
+                            @for (var a = 0; a < 2; a++)
                             {
-                                if (index < 3)
-                                {
-                                    index++;
-                                    continue;
-                                }
+                                var station = Model.STATION_APPROVE[a];
                                 if (station.IS_APPROVED)
                                 {
                                     <td>
@@ -417,68 +302,193 @@
                         </tr>
                     </tbody>
                 </table>
-
             </div>
+        </div>
+    </div>
+    <div class="border card-body border-dark">
 
+        <div class="row">
+            <p class="text-uppercase lang font-weight-bold mb-4 col-7" style="font-size:15px;">
+                ②LCA 「見積もり] /Báo giá, Leadtime
+                <br />
+                見積もり作成⇒Jig作成実施可能承認
+            </p>
+            <label class="col lang text-right">受付日／Ngày nhận: <span>@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
+            <label class="lang col text-right">Lead time: <span>@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
+        </div>
+        <div class="table-responsive">
+            <table class="table-border-dark">
+                <tr>
+                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                </tr>
+                <tr>
 
-            <div class="row ml-1">
-                <p class="font-weight-bold text-underline ">Comment:</p>
-                <p>
-                    @if (Model.LIST_COMMENT != null && Model.LIST_COMMENT.Count() > 0)
-                    {
+                    <td class="lang text-center" width="">Unit price</td>
+                    <td class="lang text-center" width="">Total cost</td>
+                    <td class="lang text-center" width="">Unit price</td>
+                    <td class="lang text-center" width="">Total cost</td>
 
-                        foreach (var comment in Model.LIST_COMMENT)
+                </tr>
+
+                <tbody id="tableInfo">
+                    @{
+                        var i = 1;
+                        foreach (var quote in Model.TICKET.LCA_QUOTEs)
                         {
+                            <tr class="row-info">
+                                <td>@(i)</td>
+                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
+                                <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
+                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
+                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
+                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
+                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
+                            </tr>
+                            i++;
+                        }
 
-                            <span class=" font-weight-bold">@comment.COMMENT_USER</span>
-                            <br />
-                            @comment.COMMENT_DETAIL
-                            <br />
-                            <br />
+                    }
+
+                    <tr class="p-3 summary">
+                        <td class="border-0 font-italic" colspan="3">
+                            * If request Items are over 5, please issue more request sheet
+                        </td>
+                        <td class="border-0 font-weight-bold" colspan="2">
+                            <div class="text-right">
+                                <span class="">Total:</span>
+                                <span class="totalLCA">100</span>
+                                <span class="">$</span>
+                            </div>
+
+                        </td>
+                        <td class="border-0 font-weight-bold text-right" colspan="2">
+                            <span class="">Total:</span>
+                            <span class="totalCustomer">100</span>
+                            <span class="">$</span>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered ">
+                <thead>
+                    <tr>
+                        @{
+                            var index = 1;
+                        }
+                        @foreach (var station in Model.STATION_APPROVE)
+                        {
+                            if (index < 3)
+                            {
+                                index++;
+                                continue;
+                            }
+                            <th class="font-italic lang" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="@station.STATION_NAME">@station.STATION_NAME</span></th>
+                        }
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr height="100px">
+                        @{
+                            index = 1;
+                        }
+                        @foreach (var station in Model.STATION_APPROVE)
+                        {
+                            if (index < 3)
+                            {
+                                index++;
+                                continue;
+                            }
+                            if (station.IS_APPROVED)
+                            {
+                                <td>
+                                    <div class="rubber_stamp">
+                                        <p>@station.COMPANY</p>
+                                        <p>@station.APPROVE_DATE.ToShortDateString()</p>
+                                        <p>@station.APPROVER</p>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
 
                         }
 
+                    </tr>
+                </tbody>
+            </table>
 
+        </div>
+
+
+        <div class="row ml-1">
+            <p class="font-weight-bold text-underline ">Comment:</p>
+            <p>
+                @if (Model.LIST_COMMENT != null && Model.LIST_COMMENT.Count() > 0)
+                {
+
+                    foreach (var comment in Model.LIST_COMMENT)
+                    {
+
+                        <span class=" font-weight-bold">@comment.COMMENT_USER</span>
+                        <br />
+                        @comment.COMMENT_DETAIL
+                        <br />
+                        <br />
 
                     }
-                    @if (!string.IsNullOrEmpty(Model.TICKET.COMMENT))
-                    {
+
+
+
+                }
+                @if (!string.IsNullOrEmpty(Model.TICKET.COMMENT))
+                {
                     <span class=" font-weight-bold">@Model.TICKET.SUBMIT_USER</span>
                     <br />
                     @Model.TICKET.COMMENT
                     <br />
                     <br />
-                    }
-                </p>
-
-
-                </div>
-            <br />
-            <div class="col">
-                <p class="font-italic font-weight-bold row text-underline">Note</p>
-                <span class="border p-2 row">
-                    1. LCA chỉ bắt đầu triển khai thực hiện sau khi giấy yêu cầu nhận được phê duyệt cuối cùng từ Tổng Giám Đốc
-                    <br />
-                    作成依頼は100% 社長が承認します。注意してお願い致します。
-                    <br />
-                    2. Trường hợp khách hàng trả Tiền thì phải được xác nhận từ bộ phận BC
-                </span>
-            </div>
-            <br />
-            <h5 class="text-uppercase lang font-weight-bold mb-4" key="">③ Biểu kiểm tra dụng cụ の書式にて完成品の確認　（Xác nhận Jig　治具確認）</h5>
-            <p>
-                Sử dụng "Biểu kiểm tra Jig,Pallet trước khi sử dụng" mã số: F06-PR.ACC.01-**
-                <br />
-                治工具運用前のチェックシートを使う：F06-PR.ACC.01-**
-
+                }
             </p>
 
+
         </div>
+        <br />
+        <div class="col">
+            <p class="font-italic font-weight-bold row text-underline">Note</p>
+            <span class="border p-2 row">
+                1. LCA chỉ bắt đầu triển khai thực hiện sau khi giấy yêu cầu nhận được phê duyệt cuối cùng từ Tổng Giám Đốc
+                <br />
+                作成依頼は100% 社長が承認します。注意してお願い致します。
+                <br />
+                2. Trường hợp khách hàng trả Tiền thì phải được xác nhận từ bộ phận BC
+            </span>
+        </div>
+        <br />
+        <h5 class="text-uppercase lang font-weight-bold mb-4" key="">③ Biểu kiểm tra dụng cụ の書式にて完成品の確認　（Xác nhận Jig　治具確認）</h5>
+        <p>
+            Sử dụng "Biểu kiểm tra Jig,Pallet trước khi sử dụng" mã số: F06-PR.ACC.01-**
+            <br />
+            治工具運用前のチェックシートを使う：F06-PR.ACC.01-**
+
+        </p>
+
     </div>
-    <script src="~/Content/js/moment.js"></script>
-    <script src="~/Content/js/lang.js"></script>
-    <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/lca/form_lca.js"></script>
+</div>
+<script src="~/Content/js/moment.js"></script>
+<script src="~/Content/js/lang.js"></script>
+<script src="~/Content/js/form_common.js"></script>
+<script src="~/Content/js/lca/form_lca.js"></script>
 
 </body>
 

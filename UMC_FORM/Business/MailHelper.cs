@@ -35,7 +35,7 @@ namespace UMC_FORM.Business
             mailMessage.IsBodyHtml = true;
             await smtpClient.SendMailAsync(mailMessage);
         }
-        public static async Task SenMailOutlookAsync(List<string> to, string body)
+        public static async Task SenMailOutlookAsync(List<string> to, string body, List<string> cc = null)
         {
             try
             {
@@ -59,6 +59,14 @@ namespace UMC_FORM.Business
                 {
                     mailMessage.To.Add(item);
                 }
+                if(cc != null && cc.Count > 0)
+                {
+                    foreach(var item in cc)
+                    {
+                        mailMessage.CC.Add(item);
+                    }
+                }
+                
                 mailMessage.Subject = Constant.SUBJECT;
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;

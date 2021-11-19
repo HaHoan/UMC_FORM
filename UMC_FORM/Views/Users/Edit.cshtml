@@ -1,5 +1,6 @@
 ﻿@model UMC_FORM.Models.Form_User
 @using UMC_FORM.Models
+@using UMC_FORM.Business
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
@@ -47,7 +48,48 @@
                                 }
                             </select>
                         </div>
-                        <div class="form-group">
+                        <label>Chọn chức vụ</label>
+                        <select class="form-control" name="POSITION">
+                            @{
+                                if (Model.POSITION == 0)
+                                {
+                                    <option value="0" selected>Read Only</option>
+                                }
+                                else
+                                {
+                                    <option value="0">Read Only</option>
+                                }
+                                if (Model.POSITION == POSITION.MANAGER)
+                                {
+                                    <option value="@POSITION.MANAGER" selected>MNG</option>
+                                }
+                                else
+                                {
+                                    <option value="@POSITION.MANAGER">MNG</option>
+                                }
+                                if (Model.POSITION == POSITION.FM)
+                                {
+                                    <option value="@POSITION.FM" selected>FM</option>
+                                }
+                                else
+                                {
+                                    <option value="@POSITION.FM">FM</option>
+                                }
+                                if (Model.POSITION == POSITION.GD)
+                                {
+                                    <option value="@POSITION.GD" selected>GD</option>
+                                }
+                                else
+                                {
+                                    <option value="@POSITION.GD">GD</option>
+                                }
+
+                            }
+
+                         
+                        </select>
+                        
+                        <div class="form-group mt-2">
                             <label for="name">Sign</label>
                             <input name="SIGNATURE" class="form-control" id="sign" value="@Model.SIGNATURE">
                         </div>
