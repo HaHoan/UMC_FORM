@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Hangfire;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -782,7 +783,7 @@ namespace UMC_FORM.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> SendMail(string ticket, string typeMail)
+        public JsonResult SendMail(string ticket, string typeMail)
         {
             try
             {
@@ -870,9 +871,7 @@ namespace UMC_FORM.Controllers
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
                     }
-
-                    Task t = MailHelper.SenMailOutlookAsync(userMails, body,cc);
-                    await t;
+                    BackgroundJob.Enqueue(() => MailHelper.SenMailOutlookAsync(userMails, body, cc));
 
                 }
             }
