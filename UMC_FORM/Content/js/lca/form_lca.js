@@ -89,8 +89,10 @@ $(function () {
                 if (confirm('Bạn có muốn submit không?')) {
                     disableButtonWhenSubmit('#lca_' + status)
                     form.ajax.submit()
+                } else {
+                    return false;
                 }
-                return true;
+             
             } 
           
             var isValid = true;
@@ -117,11 +119,15 @@ $(function () {
                     if (confirm('Bạn có muốn thay đổi gì trước khi ' + status + ' không?')) {
                         disableButtonWhenSubmit('#lca_' + status)
                         form.ajax.submit()
+                    } else {
+                        return false;
                     }
                 } else {
                     if (confirm('Bạn có muốn ' + status + ' không?')) {
                         disableButtonWhenSubmit('#lca_' + status)
                         form.ajax.submit()
+                    } else {
+                        return false;
                     }
                 }
 

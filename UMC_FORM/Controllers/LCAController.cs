@@ -383,7 +383,7 @@ namespace UMC_FORM.Controllers
                                 {
                                     result = STATUS.SUCCESS,
                                     ticket = formDb.TICKET,
-                                    typeMail = STATUS.REJECT
+                                    typeMail = STATUS.EDIT_QUOTE
                                 }, JsonRequestBehavior.AllowGet);
                             }
                         }
@@ -708,6 +708,7 @@ namespace UMC_FORM.Controllers
                     form.UPD_DATE = DateTime.Now;
                     form.SUBMIT_USER = _sess.CODE;
                     form.IS_SIGNATURE = 0;
+                    form.LCA_ID = infoTicket.LCA_ID;
                     form.ID = Guid.NewGuid().ToString();
 
                     #region Quote
@@ -842,7 +843,20 @@ namespace UMC_FORM.Controllers
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
                     }
-                    else
+                    else if(typeMail == STATUS.ACCEPT)
+                    {
+                        body = $@"
+                                                <h3>{dear}</h3>
+                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
+	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+                    }else if(typeMail == STATUS.EDIT_QUOTE)
                     {
                         body = $@"
                                                 <h3>{dear}</h3>
