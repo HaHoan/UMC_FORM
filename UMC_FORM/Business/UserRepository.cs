@@ -90,6 +90,7 @@ namespace UMC_FORM.Business
                     userId.NAME = user.NAME;
                     userId.PASSWORD = user.PASSWORD;
                     userId.SIGNATURE = user.SIGNATURE;
+                    userId.POSITION = user.POSITION;
                     context.Entry<Form_User>(userId).State = System.Data.Entity.EntityState.Modified;
                     context.SaveChanges();
                     return true;
