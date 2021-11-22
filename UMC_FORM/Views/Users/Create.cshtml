@@ -30,6 +30,10 @@
                             <input class="form-control" id="name" name="NAME" placeholder="Enter FullName">
                         </div>
                         <div class="form-group">
+                            <label for="name">Short Name</label>
+                            <input class="form-control" id="SHORT_NAME" name="SHORT_NAME" value="">
+                        </div>
+                        <div class="form-group">
                             <label for="name">Dept</label>
                             <select class="form-control" aria-label="Default select example" name="DEPT">
                                 @foreach (var item in ViewBag.depts)
@@ -53,11 +57,11 @@
                         <label>Chọn chức vụ</label>
                         <select class="form-control" name="POSITION">
                             <option value="0" selected>Read Only</option>
-                            <option value="@POSITION.MANAGER" >MNG</option>
+                            <option value="@POSITION.MANAGER">MNG</option>
                             <option value="@POSITION.FM">FM</option>
                             <option value="@POSITION.GD">GD</option>
                         </select>
-                    
+
                         <div class="form-group mt-3">
                             <label for="role">Role</label>
                             <select class="form-control" name="ROLE_ID">

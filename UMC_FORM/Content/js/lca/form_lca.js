@@ -301,7 +301,9 @@ function updateQuote() {
             index = rowIndex + 1
             var item = $('#ITEM_NAME_' + index).val()
             if (item == "") return true
-            var quantity = $('#QTY_' + index).val().split(",").join("")
+            var quantity = $('#QTY_' + index).val()
+            if (quantity == "") return true;
+            quantity = $('#QTY_' + index).val().split(",").join("")
             var lca_unit_price = $('#UNIT_PRICE_LCA_' + index).val().split(",").join("")
             var lca_total = $('#TOTAL_LCA_' + index).val().split(",").join("")
             var customer_unit_price = $('#UNIT_PRICE_CUSTOMER_' + index).val().split(",").join("")
