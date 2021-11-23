@@ -40,6 +40,7 @@ namespace UMC_FORM.Controllers
         }
         public ActionResult Index(SendType? type)
         {
+            
             if (type is null)
             {
                 type = SendType.SENDTOME;
@@ -89,7 +90,8 @@ namespace UMC_FORM.Controllers
                     }
                     else
                     {
-                        var tickets = (List<string>)db.Form_Procedures.Where(m => m.APPROVAL_NAME == session.CODE).Select(m => m.TICKET).ToList();
+                        var deptHavePermission = db.LCA_PERMISSION.Where(m => m.DEPT == session.DEPT).Select(m => m.PROCESS).ToList();
+                        var tickets = db.Form_Procedures.Where(m => m.APPROVAL_NAME == session.CODE || deptHavePermission.Contains(m.FORM_NAME)).Select(m => m.TICKET).ToList();
                         formSummaries = db.Form_Summary.Where(m => m.IS_FINISH == true && tickets.Contains(m.TICKET)).ToList();
 
                     }

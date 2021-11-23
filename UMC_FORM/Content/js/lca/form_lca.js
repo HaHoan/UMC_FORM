@@ -17,17 +17,17 @@ $(function () {
         $('#isChange').val('yes')
     })
     $('textarea[name="REQUEST_CONTENT"').keyup(function (e) {
-        var text = $(this).val();
-        if (text != '') {
-            if (checkUnicode(text) == false) {
-                $('.awarm-unicode').removeClass('d-none')
-            } else {
-                $('.awarm-unicode').addClass('d-none')
-            }
-        } else {
-            $('.awarm-unicode').addClass('d-none')
+        //var text = $(this).val();
+        //if (text != '') {
+        //    if (checkUnicode(text) == false) {
+        //        $('.awarm-unicode').removeClass('d-none')
+        //    } else {
+        //        $('.awarm-unicode').addClass('d-none')
+        //    }
+        //} else {
+        //    $('.awarm-unicode').addClass('d-none')
 
-        }
+        //}
 
     })
     var $contextMenu = $("#contextMenu");
@@ -52,16 +52,8 @@ $(function () {
             "PURPOSE": "Require 50 character!"
         },
         submitHandler: function (form) {
-            var requestContent = $('textarea[name="REQUEST_CONTENT"]').val();
-            if (!checkUnicode(requestContent)) {
-                alert("Please add comment by English or Japanese!")
-                $('textarea[name="REQUEST_CONTENT"]').focus();
-                
-            } else {
-                disableButtonWhenSubmit('#lca_create')
-                form.ajax.submit()
-            }
-          
+            disableButtonWhenSubmit('#lca_create')
+            form.ajax.submit()
         }
 
     });
@@ -92,9 +84,9 @@ $(function () {
                 } else {
                     return false;
                 }
-             
-            } 
-          
+
+            }
+
             var isValid = true;
             $('.requiredValue').each(function (e) {
                 if ($(this).val() == '') {
@@ -106,7 +98,7 @@ $(function () {
                             text: 'This field is required.'
                         }
                     )
-                   
+
                     $(this).parent().append(label)
                     $(this).focus()
                     isValid = false;
@@ -114,7 +106,7 @@ $(function () {
             })
             if (isValid) {
                 var val = $('#isChange').val();
-               
+
                 if (val == 'no') {
                     if (confirm('Bạn có muốn thay đổi gì trước khi ' + status + ' không?')) {
                         disableButtonWhenSubmit('#lca_' + status)
@@ -278,7 +270,6 @@ $(function () {
 });
 function OnSuccess(response) {
     if (response.result == 'success') {
-        sendMail(response.ticket, response.typeMail)
         window.location.href = $("#RedirectTo").val()
     } else if (response.result == 'wait') {
         if (confirm('Ticket vừa có người thay đổi,Nếu muốn tiếp tục thì hãy nhấn OK để load lại ticket để cập nhật?')) {
@@ -543,19 +534,21 @@ function updateSTT() {
 
     });
 }
-function sendMail(ticket, typeMail) {
-    $.ajax({
-        url: "/LCA/SendMail",
-        type: "Post",
-        data: {
-            ticket: ticket,
-            typeMail: typeMail
-        },
-        success: function (response) {
 
-        },
-        error: function (e) {
-            console.log(e);
-        }
-    });
-}
+
+//function sendMail(ticket, typeMail) {
+//    $.ajax({
+//        url: "/LCA/SendMail",
+//        type: "Post",
+//        data: {
+//            ticket: ticket,
+//            typeMail: typeMail
+//        },
+//        success: function (response) {
+
+//        },
+//        error: function (e) {
+//            console.log(e);
+//        }
+//    });
+//}

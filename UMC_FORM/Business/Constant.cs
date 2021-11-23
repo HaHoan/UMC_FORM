@@ -59,6 +59,8 @@ namespace UMC_FORM.Business
         public static string SUCCESS = "success";
         public static string ERROR = "error";
         public static string WAIT = "wait";
+        public static string CHANGE_QUOTE = "change_quote";
+        
     }
 
     public static class PAYER

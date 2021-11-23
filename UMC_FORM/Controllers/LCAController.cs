@@ -62,6 +62,38 @@ namespace UMC_FORM.Controllers
             var oldProcess = db.Form_Procedures.Where(m => m.TICKET == ticket).ToList();
             foreach (var pro in process)
             {
+                if(pro.FORM_INDEX == 0)
+                {
+                    var proceduce = oldProcess.Where(m => m.TICKET == ticket && m.FORM_INDEX == 0).FirstOrDefault();
+                    if (proceduce != null)
+                    {
+                        proceduce.FORM_INDEX = pro.FORM_INDEX;
+                        proceduce.FORM_NAME = pro.FORM_NAME;
+                        proceduce.STATION_NO = pro.STATION_NO;
+                    }
+                    else
+                    {
+                        proceduce = new Form_Procedures()
+                        {
+                            ID = Guid.NewGuid().ToString(),
+                            TICKET = ticket,
+                            FORM_NAME = processName,
+                            STATION_NO = pro.STATION_NO,
+                            STATION_NAME = pro.STATION_NAME,
+                            FORM_INDEX = pro.FORM_INDEX,
+                            RETURN_INDEX = pro.RETURN_INDEX,
+                            CREATER_NAME = pro.CREATER_NAME,
+                            CREATE_DATE = pro.CREATE_DATE,
+                            UPDATER_NAME = pro.UPDATER_NAME,
+                            UPDATE_DATE = pro.UPDATE_DATE,
+                            DES = pro.DES,
+                            RETURN_STATION_NO = pro.RETURN_STATION_NO,
+                            APPROVAL_NAME = _sess.CODE
+                        };
+                        db.Form_Procedures.Add(proceduce);
+                    }
+                }
+                else
                 if (pro.FORM_INDEX == 1 || pro.FORM_INDEX == 3)
                 {
                     var proceduce = oldProcess.Where(m => m.TICKET == ticket && m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == pro.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")).FirstOrDefault();
@@ -217,6 +249,12 @@ namespace UMC_FORM.Controllers
 
                             db.SaveChanges();
                             transaction.Commit();
+                            if (!sendMail(summary, STATUS.ACCEPT))
+                            {
+                                transaction.Rollback();
+                                ModelState.AddModelError("Error", "Gửi mail bị lỗi!");
+                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                            }
                             return Json(new
                             {
                                 result = STATUS.SUCCESS,
@@ -293,7 +331,8 @@ namespace UMC_FORM.Controllers
                         }
 
                     }
-                    if (listPermission.Where(m => m.DEPT == _sess.DEPT).FirstOrDefault() != null)
+                    var isEditQuote = listPermission.Where(m => m.DEPT == _sess.DEPT && m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault();
+                    if (isEditQuote != null )
                     {
                         modelDetail.SUBMITS.Add(SUBMIT.EDIT_QUOTE);
 
@@ -356,7 +395,7 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.REJECT)
                         {
-                            string result = Reject(formDb, db);
+                            string result = Reject(formDb, db,infoTicket);
                             if (result == STATUS.ERROR)
                             {
                                 return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
@@ -404,7 +443,7 @@ namespace UMC_FORM.Controllers
             }
         }
 
-        private string Reject(LCA_FORM_01 formDb, DataContext db)
+        private string Reject(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -430,6 +469,7 @@ namespace UMC_FORM.Controllers
                     form.IS_SIGNATURE = 0;
                     form.ID = Guid.NewGuid().ToString();
                     form.SUBMIT_USER = _sess.CODE;
+                    form.COMMENT = infoTicket.COMMENT;
                     AddQuotes("", db, formDb, form);
                     db.LCA_FORM_01.Add(form);
 
@@ -441,6 +481,12 @@ namespace UMC_FORM.Controllers
 
                     db.SaveChanges();
                     transaction.Commit();
+                    if (!sendMail(summary, STATUS.REJECT))
+                    {
+                        transaction.Rollback();
+                        ModelState.AddModelError("Error", "Gửi mail bị lỗi");
+                        return STATUS.ERROR;
+                    };
                     return STATUS.SUCCESS;
                 }
                 catch (Exception e)
@@ -596,6 +642,7 @@ namespace UMC_FORM.Controllers
                         form.CUSTOMER = infoTicket.CUSTOMER;
                         form.MODEL = infoTicket.MODEL;
                         form.REQUEST_CONTENT = infoTicket.REQUEST_CONTENT;
+                        
                     }
                     #region Quote
                     AddQuotes(quotes, db, infoTicket, form);
@@ -655,7 +702,13 @@ namespace UMC_FORM.Controllers
                     }
                     db.SaveChanges();
                     transaction.Commit();
-
+                    
+                    if (!sendMail(summary, STATUS.ACCEPT))
+                    {
+                        transaction.Rollback();
+                        ModelState.AddModelError("Error", "Gửi mail bị lỗi");
+                        return STATUS.ERROR;
+                    };
                     return STATUS.SUCCESS;
                 }
                 catch (Exception e)
@@ -728,7 +781,12 @@ namespace UMC_FORM.Controllers
                     #endregion
                     db.SaveChanges();
                     transaction.Commit();
-
+                    if (!sendMail(summary, STATUS.EDIT_QUOTE))
+                    {
+                        transaction.Rollback();
+                        ModelState.AddModelError("Error", "Gửi mail bị lỗi");
+                        return STATUS.ERROR;
+                    };
                     return STATUS.SUCCESS;
                 }
                 catch (Exception e)
@@ -782,6 +840,104 @@ namespace UMC_FORM.Controllers
             }
         }
 
+        private bool sendMail(Form_Summary summary, string typeMail)
+        {
+            try
+            {
+                using (var db = new DataContext())
+                {
+                    List<string> userMails = new List<string>();
+                    var dear = "Dear All !";
+                    if (summary.PROCEDURE_INDEX == -1)
+                    {
+                        var userCreate = UserRepository.GetUser(summary.CREATE_USER);
+                        userMails.Add(userCreate.EMAIL);
+                        dear = $"Dear {userCreate.SHORT_NAME} san !";
+                    }
+                    else
+                    {
+                        var stations = db.Form_Procedures.Where(m => m.TICKET == summary.TICKET &&
+                        m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1) &&
+                        m.FORM_NAME == summary.PROCESS_ID).Select(m => m.APPROVAL_NAME).ToList();
+                        userMails = UserRepository.GetUsers((List<string>)stations);
+                        if (userMails.Count == 1)
+                        {
+                            var userApproval = db.Form_User.Where(m => m.CODE == stations.FirstOrDefault()).FirstOrDefault();
+                            dear = $"Dear {userApproval.SHORT_NAME} san !";
+                        }
+                    }
+
+                    var cc = new List<string>();
+                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (summary.PROCEDURE_INDEX + 1).ToString()
+                 && m.PROCESS == summary.PROCESS_ID).ToList();
+                    var deptSubmit = listPermission.Where(m => !string.IsNullOrEmpty(m.DEPT)).FirstOrDefault();
+                    if (deptSubmit != null)
+                    {
+                        var userCC = UserRepository.GetUsersByDept(deptSubmit.DEPT);
+                        foreach (var user in userCC)
+                        {
+                            if (!userMails.Contains(user.EMAIL))
+                            {
+                                cc.Add(user.EMAIL);
+                            }
+                        }
+
+                    }
+
+
+                    string body = "";
+                    if (typeMail == STATUS.REJECT)
+                    {
+                        body = $@"
+                                                <h3>{dear}</h3>
+                                                <h3 style='color: red' >Request reject. Please click below link view details:</h3>
+	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+                    }
+                    else if (typeMail == STATUS.ACCEPT)
+                    {
+                        body = $@"
+                                                <h3>{dear}</h3>
+                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
+	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+                    }
+                    else if (typeMail == STATUS.EDIT_QUOTE)
+                    {
+                        body = $@"
+                                                <h3>{dear}</h3>
+                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
+	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+                    }
+                    BackgroundJob.Enqueue(() => MailHelper.SenMailOutlookAsync(userMails, body, cc));
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+
+            }
+        }
         [HttpPost]
         public JsonResult SendMail(string ticket, string typeMail)
         {
@@ -814,11 +970,11 @@ namespace UMC_FORM.Controllers
                     var cc = new List<string>();
                     var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (summary.PROCEDURE_INDEX + 1).ToString()
                  && m.PROCESS == summary.PROCESS_ID).ToList();
-                    var deptSubmit = listPermission.Where(m =>!string.IsNullOrEmpty(m.DEPT)).FirstOrDefault();
+                    var deptSubmit = listPermission.Where(m => !string.IsNullOrEmpty(m.DEPT)).FirstOrDefault();
                     if (deptSubmit != null)
                     {
                         var userCC = UserRepository.GetUsersByDept(deptSubmit.DEPT);
-                        foreach(var user in userCC)
+                        foreach (var user in userCC)
                         {
                             if (!userMails.Contains(user.EMAIL))
                             {
@@ -844,7 +1000,7 @@ namespace UMC_FORM.Controllers
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
                     }
-                    else if(typeMail == STATUS.ACCEPT)
+                    else if (typeMail == STATUS.ACCEPT)
                     {
                         body = $@"
                                                 <h3>{dear}</h3>
@@ -857,7 +1013,8 @@ namespace UMC_FORM.Controllers
                                                 <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
                                                 <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
                                              ";
-                    }else if(typeMail == STATUS.EDIT_QUOTE)
+                    }
+                    else if (typeMail == STATUS.EDIT_QUOTE)
                     {
                         body = $@"
                                                 <h3>{dear}</h3>
