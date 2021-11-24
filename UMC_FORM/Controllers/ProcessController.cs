@@ -133,9 +133,9 @@ namespace UMC_FORM.Controllers
             List<FormProcessJsonEntity> myDeserializedObjList = (List<FormProcessJsonEntity>)Newtonsoft.Json.JsonConvert.DeserializeObject(process, typeof(List<FormProcessJsonEntity>));
             var dept = DeptRepository.GetDept(session.DEPT);
             var mng = UserRepository.GetUser(dept.CODE_MNG);
-            if (!members.Exists(r => r.index == 2)) members.Add(new ApprovalEntity() { index = 2, member = new List<MemberEntity>() { new MemberEntity() { code = mng.CODE, name = mng.NAME } } });
-            if (!members.Exists(r => r.index == 4)) members.Add(new ApprovalEntity() { index = 4, member = new List<MemberEntity>() { new MemberEntity() { code = "iwasaki", name = "Iwasaki" } } });
-            if (!members.Exists(r => r.index == 5)) members.Add(new ApprovalEntity() { index = 5, member = new List<MemberEntity>() { new MemberEntity() { code = "yokouchi", name = "Yokouchi" } } });
+            //if (!members.Exists(r => r.index == 2)) members.Add(new ApprovalEntity() { index = 2, member = new List<MemberEntity>() { new MemberEntity() { code = mng.CODE, name = mng.NAME } } });
+            //if (!members.Exists(r => r.index == 4)) members.Add(new ApprovalEntity() { index = 4, member = new List<MemberEntity>() { new MemberEntity() { code = "iwasaki", name = "Iwasaki" } } });
+            //if (!members.Exists(r => r.index == 5)) members.Add(new ApprovalEntity() { index = 5, member = new List<MemberEntity>() { new MemberEntity() { code = "yokouchi", name = "Yokouchi" } } });
             foreach (var item in myDeserializedObjList)
             {
                 var stationNo = $"{selectedForm}_{item.index}";
