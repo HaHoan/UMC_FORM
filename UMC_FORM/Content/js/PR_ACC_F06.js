@@ -129,9 +129,9 @@ var listStep = [];
 //    }
 //];
 
-
+var current_step = 0;
 $(function () {
-    var current_step = 0;
+    
     $("#searchUser").on("keydown", function (e) {
         if (e.which == 13) {
             var value = $(this).val().toLowerCase();
