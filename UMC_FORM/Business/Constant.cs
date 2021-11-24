@@ -60,13 +60,13 @@ namespace UMC_FORM.Business
         public static string ERROR = "error";
         public static string WAIT = "wait";
         public static string CHANGE_QUOTE = "change_quote";
-        
+
     }
 
     public static class PAYER
     {
         public static string CUSTOMER = "Customer";
-        public static string UMCVN  = "UMCVN";
+        public static string UMCVN = "UMCVN";
     }
 
     public static class POSITION
@@ -76,4 +76,11 @@ namespace UMC_FORM.Business
         public static int GD = 3;
 
     }
+    public enum EXECUTE_RESULT
+    {
+        FAILED = -1,
+        SUCCESS = 1,
+        CHANGE_PASS = 0
+    }
+
 }

@@ -49,7 +49,7 @@ namespace UMC_FORM.Controllers
             }
             message = "Có lỗi trong quá trình lưu dữ liệu";
             ViewBag.message = message;
-            
+
             return View(user);
         }
 

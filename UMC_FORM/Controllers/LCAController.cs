@@ -18,6 +18,7 @@ namespace UMC_FORM.Controllers
 {
     [CustomAuthFilter]
     [CustomAuthorize("Normal")]
+    [NoCache]
     public class LCAController : Controller
     {
         private Form_User _sess = new Form_User();
