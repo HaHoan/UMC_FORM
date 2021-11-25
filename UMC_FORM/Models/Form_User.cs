@@ -35,6 +35,6 @@ namespace UMC_FORM.Models
         public string SIGNATURE { get; set; }
 
         public int ROLE_ID { get; set; }
-        public int POSITION { get; set; }
+        public int POSITION { get; set; }   
     }
 }
