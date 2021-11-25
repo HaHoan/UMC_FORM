@@ -28,6 +28,7 @@ namespace UMC_FORM.Models
         public virtual DbSet<LCA_QUOTE> LCA_QUOTE { get; set; }
         public virtual DbSet<PR_ACC_F06> PR_ACC_F06 { get; set; }
         public virtual DbSet<Form_Summary> Form_Summary { get; set; }
+        public virtual DbSet<Form_Log> Form_Logs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
