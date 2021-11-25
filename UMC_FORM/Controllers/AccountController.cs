@@ -23,13 +23,24 @@ namespace UMC_FORM.Controllers
         // GET: Login
         public ActionResult Index(string returnUrl)
         {
+
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            var account = checkCookies();
+            if (account == null)
+            {
+                return View();
+            }
+            else
+            {
+                return View(account);
+
+            }
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(Form_User user, string ReturnUrl)
+        public async Task<ActionResult> Index(Form_User user, string ReturnUrl, string rememberPasswordCheck)
         {
             string message = string.Empty;
             var t1 = UserRepository.ValidateUserAsync(user);
@@ -105,6 +116,15 @@ namespace UMC_FORM.Controllers
                         EXECUTE_RESULT_DETAILS = "Normal"
                     };
                     LogRepository.SaveLog(log);
+                    if (!string.IsNullOrEmpty(rememberPasswordCheck))
+                    {
+                        RememberMe(session.CODE, session.PASSWORD);
+                    }
+                    else
+                    {
+                        RemoveRememberMe();
+                    }
+                 
                     if (string.IsNullOrEmpty(ReturnUrl))
                     {
                         return RedirectToAction("Index", "Home", new { type = SendType.SENDTOME });
@@ -118,6 +138,56 @@ namespace UMC_FORM.Controllers
             return View(user);
         }
 
+        private Form_User checkCookies()
+        {
+            Form_User account = null;
+            var user = string.Empty;
+            var password = string.Empty;
+            if (Request.Cookies["username"] != null)
+            {
+                user = Request.Cookies["username"].Value;
+            }
+            if (Request.Cookies["password"] != null)
+            {
+                password = Request.Cookies["password"].Value;
+            }
+            if (!string.IsNullOrEmpty(user) && !string.IsNullOrEmpty(password))
+            {
+                account = new Form_User()
+                {
+                    CODE = user,
+                    PASSWORD = password
+                };
+            }
+            return account;
+        }
+        private void RememberMe(string username, string password)
+        {
+            HttpCookie ckUsername = new HttpCookie("username");
+            ckUsername.Expires = DateTime.Now.AddDays(1);
+            ckUsername.Value = username;
+            Response.Cookies.Add(ckUsername);
+            HttpCookie ckPassword = new HttpCookie("password");
+            ckPassword.Expires = DateTime.Now.AddDays(1);
+            ckPassword.Value = password;
+            Response.Cookies.Add(ckPassword);
+        }
+        private void RemoveRememberMe()
+        {
+            if(Response.Cookies["username"] != null)
+            {
+                HttpCookie ckUsername = new HttpCookie("username");
+                ckUsername.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(ckUsername);
+            }
+            if(Response.Cookies["password"] != null)
+            {
+                HttpCookie ckPassword = new HttpCookie("password");
+                ckPassword.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(ckPassword);
+            }
+            
+        }
         [CustomAuthFilter]
         [HttpGet]
         public ActionResult ChangePassword()
@@ -143,7 +213,7 @@ namespace UMC_FORM.Controllers
             try
             {
                 var session = Session["user"] as Form_User;
-                if(PASSWORD == session.PASSWORD)
+                if (PASSWORD == session.PASSWORD)
                 {
                     ViewBag.MessageError = "Không được sử dụng pass cũ!";
                     return View();
@@ -175,8 +245,8 @@ namespace UMC_FORM.Controllers
                 ViewBag.MessageError = "Có lỗi xảy ra!";
                 return View();
             }
-        
-            
+
+
         }
 
         [HttpGet]
@@ -282,6 +352,7 @@ namespace UMC_FORM.Controllers
         public ActionResult Logout()
         {
             Session.Abandon();
+            RemoveRememberMe();
             return RedirectToAction("Index");
         }
     }

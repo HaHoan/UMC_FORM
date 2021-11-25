@@ -20,11 +20,12 @@ namespace UMC_FORM.Business
                 {
                     return -1;
                 }
-                var role = context.Form_Roles.Find(userExist.ROLE_ID);
-                if (userExist.PASSWORD.ToUpper() == "UMCVN")
+                var flag = context.Form_Logs.Any(r => r.USER_ID == userExist.ID && r.EXECUTE_RESULT == (int)EXECUTE_RESULT.SUCCESS);
+                if (userExist.PASSWORD.ToUpper() == "UMCVN" || !flag)
                 {
                     return -2;
                 }
+                var role =  context.Form_Roles.Find(userExist.ROLE_ID);
                 if (role.NAME.ToUpper() == "ADMIN")// Admin
                 {
                     return 1;
@@ -32,6 +33,7 @@ namespace UMC_FORM.Business
             }
             return 0;
         }
+
         public static async Task<int> ValidateUserAsync(Form_User user)
         {
             using (DataContext context = new DataContext())
@@ -75,6 +77,7 @@ namespace UMC_FORM.Business
                 return await context.Form_User.FirstOrDefaultAsync(r => r.CODE == username);
             }
         }
+
         public static void Update(string code, string newPass)
         {
             using (DataContext context = new DataContext())
