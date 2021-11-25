@@ -17,7 +17,7 @@ using UMC_FORM.Models.LCA;
 namespace UMC_FORM.Controllers
 {
     [CustomAuthFilter]
-    [CustomAuthorize("Normal")]
+    [CustomAuthorize("CanEdit","ReadOnly")]
     [NoCache]
     public class LCAController : Controller
     {
@@ -311,33 +311,38 @@ namespace UMC_FORM.Controllers
 
                     modelDetail.PERMISSION = new List<string>();
                     modelDetail.SUBMITS = new List<string>();
-                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (modelDetail.SUMARY.PROCEDURE_INDEX + 1).ToString()
+                    if (_sess.ROLE_ID == ROLE.CanEdit)
+                    {
+                        var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (modelDetail.SUMARY.PROCEDURE_INDEX + 1).ToString()
                     && m.PROCESS == modelDetail.SUMARY.PROCESS_ID).ToList();
-                    foreach (var permission in listPermission)
-                    {
-                        modelDetail.PERMISSION.Add(permission.ITEM_COLUMN);
-                    }
-
-                    var userApprover = db.Form_Procedures.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1)
-                                       && m.FORM_NAME == modelDetail.SUMARY.PROCESS_ID && m.TICKET == modelDetail.TICKET.TICKET).ToList();
-                    if (userApprover.Where(m => m.APPROVAL_NAME == _sess.CODE).FirstOrDefault() != null)
-                    {
-                        if (modelDetail.SUMARY.IS_REJECT)
+                        foreach (var permission in listPermission)
                         {
-                            modelDetail.SUBMITS.Add(SUBMIT.RE_APPROVE);
-                        }
-                        else
-                        {
-                            modelDetail.SUBMITS.Add(SUBMIT.APPROVE);
+                            modelDetail.PERMISSION.Add(permission.ITEM_COLUMN);
                         }
 
-                    }
-                    var isEditQuote = listPermission.Where(m => m.DEPT == _sess.DEPT && m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault();
-                    if (isEditQuote != null )
-                    {
-                        modelDetail.SUBMITS.Add(SUBMIT.EDIT_QUOTE);
+                        var userApprover = db.Form_Procedures.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1)
+                                           && m.FORM_NAME == modelDetail.SUMARY.PROCESS_ID && m.TICKET == modelDetail.TICKET.TICKET).ToList();
+                        if (userApprover.Where(m => m.APPROVAL_NAME == _sess.CODE).FirstOrDefault() != null)
+                        {
+                            if (modelDetail.SUMARY.IS_REJECT)
+                            {
+                                modelDetail.SUBMITS.Add(SUBMIT.RE_APPROVE);
+                            }
+                            else
+                            {
+                                modelDetail.SUBMITS.Add(SUBMIT.APPROVE);
+                            }
+
+                        }
+                        var isEditQuote = listPermission.Where(m => m.DEPT == _sess.DEPT && m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault();
+                        if (isEditQuote != null)
+                        {
+                            modelDetail.SUBMITS.Add(SUBMIT.EDIT_QUOTE);
+
+                        }
 
                     }
+
                     modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY.PROCESS_ID, db, list);
 
                     JavaScriptSerializer js = new JavaScriptSerializer();
@@ -352,6 +357,45 @@ namespace UMC_FORM.Controllers
                 return View();
             }
 
+        }
+
+        private bool checkUserHavePermissionToChangeData(DataContext db, string ticket)
+        {
+            _sess = Session["user"] as Form_User;
+            if (_sess.ROLE_ID == ROLE.ReadOnly) return false;
+            var modelDetail = new LCADetailModel();
+            modelDetail.SUMARY = db.Form_Summary.Where(m => m.TICKET == ticket).FirstOrDefault();
+            modelDetail.PERMISSION = new List<string>();
+            modelDetail.SUBMITS = new List<string>();
+            var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (modelDetail.SUMARY.PROCEDURE_INDEX + 1).ToString()
+                   && m.PROCESS == modelDetail.SUMARY.PROCESS_ID).ToList();
+            foreach (var permission in listPermission)
+            {
+                modelDetail.PERMISSION.Add(permission.ITEM_COLUMN);
+            }
+
+            var userApprover = db.Form_Procedures.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1)
+                               && m.FORM_NAME == modelDetail.SUMARY.PROCESS_ID && m.TICKET == modelDetail.SUMARY.TICKET).ToList();
+            if (userApprover.Where(m => m.APPROVAL_NAME == _sess.CODE).FirstOrDefault() != null)
+            {
+                if (modelDetail.SUMARY.IS_REJECT)
+                {
+                    modelDetail.SUBMITS.Add(SUBMIT.RE_APPROVE);
+                }
+                else
+                {
+                    modelDetail.SUBMITS.Add(SUBMIT.APPROVE);
+                }
+
+            }
+            var isEditQuote = listPermission.Where(m => m.DEPT == _sess.DEPT && m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault();
+            if (isEditQuote != null)
+            {
+                modelDetail.SUBMITS.Add(SUBMIT.EDIT_QUOTE);
+
+            }
+            if (modelDetail.SUBMITS.Count <= 0) return false;
+            else return true;
         }
 
         [HttpPost]
@@ -371,6 +415,12 @@ namespace UMC_FORM.Controllers
                     }
                     else
                     {
+
+
+                        if (checkUserHavePermissionToChangeData(db,formDb.TICKET) == false)
+                        {
+                            return Json(new { result = STATUS.ERROR, message = "Bạn không có quyền sửa ticket này" }, JsonRequestBehavior.AllowGet);
+                        }
 
                         if (formDb.ID != infoTicket.ID)
                         {
@@ -643,7 +693,7 @@ namespace UMC_FORM.Controllers
                         form.CUSTOMER = infoTicket.CUSTOMER;
                         form.MODEL = infoTicket.MODEL;
                         form.REQUEST_CONTENT = infoTicket.REQUEST_CONTENT;
-                        
+
                     }
                     #region Quote
                     AddQuotes(quotes, db, infoTicket, form);
@@ -703,7 +753,7 @@ namespace UMC_FORM.Controllers
                     }
                     db.SaveChanges();
                     transaction.Commit();
-                    
+
                     if (!sendMail(summary, STATUS.ACCEPT))
                     {
                         transaction.Rollback();

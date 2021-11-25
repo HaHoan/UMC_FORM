@@ -279,7 +279,9 @@ function OnSuccess(response) {
         }
     }
     else {
-        alert(response.result)
+       if(response.message != null) 
+            alert(response.message)
+        else alert('error')
     }
 }
 function OnFailure(response) {

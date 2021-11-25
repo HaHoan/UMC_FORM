@@ -117,23 +117,26 @@
                     <div class="nav">
                         @{
                             var user = (Form_User)HttpContext.Current.Session["user"];
-                            if (user != null && user.CODE == Constant.GD.ToLower())
+                            if (user != null)
                             {
-                                <a class="nav-link text-dark mt-4" href="@Url.Action("Index","Summary")">
-                                    <div class="sb-nav-link-icon text-dark"><i class="fas fa-tachometer-alt"></i></div>
-                                    <label class=" lang" key="Summary">Tổng kết</label>
-                                </a>
+                                if (user.CODE == Constant.GD.ToLower())
+                                {
+                                    <a class="nav-link text-dark mt-4" href="@Url.Action("Index","Summary")">
+                                        <div class="sb-nav-link-icon text-dark"><i class="fas fa-tachometer-alt"></i></div>
+                                        <label class=" lang" key="Summary">Tổng kết</label>
+                                    </a>
+                                }
+                                if(user.ROLE_ID == ROLE.CanEdit)
+                                {
+                                    <button class="btn btn-light ml-3 mr-5 mt-3" data-toggle="modal"
+                                            data-target="#findRequestForm">
+                                        <i class="fas fa-plus text-dark"></i>
+                                        <span class="lang" key="create-request">Tạo đề xuất mới</span>
+                                    </button>
+                                }
+
                             }
                         }
-
-
-
-
-                        <button class="btn btn-light ml-3 mr-5 mt-3" data-toggle="modal"
-                                data-target="#findRequestForm">
-                            <i class="fas fa-plus text-dark"></i>
-                            <span class="lang" key="create-request">Tạo đề xuất mới</span>
-                        </button>
 
                         <div class="custom-control custom-checkbox ml-3 mt-4">
                             <input type="checkbox" class="custom-control-input" id="sendToMe" />
