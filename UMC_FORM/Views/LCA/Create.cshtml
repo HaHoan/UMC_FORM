@@ -19,6 +19,15 @@
     <link href="~/Content/css/styles.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Content/js/scripts.js"></script>
+    <script src="~/Content/js/lang.js"></script>
+    <script src="~/Content/js/form_common.js"></script>
+    <script src="~/Content/js/lca/form_lca.js"></script>
+
 </head>
 
 <body class="sb-nav-fixed container-fluid">
@@ -36,6 +45,7 @@
                 }, new { enctype = "multipart/form-data", id = "formCreate" }))
                 {
                     @Html.AntiForgeryToken()
+                    @Html.ValidationSummary();
                     <div class="modal-body">
                         <div>
                             <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
@@ -216,12 +226,14 @@
                                                 $('#umcvn').prop('checked', false);
 
                                                 $('input[name="PAYER"]').val($('#customer').val())
+                                               
                                             }
                                         })
                                         $('#umcvn').change(function () {
                                             if ($('#umcvn').prop('checked') == true) {
                                                 $('#customer').prop('checked', false);
                                                 $('input[name="PAYER"]').val($('#umcvn').val())
+                                                
                                             }
                                         })
 
@@ -423,15 +435,7 @@
         </div>
     </div>
     @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }));
-    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/Content/js/scripts.js"></script>
-    <script src="~/Content/js/lang.js"></script>
-    <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/lca/form_lca.js"></script>
-
+ 
 </body>
 
 </html>

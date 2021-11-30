@@ -112,5 +112,10 @@ namespace UMC_FORM.Models
         [StringLength(100)]
         [Required]
         public string PURPOSE { get; set; }
+
+        public string STATION_NO { get; set; }
+
+        
+        
     }
 }

@@ -42,100 +42,109 @@ namespace UMC_FORM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(Form_User user, string ReturnUrl, string rememberPasswordCheck)
         {
-            string message = string.Empty;
-            var t1 = UserRepository.ValidateUserAsync(user);
-            var t2 = UserRepository.GetUserAsync(user.CODE);
-            int userId = await t1;
-            var session = await t2;
-            Form_Log log = null;
-            switch (userId)
+            try
             {
-                case -2:// Sử dụng Pass mặc định hoặc đăng nhập lần đầu, yêu cầu đổi pass
-                    Session["user"] = session;
-                    Session["userId"] = session.CODE;
-                    log = new Form_Log()
-                    {
-                        IP_ADDRESS = NetworkHelper.Ip,
-                        HOST_NAME = NetworkHelper.Host,
-                        OPERATE_TYPE = "Đổi pass",
-                        OPERATE_TIME = DateTime.Now,
-                        USER_ID = session.ID,
-                        USER_NAME = session.CODE,
-                        DESCRIPTION = "",
-                        EXECUTE_RESULT = (int)EXECUTE_RESULT.CHANGE_PASS,
-                        EXECUTE_RESULT_DETAILS = ""
-                    };
-                    LogRepository.SaveLog(log);
-                    return RedirectToAction("ChangePassword", "Account");
-                case -1:// Tài khoản không tồn tại
-                    message = "User Not Found !. Contact IT(3143)";
-                    log = new Form_Log()
-                    {
-                        IP_ADDRESS = NetworkHelper.Ip,
-                        HOST_NAME = NetworkHelper.Host,
-                        OPERATE_TYPE = "Tài khoản không tồn tại",
-                        OPERATE_TIME = DateTime.Now,
-                        USER_ID = session.ID,
-                        USER_NAME = session.CODE,
-                        DESCRIPTION = "",
-                        EXECUTE_RESULT = (int)EXECUTE_RESULT.FAILED,
-                        EXECUTE_RESULT_DETAILS = "Cảnh báo spam"
-                    };
-                    LogRepository.SaveLog(log);
-                    break;
-                case 1://Tài khoản là admin ==> Chuyển sang phần quản trị
-                    Session["user"] = session;
-                    Session["userId"] = session.CODE;
-                    log = new Form_Log()
-                    {
-                        IP_ADDRESS = NetworkHelper.Ip,
-                        HOST_NAME = NetworkHelper.Host,
-                        OPERATE_TYPE = "Đăng nhập",
-                        OPERATE_TIME = DateTime.Now,
-                        USER_ID = session.ID,
-                        USER_NAME = session.CODE,
-                        DESCRIPTION = "",
-                        EXECUTE_RESULT = (int)EXECUTE_RESULT.SUCCESS,
-                        EXECUTE_RESULT_DETAILS = "Admin"
-                    };
-                    LogRepository.SaveLog(log);
-                    return RedirectToAction("Index", "Admin");
-                default:
-                    Session["user"] = session;
-                    Session["userId"] = session.CODE;
-                    log = new Form_Log()
-                    {
-                        IP_ADDRESS = NetworkHelper.Ip,
-                        HOST_NAME = NetworkHelper.Host,
-                        OPERATE_TYPE = "Đăng nhập",
-                        OPERATE_TIME = DateTime.Now,
-                        USER_ID = session.ID,
-                        USER_NAME = session.CODE,
-                        DESCRIPTION = "",
-                        EXECUTE_RESULT = (int)EXECUTE_RESULT.SUCCESS,
-                        EXECUTE_RESULT_DETAILS = "Normal"
-                    };
-                    LogRepository.SaveLog(log);
-                    if (!string.IsNullOrEmpty(rememberPasswordCheck))
-                    {
-                        RememberMe(session.CODE, session.PASSWORD);
-                    }
-                    else
-                    {
-                        RemoveRememberMe();
-                    }
-                 
-                    if (string.IsNullOrEmpty(ReturnUrl))
-                    {
-                        return RedirectToAction("Index", "Home", new { type = SendType.SENDTOME });
-                    }
-                    else
-                    {
-                        return Redirect(ReturnUrl);
-                    }
+                string message = string.Empty;
+                var t1 = UserRepository.ValidateUserAsync(user);
+                var t2 = UserRepository.GetUserAsync(user.CODE);
+                int userId = await t1;
+                var session = await t2;
+                Form_Log log = null;
+                switch (userId)
+                {
+                    case -2:// Sử dụng Pass mặc định hoặc đăng nhập lần đầu, yêu cầu đổi pass
+                        Session["user"] = session;
+                        Session["userId"] = session.CODE;
+                        log = new Form_Log()
+                        {
+                            IP_ADDRESS = NetworkHelper.Ip,
+                            HOST_NAME = NetworkHelper.Host,
+                            OPERATE_TYPE = "Đổi pass",
+                            OPERATE_TIME = DateTime.Now,
+                            USER_ID = session.ID,
+                            USER_NAME = session.CODE,
+                            DESCRIPTION = "",
+                            EXECUTE_RESULT = (int)EXECUTE_RESULT.CHANGE_PASS,
+                            EXECUTE_RESULT_DETAILS = ""
+                        };
+                        LogRepository.SaveLog(log);
+                        return RedirectToAction("ChangePassword", "Account");
+                    case -1:// Tài khoản không tồn tại
+                        message = "User Not Found !. Contact IT(3143)";
+                        log = new Form_Log()
+                        {
+                            IP_ADDRESS = NetworkHelper.Ip,
+                            HOST_NAME = NetworkHelper.Host,
+                            OPERATE_TYPE = "Tài khoản không tồn tại",
+                            OPERATE_TIME = DateTime.Now,
+                            USER_ID = session.ID,
+                            USER_NAME = session.CODE,
+                            DESCRIPTION = "",
+                            EXECUTE_RESULT = (int)EXECUTE_RESULT.FAILED,
+                            EXECUTE_RESULT_DETAILS = "Cảnh báo spam"
+                        };
+                        LogRepository.SaveLog(log);
+                        break;
+                    case 1://Tài khoản là admin ==> Chuyển sang phần quản trị
+                        Session["user"] = session;
+                        Session["userId"] = session.CODE;
+                        log = new Form_Log()
+                        {
+                            IP_ADDRESS = NetworkHelper.Ip,
+                            HOST_NAME = NetworkHelper.Host,
+                            OPERATE_TYPE = "Đăng nhập",
+                            OPERATE_TIME = DateTime.Now,
+                            USER_ID = session.ID,
+                            USER_NAME = session.CODE,
+                            DESCRIPTION = "",
+                            EXECUTE_RESULT = (int)EXECUTE_RESULT.SUCCESS,
+                            EXECUTE_RESULT_DETAILS = "Admin"
+                        };
+                        LogRepository.SaveLog(log);
+                        return RedirectToAction("Index", "Admin");
+                    default:
+                        Session["user"] = session;
+                        Session["userId"] = session.CODE;
+                        log = new Form_Log()
+                        {
+                            IP_ADDRESS = NetworkHelper.Ip,
+                            HOST_NAME = NetworkHelper.Host,
+                            OPERATE_TYPE = "Đăng nhập",
+                            OPERATE_TIME = DateTime.Now,
+                            USER_ID = session.ID,
+                            USER_NAME = session.CODE,
+                            DESCRIPTION = "",
+                            EXECUTE_RESULT = (int)EXECUTE_RESULT.SUCCESS,
+                            EXECUTE_RESULT_DETAILS = "Normal"
+                        };
+                        LogRepository.SaveLog(log);
+                        if (!string.IsNullOrEmpty(rememberPasswordCheck))
+                        {
+                            RememberMe(session.CODE, session.PASSWORD);
+                        }
+                        else
+                        {
+                            RemoveRememberMe();
+                        }
+
+                        if (string.IsNullOrEmpty(ReturnUrl))
+                        {
+                            return RedirectToAction("Index", "Home", new { type = SendType.SENDTOME });
+                        }
+                        else
+                        {
+                            return Redirect(ReturnUrl);
+                        }
+                }
+                ViewBag.message = message;
+                return View(user);
             }
-            ViewBag.message = message;
-            return View(user);
+            catch (Exception e)
+            {
+
+                return View();
+            }
+          
         }
 
         private Form_User checkCookies()

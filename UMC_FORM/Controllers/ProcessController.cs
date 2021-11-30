@@ -44,11 +44,24 @@ namespace UMC_FORM.Controllers
         }
 
         // GET: Process/Create
-        public ActionResult Create()
+        public ActionResult Create(string id = null)
         {
-             var users = UserRepository.GetUsers();
+            if (id != null)
+            {
+                var process = ProcessRepository.GetProcessName(id);
+                if (process == null || process.Count == 0)
+                {
+                    return HttpNotFound();
+                }
+                ViewBag.process = id;
+            }
+            var users = UserRepository.GetUsers();
+            ViewBag.listStations = ProcessRepository.GetAllStation();
             return View(users);
+
         }
+
+
         [HttpPost]
         public ActionResult Create(Form_ProcessName entity)
         {
@@ -123,95 +136,219 @@ namespace UMC_FORM.Controllers
             return Json(new { body = "OK" }, JsonRequestBehavior.AllowGet);
         }
 
+
         [HttpPost]
-        public JsonResult GetProcess(string process, string selectedForm, string user)
+        public JsonResult GetProcess(string process, string selectedForm, string user, string state)
         {
-            var session = Session["user"] as Form_User;
-            List<Form_Process> formprocess = new List<Form_Process>();
-            List<Form_Stations> stations = new List<Form_Stations>();
-            List<ApprovalEntity> members = (List<ApprovalEntity>)Newtonsoft.Json.JsonConvert.DeserializeObject(user, typeof(List<ApprovalEntity>));
-            List<FormProcessJsonEntity> myDeserializedObjList = (List<FormProcessJsonEntity>)Newtonsoft.Json.JsonConvert.DeserializeObject(process, typeof(List<FormProcessJsonEntity>));
-            var dept = DeptRepository.GetDept(session.DEPT);
-            var mng = UserRepository.GetUser(dept.CODE_MNG);
-            //if (!members.Exists(r => r.index == 2)) members.Add(new ApprovalEntity() { index = 2, member = new List<MemberEntity>() { new MemberEntity() { code = mng.CODE, name = mng.NAME } } });
-            //if (!members.Exists(r => r.index == 4)) members.Add(new ApprovalEntity() { index = 4, member = new List<MemberEntity>() { new MemberEntity() { code = "iwasaki", name = "Iwasaki" } } });
-            //if (!members.Exists(r => r.index == 5)) members.Add(new ApprovalEntity() { index = 5, member = new List<MemberEntity>() { new MemberEntity() { code = "yokouchi", name = "Yokouchi" } } });
-            foreach (var item in myDeserializedObjList)
+            try
             {
-                var stationNo = $"{selectedForm}_{item.index}";
-                formprocess.Add(new Form_Process()
+                using (var db = new DataContext())
                 {
-                    FORM_NAME = selectedForm,
-                    ID = Guid.NewGuid().ToString(),
-                    FORM_INDEX = item.index,
-                    CREATE_DATE = DateTime.Now,
-                    STATION_NO = stationNo,
-                    STATION_NAME = item.name,
-                    RETURN_STATION_NO = item.returnTo is null ? "" : myDeserializedObjList.FirstOrDefault(r => r.index == item.returnTo).name,
-                    RETURN_INDEX = item.returnTo,
-                    UPDATE_DATE = DateTime.Now,
-                    CREATER_NAME = session.NAME,
-                    UPDATER_NAME = session.NAME
-                });
-
-                var stationSlect = members.FirstOrDefault(r => r.index == item.index + 1);
-
-                if (stationSlect != null)
-                {
-                    foreach (var u in stationSlect.member)
+                    using (DbContextTransaction transaction = db.Database.BeginTransaction())
                     {
-                        stations.Add(new Form_Stations()
+                        try
                         {
-                            ID = Guid.NewGuid().ToString(),
-                            STATION_NO = stationNo,
-                            STATION_NAME = item.name,
-                            USER_ID = u.code,
-                            USER_NAME = u.name,
-                            FORM_INDEX = item.index,
-                            PROCESS = selectedForm
-                           
-                        });
+                            if (state == "new")
+                            {
+                                var exist = db.Form_Process.Where(m => m.FORM_NAME == selectedForm).FirstOrDefault();
+                                if (exist != null)
+                                    return Json(new { body = STATUS.ERROR, message = "Đã tồn tại " + selectedForm + " này rồi! Hãy điền tên khác!" }, JsonRequestBehavior.AllowGet);
+
+                            }
+                            var session = Session["user"] as Form_User;
+                            List<Form_Process> formprocess = new List<Form_Process>();
+                            List<Form_Stations> stations = new List<Form_Stations>();
+                            List<ApprovalEntity> members = (List<ApprovalEntity>)Newtonsoft.Json.JsonConvert.DeserializeObject(user, typeof(List<ApprovalEntity>));
+                            List<FormProcessJsonEntity> myDeserializedObjList = (List<FormProcessJsonEntity>)Newtonsoft.Json.JsonConvert.DeserializeObject(process, typeof(List<FormProcessJsonEntity>));
+                            var dept = DeptRepository.GetDept(session.DEPT);
+                            var mng = UserRepository.GetUser(dept.CODE_MNG);
+
+                            foreach (var item in myDeserializedObjList)
+                            {
+                                formprocess.Add(new Form_Process()
+                                {
+                                    FORM_NAME = selectedForm,
+                                    ID = Guid.NewGuid().ToString(),
+                                    FORM_INDEX = item.index,
+                                    CREATE_DATE = DateTime.Now,
+                                    STATION_NO = item.no,
+                                    STATION_NAME = item.name,
+                                    RETURN_STATION_NO = item.returnTo is null ? "" : myDeserializedObjList.FirstOrDefault(r => r.index == item.returnTo).name,
+                                    RETURN_INDEX = item.returnTo,
+                                    UPDATE_DATE = DateTime.Now,
+                                    CREATER_NAME = session.NAME,
+                                    UPDATER_NAME = session.NAME
+                                });
+
+                                var stationSlect = members.FirstOrDefault(r => r.index == item.index + 1);
+
+                                if (stationSlect != null && stationSlect.member.Count > 0)
+                                {
+                                    foreach (var u in stationSlect.member)
+                                    {
+                                       
+                                        stations.Add(new Form_Stations()
+                                        {
+                                            ID = Guid.NewGuid().ToString(),
+                                            STATION_NO = item.no,
+                                            STATION_NAME = item.name,
+                                            USER_ID = u.code,
+                                            USER_NAME = u.name,
+                                            FORM_INDEX = item.index,
+                                            PROCESS = selectedForm
+
+                                        });
+                                    }
+
+                                }
+                                else
+                                {
+                                    stations.Add(new Form_Stations()
+                                    {
+                                        ID = Guid.NewGuid().ToString(),
+                                        STATION_NO = item.no,
+                                        STATION_NAME = item.name,
+                                        USER_ID = "",
+                                        USER_NAME = "",
+                                        FORM_INDEX = item.index,
+                                        PROCESS = selectedForm
+
+                                    });
+                                }
+
+                            }
+                            #region Save Process
+                            var formProcessOld = db.Form_Process.Where(r => r.FORM_NAME == selectedForm);
+                            db.Form_Process.RemoveRange(formProcessOld);
+                            db.SaveChanges();
+                            db.Form_Process.AddRange(formprocess);
+                            db.SaveChanges();
+                            #endregion
+
+                            #region Save Station
+                            var stationNoOld = db.Form_Stations.Where(r => r.PROCESS == selectedForm);
+                            db.Form_Stations.RemoveRange(stationNoOld);
+                            db.SaveChanges();
+                            db.Form_Stations.AddRange(stations);
+                            db.SaveChanges();
+
+                            var formProcessName = db.Form_ProcessNames.Where(m => m.PROCESS_ID == selectedForm).FirstOrDefault();
+                            if (formProcessName != null)
+                            {
+                                formProcessName.PROCESS_NAME = selectedForm;
+                                formProcessName.UPD_TIME = DateTime.Now;
+                                formProcessName.UPD_USER = session.NAME;
+
+                            }
+                            else
+                            {
+                                formProcessName = new Form_ProcessName()
+                                {
+                                    UPD_USER = session.NAME,
+                                    UPD_TIME = DateTime.Now,
+                                    PROCESS_NAME = selectedForm,
+                                    PROCESS_ID = selectedForm
+                                };
+                                db.Form_ProcessNames.Add(formProcessName);
+                            }
+                            db.SaveChanges();
+                            transaction.Commit();
+                            #endregion
+                            return Json(new { body = "OK" }, JsonRequestBehavior.AllowGet);
+                        }
+                        catch (Exception)
+                        {
+                            transaction.Rollback();
+                            return Json(new { body = "NG" }, JsonRequestBehavior.AllowGet);
+
+                        }
+
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+                return Json(new { body = "NG" }, JsonRequestBehavior.AllowGet);
+
+            }
+
+        }
+
+        public JsonResult CheckExist(string processId)
+        {
+            using (var db = new DataContext())
+            {
+                try
+                {
+                    var process = db.Form_Process.Where(m => m.FORM_NAME == processId.Trim()).FirstOrDefault();
+
+                    if (process != null)
+                    {
+                        return Json(new
+                        {
+                            result = STATUS.ERROR,
+                            message = "Đã tồn tại " + processId + " này rồi! Hãy điền tên khác!"
+                        }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new
+                        {
+                            result = STATUS.SUCCESS
+                        }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch (Exception e)
+                {
+                    return Json(new
+                    {
+                        result = STATUS.ERROR,
+                        message = "Có lỗi xảy ra"
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+
+
+        }
+
+        public ActionResult DeleteProcess(string id)
+        {
+            using (var db = new DataContext())
+            {
+                using (DbContextTransaction transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var processName = db.Form_ProcessNames.Where(m => m.PROCESS_NAME == id.Trim()).ToList();
+                        if (processName != null)
+                            db.Form_ProcessNames.RemoveRange(processName);
+                        var process = db.Form_Process.Where(m => m.FORM_NAME == id.Trim()).ToList();
+                        if (process != null)
+                            db.Form_Process.RemoveRange(process);
+                        var station = db.Form_Stations.Where(m => m.PROCESS == id.Trim()).ToList();
+                        if (station != null)
+                            db.Form_Stations.RemoveRange(station);
+                        db.SaveChanges();
+                        transaction.Commit();
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception e)
+                    {
+
+                        transaction.Rollback();
+                        ViewBag.Error = e.Message.ToString();
+                        var process = ProcessRepository.GetProcessName();
+                        return View("Index", process);
                     }
 
                 }
-                else
-                {
-                    stations.Add(new Form_Stations()
-                    {
-                        ID = Guid.NewGuid().ToString(),
-                        STATION_NO = stationNo,
-                        STATION_NAME = item.name,
-                        USER_ID = "",
-                        USER_NAME = "",
-                        FORM_INDEX = item.index,
-                        PROCESS = selectedForm
-
-                    });
-                }
-            }
-            #region Save Process
-            var formProcessOld = db.Form_Process.Where(r => r.FORM_NAME == selectedForm);
-            db.Form_Process.RemoveRange(formProcessOld);
-            db.SaveChanges();
-            db.Form_Process.AddRange(formprocess);
-            db.SaveChanges();
-            #endregion
-
-            #region Save Station
-            foreach (var station in stations)
-            {
-                var stationNoOld = db.Form_Stations.Where(r => r.STATION_NO == station.STATION_NO);
-                db.Form_Stations.RemoveRange(stationNoOld);
-                db.SaveChanges();
             }
 
-            db.Form_Stations.AddRange(stations);
-            db.SaveChanges();
-            #endregion
-            return Json(new { body = "OK" }, JsonRequestBehavior.AllowGet);
         }
-
-
         public JsonResult LoadProcess(string processId)
         {
             var process = ProcessRepository.GetProcessName(processId);
@@ -221,7 +358,8 @@ namespace UMC_FORM.Controllers
             foreach (var item in sort)
             {
                 var listtemp = new List<Member>();
-                foreach (var temp in list.Where(r => r.STATION_NO == item.STATION_NO))
+                var stations = list.Where(r => r.STATION_NO == item.STATION_NO).ToList();
+                foreach (var temp in stations)
                 {
                     listtemp.Add(new Member()
                     {

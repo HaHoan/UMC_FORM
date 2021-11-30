@@ -9,6 +9,7 @@ namespace UMC_FORM.Models.LCA
     public class StationApproveModel
     {
         public string STATION_NAME { get; set; }
+        public string STATION_NO { get; set; }
         public bool IS_APPROVED { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:d/M/yyyy}")]

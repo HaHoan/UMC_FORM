@@ -1,4 +1,4 @@
-
+﻿
 var users = [];
 var listStep = [];
 //var listStep = [
@@ -131,7 +131,28 @@ var listStep = [];
 
 var current_step = 0;
 $(function () {
-    
+    $('#process').keyup(function (e) {
+        if (e.keyCode == 13) {
+            $.ajax({
+                type: "GET",
+                url: "/Process/CheckExist",
+                data: {
+                    processId: $(this).val()
+                },
+                success: function (msg) {
+                    if (msg.result == 'error') {
+                        alert(msg.message)
+                        $('#process').focus()
+                    }
+                },
+                error: function (msg) {
+                    alert('error: ' + msg.d);
+                }
+            });
+        }
+
+
+    })
     $("#searchUser").on("keydown", function (e) {
         if (e.which == 13) {
             var value = $(this).val().toLowerCase();
@@ -142,7 +163,13 @@ $(function () {
 
     });
     $('#submitors').hide();
-
+    $('#station_no').keydown(function () {
+        var val = $('#station_no').val()
+        var label = $('#list-station-no option').filter(function () {
+            return this.value == val;
+        }).attr('name');
+        $('#station_name').val(label)
+    })
 
     $('#listUser .form-check-input').change(function () {
         var step = users.findIndex((obj => obj.index == current_step));
@@ -179,7 +206,7 @@ $(function () {
         }
     });
     var processId = $('#process').val();
-    if (processId != null) {
+    if (processId != null && processId != '') {
         $.ajax({
             type: "GET",
             url: "/Process/LoadProcess",
@@ -207,6 +234,7 @@ $(function () {
                         index: value.FORM_INDEX,
                         key: 'step-' + (value.FORM_INDEX + 1),
                         name: value.STATION_NAME,
+                        no: value.STATION_NO,
                         return: back,
                         returnTo: value.RETURN_INDEX
                     }
@@ -236,6 +264,7 @@ $(function () {
                 index: 0,
                 key: 'step-1',
                 name: 'Applicant',
+                no: 'APPLICANT',
                 return: {
 
                 }
@@ -303,7 +332,7 @@ function drawStation() {
 
                         $("#submitors").fadeOut(1);
                         $("#submitors").fadeIn();
-                    } else if ( key == "Return") {
+                    } else if (key == "Return") {
                         var step = listStep.find(x => x.key === key);
 
                         if (stepStart.returnTo != null) {
@@ -312,7 +341,8 @@ function drawStation() {
                         stepStart.returnTo = step.index;
                         drawReturnLine(index, step.index);
                     } else if (key == "nextStation") {
-                        $('#exampleModal').modal('show')
+                        current_step = stepStart.index;
+                        $('#newStationModal').modal('show')
                     }
 
                 },
@@ -330,15 +360,32 @@ function drawStation() {
 }
 function saveChange() {
     var selectedForm = $("#process").val();
+    if (selectedForm == '') {
+        alert('Bạn cần nhập tên cho Process')
+        return;
+    }
+    if (selectedForm.indexOf(" ") !== -1) {
+        alert("Tên Process không được có dấu cách");
+        return;
+    }
     var data = JSON.stringify(listStep);
     var userJson = JSON.stringify(users);
     var base_url = window.location.origin;
+    var state = ''
+    if ($('#process').attr('name') == 'new') {
+        state = 'new'
+    } else {
+        state = 'old'
+    }
     $.ajax({
         type: "POST",
         url: "/Process/GetProcess",
-        data: { process: data, selectedForm: selectedForm, user: userJson },      // NOTE CHANGE HERE
+        data: { process: data, selectedForm: selectedForm, user: userJson, state: state },      // NOTE CHANGE HERE
         success: function (msg) {
-            //alert(msg.d);
+            if (msg.body == 'error') {
+                alert(msg.message)
+                return;
+            }
             window.location.href = base_url + '/Process';
         },
         error: function (msg) {
@@ -346,6 +393,7 @@ function saveChange() {
         }
 
     });
+
 }
 function GoBack() {
     window.history.back();
@@ -382,4 +430,85 @@ function makeSVG(tag, attrs) {
     for (var k in attrs)
         el.setAttribute(k, attrs[k]);
     return el;
+}
+
+function saveNewStation() {
+    var station_name = $('#station_name').val()
+    var station_no = $('#station_no').val()
+    if (station_name == '' || station_no == '') {
+        alert('Bạn cần phải điền đầy đủ STATION NAME và STATION NO')
+        return;
+    }
+    var station = listStep.find(x => x.name == station_name.trim() && x.no == station_no.trim());
+    if (station != null) {
+        alert('Đã có trạm này trong process rồi!')
+        return;
+    }
+    if (station_no.indexOf(" ") !== -1) {
+        alert("STATION NO không được có dấu cách");
+        return;
+    }
+    var tempListStep = [];
+    $.each(listStep, function (index, value) {
+        if (index <= current_step) {
+            tempListStep.push(value)
+        }
+    })
+
+    var items = "{"
+    $.each(listStep, function (index, value) {
+        if (index <= current_step) {
+            if (index == current_step) {
+                items += '"step-' + (index + 1) + '":{"name":"' + value.name.trim() + '"}'
+            } else {
+                items += '"step-' + (index + 1) + '":{"name":"' + value.name.trim() + '"},'
+            }
+        }
+
+    })
+
+    items += "}"
+    var itemsObj = JSON.parse(items)
+    var newStep = {
+        index: current_step + 1,
+        key: 'step-' + (current_step + 2),
+        name: station_name.trim(),
+        no: station_no.trim(),
+        return: {
+            "name": "Back to",
+            "items": itemsObj
+        },
+        returnTo: 0
+    }
+    tempListStep.push(newStep)
+
+    $.each(listStep, function (index, value) {
+        if (index > current_step) {
+            var returnTo = value.returnTo
+            if (value.RETURN_INDEX > current_step) {
+                returnTo += 1;
+            }
+            var obj = {
+                index: value.index + 1,
+                key: 'step-' + (value.index + 2),
+                name: value.name,
+                no: value.no,
+                return: value.return,
+                returnTo: returnTo
+            }
+            tempListStep.push(obj)
+        }
+    })
+
+    listStep = tempListStep;
+    $('.steps-form').empty()
+    drawStation()
+    var option = $('<option />', {
+        name: station_name.trim(),
+        value: station_no.trim()
+    })
+    $('#list-station-no').append(option)
+    $('#station_no').val('')
+    $('#station_name').val('')
+    $('#newStationModal').modal('hide')
 }

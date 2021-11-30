@@ -12,6 +12,7 @@ namespace UMC_FORM.Models
         public string key { get; set; }
 
         public string name { get; set; }
+        public string no { get; set; }
 
         public string _return { get; set; }
 

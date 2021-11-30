@@ -38,6 +38,8 @@ namespace UMC_FORM.Controllers
             }
             base.Dispose(disposing);
         }
+
+      
         public ActionResult Index(SendType? type)
         {
             

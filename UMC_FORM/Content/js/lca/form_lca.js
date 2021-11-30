@@ -8,6 +8,16 @@
         '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
     );
 }
+function enableButton() {
+    $('#lca_create').prop("disabled", false);
+    $('#lca_cancel').prop("disabled", false);
+    $('#lca_accept').prop("disabled", false);
+    $('#lca_reject').prop("disabled", false);
+    $('#lca_create').html("Create")
+    $('#lca_cancel').html("Cancel")
+    $('#lca_accept').html("Accept")
+    $('#lca_reject').html("Reject")
+}
 $(function () {
 
     $('input').keyup(function (e) {
@@ -282,6 +292,7 @@ function OnSuccess(response) {
        if(response.message != null) 
             alert(response.message)
         else alert('error')
+        enableButton()
     }
 }
 function OnFailure(response) {

@@ -17,7 +17,7 @@ using UMC_FORM.Models.LCA;
 namespace UMC_FORM.Controllers
 {
     [CustomAuthFilter]
-    [CustomAuthorize("CanEdit","ReadOnly")]
+    [CustomAuthorize("CanEdit", "ReadOnly")]
     [NoCache]
     public class LCAController : Controller
     {
@@ -33,12 +33,13 @@ namespace UMC_FORM.Controllers
             }
 
         }
-        private List<StationApproveModel> getListApproved(string formName, DataContext db, List<LCA_FORM_01> list)
+        private List<StationApproveModel> getListApproved(Form_Summary summary, DataContext db, List<LCA_FORM_01> list)
         {
             var listApproved = new List<StationApproveModel>();
-            var process = db.Form_Process.Where(m => m.FORM_NAME == formName).OrderBy(m => m.FORM_INDEX).ToList();
+            var process = db.Form_Procedures.Where(m => m.TICKET == summary.TICKET && m.FORM_NAME == summary.PROCESS_ID).OrderBy(m => m.FORM_INDEX).ToList();
             foreach (var pro in process)
             {
+                if (listApproved.Where(m => m.STATION_NAME.Trim() == pro.STATION_NAME.Trim()).FirstOrDefault() != null) continue;
                 var station = new StationApproveModel()
                 {
                     STATION_NAME = pro.STATION_NAME,
@@ -63,7 +64,7 @@ namespace UMC_FORM.Controllers
             var oldProcess = db.Form_Procedures.Where(m => m.TICKET == ticket).ToList();
             foreach (var pro in process)
             {
-                if(pro.FORM_INDEX == 0)
+                if (pro.FORM_INDEX == 0)
                 {
                     var proceduce = oldProcess.Where(m => m.TICKET == ticket && m.FORM_INDEX == 0).FirstOrDefault();
                     if (proceduce != null)
@@ -206,8 +207,13 @@ namespace UMC_FORM.Controllers
                             setUpFormProceduce(processName, db, ticket.TICKET, deptManager, process);
 
                             ticket.STATION_NAME = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
+                            ticket.STATION_NO = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
                             db.LCA_FORM_01.Add(ticket);
                             #region FILES
+                            if (!Directory.Exists(Server.MapPath("/UploadedFiles/")))
+                            {
+                                Directory.CreateDirectory(Server.MapPath("/UploadedFiles/"));
+                            }
                             HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
                             for (int file = 0; file < files.Count; file++)
                             {
@@ -267,7 +273,7 @@ namespace UMC_FORM.Controllers
                         {
                             transaction.Rollback();
                             ModelState.AddModelError("Error", e.Message.ToString());
-                            return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -278,7 +284,7 @@ namespace UMC_FORM.Controllers
             {
 
                 ModelState.AddModelError("Error", e.Message.ToString());
-                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
         }
@@ -343,7 +349,7 @@ namespace UMC_FORM.Controllers
 
                     }
 
-                    modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY.PROCESS_ID, db, list);
+                    modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY, db, list);
 
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     modelDetail.USERS = js.Serialize(db.Form_User.Select(r => new { name = r.CODE, username = r.NAME }).ToList());
@@ -417,7 +423,7 @@ namespace UMC_FORM.Controllers
                     {
 
 
-                        if (checkUserHavePermissionToChangeData(db,formDb.TICKET) == false)
+                        if (checkUserHavePermissionToChangeData(db, formDb.TICKET) == false)
                         {
                             return Json(new { result = STATUS.ERROR, message = "Bạn không có quyền sửa ticket này" }, JsonRequestBehavior.AllowGet);
                         }
@@ -446,7 +452,7 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.REJECT)
                         {
-                            string result = Reject(formDb, db,infoTicket);
+                            string result = Reject(formDb, db, infoTicket);
                             if (result == STATUS.ERROR)
                             {
                                 return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
@@ -724,6 +730,7 @@ namespace UMC_FORM.Controllers
 
                     var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
                     form.STATION_NAME = process.Where(m => m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1)).FirstOrDefault().STATION_NAME;
+                    form.STATION_NO = process.Where(m => m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1)).FirstOrDefault().STATION_NO;
                     db.LCA_FORM_01.Add(form);
                     #endregion
 
@@ -822,6 +829,7 @@ namespace UMC_FORM.Controllers
 
                     var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
                     form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
+                    form.STATION_NO = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
                     db.LCA_FORM_01.Add(form);
                     #endregion
 
@@ -879,7 +887,7 @@ namespace UMC_FORM.Controllers
                     modelDetail.TICKET.FILES = db.LCA_FILE.Where(m => m.TICKET == modelDetail.TICKET.TICKET).ToList();
                     modelDetail.TICKET.LCA_QUOTEs = db.LCA_QUOTE.Where(m => m.ID_TICKET == modelDetail.TICKET.ID).ToList();
 
-                    modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY.PROCESS_ID, db, list);
+                    modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY, db, list);
                     modelDetail.LIST_COMMENT = db.Form_Comment.Where(m => m.TICKET == modelDetail.TICKET.TICKET).OrderBy(m => m.UPD_DATE).ToList();
                     return View(modelDetail);
                 }
@@ -937,12 +945,13 @@ namespace UMC_FORM.Controllers
 
 
                     string body = "";
+                    var domain = Bet.Util.Config.GetValue("domain");
                     if (typeMail == STATUS.REJECT)
                     {
                         body = $@"
                                                 <h3>{dear}</h3>
                                                 <h3 style='color: red' >Request reject. Please click below link view details:</h3>
-	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
+	                                            <a href='{domain}LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
                                                 <br />
                                                 <h3>Thanks & Best regards</h3>
                                                 <h4>*********************</h4>
@@ -956,7 +965,7 @@ namespace UMC_FORM.Controllers
                         body = $@"
                                                 <h3>{dear}</h3>
                                                 <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
+	                                            <a href='{domain}LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
                                                 <br />
                                                 <h3>Thanks & Best regards</h3>
                                                 <h4>*********************</h4>
@@ -970,7 +979,7 @@ namespace UMC_FORM.Controllers
                         body = $@"
                                                 <h3>{dear}</h3>
                                                 <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
+	                                            <a href='{domain}LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
                                                 <br />
                                                 <h3>Thanks & Best regards</h3>
                                                 <h4>*********************</h4>

@@ -6,14 +6,53 @@ using UMC_FORM.Models;
 
 namespace UMC_FORM.Business
 {
+
     public static class ProcessRepository
     {
+
+        public static List<Form_Process> GetAllStation()
+        {
+            try
+            {
+                using (DataContext context = new DataContext())
+                {
+                    var listStation = context.Form_Process.GroupBy(m => m.STATION_NO).ToList();
+                    var list = new List<Form_Process>();
+                    foreach (var station in listStation)
+                    {
+                        var stationName = context.Form_Process.Where(m => m.STATION_NO == station.Key).FirstOrDefault();
+
+                        list.Add(new Form_Process()
+                        {
+                            STATION_NO = station.Key,
+                            STATION_NAME = stationName.STATION_NAME
+                        });
+                    }
+                    return list;
+                }
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+
+        }
+       
         public static List<Form_ProcessName> GetProcessName()
         {
             using (DataContext context = new DataContext())
             {
                 return context.Form_ProcessNames.ToList();
             }
+        }
+        public static bool IsExistProcessName(string processName)
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.Form_ProcessNames.Where(m => m.PROCESS_NAME == processName).FirstOrDefault() != null;
+            }
+
         }
         public static List<Form_Process> GetProcessName(string processId)
         {

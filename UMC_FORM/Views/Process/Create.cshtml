@@ -9,6 +9,18 @@
 <div id="layoutSidenav_content">
     <div class="container-fluid ">
         <div class=" container mt-5">
+            <label>Tên Process</label>
+            @{
+                if (!string.IsNullOrEmpty(ViewBag.process))
+                {
+                    <input type="text" id="process" name="old"class="form-control" value="@ViewBag.process"  readonly/>
+                }
+                else
+                {
+                    <input class="form-control" id="process" name ="new"required />
+                }
+
+            }
 
             <svg xmlns:svg="http://www.w3.org/2000/svg" class=" steps-form mt-5">
             </svg>
@@ -31,31 +43,47 @@
             <button class="btn btn-info mt-5 ml-2 lang" key="back" onclick="GoBack();">Back</button>
 
         </div>
-   
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+
+        <div class="modal fade" id="newStationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm bước phê duyệt mới</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label>STATION NO</label>
+                        <input list="list-station-no" value="" class="form-control" placeholder="Enter new station no..." id="station_no">
+                        <input id="station_name_selected" type="hidden" />
+                        <datalist id="list-station-no">
+                            @if (ViewBag.listStations != null)
+                            {
+                                foreach (var station in ViewBag.listStations)
+                                {
+                                    <option name="@station.STATION_NAME" value="@station.STATION_NO">@station.STATION_NO</option>
+                                }
+
+                            }
+
+                        </datalist>
+                        <br />
+                        <label>STATION NAME</label>
+                        <input class="form-control" id="station_name" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" onclick="saveNewStation()">Save changes</button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js")
+        @Scripts.Render("~/Content/js/PR_ACC_F06.js")
+
+
     </div>
-
-    @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js")
-    @Scripts.Render("~/Content/js/PR_ACC_F06.js")
-
-
-</div>
 
 
