@@ -273,7 +273,7 @@ $(function () {
         drawStation()
     }
 
-
+    
 });
 function resetList() {
     $('#listUser .form-check-input').prop('checked', false);
@@ -292,8 +292,14 @@ function drawStation() {
     var startX = 30;
     var startY = 100;
     var pi = 15;
+    $('#listStation').empty()
     $.each(listStep, function (index, value) {
-
+        var option = $('<option />', {
+            name: value.no,
+            value: value.name,
+            text:value.name
+        })
+        $('#listStation').append(option)
         var step = makeSVG('circle', { cx: startX, cy: startY, r: 15, fill: '#43a047', stroke: 'white', 'stroke-width': 2, class: "steps-step context-menu-" + (index + 1) });
         var step_text = makeSVG('text', { x: startX - 4, y: startY + 5, fill: 'white', class: "context-menu-" + (index + 1) })
         step_text.appendChild(document.createTextNode(index + 1));
@@ -343,6 +349,12 @@ function drawStation() {
                     } else if (key == "nextStation") {
                         current_step = stepStart.index;
                         $('#newStationModal').modal('show')
+                    } else if (key == "deleteStation") {
+                        current_step = stepStart.index;
+                        deleteStation();
+                    } else if (key == "rejectStep") {
+                        current_step = stepStart.index;
+                        $('#rejectStationModal').modal('show')
                     }
 
                 },
@@ -350,13 +362,57 @@ function drawStation() {
 
                     "Return": value.return,
                     "selectUser": { "name": "Select approval" },
-                    "nextStation": { "name": "Next Station" },
+                    "nextStation": { "name": "Add New Station" },
+                    "deleteStation": { "name": "Delete Station" },
+                    "rejectStep": {"name":"Select Step after Reject"},
                     "exit": { "name": "Exit" }
                 }
             });
         }
 
     })
+   
+    $('#btn-add-reject-station').click(function (e) {
+       
+        var li = $('<li />', {
+            text: $('#listStation option:selected').val(),
+            class:'list-group-item'
+        })
+        
+        $('#listStationApproveAfterReject').append(li)
+    })
+    $('#btn-delete-reject-station').click(function (e) {
+        $('#listStationApproveAfterReject').empty()
+    })
+}
+function deleteStation() {
+    listStep = listStep.filter(function (obj) {
+        return obj.index !== current_step;
+    });
+    users = users.filter(function (obj) {
+        return obj.index !== current_step;
+    })
+    var tempListStep = [];
+    $.each(listStep, function (index, value) {
+        if (value.index > current_step) {
+            value.index = value.index - 1;
+            value.key = 'key-' + (value.index + 1)
+
+        }
+        tempListStep.push(value)
+
+    })
+    listStep = tempListStep;
+    var tempListUser = []
+    $.each(users, function (index, value) {
+        if (value.index > current_step) {
+            value.index =  value.index - 1
+        }
+        tempListUser.push(value)
+    })
+    users = tempListUser
+    $('.steps-form').empty()
+    drawStation()
 }
 function saveChange() {
     var selectedForm = $("#process").val();
@@ -415,11 +471,11 @@ function drawReturnLine(currentStation, returnStation) {
     var line4 = makeSVG('line', { x1: returnX, y1: startY - pi, x2: returnX - 7, y2: startY - pi - 4, style: "stroke:" + color + ";stroke-width:0.5", class: "line-" + currentStation + "-" + returnStation })
     var line5 = makeSVG('line', { x1: returnX, y1: startY - pi, x2: returnX + 7, y2: startY - pi - 4, style: "stroke:" + color + ";stroke-width:0.5", class: "line-" + currentStation + "-" + returnStation })
 
-    $('svg').append(line1);
-    $('svg').append(line2);
-    $('svg').append(line3);
-    $('svg').append(line4);
-    $('svg').append(line5);
+    $('.steps-form').append(line1);
+    $('.steps-form').append(line2);
+    $('.steps-form').append(line3);
+    $('.steps-form').append(line4);
+    $('.steps-form').append(line5);
 
 }
 function removeReturnLine(currentStation, returnStation) {
