@@ -230,13 +230,18 @@ $(function () {
                         "name": "Back to",
                         "items": itemsObj
                     }
+                    
+                   
                     var obj = {
                         index: value.FORM_INDEX,
                         key: 'step-' + (value.FORM_INDEX + 1),
                         name: value.STATION_NAME,
                         no: value.STATION_NO,
                         return: back,
-                        returnTo: value.RETURN_INDEX
+                        returnTo: value.RETURN_INDEX,
+                        rejectList: msg.reject.filter(function (m) {
+                            return m.START_INDEX == (value.FORM_INDEX - 1)
+                        })
                     }
                     listStep.push(obj)
                 });
@@ -295,11 +300,12 @@ function drawStation() {
     $('#listStation').empty()
     $.each(listStep, function (index, value) {
         var option = $('<option />', {
-            name: value.no,
+            name: value.index,
             value: value.name,
             text:value.name
         })
         $('#listStation').append(option)
+        drawRejectList(value.index)
         var step = makeSVG('circle', { cx: startX, cy: startY, r: 15, fill: '#43a047', stroke: 'white', 'stroke-width': 2, class: "steps-step context-menu-" + (index + 1) });
         var step_text = makeSVG('text', { x: startX - 4, y: startY + 5, fill: 'white', class: "context-menu-" + (index + 1) })
         step_text.appendChild(document.createTextNode(index + 1));
@@ -354,6 +360,8 @@ function drawStation() {
                         deleteStation();
                     } else if (key == "rejectStep") {
                         current_step = stepStart.index;
+                        $('#listStationApproveAfterReject').empty()
+                        drawRejectList(current_step);
                         $('#rejectStationModal').modal('show')
                     }
 
@@ -364,7 +372,8 @@ function drawStation() {
                     "selectUser": { "name": "Select approval" },
                     "nextStation": { "name": "Add New Station" },
                     "deleteStation": { "name": "Delete Station" },
-                    "rejectStep": {"name":"Select Step after Reject"},
+                    "rejectStep": { "name": "Select Step after Reject" },
+                    "formPermission": {"name":"Form Permission"},
                     "exit": { "name": "Exit" }
                 }
             });
@@ -376,7 +385,8 @@ function drawStation() {
        
         var li = $('<li />', {
             text: $('#listStation option:selected').val(),
-            class:'list-group-item'
+            class: 'list-group-item',
+            name: $('#listStation option:selected').attr('name')
         })
         
         $('#listStationApproveAfterReject').append(li)
@@ -384,6 +394,42 @@ function drawStation() {
     $('#btn-delete-reject-station').click(function (e) {
         $('#listStationApproveAfterReject').empty()
     })
+}
+function drawRejectList(current_step) {
+    var step = listStep.find(m => m.index == current_step);
+    if (step.rejectList != null) {
+        $.each(step.rejectList, function (index, value) {
+            var s = listStep.find(m => m.index == (value.FORM_INDEX + 1));
+            var li = $('<li />', {
+                text: s.name,
+                class: 'list-group-item',
+                name: value.FORM_INDEX
+            })
+
+            $('#listStationApproveAfterReject').append(li)
+        })
+    }
+}
+function saveRejectStep() {
+    var reject = []
+   
+    $('#listStationApproveAfterReject li').each(function (index, value) {
+        var obj = {
+            FORM_INDEX: $(this).attr('name'),
+            START_INDEX: current_step
+        }
+        reject.push(obj)
+    })
+    var tempListStep = [];
+    $.each(listStep, function (index, value) {
+        if (value.index == current_step) {
+           value.rejectList = reject
+        }
+        tempListStep.push(value)
+
+    })
+    listStep = tempListStep
+    $('#rejectStationModal').modal('hide')
 }
 function deleteStation() {
     listStep = listStep.filter(function (obj) {

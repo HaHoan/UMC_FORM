@@ -17,5 +17,8 @@ namespace UMC_FORM.Models
         public string _return { get; set; }
 
         public int? returnTo { get; set; }
+
+        public List<Form_Reject> rejectList { get; set; }
+
     }
 }

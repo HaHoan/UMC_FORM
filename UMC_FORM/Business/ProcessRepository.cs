@@ -46,6 +46,13 @@ namespace UMC_FORM.Business
                 return context.Form_ProcessNames.ToList();
             }
         }
+        public static List<Form_Reject> GetRejectList(string process)
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.Form_Reject.Where(m => m.PROCESS_NAME == process).ToList();
+            }
+        }
         public static bool IsExistProcessName(string processName)
         {
             using (DataContext context = new DataContext())

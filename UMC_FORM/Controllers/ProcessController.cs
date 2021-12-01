@@ -215,6 +215,32 @@ namespace UMC_FORM.Controllers
 
                                     });
                                 }
+                                if(item.rejectList != null)
+                                {
+                                    var listReject = db.Form_Reject.Where(m => m.PROCESS_NAME == selectedForm && m.START_INDEX == (item.index - 1)).ToList();
+                                    if(listReject != null)
+                                    {
+                                        db.Form_Reject.RemoveRange(listReject);
+                                        db.SaveChanges();
+                                    }
+                              
+                                    int i = 0;
+                                    foreach (var reject in item.rejectList)
+                                    {
+                                        var formReject = new Form_Reject()
+                                        {
+                                            PROCESS_NAME = selectedForm,
+                                            FORM_INDEX = reject.FORM_INDEX - 1,
+                                            START_INDEX = reject.START_INDEX - 1,
+                                            TOTAL_STEP = item.rejectList.Count(),
+                                            STEP_ORDER = i
+                                        };
+                                        db.Form_Reject.Add(formReject);
+                                        i++;
+                                    }
+                                    db.SaveChanges();
+                                }
+                              
 
                             }
                             #region Save Process
@@ -254,6 +280,8 @@ namespace UMC_FORM.Controllers
                             db.SaveChanges();
                             transaction.Commit();
                             #endregion
+
+                          
                             return Json(new { body = "OK" }, JsonRequestBehavior.AllowGet);
                         }
                         catch (Exception)
@@ -355,6 +383,7 @@ namespace UMC_FORM.Controllers
             var sort = process.OrderBy(r => r.FORM_INDEX);
             var list = StationRepository.GetStationsWithProcessName(processId);
             var listStation = new List<StationMemberModel>();
+            var rejectList = ProcessRepository.GetRejectList(processId);
             foreach (var item in sort)
             {
                 var listtemp = new List<Member>();
@@ -378,6 +407,7 @@ namespace UMC_FORM.Controllers
             return Json(new
             {
                 data = sort,
+                reject = rejectList,
                 stations = listStation
             }, JsonRequestBehavior.AllowGet);
         }
