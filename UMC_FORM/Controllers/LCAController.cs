@@ -290,6 +290,8 @@ namespace UMC_FORM.Controllers
                 {
                     return HttpNotFound();
                 }
+                double number = 1.00;
+                var str = number.FormatPrice();
                 using (var db = new DataContext())
                 {
                     var modelDetail = new LCADetailModel();

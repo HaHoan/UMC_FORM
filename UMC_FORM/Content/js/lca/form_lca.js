@@ -205,6 +205,7 @@ $(function () {
     });
 
     $(".type_number").keypress(function (e) {
+
         return onlyNumber(e)
     });
 
@@ -303,8 +304,8 @@ function updateQuote() {
                 NO: index,
                 REQUEST_ITEM: item,
                 QUANTITY: quantity == "" ? 0 : parseInt(quantity),
-                LCA_UNIT_PRICE: lca_unit_price == "" ? 0 : parseInt(lca_unit_price),
-                LCA_TOTAL_COST: lca_total == "" ? 0 : parseInt(lca_total),
+                LCA_UNIT_PRICE: lca_unit_price == "" ? 0 : parseFloat(lca_unit_price).toFixed(2),
+                LCA_TOTAL_COST: lca_total == "" ? 0 : parseFloat(lca_total).toFixed(2),
                 CUSTOMER_UNIT_PRICE: customer_unit_price == "" ? 0 : parseInt(customer_unit_price),
                 CUSTOMER_TOTAL_COST: customer_total == "" ? 0 : parseInt(customer_total),
             }
@@ -478,10 +479,10 @@ function getTotalPriceLCA(rowIndex) {
     }
     unit_price_lca = convertCommas(unit_price_lca)
     if (typeof unit_price_lca !== "undefined" && unit_price_lca && typeof qty !== "undefined" && qty) {
-        totalLCA += parseInt(unit_price_lca) * parseInt(qty)
+        totalLCA += parseFloat(unit_price_lca) * parseFloat(qty)
     }
 
-    if (isNaN(totalLCA)) return "0"
+    if (isNaN(totalLCA) || totalLCA == 0) return "0"
     else
         return totalLCA;
 }
@@ -492,14 +493,14 @@ function getTotalAmountLCA() {
         if (typeof amount !== 'undefined') {
             var result = amount.split(",").join("");
             if (typeof result !== "undefined" && result) {
-                total += parseInt(result);
+                total += parseFloat(result)
             }
         }
     });
 
-    if (isNaN(total)) return "0"
+    if (isNaN(total) || total == 0) return "0"
     else
-        return addCommas(total.toString());
+        return addCommas(parseFloat(total).toFixed(2).toString());
 }
 function getTotalAmountCustomer() {
     var total = 0;
@@ -513,7 +514,7 @@ function getTotalAmountCustomer() {
         }
     });
 
-    if (isNaN(total)) return "0"
+    if (isNaN(total) || total == 0) return "0"
     else
         return addCommas(total.toString());
 }

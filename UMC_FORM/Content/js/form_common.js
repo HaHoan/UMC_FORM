@@ -31,12 +31,18 @@ function getTotalPrice(rowIndex) {
     else
         return total;
 }
+function validate(s) {
+    var rgx = /^[0-9]*\.?[0-9]*$/;
+    return s.match(rgx);
+}
 function onlyNumber(e) {
-    if (/\d+|,+|[/b]+|-+/i.test(e.key)) {
+    
+    if (validate(e.key)) {
         return true
     } else {
         return false;
     }
+   
 }
 
 function convertCommas(nStr) {
@@ -55,7 +61,7 @@ function getTotalAmount() {
         }
     });
 
-    if (isNaN(total)) return "0"
+    if (isNaN(total) || total == 0) return "0"
     else
         return addCommas(total.toString());
 }
