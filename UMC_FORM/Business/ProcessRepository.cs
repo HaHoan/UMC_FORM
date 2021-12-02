@@ -38,7 +38,40 @@ namespace UMC_FORM.Business
             }
 
         }
-       
+        public static List<string> GetAllPermission()
+        {
+            try
+            {
+                using (DataContext context = new DataContext())
+                {
+                  return context.LCA_PERMISSION.GroupBy(m => m.ITEM_COLUMN).Select(m => m.Key).ToList();
+                 
+                }
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+
+        }
+        public static List<LCA_PERMISSION> GetAllPermission(string processId)
+        {
+            try
+            {
+                using (DataContext context = new DataContext())
+                {
+                    return context.LCA_PERMISSION.Where(m => m.PROCESS == processId).ToList();
+
+                }
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+
+        }
         public static List<Form_ProcessName> GetProcessName()
         {
             using (DataContext context = new DataContext())

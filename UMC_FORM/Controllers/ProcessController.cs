@@ -57,6 +57,8 @@ namespace UMC_FORM.Controllers
             }
             var users = UserRepository.GetUsers();
             ViewBag.listStations = ProcessRepository.GetAllStation();
+            ViewBag.listPermission = ProcessRepository.GetAllPermission();
+            ViewBag.Depts = DeptRepository.GetAll();
             return View(users);
 
         }
@@ -215,15 +217,18 @@ namespace UMC_FORM.Controllers
 
                                     });
                                 }
-                                if(item.rejectList != null)
+
+                                //REJECT LIST
+
+                                var listReject = db.Form_Reject.Where(m => m.PROCESS_NAME == selectedForm && m.START_INDEX == (item.index - 1)).ToList();
+                                if (listReject != null)
                                 {
-                                    var listReject = db.Form_Reject.Where(m => m.PROCESS_NAME == selectedForm && m.START_INDEX == (item.index - 1)).ToList();
-                                    if(listReject != null)
-                                    {
-                                        db.Form_Reject.RemoveRange(listReject);
-                                        db.SaveChanges();
-                                    }
-                              
+                                    db.Form_Reject.RemoveRange(listReject);
+                                    db.SaveChanges();
+                                }
+
+                                if (item.rejectList != null)
+                                {
                                     int i = 0;
                                     foreach (var reject in item.rejectList)
                                     {
@@ -239,6 +244,33 @@ namespace UMC_FORM.Controllers
                                         i++;
                                     }
                                     db.SaveChanges();
+                                }
+
+                                //PERMISSION
+                                var listPermission = db.LCA_PERMISSION.Where(m => m.PROCESS == selectedForm && m.ITEM_COLUMN_PERMISSION == item.index.ToString()).ToList();
+                                if (listPermission != null)
+                                {
+                                    db.LCA_PERMISSION.RemoveRange(listPermission);
+                                    db.SaveChanges();
+                                }
+                                if (item.permission != null)
+                                {
+                                    foreach(var permission in item.permission)
+                                    {
+                                        var per = new LCA_PERMISSION()
+                                        {
+                                            ITEM_COLUMN = permission.ITEM_COLUMN,
+                                            ITEM_COLUMN_PERMISSION = permission.ITEM_COLUMN_PERMISSION,
+                                            DEPT = permission.DEPT,
+                                            PROCESS = selectedForm
+                                        };
+                                        db.LCA_PERMISSION.Add(per);
+                                        db.SaveChanges();
+                                    }
+                                }
+                                else
+                                {
+
                                 }
                               
 
@@ -384,6 +416,7 @@ namespace UMC_FORM.Controllers
             var list = StationRepository.GetStationsWithProcessName(processId);
             var listStation = new List<StationMemberModel>();
             var rejectList = ProcessRepository.GetRejectList(processId);
+            var permission = ProcessRepository.GetAllPermission(processId);
             foreach (var item in sort)
             {
                 var listtemp = new List<Member>();
@@ -408,6 +441,7 @@ namespace UMC_FORM.Controllers
             {
                 data = sort,
                 reject = rejectList,
+                permission = permission,
                 stations = listStation
             }, JsonRequestBehavior.AllowGet);
         }

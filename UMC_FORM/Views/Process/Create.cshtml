@@ -92,27 +92,88 @@
                     </div>
                     <div class="modal-body">
                         <label>STATION NO</label>
-                        <select id="listStation" class="form-control">
-
-                        </select>
+                        <select id="listStation" class="form-control"></select>
                         <div class="row m-2">
                             <button class="form-control btn btn-success mt-2 col-5" id="btn-add-reject-station">
                                 <i class="fas fa-plus text-white"></i> Thêm
-                            </button> 
+                            </button>
                             <div class="col-2"></div>
                             <button class="form-control btn btn-danger mt-2 col-5" id="btn-delete-reject-station">
                                 <i class="fas fa-minus"></i> Tạo lại
                             </button>
                         </div>
-                      
-                        
-                        <ul id="listStationApproveAfterReject" class="list-group mt-2">
-                        
-                        </ul>
+
+
+                        <ul id="listStationApproveAfterReject" class="list-group mt-2"></ul>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-success" onclick="saveRejectStep()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="formPermission" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm các quyền chỉnh sửa form</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="font-weight-bold">PERMISSION</label>
+                        <input list="list-permission" value="" class="form-control" placeholder="Enter new permission..." id="permission">
+                        <datalist id="list-permission">
+                            @if (ViewBag.listPermission != null)
+                            {
+                                foreach (var station in ViewBag.listPermission)
+                                {
+                                    <option value="@station">@station</option>
+                                }
+
+                            }
+
+                        </datalist>
+                        <br />
+                        <label class="font-weight-bold">DEPARTMENT</label>
+                        <p class="font-italic">
+                            None: Chỉ người được phê duyệt mới được sửa
+                            <br />
+                            #: Những người khác trong phòng ban cũng có thể sửa
+                        </p>
+                        @if (ViewBag.Depts != null)
+                        {<select class="form-control" id="dept-permission">
+                                <option>None</option>
+                                @foreach (var station in ViewBag.Depts)
+                                {
+                                    <option value="@station.DEPT">@station.DEPT</option>
+                                }
+                            </select>
+                        }
+                        <button class="form-control btn btn-success mt-2 col-5" id="btn-add-permission">
+                            <i class="fas fa-plus text-white"></i> Thêm
+                        </button>
+                        <table class="table table-bordered mt-2 text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Permission</th>
+                                    <th scope="col">Dept</th>
+                                    <th scope="col"></th>
+
+                                </tr>
+                            </thead>
+                            <tbody  id="listPermissionSelected">
+                               
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" onclick="savePermission()">Save changes</button>
                     </div>
                 </div>
             </div>

@@ -19,6 +19,7 @@ namespace UMC_FORM.Models
         public int? returnTo { get; set; }
 
         public List<Form_Reject> rejectList { get; set; }
+        public List<LCA_PERMISSION> permission { get; set; }
 
     }
 }

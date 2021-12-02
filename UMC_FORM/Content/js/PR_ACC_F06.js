@@ -230,8 +230,8 @@ $(function () {
                         "name": "Back to",
                         "items": itemsObj
                     }
-                    
-                   
+
+
                     var obj = {
                         index: value.FORM_INDEX,
                         key: 'step-' + (value.FORM_INDEX + 1),
@@ -241,6 +241,9 @@ $(function () {
                         returnTo: value.RETURN_INDEX,
                         rejectList: msg.reject.filter(function (m) {
                             return m.START_INDEX == (value.FORM_INDEX - 1)
+                        }),
+                        permission: msg.permission.filter(function (m) {
+                            return m.ITEM_COLUMN_PERMISSION == (value.FORM_INDEX)
                         })
                     }
                     listStep.push(obj)
@@ -278,7 +281,28 @@ $(function () {
         drawStation()
     }
 
-    
+    $('#btn-add-reject-station').click(function (e) {
+
+        var li = $('<li />', {
+            text: $('#listStation option:selected').val(),
+            class: 'list-group-item',
+            name: $('#listStation option:selected').attr('name')
+        })
+
+        $('#listStationApproveAfterReject').append(li)
+    })
+    $('#btn-delete-reject-station').click(function (e) {
+        $('#listStationApproveAfterReject').empty()
+    })
+
+    $('#btn-add-permission').click(function () {
+        if ($('#permission').val().indexOf(" ") !== -1) {
+            alert("PERMISSION không được có dấu cách")
+            $('#permission').focus()
+            return;
+        }
+        addPermissionRow($('#permission').val(), $('#dept-permission').val())
+    })
 });
 function resetList() {
     $('#listUser .form-check-input').prop('checked', false);
@@ -293,19 +317,57 @@ function resetList() {
     }
 
 }
+
+function addPermissionRow(per, dept) {
+    var tr = $('<tr />')
+    var td = $('<td />', {
+        text: per,
+        class: "per"
+    })
+    var td1 = $('<td/>', {
+        text: dept,
+        class: "dept"
+    })
+    tr.append(td)
+    tr.append(td1)
+    var td2 = $('<td/>')
+    var btnDelete = $('<button />', {
+        class: "border-0 bg-white btn-delete-permission",
+        click: function () {
+            $(this).closest('tr').remove();
+        }
+    })
+    var i = $('<i />', {
+        class: "fas fa-minus-circle text-danger"
+    })
+    btnDelete.append(i)
+    td2.append(btnDelete)
+    tr.append(td2)
+    $('#listPermissionSelected').append(tr)
+}
+function drawPermissionList(current_step) {
+    $('#listPermissionSelected').empty()
+    var step = listStep.find(m => m.index == current_step);
+    if (step.permission != null) {
+        $.each(step.permission, function (index, value) {
+            addPermissionRow(value.ITEM_COLUMN, value.DEPT == '' ? 'None' : value.DEPT)
+        })
+    }
+}
 function drawStation() {
     var startX = 30;
     var startY = 100;
     var pi = 15;
     $('#listStation').empty()
+  
     $.each(listStep, function (index, value) {
         var option = $('<option />', {
             name: value.index,
             value: value.name,
-            text:value.name
+            text: value.name
         })
         $('#listStation').append(option)
-        drawRejectList(value.index)
+    
         var step = makeSVG('circle', { cx: startX, cy: startY, r: 15, fill: '#43a047', stroke: 'white', 'stroke-width': 2, class: "steps-step context-menu-" + (index + 1) });
         var step_text = makeSVG('text', { x: startX - 4, y: startY + 5, fill: 'white', class: "context-menu-" + (index + 1) })
         step_text.appendChild(document.createTextNode(index + 1));
@@ -363,6 +425,10 @@ function drawStation() {
                         $('#listStationApproveAfterReject').empty()
                         drawRejectList(current_step);
                         $('#rejectStationModal').modal('show')
+                    } else if (key == 'formPermission') {
+                        current_step = stepStart.index;
+                        drawPermissionList(value.index)
+                        $('#formPermission').modal('show')
                     }
 
                 },
@@ -373,27 +439,15 @@ function drawStation() {
                     "nextStation": { "name": "Add New Station" },
                     "deleteStation": { "name": "Delete Station" },
                     "rejectStep": { "name": "Select Step after Reject" },
-                    "formPermission": {"name":"Form Permission"},
+                    "formPermission": { "name": "Form Permission" },
                     "exit": { "name": "Exit" }
                 }
             });
         }
 
     })
-   
-    $('#btn-add-reject-station').click(function (e) {
-       
-        var li = $('<li />', {
-            text: $('#listStation option:selected').val(),
-            class: 'list-group-item',
-            name: $('#listStation option:selected').attr('name')
-        })
-        
-        $('#listStationApproveAfterReject').append(li)
-    })
-    $('#btn-delete-reject-station').click(function (e) {
-        $('#listStationApproveAfterReject').empty()
-    })
+
+  
 }
 function drawRejectList(current_step) {
     var step = listStep.find(m => m.index == current_step);
@@ -410,9 +464,38 @@ function drawRejectList(current_step) {
         })
     }
 }
+function savePermission() {
+  
+    var permission = []
+    $('#listPermissionSelected tr').each(function (index, value) {
+        var per = ''
+        var dept = ''
+        $(this).find('td').each(function (i,v) {
+            if (i == 0) per = $(this).text()
+            if (i == 1) dept = $(this).text()
+        }); 
+        
+        var obj = {
+            ITEM_COLUMN: per,
+            ITEM_COLUMN_PERMISSION: current_step,
+            DEPT:dept == 'None' ? '' : dept
+        }
+        permission.push(obj)
+    })
+    var tempListStep = [];
+    $.each(listStep, function (index, value) {
+        if (value.index == current_step) {
+            value.permission = permission
+        }
+        tempListStep.push(value)
+
+    })
+    listStep = tempListStep
+    $('#formPermission').modal('hide')
+}
 function saveRejectStep() {
     var reject = []
-   
+
     $('#listStationApproveAfterReject li').each(function (index, value) {
         var obj = {
             FORM_INDEX: $(this).attr('name'),
@@ -423,7 +506,7 @@ function saveRejectStep() {
     var tempListStep = [];
     $.each(listStep, function (index, value) {
         if (value.index == current_step) {
-           value.rejectList = reject
+            value.rejectList = reject
         }
         tempListStep.push(value)
 
@@ -452,7 +535,7 @@ function deleteStation() {
     var tempListUser = []
     $.each(users, function (index, value) {
         if (value.index > current_step) {
-            value.index =  value.index - 1
+            value.index = value.index - 1
         }
         tempListUser.push(value)
     })
