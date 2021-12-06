@@ -79,7 +79,6 @@ namespace UMC_FORM.Models
         [StringLength(50)]
         public string MODEL { get; set; }
 
-        [StringLength(500)]
         public string REQUEST_CONTENT { get; set; }
 
         [Column(TypeName = "date")]

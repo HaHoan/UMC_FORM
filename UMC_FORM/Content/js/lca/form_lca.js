@@ -280,7 +280,7 @@ function OnSuccess(response) {
         }
     }
     else {
-        alert(response.result)
+        alert(response.message)
     }
 }
 function OnFailure(response) {

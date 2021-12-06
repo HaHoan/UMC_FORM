@@ -22,7 +22,6 @@ namespace UMC_FORM.Models
         public string ID_TICKET { get; set; }
 
         [Required]
-        [StringLength(50)]
         public string FILE_NAME { get; set; }
     }
 }
