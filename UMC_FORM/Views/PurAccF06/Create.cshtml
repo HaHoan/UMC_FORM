@@ -20,39 +20,19 @@
     <link href="~/Content/css/styles.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
+
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <style>
-        .modal {
-            position: fixed;
-            z-index: 999;
-            height: 100%;
-            width: 100%;
-            top: 0;
-            background-color: Black;
-            filter: alpha(opacity=60);
-            opacity: 0.6;
-            -moz-opacity: 0.8;
-            display: none;
-        }
-
-        .center {
-            z-index: 1000;
-            margin: 50px auto;
-            padding: 10px;
-            width: 130px;
-            background-color: White;
-            border-radius: 10px;
-            filter: alpha(opacity=100);
-            opacity: 1;
-            -moz-opacity: 1;
-        }
-
-        .centerimg {
-            height: 128px;
-            width: 128px;
-        }
-    </style>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/js/moment.js"></script>
+    <script src="~/Content/js/jquery.simplePagination.js"></script>
+    <script src="~/Content/js/pagination.js"></script>
+    <script src="~/Content/assets/demo/datatables-demo.js"></script>
+    <script src="~/Content/js/bootstrap-typeahead.js"></script>
+    <script src="~/Content/js/mention.js"></script>
+    <script src="~/Content/js/lang.js"></script>
+    <script src="~/Content/js/form_common.js"></script>
+    <script src="~/Content/js/pur/scripts.js"></script>
+    <script src="~/Content/js/pur/form.js"></script>
 </head>
 
 <body class="sb-nav-fixed container-fluid">
@@ -69,337 +49,324 @@
                 }, new { enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken()
-                    <div class="modal-body">
-                        <div>
-                            <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
+                <div class="modal-body">
+                    <div>
+                        <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
 
-                                <i class="fas fa-angle-left font-title text-muted d-inline"></i>
-                                <h5 class="rext-dark d-inline lang text-uppercase" key="create-request">TẠO ĐỀ XUẤT MỚI</h5>
-                            </a>
+                            <i class="fas fa-angle-left font-title text-muted d-inline"></i>
+                            <h5 class="rext-dark d-inline lang text-uppercase" key="create-request">TẠO ĐỀ XUẤT MỚI</h5>
+                        </a>
 
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
                         </div>
-                        <div class="row">
-                            <div class="col-3">
-                            </div>
-                            <div class="col-9">
-                                <h5 class=" rext-dark d-inline text-danger">@ViewBag.message</h5>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="font-weight-bold lang">MNG</label>
-                            </div>
-                            <div class="col-9">
-                                @Html.DropDownList("listMng", null, new { @class = "form-control" })
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="font-weight-bold lang" key="purpose">Mục đích</label>
-                            </div>
-                            <div class="col-9">
-                                <input class="form-control" name="purpose">
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="font-weight-bold lang" key="issus-date">Issus date</label>
-                            </div>
-                            <div class="col-9">
-                                <input class="form-control" value=@DateTime.Now.ToString("yyyy-MM-dd") readonly="readonly">
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="font-weight-bold lang" key="dept">Dept</label>
-                            </div>
-                            <div class="col-9">
-                                @*<select class="form-control" aria-label="Default select example">
-                                        <option selected key="select_dept" class="lang"></option>
-                                        <option value="1">PE_IT</option>
-                                        <option value="2">PE-PE</option>
-                                        <option value="3">GA</option>
-                                        <option value="4">ACC</option>
-                                        <option value="5">PUR</option>
-                                        <option value="6">DM</option>
-                                        <option value="7">LCA</option>
-                                    </select>*@
-                                <input type="text" class="form-control" value="@_session.DEPT" readonly="readonly" />
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="font-weight-bold lang" key="name">Name</label>
-                            </div>
-                            <div class="col-9">
-                                <input type="text" class="form-control" value="@_session.NAME" readonly="readonly">
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="font-weight-bold lang" key="type-supply">Loại Supply *</label>
-                            </div>
-                            <div class="col-9">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-check">
-                                            @*<input class="form-check-input" type="checkbox" value="" id="s1">*@
-                                            @Html.EditorFor(m => m.IS_S1, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S1">S1 Nguyên vật liệu phụ(副資材)</label>
-
-                                        </div>
-                                        <div class="form-check mt-2">
-                                            @Html.EditorFor(m => m.IS_S2, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S2">S2 Vật tư tiêu hao văn phòng (GA)(総務消耗品)</label>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-check">
-                                            @Html.EditorFor(m => m.IS_S3, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S3">
-                                                S3 Vật tư tiêu hao sản xuất (製造消耗品)
-                                            </label>
-                                        </div>
-                                        <div class="form-check mt-2">
-                                            @Html.EditorFor(m => m.IS_S4, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S4">
-                                                S4 Văn phòng phẩm (事務消耗品)
-                                            </label>
-                                        </div>
-
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-check">
-                                            @Html.EditorFor(m => m.IS_S5, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S5">
-                                                S5 Cơ khí (WS)(工作室消耗品)　
-                                            </label>
-                                        </div>
-                                        <div class="form-check mt-2">
-                                            @Html.EditorFor(m => m.IS_S6, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S6">
-                                                S6 Thiết bị (FC-IT)(設備消耗品)
-                                            </label>
-                                        </div>
-
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-check">
-                                            @*<input class="form-check-input" type="checkbox" value="" id="s4">*@
-                                            @Html.EditorFor(m => m.IS_S7, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S7">
-                                                S7 Hàng sửa chữa (補修用部品消耗品)
-
-                                            </label>
-                                        </div>
-                                        <div class="form-check mt-2">
-                                            @* <input class="form-check-input" type="checkbox" value="" id="s4">*@
-                                            @Html.EditorFor(m => m.IS_S8, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S8">
-                                                Tài sản cố định (固定資産)
-                                            </label>
-                                        </div>
-
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-check ">
-                                            @Html.EditorFor(m => m.IS_S9, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S9"> Thiết bị cần hiệu chuẩn(較正する設備)</label>
-                                        </div>
-                                        <div class="form-check mt-2">
-                                            @Html.EditorFor(m => m.IS_S10, new { htmlAttributes = new { @class = "form-check-input" } })
-                                            <label class="form-check-label" for="IS_S10">Khác(その他)</label>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-                        <hr>
-                        <h4 class="text-uppercase lang" key="req-info">THÔNG TIN SẢN PHẨM</h4>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered mt-3">
-                                <tr>
-                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                    <th class="lang" key="table-code" rowspan="2">Code No</th>
-                                    <th class="lang" key="table-item-name" width="300px" rowspan="2">Item name</th>
-                                    <th class="lang" key="table-desc" width="300px" rowspan="2">Description</th>
-                                    <th class="lang" key="table-vendor" rowspan="2">Vendor</th>
-                                    <th class="lang" key="table-unit-price" rowspan="2">Unit_Price</th>
-                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                    <th rowspan="2"><p class="lang" key="table-unit">Unit</p><p class="lang" key="table-unit-detail">(kg • pcs)</p></th>
-                                    <th width="100px" rowspan="2">
-                                        <p class="lang" key="table-amount">Amount</p>
-                                        <select class="form-control" name="EXCHANGE">
-                                            <option selected>VND</option>
-                                            <option>USD</option>
-                                        </select>
-                                    </th>
-                                    <th class="lang" key="table-owner-of-item" width="50px">Owner of Item</th>
-                                    <th class="lang" key="table-cost-center" width="50px">Cost Center</th>
-                                    <th width="50px" rowspan="2">
-                                        （A)→Asset
-                                        （K)→Expense
-                                    </th>
-                                    <th class="lang" key="table-acount" rowspan="2">Account code</th>
-                                    <th class="lang" key="table-asset-no" rowspan="2">Asset No.</th>
-                                </tr>
-                                <tr>
-
-                                    <th class="lang" key="table-owner-of-item-detail" width="50px">Owner of Item</th>
-                                    <th class="lang" key="table-cost-center-detail" width="50px">Cost Center</th>
-
-                                </tr>
-
-                                <tbody id="tableInfo">
-                                    @{
-                                        for (int i = 1; i <= 5; i++)
-                                        {
-                                            <tr class="row-info">
-                                                <td>@(i)</td>
-                                                <td>   <input class="form-input inputDefault" name=@("NO_"+i) /></td>
-                                                <td>  <input class="form-input inputDefault" name=@("ITEM_NAME_"+i) /></td>
-                                                <td>  <input class="form-input inputDefault" name=@("DES_"+i) /></td>
-                                                <td> <input class="form-input inputDefault" name=@("VENDOR_"+i) /></td>
-
-                                                <td>
-                                                    <input type="hidden" name=@("UNIT_PRICE_"+i) id=@("UNIT_PRICE_"+i+"_HIDDEN") />
-                                                    <input id=@("UNIT_PRICE_"+i) class="form-input type_number inputDefault" />
-                                                </td>
-                                                <td> <input class="form-input type_number text-center inputDefault" name=@("QTY_"+i) id=@("QTY_"+i) /></td>
-                                                <td> <input class="form-input inputDefault" name=@("UNIT_"+i) /></td>
-
-                                                <td>
-                                                    <input name=@("AMOUNT_"+i) id=@("AMOUNT_"+i) class="form-input text-right inputDefault" readonly />
-                                                </td>
-
-                                                <td>
-                                                    <div class="form-inline">
-                                                        <input type="radio" name=@("OWNER_OF_ITEM_"+i) value="u" checked>
-                                                        <label for="u">U</label>
-                                                        <input type="radio" name=@("OWNER_OF_ITEM_"+i) value="c" class="ml-2">
-                                                        <label for="c">C</label>
-                                                    </div>
-                                                </td>
-
-                                                <td>
-                                                    <input name=@("COST_CENTER_"+i) id=@("COST_CENTER_"+i) class="form-input inputDefault" readonly="readonly" />
-                                                </td>
-
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-
-                                                <td></td>
-                                            </tr>
-                                        }
-                                    }
-
-                                    <tr class="summary">
-                                        <td colspan="6"><textarea class="form-input" cols="30" rows="2"></textarea></td>
-                                        <td colspan="2" class="lang text-uppercase font-weight-bold" key="table-total">TOTAL</td>
-                                        <td class="font-weight-bold total">0</td>
-                                        <td class="font-weight-bold" colspan="2">（USD or VND）</td>
-                                        <td colspan="3"></td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                            <div></div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-3 lang" key="req-delivery-date">
-                                Request Delivery Date (Ngày yêu cầu giao hàng) :
-                            </div>
-                            <div class="col-9">
-                                @*@Html.EditorFor(m => m.REQUEST_DATE, new { htmlAttributes = new { @class = "form-control", @type = "date" } })*@
-                                <input type="date" class="form-control" name="REQUEST_DATE" />
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-3 lang" key="note">
-                                Remark (Ghi chú):
-                            </div>
-                            <div class="col-9">
-                                @*<textarea rows="3" class="form-control"></textarea>*@
-                                @Html.TextAreaFor(m => m.REMARK, new { @class = "form-control inputDefault", @rows = "3" })
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-3 lang" key="round-robin">Round robin</div>
-                            <div class="col-1">
-                                <div class="form-inline">
-                                    @Html.RadioButtonFor(m => m.IS_ROUND_ROBIN, true)
-                                    <label for="y" class="ml-2 lang" key="yes">Yes</label>
-                                    @Html.RadioButtonFor(m => m.IS_ROUND_ROBIN, false, new { @class = "ml-4", @checked = true })
-                                    <label for="n" class="ml-1 lang" key="no">No</label>
-                                </div>
-                            </div>
-                            @*<div class="col-7">
-                                    <input type="file" id="robinAttach" class="ml-4">
-                                </div>*@
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-3 lang" key="req-expenses-cus">Request expenses to Customer ?客先費用請求あり？　なし？ </div>
-                            <div class="col-1">
-                                <div class="form-inline">
-                                    @*<input type="radio" name="request-expenses" value="y">*@
-                                    @Html.RadioButtonFor(m => m.IS_REQ_CUS, true)
-                                    <label for="y" class="ml-2 lang" key="yes">Yes</label>
-                                    @*<input type="radio" name="request-expenses" value="n" class="ml-4" checked>*@
-                                    @Html.RadioButtonFor(m => m.IS_REQ_CUS, false, new { @class = "ml-4", @checked = true })
-                                    <label for="n" class="ml-1 lang" key="no">No</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-3 lang" key="req-checkout">Có yêu cầu khách hàng thanh toán :</div>
-                            <div class="col-1">
-                                <div class="form-inline">
-                                    @*<input type="radio" name="customer-checkout" value="y">*@
-                                    @Html.RadioButtonFor(m => m.IS_CUS_PAY, true)
-                                    <label for="y" class="ml-2 lang" key="yes">Yes</label>
-                                    @*<input type="radio" name="customer-checkout" value="n" class="ml-4" checked>*@
-                                    @Html.RadioButtonFor(m => m.IS_CUS_PAY, false, new { @class = "ml-4", @checked = true })
-                                    <label for="n" class="ml-1 lang" key="no">No</label>
-
-                                </div>
-                            </div>
-                            <div class="col-7 " id="customer-checkout-info">
-                                Yêu cầu như thế nào ( cho vào đơn giá bán hàng , hay yêu cầu DN …)
-                                <br>
-                                @*<textarea class="form-control" rows="2"></textarea>*@
-                                @Html.TextAreaFor(m => m.CUS_PAY_REMARK, new { @class = "form-control inputDefault", @rows = "2" })
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="form-inline">
-                                @*<p class="font-weight-bold lang" key="attach">File đính kèm</p>*@
-                                <button type="button" class="btn btn-warning font-weight-bold lang" key="attach">**File đính kèm**</button>
-                                <input type="file" name="fileAttach" class="ml-3" multiple>
-                            </div>
-                        </div>
-                        <div id="contextMenu" class="dropdown clearfix">
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
-                                style="display:block;position:static;margin-bottom:5px; color:red">
-                                <li>
-                                    <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                       class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
-                                </li>
-
-                            </ul>
+                        <div class="col-9">
+                            <h5 class=" rext-dark d-inline text-danger">@ViewBag.message</h5>
                         </div>
                     </div>
+                    <hr>
+                    @if (ViewBag.listManager != null)
+                    {
+                        <br />
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                            </div>
+                            <div class="col-9">
+                                <select class="custom-select" id="deptManager" name="deptManager">
+                                    @foreach (var mng in ViewBag.listManager)
+                                    {
+                                        <option value="@mng.CODE">@mng.NAME</option>
+
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    }
+                    <br />
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="font-weight-bold lang" key="purpose">Mục đích</label>
+                        </div>
+                        <div class="col-9">
+                            <input class="form-control" name="purpose">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="font-weight-bold lang" key="issus-date">Issus date</label>
+                        </div>
+                        <div class="col-9">
+                            <input class="form-control" value=@DateTime.Now.ToString("yyyy-MM-dd") readonly="readonly">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="font-weight-bold lang" key="dept">Dept</label>
+                        </div>
+                        <div class="col-9">
+                            <input type="text" class="form-control" value="@_session.DEPT" readonly="readonly" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="font-weight-bold lang" key="name">Name</label>
+                        </div>
+                        <div class="col-9">
+                            <input type="text" class="form-control" value="@_session.NAME" readonly="readonly">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="font-weight-bold lang" key="type-supply">Loại Supply *</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="s1">
+                                        <label class="form-check-label" for="s1">S1 Nguyên vật liệu phụ(副資材)</label>
+
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="s2">
+                                        <label class="form-check-label" for="s2">S2 Vật tư tiêu hao văn phòng (GA)(総務消耗品)</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="s3">
+                                        <label class="form-check-label" for="s3">
+                                            S3 Vật tư tiêu hao sản xuất (製造消耗品)
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="s4">
+                                        <label class="form-check-label" for="s4">
+                                            S4 Văn phòng phẩm (事務消耗品)
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="s5">
+                                        <label class="form-check-label" for="s5">
+                                            S5 Cơ khí (WS)(工作室消耗品)　
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="s6">
+                                        <label class="form-check-label" for="s6">
+                                            S6 Thiết bị (FC-IT)(設備消耗品)
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="s7">
+                                        <label class="form-check-label" for="s7">
+                                            S7 Hàng sửa chữa (補修用部品消耗品)
+
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="s8">
+                                        <label class="form-check-label" for="s8">
+                                            Tài sản cố định (固定資産)
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col">
+                                    <div class="form-check ">
+                                        <input class="form-check-input" type="checkbox" value="" id="s9">
+                                        <label class="form-check-label" for="s9"> Thiết bị cần hiệu chuẩn(較正する設備)</label>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="s10">
+                                        <label class="form-check-label" for="s10">Khác(その他)</label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <hr>
+                    <h4 class="text-uppercase lang" key="req-info">THÔNG TIN SẢN PHẨM</h4>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered mt-3">
+                            <tr>
+                                <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                <th class="lang" key="table-code" rowspan="2">Code No</th>
+                                <th class="lang" key="table-item-name" width="300px" rowspan="2">Item name</th>
+                                <th class="lang" key="table-desc" width="300px" rowspan="2">Description</th>
+                                <th class="lang" key="table-vendor" rowspan="2">Vendor</th>
+                                <th class="lang" key="table-unit-price" rowspan="2">Unit_Price</th>
+                                <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                <th rowspan="2"><p class="lang" key="table-unit">Unit</p><p class="lang" key="table-unit-detail">(kg • pcs)</p></th>
+                                <th width="100px" rowspan="2">
+                                    <p class="lang" key="table-amount">Amount</p>
+                                    <select class="form-control" name="EXCHANGE">
+                                        <option selected>VND</option>
+                                        <option>USD</option>
+                                    </select>
+                                </th>
+                                <th class="lang" key="table-owner-of-item" width="50px">Owner of Item</th>
+                                <th class="lang" key="table-cost-center" width="50px">Cost Center</th>
+                                <th width="50px" rowspan="2">
+                                    （A)→Asset
+                                    （K)→Expense
+                                </th>
+                                <th class="lang" key="table-acount" rowspan="2">Account code</th>
+                                <th class="lang" key="table-asset-no" rowspan="2">Asset No.</th>
+                            </tr>
+                            <tr>
+
+                                <th class="lang" key="table-owner-of-item-detail" width="50px">Owner of Item</th>
+                                <th class="lang" key="table-cost-center-detail" width="50px">Cost Center</th>
+
+                            </tr>
+
+                            <tbody id="tableInfo">
+                                @{
+                                    for (int i = 1; i <= 5; i++)
+                                    {
+                                        <tr class="row-info">
+                                            <td>@(i)</td>
+                                            <td>   <input class="form-input inputDefault" name=@("NO_"+i) /></td>
+                                            <td>  <input class="form-input inputDefault" name=@("ITEM_NAME_"+i) /></td>
+                                            <td>  <input class="form-input inputDefault" name=@("DES_"+i) /></td>
+                                            <td> <input class="form-input inputDefault" name=@("VENDOR_"+i) /></td>
+
+                                            <td>
+                                                <input type="hidden" name=@("UNIT_PRICE_"+i) id=@("UNIT_PRICE_"+i+"_HIDDEN") />
+                                                <input id=@("UNIT_PRICE_"+i) class="form-input type_number inputDefault" />
+                                            </td>
+                                            <td> <input class="form-input type_number text-center inputDefault" name=@("QTY_"+i) id=@("QTY_"+i) /></td>
+                                            <td> <input class="form-input inputDefault" name=@("UNIT_"+i) /></td>
+
+                                            <td>
+                                                <input name=@("AMOUNT_"+i) id=@("AMOUNT_"+i) class="form-input text-right inputDefault" readonly />
+                                            </td>
+
+                                            <td>
+                                                <div class="form-inline">
+                                                    <input type="radio" name=@("OWNER_OF_ITEM_"+i) value="u" checked>
+                                                    <label for="u">U</label>
+                                                    <input type="radio" name=@("OWNER_OF_ITEM_"+i) value="c" class="ml-2">
+                                                    <label for="c">C</label>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <input name=@("COST_CENTER_"+i) id=@("COST_CENTER_"+i) class="form-input inputDefault" readonly="readonly" />
+                                            </td>
+
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+
+                                            <td></td>
+                                        </tr>
+                                    }
+                                }
+
+                                <tr class="summary">
+                                    <td colspan="6"><textarea class="form-input" cols="30" rows="2"></textarea></td>
+                                    <td colspan="2" class="lang text-uppercase font-weight-bold" key="table-total">TOTAL</td>
+                                    <td class="font-weight-bold total">0</td>
+                                    <td class="font-weight-bold" colspan="2">（USD or VND）</td>
+                                    <td colspan="3"></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <div></div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-3 lang" key="req-delivery-date">
+                            Request Delivery Date (Ngày yêu cầu giao hàng) :
+                        </div>
+                        <div class="col-9">
+                            <input type="date" class="form-control" name="REQUEST_DATE" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-3 lang" key="note">
+                            Remark (Ghi chú):
+                        </div>
+                        <div class="col-9">
+                            @Html.TextAreaFor(m => m.REMARK, new { @class = "form-control inputDefault", @rows = "3" })
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-3 lang" key="round-robin">Round robin</div>
+                        <div class="col-1">
+                            <div class="form-inline">
+                                @Html.RadioButtonFor(m => m.IS_ROUND_ROBIN, true)
+                                <label for="y" class="ml-2 lang" key="yes">Yes</label>
+                                @Html.RadioButtonFor(m => m.IS_ROUND_ROBIN, false, new { @class = "ml-4", @checked = true })
+                                <label for="n" class="ml-1 lang" key="no">No</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-3 lang" key="req-expenses-cus">Request expenses to Customer ?客先費用請求あり？　なし？ </div>
+                        <div class="col-1">
+                            <div class="form-inline">
+                                @Html.RadioButtonFor(m => m.IS_REQ_CUS, true)
+                                <label for="y" class="ml-2 lang" key="yes">Yes</label>
+                                @Html.RadioButtonFor(m => m.IS_REQ_CUS, false, new { @class = "ml-4", @checked = true })
+                                <label for="n" class="ml-1 lang" key="no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-3 lang" key="req-checkout">Có yêu cầu khách hàng thanh toán :</div>
+                        <div class="col-1">
+                            <div class="form-inline">
+                                @Html.RadioButtonFor(m => m.IS_CUS_PAY, true)
+                                <label for="y" class="ml-2 lang" key="yes">Yes</label>
+                                @Html.RadioButtonFor(m => m.IS_CUS_PAY, false, new { @class = "ml-4", @checked = true })
+                                <label for="n" class="ml-1 lang" key="no">No</label>
+
+                            </div>
+                        </div>
+                        <div class="col-7 " id="customer-checkout-info">
+                            Yêu cầu như thế nào ( cho vào đơn giá bán hàng , hay yêu cầu DN …)
+                            <br>
+                            @Html.TextAreaFor(m => m.CUS_PAY_REMARK, new { @class = "form-control inputDefault", @rows = "2" })
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="form-inline">
+                            <button type="button" class="btn btn-warning font-weight-bold lang" key="attach">**File đính kèm**</button>
+                            <input type="file" name="fileAttach" class="ml-3" multiple>
+                        </div>
+                    </div>
+                    <div id="contextMenu" class="dropdown clearfix">
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
+                            style="display:block;position:static;margin-bottom:5px; color:red">
+                            <li>
+                                <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
+                                   class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
 
                     <div class="row">
                         <div class="col-3"></div>
@@ -437,19 +404,7 @@
             alert("Error occured.");
         }
     </script>
-    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
-    <script src="~/Content/js/moment.js"></script>
-    <script src="~/Content/js/jquery.simplePagination.js"></script>
-    <script src="~/Content/js/pagination.js"></script>
-
-    <script src="~/Content/assets/demo/datatables-demo.js"></script>
-    <script src="~/Content/js/bootstrap-typeahead.js"></script>
-    <script src="~/Content/js/mention.js"></script>
-    <script src="~/Content/js/scripts.js"></script>
-    <script src="~/Content/js/lang.js"></script>
-    <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/form.js"></script>
+   
 </body>
 
 </html>

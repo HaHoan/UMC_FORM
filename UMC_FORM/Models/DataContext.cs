@@ -4,6 +4,7 @@ namespace UMC_FORM.Models
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
+    using UMC_FORM.Models.PUR;
 
     public partial class DataContext : DbContext
     {
@@ -27,6 +28,7 @@ namespace UMC_FORM.Models
         public virtual DbSet<LCA_PERMISSION> LCA_PERMISSION { get; set; }
         public virtual DbSet<LCA_QUOTE> LCA_QUOTE { get; set; }
         public virtual DbSet<PR_ACC_F06> PR_ACC_F06 { get; set; }
+        public virtual DbSet<PR_ACC_F06_QUOTE> PR_ACC_F06_QUOTE { get; set; }
         public virtual DbSet<Form_Summary> Form_Summary { get; set; }
         public virtual DbSet<Form_Log> Form_Logs { get; set; }
 
