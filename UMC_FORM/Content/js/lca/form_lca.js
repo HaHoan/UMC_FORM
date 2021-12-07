@@ -284,7 +284,7 @@ function OnSuccess(response) {
     }
 }
 function OnFailure(response) {
-    alert("Error occured.")
+    alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?")
 }
 function updateQuote() {
     try {

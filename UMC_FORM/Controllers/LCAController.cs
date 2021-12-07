@@ -62,7 +62,7 @@ namespace UMC_FORM.Controllers
             var oldProcess = db.Form_Procedures.Where(m => m.TICKET == ticket).ToList();
             foreach (var pro in process)
             {
-                if(pro.FORM_INDEX == 0)
+                if (pro.FORM_INDEX == 0)
                 {
                     var proceduce = oldProcess.Where(m => m.TICKET == ticket && m.FORM_INDEX == 0).FirstOrDefault();
                     if (proceduce != null)
@@ -189,6 +189,11 @@ namespace UMC_FORM.Controllers
                     {
                         try
                         {
+                            string validate = validateTicket(ticket);
+                            if(!string.IsNullOrEmpty(validate))
+                            {
+                                return Json(new { result = STATUS.ERROR, message = validate }, JsonRequestBehavior.AllowGet);
+                            }
                             _sess = Session["user"] as Form_User;
                             ticket.DEPT = _sess.DEPT;
                             ticket.SUBMIT_USER = _sess.CODE;
@@ -227,7 +232,13 @@ namespace UMC_FORM.Controllers
                             }
 
                             #endregion
-                            AddQuotes(quotes, db, ticket, ticket);
+                            var saveQuote = AddQuotes(quotes, db, ticket, ticket);
+                            if (saveQuote.Item1 == STATUS.ERROR)
+                            {
+                                transaction.Rollback();
+
+                                return Json(new { result = STATUS.ERROR, message = saveQuote.Item2 }, JsonRequestBehavior.AllowGet);
+                            }
                             #region SUMARY
                             Form_Summary summary = new Form_Summary()
                             {
@@ -269,7 +280,7 @@ namespace UMC_FORM.Controllers
 
                             var error = ModelState.Values.Where(m => m.Errors.Count > 0).ToList();
                             ModelState.AddModelError("Error", e.Message.ToString());
-                            return Json(new { result = STATUS.ERROR,message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -280,7 +291,7 @@ namespace UMC_FORM.Controllers
             {
 
                 ModelState.AddModelError("Error", e.Message.ToString());
-                return Json(new { result = STATUS.ERROR,  message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
         }
@@ -337,7 +348,7 @@ namespace UMC_FORM.Controllers
 
                     }
                     var isEditQuote = listPermission.Where(m => m.DEPT == _sess.DEPT && m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault();
-                    if (isEditQuote != null )
+                    if (isEditQuote != null)
                     {
                         modelDetail.SUBMITS.Add(SUBMIT.EDIT_QUOTE);
 
@@ -383,10 +394,10 @@ namespace UMC_FORM.Controllers
 
                         if (status == STATUS.ACCEPT)
                         {
-                            string result = Accept(formDb, db, infoTicket, quotes);
-                            if (result == STATUS.ERROR)
+                            var result = Accept(formDb, db, infoTicket, quotes);
+                            if (result.Item1 == STATUS.ERROR)
                             {
-                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                                return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
@@ -400,10 +411,10 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.REJECT)
                         {
-                            string result = Reject(formDb, db,infoTicket);
-                            if (result == STATUS.ERROR)
+                            var result = Reject(formDb, db, infoTicket);
+                            if (result.Item1 == STATUS.ERROR)
                             {
-                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                                return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
@@ -417,10 +428,10 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.EDIT_QUOTE)
                         {
-                            string result = EditQuote(formDb, db, infoTicket, quotes);
-                            if (result == STATUS.ERROR)
+                            var result = EditQuote(formDb, db, infoTicket, quotes);
+                            if (result.Item1 == STATUS.ERROR)
                             {
-                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                                return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
@@ -434,7 +445,7 @@ namespace UMC_FORM.Controllers
                         }
                         else
                         {
-                            return Json(new { result = STATUS.ERROR}, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR, message = "Không tồn tại trạng thái này" }, JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -444,11 +455,11 @@ namespace UMC_FORM.Controllers
             {
 
                 ModelState.AddModelError("Error", e.Message.ToString());
-                return Json(new { result = STATUS.ERROR ,message = e.Message.ToString()}, JsonRequestBehavior.AllowGet);
+                return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
 
-        private string Reject(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket)
+        private Tuple<string, string> Reject(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -466,7 +477,7 @@ namespace UMC_FORM.Controllers
                     if (process == null)
                     {
                         ModelState.AddModelError("Error", "Error System!!!");
-                        return STATUS.ERROR;
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại reject process!");
                     }
 
                     form.PROCEDURE_INDEX = process.RETURN_INDEX is int returnIndex ? returnIndex - 1 : 0;
@@ -475,7 +486,12 @@ namespace UMC_FORM.Controllers
                     form.ID = Guid.NewGuid().ToString();
                     form.SUBMIT_USER = _sess.CODE;
                     form.COMMENT = infoTicket.COMMENT;
-                    AddQuotes("", db, formDb, form);
+                    var saveQuote = AddQuotes("", db, formDb, form);
+                    if (saveQuote.Item1 == STATUS.ERROR)
+                    {
+                        transaction.Rollback();
+                        return saveQuote;
+                    }
                     db.LCA_FORM_01.Add(form);
 
                     summary.IS_REJECT = true;
@@ -490,20 +506,20 @@ namespace UMC_FORM.Controllers
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return STATUS.ERROR;
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
                     };
-                    return STATUS.SUCCESS;
+                    return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
                     ModelState.AddModelError("Error", e.Message.ToString());
-                    return STATUS.ERROR;
+                    return Tuple.Create<string, string>(STATUS.ERROR, e.Message.ToString());
                 }
 
             }
         }
-        private void AddQuotes(string quotes, DataContext db, LCA_FORM_01 prevTicket, LCA_FORM_01 currentTicket)
+        private Tuple<string, string> AddQuotes(string quotes, DataContext db, LCA_FORM_01 prevTicket, LCA_FORM_01 currentTicket)
         {
             try
             {
@@ -520,6 +536,10 @@ namespace UMC_FORM.Controllers
                 {
                     lcaQuotes = JsonConvert.DeserializeObject<List<LCA_QUOTE>>(quotes);
                 }
+                if (lcaQuotes == null || lcaQuotes.Count == 0)
+                {
+                    return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại thông tin báo giá");
+                }
                 foreach (var quote in lcaQuotes)
                 {
                     var quoteDb = new LCA_QUOTE
@@ -535,15 +555,18 @@ namespace UMC_FORM.Controllers
                     };
                     db.LCA_QUOTE.Add(quoteDb);
                 }
+                db.SaveChanges();
+
+                return Tuple.Create<string, string>(STATUS.SUCCESS, "");
             }
             catch (Exception e)
             {
-                Console.Write(e.ToString());
+                return Tuple.Create<string, string>(STATUS.ERROR, e.Message.ToString());
             }
 
 
         }
-        private string Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
+        private Tuple<string, string> Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -572,7 +595,7 @@ namespace UMC_FORM.Controllers
                         }
                         else
                         {
-                            return STATUS.ERROR;
+                            return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại form reject process");
                         }
 
 
@@ -647,10 +670,15 @@ namespace UMC_FORM.Controllers
                         form.CUSTOMER = infoTicket.CUSTOMER;
                         form.MODEL = infoTicket.MODEL;
                         form.REQUEST_CONTENT = infoTicket.REQUEST_CONTENT;
-                        
+
                     }
                     #region Quote
-                    AddQuotes(quotes, db, infoTicket, form);
+                    var saveQuote = AddQuotes(quotes, db, infoTicket, form);
+                    if (saveQuote.Item1 == STATUS.ERROR)
+                    {
+                        transaction.Rollback();
+                        return saveQuote;
+                    }
                     #endregion
                     #region Files
                     HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
@@ -700,27 +728,27 @@ namespace UMC_FORM.Controllers
                         {
                             transaction.Rollback();
                             ModelState.AddModelError("Error", "Bạn không thể thay đổi thành chi trả theo " + form.PAYER + " được!");
-                            return STATUS.ERROR;
+                            return Tuple.Create<string, string>(STATUS.ERROR, "Bạn không thể thay đổi thành chi trả theo " + form.PAYER + " được!");
 
                         }
 
                     }
                     db.SaveChanges();
                     transaction.Commit();
-                    
+
                     if (!sendMail(summary, STATUS.ACCEPT))
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return STATUS.ERROR;
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
                     };
-                    return STATUS.SUCCESS;
+                    return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
                     ModelState.AddModelError("Error", e.Message.ToString());
-                    return STATUS.ERROR;
+                    return Tuple.Create<string, string>(STATUS.ERROR, e.Message.ToString());
                 }
 
             }
@@ -750,7 +778,7 @@ namespace UMC_FORM.Controllers
 
 
         }
-        private string EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
+        private Tuple<string, string> EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -790,15 +818,15 @@ namespace UMC_FORM.Controllers
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return STATUS.ERROR;
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
                     };
-                    return STATUS.SUCCESS;
+                    return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
                     ModelState.AddModelError("Error", e.Message.ToString());
-                    return STATUS.ERROR;
+                    return Tuple.Create<string, string>(STATUS.ERROR, e.Message.ToString());
                 }
 
             }
@@ -1045,6 +1073,25 @@ namespace UMC_FORM.Controllers
             return Json(new { result = STATUS.SUCCESS }, JsonRequestBehavior.AllowGet);
         }
 
-
+        private string validateTicket(LCA_FORM_01 ticket)
+        {
+            if (string.IsNullOrEmpty(ticket.PAYER))
+            {
+                return "Cần chọn một hình thức thanh toán";
+            }
+            if (string.IsNullOrEmpty(ticket.PURPOSE))
+            {
+                return "Cần điền vào ô mục đích";
+            }
+            if (string.IsNullOrEmpty(ticket.REQUEST_TARGET))
+            {
+                return "Cần chọn ít nhất một mục đích yêu cầu";
+            }
+            if (string.IsNullOrEmpty(ticket.REQUEST_CONTENT))
+            {
+                return "Cần điền nội dung yêu cầu";
+            }
+            return "";
+        }
     }
 }
