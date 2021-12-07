@@ -84,7 +84,7 @@
     "reaccept": "Re-accept",
     "need_enter_english": "Please add comment by English or Japanese",
     "dept_manager": "Dept Manager",
-    "edit_quote": "Quote Edit",
+    "edit_quote": "Save Changes",
     "follow-request": "Following",
     "title_request": "Title",
     "target-date": "Ngày Mong Muốn",
@@ -269,7 +269,7 @@
     "daily": "日",
     "need_enter_english": "Please add comment by English or Japanese",
     "dept_manager": "部長",
-    "edit_quote": "Quote Edit",
+    "edit_quote": "Save Changes",
     "follow-request": "Following",
     "title_request": "Title",
     "form_bieu": "Form List"
