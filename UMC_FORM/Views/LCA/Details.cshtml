@@ -45,7 +45,7 @@
                         <hr>
                         @Html.ValidationMessage("Error")
 
-                       
+
                         <input id="status" name="status" type="hidden" />
                         if (Model.SUBMITS.Contains(SUBMIT.RE_APPROVE))
                         {
@@ -154,10 +154,10 @@
                                                                     <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" /> </td>
                                                                 }
 
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.FormatPrice()" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.FormatPrice()" readonly />  </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.FormatPrice()" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.FormatPrice()" readonly /></td>
                                                             </tr>
                                                             i++;
                                                         }
@@ -277,12 +277,15 @@
                                                         {
                                                             <tr class="row-info">
                                                                 <td>@(i)</td>
-                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
+                                                                <td>
+                                                                    @quote.REQUEST_ITEM
+                                                                    <input class="form-input inputDefault bg-white" type="hidden" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly />
+                                                                </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white @(required)" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white " id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly/> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
+                                                                <td><input class="form-input type_number inputDefault bg-white @(required)" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.FormatPrice()" /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.FormatPrice()" readonly />  </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white " id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.FormatPrice()" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.FormatPrice()" readonly /></td>
                                                             </tr>
                                                             i++;
                                                         }
@@ -350,16 +353,21 @@
                                                 <tbody id="tableInfo">
                                                     @{
                                                         var i = 1;
+
                                                         foreach (var quote in Model.TICKET.LCA_QUOTEs)
                                                         {
+
                                                             <tr class="row-info">
                                                                 <td>@(i)</td>
-                                                                <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly /></td>
+                                                                <td>
+                                                                    <input class="form-input inputDefault bg-white" type="hidden" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" readonly />
+                                                                    @quote.REQUEST_ITEM
+                                                                </td>
                                                                 <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.ToString("#,##0")" readonly />  </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.ToString("#,##0")" readonly /> </td>
-                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.ToString("#,##0")" readonly /></td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_LCA_" + i) value="@quote.LCA_UNIT_PRICE.FormatPrice()" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_LCA_" + i) value="@quote.LCA_TOTAL_COST.FormatPrice()" readonly />  </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("UNIT_PRICE_CUSTOMER_" + i) value="@quote.CUSTOMER_UNIT_PRICE.FormatPrice()" readonly /> </td>
+                                                                <td><input class="form-input type_number inputDefault bg-white" id=@("TOTAL_CUSTOMER_" + i) value="@quote.CUSTOMER_TOTAL_COST.FormatPrice()" readonly /></td>
                                                             </tr>
                                                             i++;
                                                         }

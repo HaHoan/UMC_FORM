@@ -271,9 +271,13 @@ namespace UMC_FORM.Controllers
                         }
                         catch (Exception e)
                         {
+
                             transaction.Rollback();
+
+                            var error = ModelState.Values.Where(m => m.Errors.Count > 0).ToList();
                             ModelState.AddModelError("Error", e.Message.ToString());
-                            return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
+
+                            return Json(new { result = STATUS.ERROR,message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -284,7 +288,8 @@ namespace UMC_FORM.Controllers
             {
 
                 ModelState.AddModelError("Error", e.Message.ToString());
-                return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
+
+                return Json(new { result = STATUS.ERROR,  message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
         }
@@ -297,6 +302,8 @@ namespace UMC_FORM.Controllers
                 {
                     return HttpNotFound();
                 }
+                double number = 1.00;
+                var str = number.FormatPrice();
                 using (var db = new DataContext())
                 {
                     var modelDetail = new LCADetailModel();
@@ -486,7 +493,7 @@ namespace UMC_FORM.Controllers
                         }
                         else
                         {
-                            return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR}, JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -496,7 +503,7 @@ namespace UMC_FORM.Controllers
             {
 
                 ModelState.AddModelError("Error", e.Message.ToString());
-                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = STATUS.ERROR ,message = e.Message.ToString()}, JsonRequestBehavior.AllowGet);
             }
         }
 
