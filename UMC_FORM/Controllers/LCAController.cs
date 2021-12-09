@@ -264,7 +264,7 @@ namespace UMC_FORM.Controllers
                             if (saveFile.Item1 == STATUS.ERROR)
                             {
                                 transaction.Rollback();
-                                return  Json(new { result = STATUS.ERROR, message = saveFile.Item2 }, JsonRequestBehavior.AllowGet); ;
+                                return Json(new { result = STATUS.ERROR, message = saveFile.Item2 }, JsonRequestBehavior.AllowGet); ;
                             }
                             #endregion
                             var saveQuote = AddQuotes(quotes, db, ticket, ticket);
@@ -461,7 +461,7 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.EDIT_QUOTE)
                         {
-                            var result = EditQuote(formDb, db, infoTicket, quotes,listFiles);
+                            var result = EditQuote(formDb, db, infoTicket, quotes, listFiles);
                             if (result.Item1 == STATUS.ERROR)
                             {
                                 return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
@@ -750,7 +750,7 @@ namespace UMC_FORM.Controllers
                     #endregion
                     #region Files
                     var saveFile = AddFilesToForm(listFiles, form, db);
-                    if(saveFile.Item1 == STATUS.ERROR)
+                    if (saveFile.Item1 == STATUS.ERROR)
                     {
                         transaction.Rollback();
                         return saveFile;
@@ -832,7 +832,7 @@ namespace UMC_FORM.Controllers
 
 
         }
-        private Tuple<string, string> EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes,string listFiles)
+        private Tuple<string, string> EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -946,7 +946,8 @@ namespace UMC_FORM.Controllers
                     {
                         var userCreate = UserRepository.GetUser(summary.CREATE_USER);
                         userMails.Add(userCreate.EMAIL);
-                        dear = $"Dear {userCreate.SHORT_NAME} san !";
+                        var name = string.IsNullOrEmpty(userCreate.SHORT_NAME) ? userCreate.NAME : userCreate.NAME;
+                        dear = $"Dear {name} san !";
                     }
                     else
                     {
@@ -957,7 +958,8 @@ namespace UMC_FORM.Controllers
                         if (userMails.Count == 1)
                         {
                             var userApproval = db.Form_User.Where(m => m.CODE == stations.FirstOrDefault()).FirstOrDefault();
-                            dear = $"Dear {userApproval.SHORT_NAME} san !";
+                            var name = string.IsNullOrEmpty(userApproval.SHORT_NAME) ? userApproval.NAME : userApproval.NAME;
+                            dear = $"Dear {name} san !";
                         }
                     }
 

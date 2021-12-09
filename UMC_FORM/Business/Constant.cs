@@ -18,7 +18,7 @@ namespace UMC_FORM.Business
         public static string GD = "YOKOUCHI";
         //public static readonly string MAIL = "quyetpv@umcvn.com";
         //public static readonly string PASS = "Quyet@123";
-        public static readonly string SUBJECT = "REQUEST ONLINE APPROVAL";
+        public static readonly string SUBJECT = "(SYSTEM TESTING) REQUEST ONLINE APPROVAL";
         public static readonly string BODY = @"
                                                 <h3>Dear Mr!</h3>
                                                 <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
