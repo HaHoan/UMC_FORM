@@ -36,13 +36,13 @@ function validate(s) {
     return s.match(rgx);
 }
 function onlyNumber(e) {
-    
+
     if (validate(e.key)) {
         return true
     } else {
         return false;
     }
-   
+
 }
 
 function convertCommas(nStr) {
@@ -67,22 +67,115 @@ function getTotalAmount() {
 }
 
 $("#fileAttach").change(function () {
-    var file = $(this)[0].files;
-    if (file) {
-        $('.files').empty()
-        for (var i = 0; i < file.length; i++) {
-            var a = $('<a/>', {
-                class: 'badge badge-danger bg-success',
-                target: '_blank',
-                text:file[i].name
-            })
-            var br = $('<br/>')
-            $('.files').append(a)
-            $('.files').append(br)
+
+    var formdata = new FormData(); //FormData object
+    var fileInput = $(this)[0].files;
+    //Iterating through each files selected in fileInput
+    for (i = 0; i < fileInput.length; i++) {
+        //Appending each file to FormData object
+        formdata.append(fileInput[i].name, fileInput[i]);
+    }
+    //Creating an XMLHttpRequest and sending
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/LCA/UploadFiles');
+    xhr.send(formdata);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText)
+            if (response.result == 'success' && response.message != null) {
+                var listFilesStr = $('#listFiles').val()
+                var listFiles = []
+                if (listFilesStr != '') {
+                     listFiles = JSON.parse(listFilesStr)
+                } 
+                for (var i = 0; i < response.message.length; i++) {
+                    listFiles.push(response.message[i])
+                    var div = $('<div />', {
+                        class: 'badge badge-danger bg-light p-2',
+                        name: 'TEXT' + response.message[i].FILE_URL
+
+                    })
+                    var br = $('<br />', {
+                        name: 'TEXT' + response.message[i].FILE_URL
+                    })
+                    var a = $('<a/>', {
+                        class: 'font-weight-bold text-primary',
+                        style: 'font-weight:900;font-size:15px; text-decoration: underline;',
+                        target: '_blank',
+                        text: response.message[i].FILE_NAME,
+                        href: response.message[i].FILE_URL
+                    })
+                    var button = $('<button />', {
+                        class: 'btn-image border-0 ',
+                        name: response.message[i].FILE_URL,
+                        click: function (e) {
+                            e.preventDefault();
+                            deleteFiles($(this).attr('name'))
+                        }
+
+                    })
+                    var i = $('<i />', {
+                        class: 'fas fa-times ml-5 text-dark',
+                        style: 'font-size:15px',
+
+                    })
+                    button.append(i)
+                    div.append(a)
+                    div.append(button)
+                    div.append($('<br/>'))
+                   
+                    $('.files').append(div)
+                    $('.files').append(br)
+                   
+                }
+                $('#listFiles').val(JSON.stringify(listFiles))
+                $('#fileAttach').val('')
+                $('#fileAttach').val('')
+            }
+
         }
     }
 })
+function deleteFiles(name) {
+    try {
+        $.ajax({
+            url: "/LCA/DeleteFiles",
+            type: "Post",
+            data: {
+                deleteFile: name
+            },
+            success: function (response) {
+                if (response.result == 'success') {
+                    $('div[name="TEXT' + name + '"').remove()
+                    $('br[name="TEXT' + name + '"').remove()
+                    var listFilesStr = $('#listFiles').val()
+                    var listFiles = []
+                    if (listFilesStr != '') {
+                        listFiles = JSON.parse(listFilesStr)
+                    } 
+                    var temp = [];
+                    $.each(listFiles, function (index, value) {
+                        if (value.FILE_URL != name) {
+                            temp.push(value)
+                        }
+                    });
+                  
+                    listFiles = temp;
+                    $('#listFiles').val(JSON.stringify(listFiles))
+                } else {
+                    alert(response.message)
+                }
 
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    } catch (e) {
+        alert(e)
+    }
+
+}
 function checkUnicode(text) {
     regex = /^[a-zA-Z0-9_ ぁ-んァ-ン一-龥\.０-９@\n]+$/; // Chỉ chấp nhận ký tự alphabet thường hoặc ký tự hoa
     if (regex.test(text)) { // true nếu text chỉ chứa ký tự alphabet thường hoặc hoa, false trong trường hợp còn lại. 
