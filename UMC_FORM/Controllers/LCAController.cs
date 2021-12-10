@@ -17,7 +17,7 @@ using UMC_FORM.Models.LCA;
 namespace UMC_FORM.Controllers
 {
     [CustomAuthFilter]
-    [CustomAuthorize("CanEdit", "ReadOnly")]
+    [CustomAuthorize("Normal", "ReadOnly")]
     [NoCache]
     public class LCAController : Controller
     {
