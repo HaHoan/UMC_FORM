@@ -13,7 +13,6 @@ namespace UMC_FORM.Models
         public int NO { get; set; }
 
         [Required]
-        [StringLength(50)]
         public string REQUEST_ITEM { get; set; }
 
         public int QUANTITY { get; set; }

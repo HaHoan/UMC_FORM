@@ -79,7 +79,7 @@ namespace UMC_FORM.Business
                     Credentials = new NetworkCredential(maiAccount, maiPass)
                 };
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                mailMessage.From = new MailAddress(maiAccount);
+                mailMessage.From = new MailAddress(maiAccount,"System Testing");
                 foreach (var item in to)
                 {
                     mailMessage.To.Add(item);

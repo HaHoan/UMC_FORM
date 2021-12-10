@@ -174,13 +174,60 @@ namespace UMC_FORM.Controllers
 
 
         }
+        public JsonResult DeleteFiles(string deleteFile)
+        {
+            try
+            {
+                string fullPath = Request.MapPath("~" + deleteFile);
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+                return Json(new { result = STATUS.SUCCESS, }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+        public JsonResult UploadFiles()
+        {
+            try
+            {
+                HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
+                var listFiles = new List<LCA_FILE>();
+                for (int file = 0; file < files.Count; file++)
+                {
+                    HttpPostedFile filedata = files[file];
+                    string fileName = filedata.FileName;
+                    var lcaFile = new LCA_FILE();
+                    lcaFile.FILE_URL = string.Format("/UploadedFiles/{0}-{1}", DateTime.Now.ToString("yyyyMMddHHmmss"), fileName);
+                    lcaFile.FILE_NAME = fileName;
+                    string fullPath = Server.MapPath(lcaFile.FILE_URL);
+                    if (fileName != "")
+                    {
+                        filedata.SaveAs(fullPath);
+                        listFiles.Add(lcaFile);
+                    }
+                }
+                return Json(new { result = STATUS.SUCCESS, message = listFiles }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
+
+            }
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Create(LCA_FORM_01 ticket, string quotes, string deptManager)
+        public JsonResult Create(LCA_FORM_01 ticket, string quotes, string deptManager, string listFiles)
         {
             if (ticket == null)
             {
-                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = STATUS.ERROR, message = "Ticket không có dữ liệu" }, JsonRequestBehavior.AllowGet);
             }
             try
             {
@@ -191,6 +238,12 @@ namespace UMC_FORM.Controllers
                     {
                         try
                         {
+
+                            string validate = validateTicket(ticket);
+                            if (!string.IsNullOrEmpty(validate))
+                            {
+                                return Json(new { result = STATUS.ERROR, message = validate }, JsonRequestBehavior.AllowGet);
+                            }
                             _sess = Session["user"] as Form_User;
                             ticket.DEPT = _sess.DEPT;
                             ticket.SUBMIT_USER = _sess.CODE;
@@ -217,24 +270,17 @@ namespace UMC_FORM.Controllers
                             HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
                             for (int file = 0; file < files.Count; file++)
                             {
-                                HttpPostedFile filedata = files[file];
-                                string fileName = filedata.FileName;
-                                var lcaFile = new LCA_FILE();
-                                lcaFile.TICKET = ticket.TICKET;
-                                lcaFile.ID_TICKET = ticket.ID;
-                                lcaFile.FILE_URL = string.Format("/UploadedFiles/{0}-{1}", DateTime.Now.ToString("yyyyMMddHHmmss"), fileName);
-                                lcaFile.FILE_NAME = fileName;
-                                string fullPath = Server.MapPath(lcaFile.FILE_URL);
-                                if (fileName != "")
-                                {
-                                    filedata.SaveAs(fullPath);
-                                    db.LCA_FILE.Add(lcaFile);
-                                }
-
+                                transaction.Rollback();
+                                return Json(new { result = STATUS.ERROR, message = saveFile.Item2 }, JsonRequestBehavior.AllowGet); ;
                             }
-
                             #endregion
-                            AddQuotes(quotes, db, ticket, ticket);
+                            var saveQuote = AddQuotes(quotes, db, ticket, ticket);
+                            if (saveQuote.Item1 == STATUS.ERROR)
+                            {
+                                transaction.Rollback();
+
+                                return Json(new { result = STATUS.ERROR, message = saveQuote.Item2 }, JsonRequestBehavior.AllowGet);
+                            }
                             #region SUMARY
                             Form_Summary summary = new Form_Summary()
                             {
@@ -272,6 +318,7 @@ namespace UMC_FORM.Controllers
                         catch (Exception e)
                         {
                             transaction.Rollback();
+                            var error = ModelState.Values.Where(m => m.Errors.Count > 0).ToList();
                             ModelState.AddModelError("Error", e.Message.ToString());
                             return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
                         }
@@ -297,6 +344,8 @@ namespace UMC_FORM.Controllers
                 {
                     return HttpNotFound();
                 }
+                double number = 1.00;
+                var str = number.FormatPrice();
                 using (var db = new DataContext())
                 {
                     var modelDetail = new LCADetailModel();
@@ -406,7 +455,7 @@ namespace UMC_FORM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket)
+        public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket, string listFiles)
         {
             try
             {
@@ -435,10 +484,10 @@ namespace UMC_FORM.Controllers
 
                         if (status == STATUS.ACCEPT)
                         {
-                            string result = Accept(formDb, db, infoTicket, quotes);
-                            if (result == STATUS.ERROR)
+                            var result = Accept(formDb, db, infoTicket, quotes, listFiles);
+                            if (result.Item1 == STATUS.ERROR)
                             {
-                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                                return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
@@ -452,10 +501,10 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.REJECT)
                         {
-                            string result = Reject(formDb, db, infoTicket);
-                            if (result == STATUS.ERROR)
+                            var result = Reject(formDb, db, infoTicket);
+                            if (result.Item1 == STATUS.ERROR)
                             {
-                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                                return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
@@ -469,10 +518,10 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.EDIT_QUOTE)
                         {
-                            string result = EditQuote(formDb, db, infoTicket, quotes);
-                            if (result == STATUS.ERROR)
+                            var result = EditQuote(formDb, db, infoTicket, quotes, listFiles);
+                            if (result.Item1 == STATUS.ERROR)
                             {
-                                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                                return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
@@ -486,7 +535,7 @@ namespace UMC_FORM.Controllers
                         }
                         else
                         {
-                            return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR, message = "Không tồn tại trạng thái này" }, JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -496,11 +545,11 @@ namespace UMC_FORM.Controllers
             {
 
                 ModelState.AddModelError("Error", e.Message.ToString());
-                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = STATUS.ERROR, message = e.Message.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
 
-        private string Reject(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket)
+        private Tuple<string, string> Reject(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -518,7 +567,7 @@ namespace UMC_FORM.Controllers
                     if (process == null)
                     {
                         ModelState.AddModelError("Error", "Error System!!!");
-                        return STATUS.ERROR;
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại reject process!");
                     }
 
                     form.PROCEDURE_INDEX = process.RETURN_INDEX is int returnIndex ? returnIndex - 1 : 0;
@@ -527,7 +576,12 @@ namespace UMC_FORM.Controllers
                     form.ID = Guid.NewGuid().ToString();
                     form.SUBMIT_USER = _sess.CODE;
                     form.COMMENT = infoTicket.COMMENT;
-                    AddQuotes("", db, formDb, form);
+                    var saveQuote = AddQuotes("", db, formDb, form);
+                    if (saveQuote.Item1 == STATUS.ERROR)
+                    {
+                        transaction.Rollback();
+                        return saveQuote;
+                    }
                     db.LCA_FORM_01.Add(form);
 
                     summary.IS_REJECT = true;
@@ -542,20 +596,20 @@ namespace UMC_FORM.Controllers
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return STATUS.ERROR;
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
                     };
-                    return STATUS.SUCCESS;
+                    return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
                     ModelState.AddModelError("Error", e.Message.ToString());
-                    return STATUS.ERROR;
+                    return Tuple.Create<string, string>(STATUS.ERROR, e.Message.ToString());
                 }
 
             }
         }
-        private void AddQuotes(string quotes, DataContext db, LCA_FORM_01 prevTicket, LCA_FORM_01 currentTicket)
+        private Tuple<string, string> AddQuotes(string quotes, DataContext db, LCA_FORM_01 prevTicket, LCA_FORM_01 currentTicket)
         {
             try
             {
@@ -572,6 +626,10 @@ namespace UMC_FORM.Controllers
                 {
                     lcaQuotes = JsonConvert.DeserializeObject<List<LCA_QUOTE>>(quotes);
                 }
+                if (lcaQuotes == null || lcaQuotes.Count == 0)
+                {
+                    return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại thông tin báo giá");
+                }
                 foreach (var quote in lcaQuotes)
                 {
                     var quoteDb = new LCA_QUOTE
@@ -587,15 +645,53 @@ namespace UMC_FORM.Controllers
                     };
                     db.LCA_QUOTE.Add(quoteDb);
                 }
+                db.SaveChanges();
+
+                return Tuple.Create<string, string>(STATUS.SUCCESS, "");
             }
             catch (Exception e)
             {
-                Console.Write(e.ToString());
+                return Tuple.Create<string, string>(STATUS.ERROR, e.Message.ToString());
             }
 
 
         }
-        private string Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
+        private Tuple<string, string> AddFilesToForm(string listFiles, LCA_FORM_01 form, DataContext db)
+        {
+            if (string.IsNullOrEmpty(listFiles))
+            {
+                return Tuple.Create<string, string>(STATUS.SUCCESS, "");
+            }
+            var list = JsonConvert.DeserializeObject<List<LCA_FILE>>(listFiles);
+            if (list != null)
+            {
+                foreach (var file in list)
+                {
+                    var lcaFile = new LCA_FILE();
+                    lcaFile.TICKET = form.TICKET;
+                    lcaFile.ID_TICKET = form.ID;
+                    lcaFile.FILE_URL = file.FILE_URL;
+                    lcaFile.FILE_NAME = file.FILE_NAME;
+                    string fullPath = Request.MapPath("~" + file.FILE_URL);
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        db.LCA_FILE.Add(lcaFile);
+                    }
+                    else
+                    {
+                        return Tuple.Create<string, string>(STATUS.ERROR, "File " + file.FILE_URL + " chưa được upload thành công!");
+                    }
+
+                }
+                return Tuple.Create<string, string>(STATUS.SUCCESS, "");
+            }
+            else
+            {
+                return Tuple.Create<string, string>(STATUS.ERROR, "File chưa được upload thành công!");
+            }
+        }
+
+        private Tuple<string, string> Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -624,7 +720,7 @@ namespace UMC_FORM.Controllers
                         }
                         else
                         {
-                            return STATUS.ERROR;
+                            return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại form reject process");
                         }
 
 
@@ -702,29 +798,20 @@ namespace UMC_FORM.Controllers
 
                     }
                     #region Quote
-                    AddQuotes(quotes, db, infoTicket, form);
+                    var saveQuote = AddQuotes(quotes, db, infoTicket, form);
+                    if (saveQuote.Item1 == STATUS.ERROR)
+                    {
+                        transaction.Rollback();
+                        return saveQuote;
+                    }
                     #endregion
                     #region Files
-                    HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
-                    for (int file = 0; file < files.Count; file++)
+                    var saveFile = AddFilesToForm(listFiles, form, db);
+                    if (saveFile.Item1 == STATUS.ERROR)
                     {
-                        HttpPostedFile filedata = files[file];
-                        string fileName = filedata.FileName;
-                        if (string.IsNullOrEmpty(fileName)) continue;
-                        var lcaFile = new LCA_FILE();
-                        lcaFile.TICKET = form.TICKET;
-                        lcaFile.ID_TICKET = form.ID;
-                        lcaFile.FILE_URL = string.Format("/UploadedFiles/{0}-{1}", DateTime.Now.ToString("yyyyMMddHHmmss"), fileName);
-                        lcaFile.FILE_NAME = fileName;
-                        string fullPath = Server.MapPath(lcaFile.FILE_URL);
-                        if (string.IsNullOrEmpty(fileName))
-                        {
-                            filedata.SaveAs(fullPath);
-                            db.LCA_FILE.Add(lcaFile);
-                        }
-
+                        transaction.Rollback();
+                        return saveFile;
                     }
-
                     #endregion
 
 
@@ -753,7 +840,7 @@ namespace UMC_FORM.Controllers
                         {
                             transaction.Rollback();
                             ModelState.AddModelError("Error", "Bạn không thể thay đổi thành chi trả theo " + form.PAYER + " được!");
-                            return STATUS.ERROR;
+                            return Tuple.Create<string, string>(STATUS.ERROR, "Bạn không thể thay đổi thành chi trả theo " + form.PAYER + " được!");
 
                         }
 
@@ -765,15 +852,15 @@ namespace UMC_FORM.Controllers
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return STATUS.ERROR;
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
                     };
-                    return STATUS.SUCCESS;
+                    return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
                     ModelState.AddModelError("Error", e.Message.ToString());
-                    return STATUS.ERROR;
+                    return Tuple.Create<string, string>(STATUS.ERROR, e.Message.ToString());
                 }
 
             }
@@ -803,7 +890,7 @@ namespace UMC_FORM.Controllers
 
 
         }
-        private string EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes)
+        private Tuple<string, string> EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -826,7 +913,14 @@ namespace UMC_FORM.Controllers
                     #region Quote
                     AddQuotes(quotes, db, infoTicket, form);
                     #endregion
-
+                    #region Files
+                    var saveFile = AddFilesToForm(listFiles, form, db);
+                    if (saveFile.Item1 == STATUS.ERROR)
+                    {
+                        transaction.Rollback();
+                        return saveFile;
+                    }
+                    #endregion
                     var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
                     form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                     form.STATION_NO = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
@@ -844,15 +938,15 @@ namespace UMC_FORM.Controllers
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return STATUS.ERROR;
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
                     };
-                    return STATUS.SUCCESS;
+                    return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
                     ModelState.AddModelError("Error", e.Message.ToString());
-                    return STATUS.ERROR;
+                    return Tuple.Create<string, string>(STATUS.ERROR, e.Message.ToString());
                 }
 
             }
@@ -911,7 +1005,8 @@ namespace UMC_FORM.Controllers
                     {
                         var userCreate = UserRepository.GetUser(summary.CREATE_USER);
                         userMails.Add(userCreate.EMAIL);
-                        dear = $"Dear {userCreate.SHORT_NAME} san !";
+                        var name = string.IsNullOrEmpty(userCreate.SHORT_NAME) ? userCreate.NAME : userCreate.NAME;
+                        dear = $"Dear {name} san !";
                     }
                     else
                     {
@@ -922,7 +1017,8 @@ namespace UMC_FORM.Controllers
                         if (userMails.Count == 1)
                         {
                             var userApproval = db.Form_User.Where(m => m.CODE == stations.FirstOrDefault()).FirstOrDefault();
-                            dear = $"Dear {userApproval.SHORT_NAME} san !";
+                            var name = string.IsNullOrEmpty(userApproval.SHORT_NAME) ? userApproval.NAME : userApproval.NAME;
+                            dear = $"Dear {name} san !";
                         }
                     }
 
@@ -1100,6 +1196,25 @@ namespace UMC_FORM.Controllers
             return Json(new { result = STATUS.SUCCESS }, JsonRequestBehavior.AllowGet);
         }
 
-
+        private string validateTicket(LCA_FORM_01 ticket)
+        {
+            if (string.IsNullOrEmpty(ticket.PAYER))
+            {
+                return "Cần chọn một hình thức thanh toán";
+            }
+            if (string.IsNullOrEmpty(ticket.PURPOSE))
+            {
+                return "Cần điền vào ô mục đích";
+            }
+            if (string.IsNullOrEmpty(ticket.REQUEST_TARGET))
+            {
+                return "Cần chọn ít nhất một mục đích yêu cầu";
+            }
+            if (string.IsNullOrEmpty(ticket.REQUEST_CONTENT))
+            {
+                return "Cần điền nội dung yêu cầu";
+            }
+            return "";
+        }
     }
 }

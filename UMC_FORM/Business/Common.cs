@@ -26,6 +26,9 @@ namespace UMC_FORM.Business
             }
             return signatures;
         }
-
+        public static string FormatPrice(this double str)
+        {
+            return str == 0 ? "" : str.ToString("#,##0.00");
+        }
     }
 }
