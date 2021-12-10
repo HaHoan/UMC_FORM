@@ -17,7 +17,7 @@ using UMC_FORM.Models.LCA;
 namespace UMC_FORM.Controllers
 {
     [CustomAuthFilter]
-    [CustomAuthorize("CanEdit", "ReadOnly")]
+    [CustomAuthorize("Normal", "ReadOnly")]
     [NoCache]
     public class LCAController : Controller
     {
@@ -62,20 +62,13 @@ namespace UMC_FORM.Controllers
         {
             var formStation = db.Form_Stations.Where(m => m.PROCESS == processName).ToList();
             var oldProcess = db.Form_Procedures.Where(m => m.TICKET == ticket).ToList();
-            foreach (var pro in process)
+            if (oldProcess == null || oldProcess.Count == 0)
             {
-                if (pro.FORM_INDEX == 0)
+                foreach (var pro in process)
                 {
-                    var proceduce = oldProcess.Where(m => m.TICKET == ticket && m.FORM_INDEX == 0).FirstOrDefault();
-                    if (proceduce != null)
+                    if (pro.FORM_INDEX == 0)
                     {
-                        proceduce.FORM_INDEX = pro.FORM_INDEX;
-                        proceduce.FORM_NAME = pro.FORM_NAME;
-                        proceduce.STATION_NO = pro.STATION_NO;
-                    }
-                    else
-                    {
-                        proceduce = new Form_Procedures()
+                        var proceduce = new Form_Procedures()
                         {
                             ID = Guid.NewGuid().ToString(),
                             TICKET = ticket,
@@ -93,21 +86,12 @@ namespace UMC_FORM.Controllers
                             APPROVAL_NAME = _sess.CODE
                         };
                         db.Form_Procedures.Add(proceduce);
-                    }
-                }
-                else
-                if (pro.FORM_INDEX == 1 || pro.FORM_INDEX == 3)
-                {
-                    var proceduce = oldProcess.Where(m => m.TICKET == ticket && m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == pro.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")).FirstOrDefault();
-                    if (proceduce != null)
-                    {
-                        proceduce.FORM_INDEX = pro.FORM_INDEX;
-                        proceduce.FORM_NAME = pro.FORM_NAME;
-                        proceduce.STATION_NO = pro.STATION_NO;
+
                     }
                     else
+                    if (pro.FORM_INDEX == 1 || pro.FORM_INDEX == 3)
                     {
-                        proceduce = new Form_Procedures()
+                        var proceduce = new Form_Procedures()
                         {
                             ID = Guid.NewGuid().ToString(),
                             TICKET = ticket,
@@ -126,24 +110,12 @@ namespace UMC_FORM.Controllers
                         };
                         db.Form_Procedures.Add(proceduce);
                     }
-
-
-                }
-                else
-                {
-                    var listUserApprover = formStation.Where(m => m.FORM_INDEX == pro.FORM_INDEX).ToList();
-                    foreach (var userApprover in listUserApprover)
+                    else
                     {
-                        var proceduce = oldProcess.Where(m => m.TICKET == ticket && m.APPROVAL_NAME == userApprover.USER_ID && m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == pro.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")).FirstOrDefault();
-                        if (proceduce != null)
+                        var listUserApprover = formStation.Where(m => m.FORM_INDEX == pro.FORM_INDEX).ToList();
+                        foreach (var userApprover in listUserApprover)
                         {
-                            proceduce.FORM_INDEX = pro.FORM_INDEX;
-                            proceduce.FORM_NAME = pro.FORM_NAME;
-                            proceduce.STATION_NO = pro.STATION_NO;
-                        }
-                        else
-                        {
-                            proceduce = new Form_Procedures()
+                            var proceduce = new Form_Procedures()
                             {
                                 ID = Guid.NewGuid().ToString(),
                                 TICKET = ticket,
@@ -161,17 +133,110 @@ namespace UMC_FORM.Controllers
                                 APPROVAL_NAME = userApprover.USER_ID
                             };
                             db.Form_Procedures.Add(proceduce);
+
                         }
 
                     }
 
+
                 }
-
-
             }
 
-            // Trường hợp thay đổi proceduce thì phải xóa các trạm không dùng
+            else
+            {
+                foreach (var pro in process)
+                {
+                    if (pro.FORM_INDEX == 0)
+                    {
+                        var proceduceOld = oldProcess.Where(m => m.TICKET == ticket && m.FORM_INDEX == 0).FirstOrDefault();
 
+                        var proceduce = new Form_Procedures()
+                        {
+                            ID = Guid.NewGuid().ToString(),
+                            TICKET = ticket,
+                            FORM_NAME = processName,
+                            STATION_NO = pro.STATION_NO,
+                            STATION_NAME = pro.STATION_NAME,
+                            FORM_INDEX = pro.FORM_INDEX,
+                            RETURN_INDEX = pro.RETURN_INDEX,
+                            CREATER_NAME = pro.CREATER_NAME,
+                            CREATE_DATE = pro.CREATE_DATE,
+                            UPDATER_NAME = pro.UPDATER_NAME,
+                            UPDATE_DATE = pro.UPDATE_DATE,
+                            DES = pro.DES,
+                            RETURN_STATION_NO = pro.RETURN_STATION_NO
+                        };
+                        if (proceduceOld != null)
+                        {
+                            proceduce.APPROVAL_NAME = proceduceOld.APPROVAL_NAME;
+                        }
+                        db.Form_Procedures.Add(proceduce);
+
+                    }
+                    else
+                    if (pro.FORM_INDEX == 1 || pro.FORM_INDEX == 3)
+                    {
+                        var proceduceOld = oldProcess.Where(m => m.TICKET == ticket && m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == pro.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")).FirstOrDefault();
+
+                        var proceduce = new Form_Procedures()
+                        {
+                            ID = Guid.NewGuid().ToString(),
+                            TICKET = ticket,
+                            FORM_NAME = processName,
+                            STATION_NO = pro.STATION_NO,
+                            STATION_NAME = pro.STATION_NAME,
+                            FORM_INDEX = pro.FORM_INDEX,
+                            RETURN_INDEX = pro.RETURN_INDEX,
+                            CREATER_NAME = pro.CREATER_NAME,
+                            CREATE_DATE = pro.CREATE_DATE,
+                            UPDATER_NAME = pro.UPDATER_NAME,
+                            UPDATE_DATE = pro.UPDATE_DATE,
+                            DES = pro.DES,
+                            RETURN_STATION_NO = pro.RETURN_STATION_NO
+
+                        };
+                        if (proceduceOld != null)
+                        {
+                            proceduce.APPROVAL_NAME = proceduceOld.APPROVAL_NAME;
+                        }
+                        db.Form_Procedures.Add(proceduce);
+
+                    }
+                    else
+                    {
+                        var listUserApprover = formStation.Where(m => m.FORM_INDEX == pro.FORM_INDEX).ToList();
+                        foreach (var userApprover in listUserApprover)
+                        {
+                            var proceduce = new Form_Procedures()
+                            {
+                                ID = Guid.NewGuid().ToString(),
+                                TICKET = ticket,
+                                FORM_NAME = processName,
+                                STATION_NO = pro.STATION_NO,
+                                STATION_NAME = pro.STATION_NAME,
+                                FORM_INDEX = pro.FORM_INDEX,
+                                RETURN_INDEX = pro.RETURN_INDEX,
+                                CREATER_NAME = pro.CREATER_NAME,
+                                CREATE_DATE = pro.CREATE_DATE,
+                                UPDATER_NAME = pro.UPDATER_NAME,
+                                UPDATE_DATE = pro.UPDATE_DATE,
+                                DES = pro.DES,
+                                RETURN_STATION_NO = pro.RETURN_STATION_NO,
+                                APPROVAL_NAME = userApprover.USER_ID
+                            };
+                            db.Form_Procedures.Add(proceduce);
+
+
+                        }
+
+                    }
+
+
+                }
+            }
+            // Trường hợp thay đổi proceduce thì phải xóa các trạm không dùng
+            var processOld = db.Form_Procedures.Where(m => m.TICKET == ticket && m.FORM_NAME != processName).ToList();
+            db.Form_Procedures.RemoveRange(processOld);
 
         }
         public JsonResult DeleteFiles(string deleteFile)
@@ -263,12 +328,14 @@ namespace UMC_FORM.Controllers
                             ticket.STATION_NO = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
                             db.LCA_FORM_01.Add(ticket);
                             #region FILES
+
                             if (!Directory.Exists(Server.MapPath("/UploadedFiles/")))
                             {
                                 Directory.CreateDirectory(Server.MapPath("/UploadedFiles/"));
                             }
-                            HttpFileCollection files = System.Web.HttpContext.Current.Request.Files;
-                            for (int file = 0; file < files.Count; file++)
+
+                            var saveFile = AddFilesToForm(listFiles, ticket, db);
+                            if (saveFile.Item1 == STATUS.ERROR)
                             {
                                 transaction.Rollback();
                                 return Json(new { result = STATUS.ERROR, message = saveFile.Item2 }, JsonRequestBehavior.AllowGet); ;
@@ -843,6 +910,11 @@ namespace UMC_FORM.Controllers
                             return Tuple.Create<string, string>(STATUS.ERROR, "Bạn không thể thay đổi thành chi trả theo " + form.PAYER + " được!");
 
                         }
+                        if (!summary.IS_REJECT)
+                        {
+                            form.PROCEDURE_INDEX = summary.REJECT_INDEX;
+                            summary.PROCEDURE_INDEX = summary.REJECT_INDEX;
+                        }
 
                     }
                     db.SaveChanges();
@@ -875,10 +947,12 @@ namespace UMC_FORM.Controllers
                 var stationReTurnToNew = processNew.Where(m => m.STATION_NAME == stationReturnToOld.STATION_NAME).FirstOrDefault();
                 var stationRejectOld = processOld.Where(m => m.FORM_INDEX == (summary.REJECT_INDEX + 1)).FirstOrDefault();
                 var stationRejectNew = processNew.Where(m => m.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "") == stationRejectOld.STATION_NAME.Trim().Replace("\n", "").Replace("\r", "")).FirstOrDefault();
+
                 summary.RETURN_TO = stationReTurnToNew.FORM_INDEX - 1;
                 summary.REJECT_INDEX = stationRejectNew.FORM_INDEX - 1;
                 summary.PROCESS_ID = stationRejectNew.FORM_NAME;
                 summary.LAST_INDEX = processNew.Count() - 1;
+
                 var proceduce = db.Form_Procedures.Where(m => m.TICKET == summary.TICKET).ToList();
                 setUpFormProceduce(stationRejectNew.FORM_NAME, db, summary.TICKET, "", processNew);
                 return summary;

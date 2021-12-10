@@ -79,19 +79,35 @@ namespace UMC_FORM.Business
                     Credentials = new NetworkCredential(maiAccount, maiPass)
                 };
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                mailMessage.From = new MailAddress(maiAccount,"System Testing");
+                mailMessage.From = new MailAddress(maiAccount, "System Testing");
+                string hostName = System.Net.Dns.GetHostName();
                 foreach (var item in to)
                 {
-                    mailMessage.To.Add(item);
-                }
-                if(cc != null && cc.Count > 0)
-                {
-                    foreach(var item in cc)
+                    if (hostName.ToUpper() == "UMC-C998")
                     {
-                        mailMessage.CC.Add(item);
+                        mailMessage.To.Add("hoanht@umcvn.com");
+                    }
+                    else
+                    {
+                        mailMessage.To.Add(item);
+                    }
+
+                }
+                if (cc != null && cc.Count > 0)
+                {
+                    foreach (var item in cc)
+                    {
+                        if (hostName.ToUpper() == "UMC-C998")
+                        {
+                            mailMessage.CC.Add("hoanht@umcvn.com");
+                        }
+                        else
+                        {
+                            mailMessage.CC.Add(item);
+                        }
                     }
                 }
-                
+
                 mailMessage.Subject = Constant.SUBJECT;
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
@@ -101,7 +117,7 @@ namespace UMC_FORM.Business
             {
                 Debug.Write(e.ToString());
             }
-           
+
         }
 
     }

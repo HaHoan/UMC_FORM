@@ -453,7 +453,7 @@ function drawRejectList(current_step) {
     var step = listStep.find(m => m.index == current_step);
     if (step.rejectList != null) {
         $.each(step.rejectList, function (index, value) {
-            var s = listStep.find(m => m.index == (value.FORM_INDEX + 1));
+            var s = listStep.find(m => m.index == (parseInt(value.FORM_INDEX) + 1));
             var li = $('<li />', {
                 text: s.name,
                 class: 'list-group-item',

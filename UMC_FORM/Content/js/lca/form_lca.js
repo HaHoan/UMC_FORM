@@ -222,6 +222,9 @@ $(function () {
     // update total
     for (var i = 1; i <= $('.row-info').length; i++) {
 
+        $('#ITEM_NAME_' + i).keyup(function (e) {
+            updateQuote()
+        })
         $('#QTY_' + i).keyup(function (e) {
             var id = $(this).attr('id')
             var rStr = id.substr(4, id.length - 4)
@@ -297,7 +300,8 @@ function OnSuccess(response) {
     }
 }
 function OnFailure(response) {
-    alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?")
+    alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?" + "Detail:" + response.responseText)
+    enableButton()
 }
 function updateQuote() {
     try {
