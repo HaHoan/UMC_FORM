@@ -322,6 +322,8 @@ namespace UMC_FORM.Controllers
                             ticket.UPD_DATE = DateTime.Now;
                             var processName = (ticket.PAYER == PAYER.UMCVN) ? Constant.LCA_01 : Constant.LCA_Process;
                             var process = db.Form_Process.Where(m => m.FORM_NAME == processName).ToList();
+                            var deptDb = db.Form_User.Where(m => m.CODE == deptManager).FirstOrDefault();
+                            if (deptDb == null) return Json(new { result = STATUS.ERROR, message = "Không tồn tại user có code là " + deptManager }, JsonRequestBehavior.AllowGet);
                             setUpFormProceduce(processName, db, ticket.TICKET, deptManager, process);
 
                             ticket.STATION_NAME = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
@@ -417,6 +419,10 @@ namespace UMC_FORM.Controllers
                 {
                     var modelDetail = new LCADetailModel();
                     var list = db.LCA_FORM_01.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).ToList();
+                    if (list.Count == 0)
+                    {
+                        return HttpNotFound();
+                    }
                     modelDetail.TICKET = list.FirstOrDefault();
                     modelDetail.TICKET.FILES = db.LCA_FILE.Where(m => m.TICKET == modelDetail.TICKET.TICKET).ToList();
                     if (modelDetail.TICKET == null)
@@ -630,7 +636,7 @@ namespace UMC_FORM.Controllers
                     // để lưu lại bước sẽ quay lại sau khi luồng reject được thực hiện xong
                     summary.REJECT_INDEX = form.PROCEDURE_INDEX;
 
-                    var process = db.Form_Process.Where(m => m.FORM_INDEX == summary.REJECT_INDEX && m.FORM_NAME == summary.PROCESS_ID).FirstOrDefault();
+                    var process = db.Form_Process.Where(m => m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1) && m.FORM_NAME == summary.PROCESS_ID).FirstOrDefault();
                     if (process == null)
                     {
                         ModelState.AddModelError("Error", "Error System!!!");

@@ -18,6 +18,7 @@ function enableButton() {
     $('#lca_accept').html("Accept")
     $('#lca_reject').html("Reject")
 }
+
 $(function () {
 
     $('input').keyup(function (e) {
@@ -40,6 +41,7 @@ $(function () {
         //}
 
     })
+   
     var $contextMenu = $("#contextMenu");
     $("#formCreate").validate({
         rules: {
@@ -54,12 +56,16 @@ $(function () {
             "PURPOSE": {
                 required: true,
                 maxlength: 100
+            },
+            "DECREASE_PERSON": {
+                maxlength:5
             }
         },
         messages: {
             "payer[]": "Please select at least one checkbox",
             "request_target[]": "Please select at least one checkbox",
-            "PURPOSE": "Require 50 character!"
+            "PURPOSE": "Require 50 character!",
+            "DECREASE_PERSON":"Number too large!"
         },
         submitHandler: function (form) {
             disableButtonWhenSubmit('#lca_create')
@@ -79,11 +85,15 @@ $(function () {
             "request_target[]": {
                 required: true,
                 minlength: 1
+            },
+            "DECREASE_PERSON": {
+                maxlength: 5
             }
         },
         messages: {
             "payer[]": "Please select at least one checkbox",
-            "request_target[]": "Please select at least one checkbox"
+            "request_target[]": "Please select at least one checkbox",
+            "DECREASE_PERSON": "Number too large!"
         },
         submitHandler: function (form) {
             var status = $('#status').val();
