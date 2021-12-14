@@ -145,12 +145,12 @@
                                                                 <td>@(i)</td>
                                                                 @if (i == 1)
                                                                 {
-                                                                    <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" required /></td>
+                                                                    <td><textarea class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required>@quote.REQUEST_ITEM</textarea></td>
                                                                     <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" required /> </td>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <td><input class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) value="@quote.REQUEST_ITEM" /></td>
+                                                                    <td><textarea class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) >@quote.REQUEST_ITEM</textarea></td>
                                                                     <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" /> </td>
                                                                 }
 
@@ -169,12 +169,12 @@
                                                                     <td>@(i)</td>
                                                                     @if (i == 1)
                                                                     {
-                                                                        <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required /></td>
+                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required ></textarea></td>
                                                                         <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required /> </td>
                                                                     }
                                                                     else
                                                                     {
-                                                                        <td><input class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) /></td>
+                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) ></textarea></td>
                                                                         <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
                                                                     }
 
