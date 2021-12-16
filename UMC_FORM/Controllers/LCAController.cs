@@ -544,15 +544,14 @@ namespace UMC_FORM.Controllers
                     else
                     {
 
+                        if (formDb.ID != infoTicket.ID)
+                        {
+                            return Json(new { result = STATUS.WAIT }, JsonRequestBehavior.AllowGet);
+                        }
 
                         if (checkUserHavePermissionToChangeData(db, formDb.TICKET) == false)
                         {
                             return Json(new { result = STATUS.ERROR, message = "Bạn không có quyền sửa ticket này" }, JsonRequestBehavior.AllowGet);
-                        }
-
-                        if (formDb.ID != infoTicket.ID)
-                        {
-                            return Json(new { result = STATUS.WAIT }, JsonRequestBehavior.AllowGet);
                         }
 
                         if (status == STATUS.ACCEPT)
