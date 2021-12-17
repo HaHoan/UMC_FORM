@@ -10,6 +10,10 @@
         <div class="">
             <div class="">
                 <div class="card-body">
+                    @if (ViewBag.Error != null)
+                    {
+                        <p class="text-danger">ViewBag.Error</p>
+                    }
                     <a href="./index.html" style="text-decoration: none;">
                         <span class="font-title text-muted lang">Process</span>
                     </a>
@@ -60,7 +64,7 @@
 
                                             <td><i class="fa fa-star text-info"></i></td>
                                             <td>
-                                                <a class="link request-item" href="@Url.Action("Details","Process", new {id = item.PROCESS_ID })" data-slide="next" name="1">
+                                                <a class="link request-item" href="@Url.Action("Create","Process", new {id = item.PROCESS_ID })" data-slide="next" name="1">
                                                     <span class="mb-0 text-muted">@Html.DisplayFor(m => item.PROCESS_ID)</span>
                                                 </a>
                                             </td>
@@ -76,6 +80,15 @@
                                             <td class="text-muted">
                                                 <a href="@Url.Action("Edit","Process", new {id = item.PROCESS_ID })"><i style="color:gray" class='fas fa-edit'></i></a>
                                             </td>
+                                            <td class="text-muted">
+                                                @{
+                                                    var contentConfirm = "Bạn có muốn xóa " + item.PROCESS_NAME + " này không?";
+                                                }
+                                                <a href="@Url.Action("DeleteProcess", new {id = item.PROCESS_NAME })" onclick="return confirm('@(contentConfirm)')">
+                                                    <i class="text-danger far fa-trash-alt"></i>
+                                                </a>
+                                            </td>
+
                                         </tr>
                                         _no++;
                                     }

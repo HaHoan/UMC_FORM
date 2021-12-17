@@ -25,7 +25,7 @@ namespace UMC_FORM.Business
                 }
                 else
                 {
-                    return context.Form_Stations.Where(m => m.STATION_NO.Contains(ProcessName)).ToList();
+                    return context.Form_Stations.Where(m => m.PROCESS == ProcessName.Trim()).ToList();
                 }
               
             }

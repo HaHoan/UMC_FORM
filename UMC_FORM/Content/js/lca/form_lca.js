@@ -3,11 +3,25 @@
     $('#lca_cancel').prop("disabled", true);
     $('#lca_accept').prop("disabled", true);
     $('#lca_reject').prop("disabled", true);
+    $('#lca_edit_quote').prop("disabled", true);
 
     $(btn).html(
         '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
     );
 }
+function enableButton() {
+    $('#lca_create').prop("disabled", false);
+    $('#lca_cancel').prop("disabled", false);
+    $('#lca_accept').prop("disabled", false);
+    $('#lca_reject').prop("disabled", false);
+    $('#lca_edit_quote').prop("disabled", false);
+    $('#lca_create').html("Create")
+    $('#lca_cancel').html("Cancel")
+    $('#lca_accept').html("Accept")
+    $('#lca_reject').html("Reject")
+    $('#lca_edit_quote').html("Save Changes")
+}
+
 $(function () {
 
     $('input').keyup(function (e) {
@@ -30,6 +44,7 @@ $(function () {
         //}
 
     })
+
     var $contextMenu = $("#contextMenu");
     $("#formCreate").validate({
         rules: {
@@ -44,12 +59,16 @@ $(function () {
             "PURPOSE": {
                 required: true,
                 maxlength: 100
+            },
+            "DECREASE_PERSON": {
+                maxlength: 5
             }
         },
         messages: {
             "payer[]": "Please select at least one checkbox",
             "request_target[]": "Please select at least one checkbox",
-            "PURPOSE": "Require 50 character!"
+            "PURPOSE": "Require 50 character!",
+            "DECREASE_PERSON": "Number too large!"
         },
         submitHandler: function (form) {
             disableButtonWhenSubmit('#lca_create')
@@ -69,11 +88,15 @@ $(function () {
             "request_target[]": {
                 required: true,
                 minlength: 1
+            },
+            "DECREASE_PERSON": {
+                maxlength: 5
             }
         },
         messages: {
             "payer[]": "Please select at least one checkbox",
-            "request_target[]": "Please select at least one checkbox"
+            "request_target[]": "Please select at least one checkbox",
+            "DECREASE_PERSON": "Number too large!"
         },
         submitHandler: function (form) {
             var status = $('#status').val();
@@ -212,6 +235,9 @@ $(function () {
     // update total
     for (var i = 1; i <= $('.row-info').length; i++) {
 
+        $('#ITEM_NAME_' + i).keyup(function (e) {
+            updateQuote()
+        })
         $('#QTY_' + i).keyup(function (e) {
             var id = $(this).attr('id')
             var rStr = id.substr(4, id.length - 4)
@@ -280,11 +306,16 @@ function OnSuccess(response) {
         }
     }
     else {
-        alert(response.message)
+        if (response.message != null) {
+            alert(response.message)
+        }
+        else alert('error')
+        enableButton()
     }
 }
 function OnFailure(response) {
-    alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?")
+    alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?" + "Detail:" + response.responseText)
+    enableButton()
 }
 function updateQuote() {
     try {

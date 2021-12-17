@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -19,11 +20,12 @@ namespace UMC_FORM.Business
                 {
                     return -1;
                 }
-                var role = context.Form_Roles.Find(userExist.ROLE_ID);
-                if (userExist.PASSWORD.ToUpper() == "UMCVN")
+                var flag = context.Form_Logs.Any(r => r.USER_ID == userExist.ID && r.EXECUTE_RESULT == (int)EXECUTE_RESULT.SUCCESS);
+                if (userExist.PASSWORD.ToUpper() == "UMCVN" || !flag)
                 {
                     return -2;
                 }
+                var role =  context.Form_Roles.Find(userExist.ROLE_ID);
                 if (role.NAME.ToUpper() == "ADMIN")// Admin
                 {
                     return 1;
@@ -31,6 +33,7 @@ namespace UMC_FORM.Business
             }
             return 0;
         }
+
         public static async Task<int> ValidateUserAsync(Form_User user)
         {
             using (DataContext context = new DataContext())
@@ -40,7 +43,8 @@ namespace UMC_FORM.Business
                 {
                     return -1;
                 }
-                if (userExist.PASSWORD.ToUpper() == "UMCVN")
+                var flag = context.Form_Logs.Any(r => r.USER_ID == userExist.ID && r.EXECUTE_RESULT == (int)EXECUTE_RESULT.SUCCESS);
+                if (userExist.PASSWORD.ToUpper() == "UMCVN" || !flag)
                 {
                     return -2;
                 }
@@ -56,21 +60,29 @@ namespace UMC_FORM.Business
         {
             using (DataContext context = new DataContext())
             {
-                return context.Form_User.Find(username);
+                return context.Form_User.FirstOrDefault(r => r.CODE == username);
+            }
+        }
+        public static Form_User GetUserByMail(string email)
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.Form_User.FirstOrDefault(r => r.EMAIL == email);
             }
         }
         public static async Task<Form_User> GetUserAsync(string username)
         {
             using (DataContext context = new DataContext())
             {
-                return await context.Form_User.FindAsync(username);
+                return await context.Form_User.FirstOrDefaultAsync(r => r.CODE == username);
             }
         }
+
         public static void Update(string code, string newPass)
         {
             using (DataContext context = new DataContext())
             {
-                var user = context.Form_User.Find(code);
+                var user = context.Form_User.FirstOrDefault(r => r.CODE == code);
                 user.PASSWORD = newPass;
                 context.Entry<Form_User>(user).State = System.Data.Entity.EntityState.Modified;
                 context.SaveChanges();
@@ -82,7 +94,7 @@ namespace UMC_FORM.Business
             {
                 using (DataContext context = new DataContext())
                 {
-                    var userId = context.Form_User.Find(code);
+                    var userId = context.Form_User.FirstOrDefault(r => r.CODE == code);
                     userId.CODE = user.CODE;
                     userId.DEPT = user.DEPT;
                     userId.EMAIL = user.EMAIL;
@@ -104,12 +116,13 @@ namespace UMC_FORM.Business
                 return false;
             }
         }
-
-        public static List<Form_User> GetUsers()
+        public static void Update(int userId, string password)
         {
             using (DataContext context = new DataContext())
             {
-                return context.Form_User.ToList();
+                var sql = $"UPDATE [UMC_FORM].[dbo].[Form_User] SET PASSWORD = '{password}'  where ID = {userId}";
+                context.Database.ExecuteSqlCommand(sql);
+                context.SaveChanges();
             }
         }
 
@@ -118,6 +131,14 @@ namespace UMC_FORM.Business
             using (DataContext context = new DataContext())
             {
                 return context.Form_User.Where(m => m.DEPT == dept).ToList();
+            }
+        }
+
+        public static List<Form_User> GetUsers()
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.Form_User.ToList();
             }
         }
         public static List<Form_User> GetUsersEx(string code)
@@ -167,7 +188,7 @@ namespace UMC_FORM.Business
             {
                 using (DataContext context = new DataContext())
                 {
-                    var userId = context.Form_User.Find(code);
+                    var userId = context.Form_User.FirstOrDefault(r => r.CODE == code);
                     context.Form_User.Remove(userId);
                     context.SaveChanges();
 

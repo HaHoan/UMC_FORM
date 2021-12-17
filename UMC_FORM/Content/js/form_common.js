@@ -1,4 +1,91 @@
-﻿
+﻿$(function () {
+    $("#fileAttach").change(function () {
+        var fileInput =
+            document.getElementById('fileAttach');
+
+        var filePath = fileInput.value;
+
+        // Allowing file type
+        var allowedExtensions =
+            /(\.pdf|\.xlsx|\.xls|\.doc|\.docx|\.ppt|\.pptx|\.jpg|\.jpeg|\.mp3|\.mp4|\.png|\.pps|\.ppsx|\.pptm|\.txt)$/i;
+
+        if (!allowedExtensions.exec(filePath)) {
+            alert('File có thể chứa virut hoặc mã độc!');
+            fileInput.value = '';
+            return false;
+        }
+        else {
+            var formdata = new FormData(); //FormData object
+            var fileInput = $(this)[0].files;
+            //Iterating through each files selected in fileInput
+            for (i = 0; i < fileInput.length; i++) {
+                //Appending each file to FormData object
+                formdata.append(fileInput[i].name, fileInput[i]);
+            }
+            //Creating an XMLHttpRequest and sending
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/LCA/UploadFiles');
+            xhr.send(formdata);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText)
+                    if (response.result == 'success' && response.message != null) {
+                        var listFilesStr = $('#listFiles').val()
+                        var listFiles = []
+                        if (listFilesStr != '') {
+                            listFiles = JSON.parse(listFilesStr)
+                        }
+                        for (var i = 0; i < response.message.length; i++) {
+                            listFiles.push(response.message[i])
+                            var div = $('<div />', {
+                                class: 'badge badge-danger bg-light p-2',
+                                name: 'TEXT' + response.message[i].FILE_URL
+
+                            })
+                            var br = $('<br />', {
+                                name: 'TEXT' + response.message[i].FILE_URL
+                            })
+                            var a = $('<a/>', {
+                                class: 'font-weight-bold text-primary',
+                                style: 'font-weight:900;font-size:15px; text-decoration: underline;',
+                                target: '_blank',
+                                text: response.message[i].FILE_NAME,
+                                href: response.message[i].FILE_URL
+                            })
+                            var button = $('<button />', {
+                                class: 'btn-image border-0 ',
+                                name: response.message[i].FILE_URL,
+                                click: function (e) {
+                                    e.preventDefault();
+                                    deleteFiles($(this).attr('name'))
+                                }
+
+                            })
+                            var i = $('<i />', {
+                                class: 'fas fa-times ml-5 text-dark',
+                                style: 'font-size:15px',
+
+                            })
+                            button.append(i)
+                            div.append(a)
+                            div.append(button)
+                            div.append($('<br/>'))
+
+                            $('.files').append(div)
+                            $('.files').append(br)
+
+                        }
+                        $('#listFiles').val(JSON.stringify(listFiles))
+                        $('#fileAttach').val('')
+                        $('#fileAttach').val('')
+                    }
+
+                }
+            }
+        }
+     
+    })
+})
 function addCommas(nStr) {
     if (typeof nStr !== 'undefined') {
         nStr = nStr.split(",").join("");
@@ -66,76 +153,7 @@ function getTotalAmount() {
         return addCommas(total.toString());
 }
 
-$("#fileAttach").change(function () {
 
-    var formdata = new FormData(); //FormData object
-    var fileInput = $(this)[0].files;
-    //Iterating through each files selected in fileInput
-    for (i = 0; i < fileInput.length; i++) {
-        //Appending each file to FormData object
-        formdata.append(fileInput[i].name, fileInput[i]);
-    }
-    //Creating an XMLHttpRequest and sending
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/LCA/UploadFiles');
-    xhr.send(formdata);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            var response = JSON.parse(xhr.responseText)
-            if (response.result == 'success' && response.message != null) {
-                var listFilesStr = $('#listFiles').val()
-                var listFiles = []
-                if (listFilesStr != '') {
-                     listFiles = JSON.parse(listFilesStr)
-                } 
-                for (var i = 0; i < response.message.length; i++) {
-                    listFiles.push(response.message[i])
-                    var div = $('<div />', {
-                        class: 'badge badge-danger bg-light p-2',
-                        name: 'TEXT' + response.message[i].FILE_URL
-
-                    })
-                    var br = $('<br />', {
-                        name: 'TEXT' + response.message[i].FILE_URL
-                    })
-                    var a = $('<a/>', {
-                        class: 'font-weight-bold text-primary',
-                        style: 'font-weight:900;font-size:15px; text-decoration: underline;',
-                        target: '_blank',
-                        text: response.message[i].FILE_NAME,
-                        href: response.message[i].FILE_URL
-                    })
-                    var button = $('<button />', {
-                        class: 'btn-image border-0 ',
-                        name: response.message[i].FILE_URL,
-                        click: function (e) {
-                            e.preventDefault();
-                            deleteFiles($(this).attr('name'))
-                        }
-
-                    })
-                    var i = $('<i />', {
-                        class: 'fas fa-times ml-5 text-dark',
-                        style: 'font-size:15px',
-
-                    })
-                    button.append(i)
-                    div.append(a)
-                    div.append(button)
-                    div.append($('<br/>'))
-                   
-                    $('.files').append(div)
-                    $('.files').append(br)
-                   
-                }
-                $('#listFiles').val(JSON.stringify(listFiles))
-                $('#fileAttach').val('')
-                $('#fileAttach').val('')
-            }
-
-        }
-    }
-})
 function deleteFiles(name) {
     try {
         $.ajax({

@@ -38,6 +38,8 @@ namespace UMC_FORM.Controllers
             }
             base.Dispose(disposing);
         }
+
+      
         public ActionResult Index(SendType? type)
         {
             
@@ -64,7 +66,7 @@ namespace UMC_FORM.Controllers
                     ViewBag.type = 1;
                     break;
                 case SendType.MYREQUEST:
-                    formSummaries = db.Form_Summary.Where(r => r.CREATE_USER == session.CODE && r.IS_FINISH == false && r.IS_REJECT == false)
+                    formSummaries = db.Form_Summary.Where(r => r.CREATE_USER == session.CODE)
                        .ToList();
 
                     ViewBag.type = 2;
