@@ -235,8 +235,8 @@ namespace UMC_FORM.Controllers
                                         var formReject = new Form_Reject()
                                         {
                                             PROCESS_NAME = selectedForm,
-                                            FORM_INDEX = reject.FORM_INDEX - 1,
-                                            START_INDEX = reject.START_INDEX - 1,
+                                            FORM_INDEX = reject.FORM_INDEX,
+                                            START_INDEX = reject.START_INDEX,
                                             TOTAL_STEP = item.rejectList.Count(),
                                             STEP_ORDER = i
                                         };

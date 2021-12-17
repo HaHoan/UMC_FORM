@@ -16,5 +16,6 @@ namespace UMC_FORM.Models.LCA
         public DateTime APPROVE_DATE { get; set; }
         public string APPROVER { get; set; }
         public string COMPANY { get; set; }
+        public string SIGNATURE { get; set; }
     }
 }

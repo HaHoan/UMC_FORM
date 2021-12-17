@@ -406,7 +406,7 @@
 
 
                             <div class="row form-inline">
-                                <p class="font-weight-bold m-3">ID<span class="font-weight-normal font-italic">(Do LCA nhập)</span></p>
+                                <p class="font-weight-bold m-3">ID<span class="font-weight-normal font-italic"> (Do LCA nhập)</span></p>
                                 @if (Model.PERMISSION.Contains(PERMISSION.ADD_ID))
                                 {
                                     @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control " + ((Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE) && Model.SUBMITS.Contains(SUBMIT.APPROVE)) ? "requiredValue" : "") })

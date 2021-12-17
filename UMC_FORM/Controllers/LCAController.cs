@@ -53,6 +53,15 @@ namespace UMC_FORM.Controllers
                     station.APPROVE_DATE = lca.UPD_DATE;
                     station.APPROVER = lca.SUBMIT_USER;
                     station.COMPANY = "UMCVN";
+                    var user = db.Form_User.Where(m => m.NAME == station.APPROVER).FirstOrDefault();
+                    if (user != null)
+                    {
+                        station.SIGNATURE = user.SIGNATURE;
+                    }
+                    else
+                    {
+                        station.SIGNATURE = station.APPROVER;
+                    }
                 }
                 listApproved.Add(station);
             }
@@ -681,7 +690,7 @@ namespace UMC_FORM.Controllers
 
             }
         }
-        private Tuple<string, string> AddQuotes(string quotes, DataContext db, LCA_FORM_01 prevTicket, LCA_FORM_01 currentTicket)
+        private Tuple<string, string> AddQuotes(string quotes, DataContext db, LCA_FORM_01 prevTicket, LCA_FORM_01 currentTicket, string status = null)
         {
             try
             {
@@ -704,6 +713,8 @@ namespace UMC_FORM.Controllers
                 }
                 foreach (var quote in lcaQuotes)
                 {
+                    if (status == STATUS.EDIT_QUOTE && quote.LCA_UNIT_PRICE == 0)
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Bạn không được phép để giá bằng 0");
                     var quoteDb = new LCA_QUOTE
                     {
                         ID_TICKET = currentTicket.ID,
@@ -990,7 +1001,11 @@ namespace UMC_FORM.Controllers
                     form.ID = Guid.NewGuid().ToString();
 
                     #region Quote
-                    AddQuotes(quotes, db, infoTicket, form);
+                    var saveQuote = AddQuotes(quotes, db, infoTicket, form, STATUS.EDIT_QUOTE);
+                    if (saveQuote.Item1 == STATUS.ERROR)
+                    {
+                        return saveQuote;
+                    }
                     #endregion
                     #region Files
                     var saveFile = AddFilesToForm(listFiles, form, db);
@@ -1084,7 +1099,7 @@ namespace UMC_FORM.Controllers
                     {
                         var userCreate = UserRepository.GetUser(summary.CREATE_USER);
                         userMails.Add(userCreate.EMAIL);
-                        var name = string.IsNullOrEmpty(userCreate.SHORT_NAME) ? userCreate.NAME : userCreate.NAME;
+                        var name = string.IsNullOrEmpty(userCreate.SHORT_NAME) ? userCreate.NAME : userCreate.SHORT_NAME;
                         dear = $"Dear {name} san !";
                     }
                     else
@@ -1096,7 +1111,7 @@ namespace UMC_FORM.Controllers
                         if (userMails.Count == 1)
                         {
                             var userApproval = db.Form_User.Where(m => m.CODE == stations.FirstOrDefault()).FirstOrDefault();
-                            var name = string.IsNullOrEmpty(userApproval.SHORT_NAME) ? userApproval.NAME : userApproval.NAME;
+                            var name = string.IsNullOrEmpty(userApproval.SHORT_NAME) ? userApproval.NAME : userApproval.SHORT_NAME;
                             dear = $"Dear {name} san !";
                         }
                     }

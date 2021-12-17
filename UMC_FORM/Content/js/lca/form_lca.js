@@ -3,6 +3,7 @@
     $('#lca_cancel').prop("disabled", true);
     $('#lca_accept').prop("disabled", true);
     $('#lca_reject').prop("disabled", true);
+    $('#lca_edit_quote').prop("disabled", true);
 
     $(btn).html(
         '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
@@ -13,10 +14,12 @@ function enableButton() {
     $('#lca_cancel').prop("disabled", false);
     $('#lca_accept').prop("disabled", false);
     $('#lca_reject').prop("disabled", false);
+    $('#lca_edit_quote').prop("disabled", false);
     $('#lca_create').html("Create")
     $('#lca_cancel').html("Cancel")
     $('#lca_accept').html("Accept")
     $('#lca_reject').html("Reject")
+    $('#lca_edit_quote').html("Save Changes")
 }
 
 $(function () {
@@ -41,7 +44,7 @@ $(function () {
         //}
 
     })
-   
+
     var $contextMenu = $("#contextMenu");
     $("#formCreate").validate({
         rules: {
@@ -58,14 +61,14 @@ $(function () {
                 maxlength: 100
             },
             "DECREASE_PERSON": {
-                maxlength:5
+                maxlength: 5
             }
         },
         messages: {
             "payer[]": "Please select at least one checkbox",
             "request_target[]": "Please select at least one checkbox",
             "PURPOSE": "Require 50 character!",
-            "DECREASE_PERSON":"Number too large!"
+            "DECREASE_PERSON": "Number too large!"
         },
         submitHandler: function (form) {
             disableButtonWhenSubmit('#lca_create')
@@ -303,8 +306,9 @@ function OnSuccess(response) {
         }
     }
     else {
-       if(response.message != null) 
+        if (response.message != null) {
             alert(response.message)
+        }
         else alert('error')
         enableButton()
     }

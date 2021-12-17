@@ -362,7 +362,7 @@ function drawStation() {
   
     $.each(listStep, function (index, value) {
         var option = $('<option />', {
-            name: value.index,
+            name: value.index - 1,
             value: value.name,
             text: value.name
         })
@@ -499,7 +499,7 @@ function saveRejectStep() {
     $('#listStationApproveAfterReject li').each(function (index, value) {
         var obj = {
             FORM_INDEX: $(this).attr('name'),
-            START_INDEX: current_step
+            START_INDEX: current_step - 1
         }
         reject.push(obj)
     })
