@@ -25,6 +25,7 @@ namespace UMC_FORM.Controllers
         // GET: LCA
         public ActionResult Create()
         {
+           
             using (var db = new DataContext())
             {
                 _sess = Session["user"] as Form_User;

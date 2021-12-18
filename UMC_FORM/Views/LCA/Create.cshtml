@@ -1,6 +1,7 @@
 ﻿@model UMC_FORM.Models.LCA_FORM_01
 @using UMC_FORM.Models
 @using UMC_FORM.Business
+@using UMC_FORM.Ultils
 @{
     Layout = null;
     var _session = Session["user"] as Form_User;
@@ -23,10 +24,10 @@
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/Content/js/scripts.js"></script>
-    <script src="~/Content/js/lang.js"></script>
-    <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/lca/form_lca.js"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/scripts.js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/lang.js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/lca/form_common.js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/lca/form_lca.js")"></script>
 
 </head>
 

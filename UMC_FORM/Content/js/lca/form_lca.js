@@ -23,7 +23,7 @@ function enableButton() {
 }
 
 $(function () {
-
+    alert('hihi')
     $('input').keyup(function (e) {
         $('#isChange').val('yes')
     });

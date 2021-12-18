@@ -131,6 +131,7 @@ var listStep = [];
 
 var current_step = 0;
 $(function () {
+    alert('hihi')
     $('#process').keyup(function (e) {
         if (e.keyCode == 13) {
             $.ajax({

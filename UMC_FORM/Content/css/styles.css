@@ -6681,6 +6681,7 @@ a.close.disabled {
 
 .bg-primary-light {
     background-color: #81d4fa !important;
+    /*background-color: #dee2e6 !important;*/
 }
 
 a.bg-primary:hover, a.bg-primary:focus,

@@ -1,6 +1,6 @@
 ﻿@using UMC_FORM.Models
 @using UMC_FORM.Business
-
+@using UMC_FORM.Ultils
 @{
     var _session = Session["user"] as Form_User;
 
@@ -15,7 +15,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="@Url.ContentVersioned("~/Content/css/styles.css")" rel="stylesheet" type="text/css" />
+    @*<link href="~/Content/css/styles.css" rel="stylesheet" />*@
     <link href="~/Content/css/simplePagination.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
