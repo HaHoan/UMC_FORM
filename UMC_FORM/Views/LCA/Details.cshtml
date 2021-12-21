@@ -1,6 +1,7 @@
 ﻿@model UMC_FORM.Models.LCA.LCADetailModel
 @using UMC_FORM.Models
 @using UMC_FORM.Business
+@using UMC_FORM.Ultils
 @{
     Layout = "~/Views/Shared/_Layout_Custom1.cshtml";
     var _session = Session["user"] as Form_User;
@@ -150,7 +151,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <td><textarea class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) >@quote.REQUEST_ITEM</textarea></td>
+                                                                    <td><textarea class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i)>@quote.REQUEST_ITEM</textarea></td>
                                                                     <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" /> </td>
                                                                 }
 
@@ -169,12 +170,12 @@
                                                                     <td>@(i)</td>
                                                                     @if (i == 1)
                                                                     {
-                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required ></textarea></td>
+                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required></textarea></td>
                                                                         <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required /> </td>
                                                                     }
                                                                     else
                                                                     {
-                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) ></textarea></td>
+                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i)></textarea></td>
                                                                         <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
                                                                     }
 
@@ -526,10 +527,10 @@
 @Html.Hidden("LoadTicket", Url.Action("Details", "LCA", new { ticket = Model.TICKET.TICKET }));
 @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
 @Scripts.Render("~/Scripts/jquery.validate.min.js")
-@Scripts.Render("~/Content/js/mention.js")
-@Scripts.Render("~/Content/js/moment.js")
+@Scripts.Render(Url.ContentVersioned("~/Content/js/mention","js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/moment","js"))
 @Scripts.Render("~/Scripts/jquery.simplePagination.js")
 @Scripts.Render("~/Scripts/bootstrap-typeahead.js")
-@Scripts.Render("~/Content/js/form_common.js")
-@Scripts.Render("~/Content/js/lca/form_lca.js")
-@Scripts.Render("~/Content/js/comment.js")
+@Scripts.Render(Url.ContentVersioned("~/Content/js/form_common","js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/lca/form_lca","js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/comment","js"))

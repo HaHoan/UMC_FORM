@@ -1,4 +1,4 @@
-﻿
+﻿@using UMC_FORM.Ultils
 @model IEnumerable<UMC_FORM.Models.Form_User>
 
 @{
@@ -165,10 +165,7 @@
 
                                 </tr>
                             </thead>
-                            <tbody  id="listPermissionSelected">
-                               
-
-                            </tbody>
+                            <tbody id="listPermissionSelected"></tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
@@ -179,8 +176,7 @@
             </div>
         </div>
         @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js")
-        @Scripts.Render("~/Content/js/PR_ACC_F06.js")
-
+        @Scripts.Render(Url.ContentVersioned("~/Content/js/PR_ACC_F06", "js"))
 
     </div>
 

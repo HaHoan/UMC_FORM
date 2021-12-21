@@ -16,10 +16,18 @@ namespace UMC_FORM.Ultils
     }
     public static class UrlHelperExtensions
     {
-        public static string ContentVersioned(this UrlHelper self, string contentPath)
+        public static string ContentVersioned(this UrlHelper self, string contentPath,string extension)
         {
-            string versionedContentPath = contentPath + "?v=" + Assembly.GetAssembly(typeof(UrlHelperExtensions)).GetName().Version.ToString();
-            return self.Content(versionedContentPath);
+            var version = Bet.Util.Config.GetValue("version");
+            if(version == "0")
+            {
+                return self.Content($"{contentPath}.{extension}");
+            }
+            else
+            {
+                return self.Content($"{contentPath}[{version}].{extension}");
+            }
+           
         }
     }
 }

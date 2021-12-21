@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<UMC_FORM.Models.Form_Summary>
 @using UMC_FORM.Business
+@using UMC_FORM.Ultils
 @{
     ViewBag.Title = "Home Page";
     Layout = "~/Views/Shared/_Layout_Custom1.cshtml";
@@ -92,7 +93,7 @@
                                                     {
                                                         <span class="badge badge-pill text-white font-medium badge-success mr-2">Work</span>
                                                     }
-                                                        <span class="text-dark"><span class="text-success">@Html.DisplayFor(m => item.TITLE)</span> @Html.DisplayFor(m => item.PURPOSE)</span>
+                                                    <span class="text-dark"><span class="text-success">@Html.DisplayFor(m => item.TITLE)</span> @Html.DisplayFor(m => item.PURPOSE)</span>
                                                 </a>
                                             </td>
                                             <td><i class="fa fa-paperclip text-muted"></i></td>
@@ -164,11 +165,11 @@
 
     </div>
 </div>
-@Scripts.Render("~/Content/js/mention.js")
-@Scripts.Render("~/Content/js/moment.js")
+@Scripts.Render(@Url.ContentVersioned("~/Content/js/mention", "js"))
+@Scripts.Render(@Url.ContentVersioned("~/Content/js/moment", "js"))
 @Scripts.Render("~/Scripts/jquery.simplePagination.js")
-@Scripts.Render("~/Content/js/pagination.js")
-@Scripts.Render("~/Content/js/scripts.js")
+@Scripts.Render(@Url.ContentVersioned("~/Content/js/pagination", "js"))
+@Scripts.Render(@Url.ContentVersioned("~/Content/js/scripts", "js"))
 @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
 
 

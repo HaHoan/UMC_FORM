@@ -17,17 +17,17 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Tạo Form LCA</title>
-    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="@Url.ContentVersioned("~/Content/css/styles", "css")" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="@Url.ContentVersioned("~/Content/js/scripts.js")"></script>
-    <script src="@Url.ContentVersioned("~/Content/js/lang.js")"></script>
-    <script src="@Url.ContentVersioned("~/Content/js/lca/form_common.js")"></script>
-    <script src="@Url.ContentVersioned("~/Content/js/lca/form_lca.js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/scripts","js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/lang","js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/form_common","js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/lca/form_lca","js")"></script>
 
 </head>
 
@@ -160,7 +160,7 @@
                                             $(function () {
                                                 $('input[id^="select_target_"').change(function () {
                                                     var target = "";
-                                                    for (var i = 1; i <= 5; i++) {
+                                                    for (var i = 1; i <= 6; i++) {
                                                         if ($('#select_target_' + i).prop('checked') == true) {
                                                             target += $('#select_target_' + i).val() + ','
                                                         }

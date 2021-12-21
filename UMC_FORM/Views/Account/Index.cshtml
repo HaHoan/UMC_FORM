@@ -1,4 +1,5 @@
-﻿@model UMC_FORM.Models.Form_User
+﻿@using UMC_FORM.Ultils
+@model UMC_FORM.Models.Form_User
 @{
     ViewBag.Title = "Index";
     Layout = null;
@@ -13,7 +14,8 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Login</title>
-    <link href="~/Content/css/styles.css" rel="stylesheet" />
+
+    <link href="@Url.ContentVersioned("~/Content/css/styles", "css")" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <style type="text/css">
         .error {
@@ -76,9 +78,7 @@
                                     }
                                 </div>
                                 <div class="card-footer text-center">
-                                    <div class="small">
-                                        <a type="" href="#" onclick="dialogAlert('Vui lòng liên hệ với phòng <b>PE-IT</b> để được hỗ trợ!', 0)">Need an account? Sign up!</a>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
