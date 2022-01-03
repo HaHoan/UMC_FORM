@@ -43,7 +43,7 @@ namespace UMC_FORM
             try
             {
                 var path = Bet.Util.Config.GetValue("folder") + @"Content\css\";
-                string[] files = Directory.GetFiles(path, "*.css",SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(path, "*.css", SearchOption.AllDirectories);
                 foreach (var file in files)
                 {
                     var version = Bet.Util.Config.GetValue("version");
@@ -52,19 +52,20 @@ namespace UMC_FORM
 
                     if (version != versionOld)
                     {
+                        var pathOfFile = Path.GetDirectoryName(file);
                         if (version == "0")
                         {
-                            File.Move(file, path + getVer.Item2 + ".css");
+                            File.Move(file, pathOfFile + @"\" + getVer.Item2 + ".css");
                         }
                         else
                         {
-                            File.Move(file, path + getVer.Item2 + "[" + version + "].css");
+                            File.Move(file, pathOfFile + @"\" + getVer.Item2 + "[" + version + "].css");
                         }
                     }
 
                 }
                 var pathJS = Bet.Util.Config.GetValue("folder") + @"Content\js\";
-                string[] filesJs = Directory.GetFiles(pathJS, "*.js",SearchOption.AllDirectories);
+                string[] filesJs = Directory.GetFiles(pathJS, "*.js", SearchOption.AllDirectories);
                 foreach (var file in filesJs)
                 {
                     var version = Bet.Util.Config.GetValue("version");
@@ -73,13 +74,14 @@ namespace UMC_FORM
 
                     if (version != versionOld)
                     {
+                        var pathOfFile = Path.GetDirectoryName(file);
                         if (version == "0")
                         {
-                            File.Move(file, pathJS + getVer.Item2 + ".js");
+                            File.Move(file, pathOfFile + @"\" + getVer.Item2 + ".js");
                         }
                         else
                         {
-                            File.Move(file, pathJS + getVer.Item2 + "[" + version + "].js");
+                            File.Move(file, pathOfFile + @"\" + getVer.Item2 + "[" + version + "].js");
                         }
                     }
 
