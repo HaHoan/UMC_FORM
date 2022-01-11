@@ -1,4 +1,4 @@
-/*!
+﻿/*!
     * Start Bootstrap - SB Admin v6.0.3 (https://startbootstrap.com/template/sb-admin)
     * Copyright 2013-2021 Start Bootstrap
     * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE)
@@ -95,4 +95,55 @@
             }
         });
     });
+    filter()
 })(jQuery);
+function filter() {
+    var filter = $('#filter').val()
+    $('#myTab').addClass('d-none')
+    if (filter == 1) { // Gửi cho tôi
+        $("#sendToMe").prop('checked', true)
+        $("#myRequest").prop('checked', false)
+        $("#myCancel").prop('checked', false)
+        $("#myFinish").prop('checked', false)
+        $("#myFollow").prop('checked', false)
+
+        localStorage.setItem('filter', 'SENDTOME');
+    } else if (filter == 2) { //Tôi cần phê duyệt
+        $("#sendToMe").prop('checked', false)
+        $("#myRequest").prop('checked', true)
+        $("#myCancel").prop('checked', false)
+        $("#myFinish").prop('checked', false)
+        $("#myFollow").prop('checked', false)
+        localStorage.setItem('filter', 'MYREQUEST');
+    } else if (filter == 3) { //Bị từ chối
+        $("#sendToMe").prop('checked', false)
+        $("#myRequest").prop('checked', false)
+        $("#myCancel").prop('checked', true)
+        $("#myFinish").prop('checked', false)
+        $("#myFollow").prop('checked', false)
+        localStorage.setItem('filter', 'CANCEL');
+        $(".badge").addClass("badge-danger").removeClass("badge-success");
+    }
+    else if (filter == 4) { //Đã hoàn thành
+        $("#sendToMe").prop('checked', false)
+        $("#myRequest").prop('checked', false)
+        $("#myCancel").prop('checked', false)
+        $("#myFinish").prop('checked', true)
+        $("#myFollow").prop('checked', false)
+
+        $(".badge").text("Finish");
+        localStorage.setItem('filter', 'FINISH');
+    } else if (filter == 5) { // Tôi cần hoàn thành
+        $("#sendToMe").prop('checked', false)
+        $("#myRequest").prop('checked', false)
+        $("#myCancel").prop('checked', false)
+        $("#myFinish").prop('checked', false)
+        $("#myFollow").prop('checked', true)
+        localStorage.setItem('filter', 'FOLLOW');
+        $('#myTab').removeClass('d-none')
+
+    }
+    else {
+
+    }
+}

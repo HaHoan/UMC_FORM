@@ -1025,7 +1025,7 @@ namespace UMC_FORM.Controllers
                     #region SUMARY
 
                     summary.UPD_DATE = DateTime.Now;
-
+                    summary.STATUS = STATUS.QUOTED;
                     #endregion
                     db.SaveChanges();
                     transaction.Commit();

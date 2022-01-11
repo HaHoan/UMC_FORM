@@ -23,7 +23,9 @@ function enableButton() {
 }
 
 $(function () {
-
+    $('#backTo').click(function () {
+        window.location.href = $("#RedirectTo").val()
+    })
     $('input').keyup(function (e) {
         $('#isChange').val('yes')
     });
@@ -100,8 +102,8 @@ $(function () {
         },
         submitHandler: function (form) {
             var status = $('#status').val();
-            if (status == 'reject' || status == 'edit_quote') {
-                if (confirm('Bạn có muốn submit không?')) {
+            if (status == 'reject') {
+                if (confirm('Bạn có muốn reject không?')) {
                     disableButtonWhenSubmit('#lca_' + status)
                     form.ajax.submit()
                 } else {

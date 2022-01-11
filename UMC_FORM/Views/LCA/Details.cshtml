@@ -26,10 +26,10 @@
                     {
                         @Html.AntiForgeryToken()
                         <br>
-                        <a href="@Url.Action("Index", "Home")" style="text-decoration: none;">
+                        <button class="border-0 bg-white" id="backTo" type="button">
                             <i class="fas fa-angle-left font-title text-muted"></i>
                             <span class="font-weight-bold ml-2 text-muted lang text-uppercase" key="title-lca-req" style="font-size: 18px;">YÊU CẦU CUNG CẤP</span>
-                        </a>
+                        </button>
                         <div class="row">
                             <div class="col-11 form-inline">
                                 <span class="font-italic text-muted lang" key="state">Trạng thái:</span>
@@ -410,7 +410,7 @@
                                 <p class="font-weight-bold m-3">ID<span class="font-weight-normal font-italic"> (Do LCA nhập)</span></p>
                                 @if (Model.PERMISSION.Contains(PERMISSION.ADD_ID))
                                 {
-                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control " + ((Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE) && Model.SUBMITS.Contains(SUBMIT.APPROVE)) ? "requiredValue" : "") })
+                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control requiredValue" })
                                 }
                                 else
                                 {
@@ -524,13 +524,20 @@
     </div>
 </div>
 @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }));
+<script>
+    var filter = localStorage.getItem('filter')
+    if (filter == null) filter = 'SENDTOME';
+    $('#RedirectTo').val('/Home?type=' + filter);
+    
+</script>
+
 @Html.Hidden("LoadTicket", Url.Action("Details", "LCA", new { ticket = Model.TICKET.TICKET }));
 @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
 @Scripts.Render("~/Scripts/jquery.validate.min.js")
-@Scripts.Render(Url.ContentVersioned("~/Content/js/mention","js"))
-@Scripts.Render(Url.ContentVersioned("~/Content/js/moment","js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/mention", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
 @Scripts.Render("~/Scripts/jquery.simplePagination.js")
 @Scripts.Render("~/Scripts/bootstrap-typeahead.js")
-@Scripts.Render(Url.ContentVersioned("~/Content/js/form_common","js"))
-@Scripts.Render(Url.ContentVersioned("~/Content/js/lca/form_lca","js"))
-@Scripts.Render(Url.ContentVersioned("~/Content/js/comment","js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/form_common", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/lca/form_lca", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/comment", "js"))
