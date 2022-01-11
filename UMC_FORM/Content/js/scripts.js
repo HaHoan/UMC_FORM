@@ -100,6 +100,7 @@
 function filter() {
     var filter = $('#filter').val()
     $('#myTab').addClass('d-none')
+  
     if (filter == 1) { // Gửi cho tôi
         $("#sendToMe").prop('checked', true)
         $("#myRequest").prop('checked', false)

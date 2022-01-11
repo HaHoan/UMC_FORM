@@ -191,7 +191,12 @@
                             <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
                                 <tbody class="list-request">
                                     @{
-                                        var listNotYet = Model.Where(m => m.STATUS != STATUS.QUOTED).ToList();
+                                        var listNotYet = Model;
+                                        if (ViewBag.type == 5)
+                                        {
+                                            listNotYet = Model.Where(m => m.STATUS != STATUS.QUOTED).ToList();
+                                        }
+
                                         foreach (var item in listNotYet)
                                         {
                                             var id = "cst" + _no;

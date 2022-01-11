@@ -2353,7 +2353,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\EmaiApproval\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Process\Create.cshtml" />
@@ -2406,7 +2406,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="UploadedFiles\" />
     <Folder Include="Views\Comment\" />
-    <Folder Include="Views\EmaiApproval\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

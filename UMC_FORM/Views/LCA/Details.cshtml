@@ -116,7 +116,7 @@
                                                 <p class="font-italic">(After get approval from GD)</p>
                                             </div>
                                             <div class="col-9">
-                                                <input class="form-control" name="LEAD_TIME" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                                <input class="form-control type_number" name="LEAD_TIME_NUMBER" value="@Model.TICKET.LEAD_TIME_NUMBER">
                                             </div>
                                         </div>
                                         <div class="table-responsive">
@@ -233,23 +233,25 @@
                                     <div class="create-quote">
                                         <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
                                         <div class="row">
-                                            <div class="col-3">
-                                                <label class="font-weight-bold lang" key="received-date">Target date</label>
+                                            <div class="col text-right">
+                                                <label class="font-weight-bold lang d-inline" key="received-date">Target date</label>
+
                                             </div>
-                                            <div class="col-9">
-                                                <input class="form-control" name="RECEIVE_DATE" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            <div class="col">
+                                               
+                                                <input class="form-control " name="RECEIVE_DATE" type="date" value=@Model.TICKET.RECEIVE_DATE.ToString("yyyy-MM-dd")>
+                                            </div>
+                                            <div class="col text-right">
+                                                <label class="font-weight-bold lang" key="">Lead time:</label>
+                                                <p class="font-italic">(After get approval from GD)</p>
+
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-control type_number requiredValue" name="LEAD_TIME_NUMBER" value="@Model.TICKET.LEAD_TIME_NUMBER">
                                             </div>
                                         </div>
                                         <br />
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <label class="font-weight-bold lang" key="">Lead time:</label>
-                                                <p class="font-italic">(After get approval from GD)</p>
-                                            </div>
-                                            <div class="col-9">
-                                                <input class="form-control" name="LEAD_TIME" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
-                                            </div>
-                                        </div>
+
 
                                         <div class="table-responsive">
                                             <table class="table-border-dark">
@@ -330,7 +332,7 @@
                                         <div class="row">
                                             <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
                                             <label class="col lang text-right">受付日／Ngày nhận: <span name="RECEIVE_DATE">@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
-                                            <label class="lang col text-right">Lead time: <span name="LEAD_TIME">@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
+                                            <label class="lang col text-right">Lead time: <span name="LEAD_TIME_NUMBER">@Html.DisplayFor(m => m.TICKET.LEAD_TIME_NUMBER)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
                                         </div>
 
                                         <div class="table-responsive">

@@ -852,7 +852,7 @@ namespace UMC_FORM.Controllers
                     if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault() != null)
                     {
                         form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
-                        form.LEAD_TIME = infoTicket.LEAD_TIME;
+                        form.LEAD_TIME_NUMBER = infoTicket.LEAD_TIME_NUMBER;
 
                     }
                     if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.ADD_ID).FirstOrDefault() != null)
@@ -902,7 +902,7 @@ namespace UMC_FORM.Controllers
                     var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
                     form.STATION_NAME = process.Where(m => m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1)).FirstOrDefault().STATION_NAME;
                     form.STATION_NO = process.Where(m => m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1)).FirstOrDefault().STATION_NO;
-                    db.LCA_FORM_01.Add(form);
+                   
                     #endregion
 
                     #region SUMARY
@@ -912,8 +912,10 @@ namespace UMC_FORM.Controllers
                     if (form.PROCEDURE_INDEX == summary.LAST_INDEX)
                     {
                         summary.IS_FINISH = true;
+                        form.LEAD_TIME = form.UPD_DATE.AddDays(form.LEAD_TIME_NUMBER);
                     }
 
+                    db.LCA_FORM_01.Add(form);
                     #endregion
 
                     // Thay đổi payer => change process
@@ -1000,7 +1002,8 @@ namespace UMC_FORM.Controllers
                     form.IS_SIGNATURE = 0;
                     form.LCA_ID = infoTicket.LCA_ID;
                     form.ID = Guid.NewGuid().ToString();
-
+                    form.LEAD_TIME_NUMBER = infoTicket.LEAD_TIME_NUMBER;
+                    form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
                     #region Quote
                     var saveQuote = AddQuotes(quotes, db, infoTicket, form, STATUS.EDIT_QUOTE);
                     if (saveQuote.Item1 == STATUS.ERROR)

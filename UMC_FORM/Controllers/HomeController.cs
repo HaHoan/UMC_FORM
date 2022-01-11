@@ -54,6 +54,7 @@ namespace UMC_FORM.Controllers
             {
                 case SendType.SENDTOME:
                     list = db.Form_Summary.Where(r => r.IS_FINISH == false).ToList();
+                    
                     foreach (var item in list)
                     {
                         var index = item.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
