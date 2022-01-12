@@ -202,3 +202,4 @@ function checkUnicode(text) {
         return false
     }
 }
+

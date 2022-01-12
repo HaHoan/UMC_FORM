@@ -2010,11 +2010,18 @@ pre {
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
     .table-responsive > .table-bordered {
         border: 0;
     }
+
+
+
+
+
 
 .form-control {
     display: block;
@@ -11352,14 +11359,14 @@ input[type='radio']:checked:after {
     border-radius: 50%;
     height: auto;
     width: 90px;
-    margin:0 auto;
+    margin: 0 auto;
     line-height: 100px;
     opacity: 0.8;
     -webkit-transform: rotate(-10deg);
     -o-transform: rotate(-10deg);
     -moz-transform: rotate(-10deg);
     -ms-transform: rotate(-10deg);
-     text-align:center;
+    text-align: center;
 }
 
     .rubber_stamp::after {
@@ -11408,13 +11415,14 @@ table td {
 .inputDefault {
     font-size: 1rem;
 }
+
 .field-validation-error {
     color: red;
-   
 }
-.table-border-dark, .table-border-dark td, .table-border-dark th {
+
+.table-border-dark, .table-border-dark td, .table-border-dark th, .table-border-dark thead {
     border: 1px solid black;
-    color:black;
+    color: black;
 }
 
 .table-border-dark {
@@ -11422,6 +11430,11 @@ table td {
     border-collapse: collapse;
 }
 
+    .table-border-dark thead {
+        position: sticky;
+        top: 0;
+        
+    }
 
 
 .switcher {
@@ -11502,9 +11515,8 @@ table td {
     }
 
 .middle {
-    width:100%;
-    height:100%;
-    
+    width: 100%;
+    height: 100%;
     transition: .5s ease;
     position: absolute;
     top: 50%;
@@ -11512,19 +11524,19 @@ table td {
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     text-align: center;
-    z-index:1
+    z-index: 1
 }
+
 .center_image {
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: auto;
-    vertical-align:middle;
-    
+    vertical-align: middle;
 }
-.error{
-    
-    color:red;
+
+.error {
+    color: red;
 }
 
 .btn-image, .btn-image.hover {

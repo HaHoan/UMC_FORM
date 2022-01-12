@@ -120,23 +120,26 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table-border-dark">
-                                                <tr>
-                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                                                </tr>
-                                                <tr>
+                                            <table class="table-border-dark ">
+                                                <thead class="bg-primary-light">
+                                                    <tr>
+                                                        <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                                        <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                                        <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                                        <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                                        <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                                    </tr>
+                                                    <tr>
 
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
 
-                                                </tr>
+                                                    </tr>
 
+                                                </thead>
+                                             
                                                 <tbody id="tableInfo">
                                                     @{
                                                         var i = 1;
@@ -238,7 +241,7 @@
 
                                             </div>
                                             <div class="col">
-                                               
+
                                                 <input class="form-control " name="RECEIVE_DATE" type="date" value=@Model.TICKET.RECEIVE_DATE.ToString("yyyy-MM-dd")>
                                             </div>
                                             <div class="col text-right">
@@ -252,24 +255,48 @@
                                         </div>
                                         <br />
 
+                                        <p>
+                                            ** Nếu số hạng mục yêu cầu quá nhiều, bấm vào
+                                            <a class="text-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                COPY/PASTE EXCEL DATA
+                                            </a>
+                                            để sử dụng chức năng copy paste từ Excel
+                                        </p>
+
+
+                                        <div class="collapse" id="collapseExample">
+                                            <div class="m-2">
+                                                <div class="form-group">
+                                                    <label for="exampleTextarea">
+                                                        <span id="inline-forms" class="btn-outline-success">Copy dữ liệu từ Excel rồi Paste vào đây:</span>
+                                                        <span class="font-italic text-danger">(Lưu ý: Dữ liệu bạn copy sẽ được hiển thị vào mục unit price)</span>
+                                                    </label>
+                                                    <textarea name="excel_data" class="form-control" rows="10"></textarea>
+                                                </div>
+                                                <input type="button" class="btn btn-outline-success" onclick="javascript:generateUnitToTable()" value="Paste dữ liệu vào bảng báo giá bên dưới" />
+                                            </div>
+                                        </div>
 
                                         <div class="table-responsive">
                                             <table class="table-border-dark">
-                                                <tr>
-                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                                                </tr>
-                                                <tr>
+                                                <thead class="bg-primary-light">
+                                                    <tr>
+                                                        <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                                        <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                                        <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                                        <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                                        <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                                    </tr>
+                                                    <tr>
 
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
 
-                                                </tr>
+                                                    </tr>
+                                                </thead>
+
 
                                                 <tbody id="tableInfo">
                                                     @{
@@ -530,7 +557,7 @@
     var filter = localStorage.getItem('filter')
     if (filter == null) filter = 'SENDTOME';
     $('#RedirectTo').val('/Home?type=' + filter);
-    
+
 </script>
 
 @Html.Hidden("LoadTicket", Url.Action("Details", "LCA", new { ticket = Model.TICKET.TICKET }));

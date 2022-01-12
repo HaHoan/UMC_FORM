@@ -714,8 +714,12 @@ namespace UMC_FORM.Controllers
                 }
                 foreach (var quote in lcaQuotes)
                 {
+                    if(quote.QUANTITY == 0)
+                    {
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Item số " + quote.NO + " đang chưa điền số lượng!");
+                    }
                     if (status == STATUS.EDIT_QUOTE && quote.LCA_UNIT_PRICE == 0)
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Bạn không được phép để giá bằng 0");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Item số " + quote.NO + " đang chưa điền giá!");
                     var quoteDb = new LCA_QUOTE
                     {
                         ID_TICKET = currentTicket.ID,
@@ -852,6 +856,11 @@ namespace UMC_FORM.Controllers
                     if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault() != null)
                     {
                         form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
+                        if(infoTicket.LEAD_TIME_NUMBER == 0)
+                        {
+                            return Tuple.Create<string, string>(STATUS.ERROR, "Lead time không được bằng 0");
+                        }
+                           
                         form.LEAD_TIME_NUMBER = infoTicket.LEAD_TIME_NUMBER;
 
                     }
@@ -1002,6 +1011,10 @@ namespace UMC_FORM.Controllers
                     form.IS_SIGNATURE = 0;
                     form.LCA_ID = infoTicket.LCA_ID;
                     form.ID = Guid.NewGuid().ToString();
+                    if (infoTicket.LEAD_TIME_NUMBER == 0)
+                    {
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Lead time không được bằng 0");
+                    }
                     form.LEAD_TIME_NUMBER = infoTicket.LEAD_TIME_NUMBER;
                     form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
                     #region Quote
