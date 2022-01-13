@@ -156,7 +156,9 @@
                         </div>
                         <div class="custom-control custom-checkbox ml-3 mt-4">
                             <input type="checkbox" class="custom-control-input" id="myFollow">
-                            <a class="custom-control-label lang" key="follow-request" for="myFollow" href="@Url.Action("Index","Home", new { type = SendType.FOLLOW})">Đã hoàn thành</a>
+                            <a class="custom-control-label lang"  for="myFollow" href="@Url.Action("Index","Home", new { type = SendType.FOLLOW})">
+                                <h6><span class="lang" key="follow-request">Đang theo dõi</span> <span class="badge badge-danger" id="number_follow_not_yet">@ViewBag.NumberFollowNotYet</span></h6>
+                            </a>
                         </div>
                         <div class="sb-sidenav-menu-heading lang" key="form_bieu">Form biểu</div>
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts"

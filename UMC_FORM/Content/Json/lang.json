@@ -53,6 +53,7 @@
     "no": "NO",
     "req-checkout": "Có yêu cầu khách hàng thanh toán : Có / Không",
     "attach": "**File Attach**",
+    "quote_attach": "**File Quote Attach**",
     "main-action": "Main Action",
     "apply": "Applicant",
     "dept-manager": " Dept Manager",
@@ -170,6 +171,7 @@
     "no": "Không",
     "req-checkout": "Có yêu cầu khách hàng thanh toán : Có/ Không",
     "attach": "**File đính kèm**",
+    "quote_attach": "**File báo giá đính kèm**",
     "main-action": "hoạt động chính",
     "apply": "Người Đề Xuất",
     "dept-manager": "Trưởng Phòng",
@@ -275,6 +277,8 @@
     "form_bieu": "Form List",
     "all": "All",
     "in-turn": "Done",
-    "overdue": "Not Yet"
+    "overdue": "Not Yet",
+    "attach": "**File Attach**",
+    "quote_attach": "**File Quote Attach**"
   }
 }

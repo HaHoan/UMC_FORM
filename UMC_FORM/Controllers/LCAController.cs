@@ -538,7 +538,7 @@ namespace UMC_FORM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket, string listFiles)
+        public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket, string listFiles,string listFilesQuote)
         {
             try
             {
@@ -566,7 +566,7 @@ namespace UMC_FORM.Controllers
 
                         if (status == STATUS.ACCEPT)
                         {
-                            var result = Accept(formDb, db, infoTicket, quotes, listFiles);
+                            var result = Accept(formDb, db, infoTicket, quotes, listFiles,listFilesQuote);
                             if (result.Item1 == STATUS.ERROR)
                             {
                                 return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
@@ -600,7 +600,7 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.EDIT_QUOTE)
                         {
-                            var result = EditQuote(formDb, db, infoTicket, quotes, listFiles);
+                            var result = EditQuote(formDb, db, infoTicket, quotes, listFiles,listFilesQuote);
                             if (result.Item1 == STATUS.ERROR)
                             {
                                 return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
@@ -744,7 +744,7 @@ namespace UMC_FORM.Controllers
 
 
         }
-        private Tuple<string, string> AddFilesToForm(string listFiles, LCA_FORM_01 form, DataContext db)
+        private Tuple<string, string> AddFilesToForm(string listFiles, LCA_FORM_01 form, DataContext db, string type = null)
         {
             if (string.IsNullOrEmpty(listFiles))
             {
@@ -760,6 +760,7 @@ namespace UMC_FORM.Controllers
                     lcaFile.ID_TICKET = form.ID;
                     lcaFile.FILE_URL = file.FILE_URL;
                     lcaFile.FILE_NAME = file.FILE_NAME;
+                    lcaFile.FILE_TYPE = type;
                     string fullPath = Request.MapPath("~" + file.FILE_URL);
                     if (System.IO.File.Exists(fullPath))
                     {
@@ -779,7 +780,7 @@ namespace UMC_FORM.Controllers
             }
         }
 
-        private Tuple<string, string> Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles)
+        private Tuple<string, string> Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles, string listFileQuote)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -905,6 +906,12 @@ namespace UMC_FORM.Controllers
                         transaction.Rollback();
                         return saveFile;
                     }
+                    var saveFileQuote = AddFilesToForm(listFileQuote, form, db,FILE_TYPE.QUOTED);
+                    if (saveFileQuote.Item1 == STATUS.ERROR)
+                    {
+                        transaction.Rollback();
+                        return saveFileQuote;
+                    }
                     #endregion
 
 
@@ -992,7 +999,7 @@ namespace UMC_FORM.Controllers
 
 
         }
-        private Tuple<string, string> EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles)
+        private Tuple<string, string> EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles,string listFileQuote)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -1023,6 +1030,7 @@ namespace UMC_FORM.Controllers
                     {
                         return saveQuote;
                     }
+
                     #endregion
                     #region Files
                     var saveFile = AddFilesToForm(listFiles, form, db);
@@ -1030,6 +1038,12 @@ namespace UMC_FORM.Controllers
                     {
                         transaction.Rollback();
                         return saveFile;
+                    }
+                    var saveFileQuote = AddFilesToForm(listFileQuote, form, db, FILE_TYPE.QUOTED);
+                    if (saveFileQuote.Item1 == STATUS.ERROR)
+                    {
+                        transaction.Rollback();
+                        return saveFileQuote;
                     }
                     #endregion
                     var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();

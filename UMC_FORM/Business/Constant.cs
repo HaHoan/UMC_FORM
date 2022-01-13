@@ -68,7 +68,10 @@ namespace UMC_FORM.Business
         public static string CUSTOMER = "Customer";
         public static string UMCVN = "UMCVN";
     }
-
+    public static class FILE_TYPE
+    {
+        public static string QUOTED = "QUOTED";
+    }
     public static class POSITION
     {
         public static int MANAGER = 1;
