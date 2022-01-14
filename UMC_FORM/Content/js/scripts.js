@@ -123,7 +123,7 @@ function filter() {
         $("#myFinish").prop('checked', false)
         $("#myFollow").prop('checked', false)
         localStorage.setItem('filter', 'CANCEL');
-        $(".badge").addClass("badge-danger").removeClass("badge-success");
+        $(".status-ticket").addClass("badge-danger").removeClass("badge-success");
     }
     else if (filter == 4) { //Đã hoàn thành
         $("#sendToMe").prop('checked', false)
@@ -132,7 +132,7 @@ function filter() {
         $("#myFinish").prop('checked', true)
         $("#myFollow").prop('checked', false)
 
-        $(".badge").text("Finish");
+        $(".status-ticket").text("Finish");
         localStorage.setItem('filter', 'FINISH');
     } else if (filter == 5) { // Tôi cần hoàn thành
         $("#sendToMe").prop('checked', false)

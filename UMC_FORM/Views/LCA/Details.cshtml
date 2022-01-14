@@ -391,8 +391,7 @@
                                             </div>
                                         </div>
                                         <div class=" mt-2">
-                                            <p class="btn btn-warning font-weight-bold lang" key="quote_attach">**File báo giá đính kèm**</p>
-                                            <br />
+                                          
                                             @{
                                                 var filesQuote = Model.TICKET.FILES.Where(m => m.FILE_TYPE == FILE_TYPE.QUOTED).ToList();
                                                 foreach (var file in filesQuote)

@@ -58,7 +58,7 @@
                             $("#btnSearch").on('click', function () {
                                 var keySearch = $("#search").val();
                                 document.location = '@Url.Action("Search","Home")?search=' + keySearch;
-                                
+
                             });
                         });
                     </script>
@@ -126,7 +126,7 @@
                                         <label class=" lang" key="Summary">Tổng kết</label>
                                     </a>
                                 }
-                                if(user.ROLE_ID == ROLE.CanEdit)
+                                if (user.ROLE_ID == ROLE.CanEdit)
                                 {
                                     <button class="btn btn-light ml-3 mr-5 mt-3" data-toggle="modal"
                                             data-target="#findRequestForm">
@@ -156,8 +156,23 @@
                         </div>
                         <div class="custom-control custom-checkbox ml-3 mt-4">
                             <input type="checkbox" class="custom-control-input" id="myFollow">
-                            <a class="custom-control-label lang"  for="myFollow" href="@Url.Action("Index","Home", new { type = SendType.FOLLOW})">
-                                <h6><span class="lang" key="follow-request">Đang theo dõi</span> <span class="badge badge-danger" id="number_follow_not_yet">@ViewBag.NumberFollowNotYet</span></h6>
+                            <a class="custom-control-label lang" for="myFollow" href="@Url.Action("Index","Home", new { type = SendType.FOLLOW})">
+                                <h6>
+                                    <span class="lang" key="follow-request">Đang theo dõi</span>
+
+
+                                    @{
+                                        if (ViewBag.NumberFollowNotYet != null && ViewBag.NumberFollowNotYet != 0)
+                                        {
+                                            <span class="badge badge-danger">
+                                                @ViewBag.NumberFollowNotYet
+                                            </span>
+                                        }
+                                    }
+
+
+
+                                </h6>
                             </a>
                         </div>
                         <div class="sb-sidenav-menu-heading lang" key="form_bieu">Form biểu</div>
@@ -267,7 +282,7 @@
         </div>
     </div>
 
-  
+
     @RenderSection("scripts", required: false)
     <script src="@Url.ContentVersioned("~/Content/js/lang","js")"></script>
 </body>
