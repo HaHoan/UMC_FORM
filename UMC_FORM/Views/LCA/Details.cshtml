@@ -483,21 +483,21 @@
 
                                                 </tbody>
                                             </table>
-                                            <div class=" mt-2">
-                                                <p class="btn btn-warning font-weight-bold lang" key="quote_attach">**File báo giá đính kèm**</p>
-                                                <br />
-                                                @{
-                                                    var filesQuote = Model.TICKET.FILES.Where(m => m.FILE_TYPE == FILE_TYPE.QUOTED).ToList();
-                                                    foreach (var file in filesQuote)
-                                                    {
-                                                        <a target="_blank" href="@file.FILE_URL" class="badge badge-danger">@file.FILE_NAME</a>
-                                                        <br />
-                                                    }
-                                                }
 
-                                            </div>
                                         </div>
+                                        <div class=" mt-2">
+                                            <p class="btn btn-warning font-weight-bold lang" key="quote_attach">**File báo giá đính kèm**</p>
+                                            <br />
+                                            @{
+                                                var filesQuote = Model.TICKET.FILES.Where(m => m.FILE_TYPE == FILE_TYPE.QUOTED).ToList();
+                                                foreach (var file in filesQuote)
+                                                {
+                                                    <a target="_blank" href="@file.FILE_URL" class="badge badge-danger">@file.FILE_NAME</a>
+                                                    <br />
+                                                }
+                                            }
 
+                                        </div>
                                     </div>
                                 }
 

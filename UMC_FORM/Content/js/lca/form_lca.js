@@ -153,7 +153,7 @@ $(function () {
         submitHandler: function (form) {
             var status = $('#status').val();
             if (status == 'reject') {
-                if (confirm('Bạn có muốn reject không?')) {
+                if (confirm('Do you want to reject?')) {
                     disableButtonWhenSubmit('#lca_' + status)
                     form.ajax.submit()
                 } else {
@@ -183,14 +183,14 @@ $(function () {
                 var val = $('#isChange').val();
 
                 if (val == 'no') {
-                    if (confirm('Bạn có muốn thay đổi gì trước khi ' + status + ' không?')) {
+                    if (confirm('Do you want to change something before ' + status + '?')) {
                         disableButtonWhenSubmit('#lca_' + status)
                         form.ajax.submit()
                     } else {
                         return false;
                     }
                 } else {
-                    if (confirm('Bạn có muốn ' + status + ' không?')) {
+                    if (confirm('Do you want to ' + status + '?')) {
                         disableButtonWhenSubmit('#lca_' + status)
                         form.ajax.submit()
                     } else {
@@ -417,7 +417,7 @@ function addTd(name) {
 function addTdQty(rowIndex) {
     var col = $('<td/>');
     var input1 = $('<input/>', {
-        class: 'form-input type_number inputDefault',
+        class: 'form-input type_number inputDefault text-center',
         keyup: function (e) {
             var id = $(this).attr('id')
             var rStr = id.substr(4, id.length - 4)
