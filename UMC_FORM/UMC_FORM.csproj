@@ -415,13 +415,10 @@
     <Content Include="Content\js\comment.js" />
     <Content Include="Content\js\form_edit.js" />
     <Content Include="Content\js\lca\form_lca.js" />
-    <Content Include="Content\js\popper-custom.min.js" />
     <Content Include="Content\js\PR_ACC_F06.js" />
-    <Content Include="Content\js\bootstrap-typeahead.js" />
     <Content Include="Content\js\form.js" />
     <Content Include="Content\js\form_common.js" />
     <Content Include="Content\js\form_detail.js" />
-    <Content Include="Content\js\jquery.simplePagination.js" />
     <Content Include="Content\js\lang.js" />
     <Content Include="Content\js\mention.js" />
     <Content Include="Content\js\moment.js" />
@@ -432,6 +429,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-typeahead.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -2262,6 +2260,7 @@
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.simplePagination.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -2269,6 +2268,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\popper-custom.min.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -2353,7 +2353,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\EmaiApproval\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Process\Create.cshtml" />
@@ -2399,12 +2399,13 @@
     <Content Include="Views\LCA\_StationApprove.cshtml" />
     <Content Include="Views\LCA\_TicketView.cshtml" />
     <Content Include="Views\LCA\_TicketEdit.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="UploadedFiles\" />
     <Folder Include="Views\Comment\" />
-    <Folder Include="Views\EmaiApproval\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

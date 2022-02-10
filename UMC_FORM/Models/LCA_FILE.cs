@@ -23,5 +23,7 @@ namespace UMC_FORM.Models
 
         [Required]
         public string FILE_NAME { get; set; }
+
+        public string FILE_TYPE { get; set; }
     }
 }

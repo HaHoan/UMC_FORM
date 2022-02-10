@@ -39,7 +39,7 @@ function addTd(name) {
 function addTdQty(rowIndex) {
     var col2 = $('<td/>');
     var input1 = $('<input/>', {
-        class: 'form-input type_number',
+        class: 'form-input type_number inputDefault',
 
         change: function () {
             var id = $(this).attr('id')

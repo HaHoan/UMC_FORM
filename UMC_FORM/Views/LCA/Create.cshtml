@@ -1,6 +1,7 @@
 ﻿@model UMC_FORM.Models.LCA_FORM_01
 @using UMC_FORM.Models
 @using UMC_FORM.Business
+@using UMC_FORM.Ultils
 @{
     Layout = null;
     var _session = Session["user"] as Form_User;
@@ -16,17 +17,17 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Tạo Form LCA</title>
-    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="@Url.ContentVersioned("~/Content/css/styles", "css")" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/Content/js/scripts.js"></script>
-    <script src="~/Content/js/lang.js"></script>
-    <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/lca/form_lca.js"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/scripts","js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/lang","js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/form_common","js")"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/lca/form_lca","js")"></script>
 
 </head>
 
@@ -277,41 +278,63 @@
                         <div class="create-quote">
                             <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
                             <div class="row">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="received-date">Target date</label>
+                                <div class="col text-right">
+                                    <label class="font-weight-bold lang d-inline" key="received-date">Target date</label>
+
                                 </div>
-                                <div class="col-9">
-                                    <input class="form-control" name="RECEIVE_DATE" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                <div class="col">
+                                    <input class="form-control " name="RECEIVE_DATE" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                </div>
+                                <div class="col text-right">
+                                    <label class="font-weight-bold lang" key="">Lead time:</label>
+                                    <p class="font-italic">(After get approval from GD)</p>
+
+                                </div>
+                                <div class="col">
+                                    <input class="form-control type_number" name="LEAD_TIME_NUMBER">
                                 </div>
                             </div>
                             <br />
-                            <div class="row">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="">Lead time:</label>
-                                    <p class="font-italic">(After get approval from GD)</p>
-                                </div>
-                                <div class="col-9">
-                                    <input class="form-control" name="LEAD_TIME" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                            <p>
+                                ** Nếu số hạng mục yêu cầu quá nhiều, bấm vào
+                                <a class="text-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    COPY/PASTE EXCEL DATA
+                                </a>
+                                để sử dụng chức năng copy paste từ Excel
+                            </p>
+                           
+                          
+                            <div class="collapse" id="collapseExample">
+                                <div class="m-2">
+                                    <div class="form-group">
+                                        <label for="exampleTextarea"><span id="inline-forms" class="btn-outline-success">Copy dữ liệu từ Excel rồi Paste vào đây:</span></label>
+                                        <textarea name="excel_data" class="form-control" rows="10"></textarea>
+                                    </div>
+                                    <input type="button" class="btn btn-outline-success" onclick="javascript:generateTable()" value="Paste dữ liệu vào bảng báo giá bên dưới" />
                                 </div>
                             </div>
+
                             <div class="table-responsive">
                                 <table class="table-border-dark quote">
-                                    <tr>
-                                        <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                        <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                                        <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                        <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                                        <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                                    </tr>
-                                    <tr>
+                                    <thead class="bg-primary-light">
+                                        <tr>
+                                            <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                            <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                            <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                            <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                            <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                        </tr>
+                                        <tr>
 
-                                        <td class="lang text-center" width="">Unit price</td>
-                                        <td class="lang text-center" width="">Total cost</td>
-                                        <td class="lang text-center" width="">Unit price</td>
-                                        <td class="lang text-center" width="">Total cost</td>
+                                            <td class="lang text-center" width="">Unit price</td>
+                                            <td class="lang text-center" width="">Total cost</td>
+                                            <td class="lang text-center" width="">Unit price</td>
+                                            <td class="lang text-center" width="">Total cost</td>
 
-                                    </tr>
+                                        </tr>
 
+                                    </thead>
+                                   
                                     <tbody id="tableInfo">
                                         @{
                                             for (int i = 1; i <= 5; i++)
@@ -320,13 +343,13 @@
                                                     <td>@(i)</td>
                                                     @if (i == 1)
                                                     {
-                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required ></textarea></td>
+                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required></textarea></td>
                                                         <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required /> </td>
 
                                                     }
                                                     else
                                                     {
-                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) ></textarea></td>
+                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i)></textarea></td>
                                                         <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
                                                     }
 

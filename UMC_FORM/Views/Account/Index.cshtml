@@ -1,4 +1,5 @@
-﻿@model UMC_FORM.Models.Form_User
+﻿@using UMC_FORM.Ultils
+@model UMC_FORM.Models.Form_User
 @{
     ViewBag.Title = "Index";
     Layout = null;
@@ -13,7 +14,8 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Login</title>
-    <link href="~/Content/css/styles.css" rel="stylesheet" />
+
+    <link href="@Url.ContentVersioned("~/Content/css/styles", "css")" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <style type="text/css">
         .error {
@@ -22,7 +24,7 @@
     </style>
 </head>
 
-<body class="bg-primary">
+<body class="bg-primary-light">
     <div id="layoutAuthentication">
         <div id="layoutAuthentication_content">
             <main>
@@ -30,7 +32,12 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-5">
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                                <div class="card-header text-center">
+                                    <div class="d-none d-md-inline-block mr-auto">
+                                        <img src="~/Content/assets/img/logo.png" />
+                                        <span class="font-weight-light ml-4 font-weight-bold" key="title">LOGIN</span>
+                                    </div>
+                                </div>
                                 <div class="card-body">
                                     @using (Html.BeginForm("Index", "Account", new { ReturnUrl = @ViewBag.ReturnUrl }))
                                     {
@@ -46,7 +53,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="small mb-1" for="inputPassword">Password</label>
-                                            @Html.EditorFor(model => model.PASSWORD, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter password", @type = "password" , @autocomplete = "off" } })
+                                            @Html.EditorFor(model => model.PASSWORD, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter password", @type = "password", @autocomplete = "off" } })
                                             @Html.ValidationMessageFor(model => model.PASSWORD, "", new { @class = "text-danger" })
                                         </div>
                                         <div class="form-group">
@@ -71,9 +78,7 @@
                                     }
                                 </div>
                                 <div class="card-footer text-center">
-                                    <div class="small">
-                                        <a type="" href="#" onclick="dialogAlert('Vui lòng liên hệ với phòng <b>PE-IT</b> để được hỗ trợ!', 0)">Need an account? Sign up!</a>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<UMC_FORM.Models.Form_User>
+﻿@using UMC_FORM.Ultils
+@model IEnumerable<UMC_FORM.Models.Form_User>
 @{
     ViewBag.Title = "Users";
     Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
@@ -186,11 +187,11 @@
 
     </div>
 </div>
-@Scripts.Render("~/Content/js/mention.js")
-@Scripts.Render("~/Content/js/moment.js")
-@Scripts.Render("~/Content/js/jquery.simplePagination.js")
-@Scripts.Render("~/Content/js/pagination.js")
-@Scripts.Render("~/Content/js/scripts.js")
+@Scripts.Render(Url.ContentVersioned("~/Content/js/mention", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
+@Scripts.Render("~/Scripts/jquery.simplePagination.js")
+@Scripts.Render(Url.ContentVersioned("~/Content/js/pagination", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/scripts", "js"))
 
 
 

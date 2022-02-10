@@ -1,6 +1,7 @@
 ﻿@model UMC_FORM.Models.LCA.LCADetailModel
 @using UMC_FORM.Models
 @using UMC_FORM.Business
+@using UMC_FORM.Ultils
 @{
     Layout = "~/Views/Shared/_Layout_Custom1.cshtml";
     var _session = Session["user"] as Form_User;
@@ -25,10 +26,10 @@
                     {
                         @Html.AntiForgeryToken()
                         <br>
-                        <a href="@Url.Action("Index", "Home")" style="text-decoration: none;">
+                        <button class="border-0 bg-white" id="backTo" type="button">
                             <i class="fas fa-angle-left font-title text-muted"></i>
                             <span class="font-weight-bold ml-2 text-muted lang text-uppercase" key="title-lca-req" style="font-size: 18px;">YÊU CẦU CUNG CẤP</span>
-                        </a>
+                        </button>
                         <div class="row">
                             <div class="col-11 form-inline">
                                 <span class="font-italic text-muted lang" key="state">Trạng thái:</span>
@@ -101,40 +102,64 @@
                                     <div class="create-quote-info">
                                         <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
                                         <div class="row">
-                                            <div class="col-3">
-                                                <label class="font-weight-bold lang" key="received-date">Target date</label>
+                                            <div class="col text-right">
+                                                <label class="font-weight-bold lang d-inline" key="received-date">Target date</label>
+
                                             </div>
-                                            <div class="col-9">
-                                                <input class="form-control" name="RECEIVE_DATE" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            <div class="col">
+
+                                                <input class="form-control " name="RECEIVE_DATE" type="date" value=@Model.TICKET.RECEIVE_DATE.ToString("yyyy-MM-dd")>
                                             </div>
-                                        </div>
-                                        <br />
-                                        <div class="row">
-                                            <div class="col-3">
+                                            <div class="col text-right">
                                                 <label class="font-weight-bold lang" key="">Lead time:</label>
                                                 <p class="font-italic">(After get approval from GD)</p>
+
                                             </div>
-                                            <div class="col-9">
-                                                <input class="form-control" name="LEAD_TIME" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            <div class="col">
+                                                <input class="form-control type_number" name="LEAD_TIME_NUMBER" value="@Model.TICKET.LEAD_TIME_NUMBER">
                                             </div>
                                         </div>
+                                        <p>
+                                            ** Nếu số hạng mục yêu cầu quá nhiều, bấm vào
+                                            <a class="text-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                COPY/PASTE EXCEL DATA
+                                            </a>
+                                            để sử dụng chức năng copy paste từ Excel
+                                        </p>
+
+
+                                        <div class="collapse" id="collapseExample">
+                                            <div class="m-2">
+                                                <div class="form-group">
+                                                    <label for="exampleTextarea">
+                                                        <span id="inline-forms" class="btn-outline-success">Copy dữ liệu từ Excel rồi Paste vào đây:</span>
+                                                    </label>
+                                                    <textarea name="excel_data" class="form-control" rows="10"></textarea>
+                                                </div>
+                                                <input type="button" class="btn btn-outline-success" onclick="javascript:generateTable()" value="Paste dữ liệu vào bảng báo giá bên dưới" />
+                                            </div>
+                                        </div>
+
                                         <div class="table-responsive">
-                                            <table class="table-border-dark">
-                                                <tr>
-                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                                                </tr>
-                                                <tr>
+                                            <table class="table-border-dark ">
+                                                <thead class="bg-primary-light">
+                                                    <tr>
+                                                        <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                                        <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                                        <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                                        <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                                        <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                                    </tr>
+                                                    <tr>
 
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
 
-                                                </tr>
+                                                    </tr>
+
+                                                </thead>
 
                                                 <tbody id="tableInfo">
                                                     @{
@@ -150,7 +175,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <td><textarea class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) >@quote.REQUEST_ITEM</textarea></td>
+                                                                    <td><textarea class="form-input inputDefault bg-white" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i)>@quote.REQUEST_ITEM</textarea></td>
                                                                     <td><input class="form-input type_number inputDefault bg-white" id=@("QTY_" + i) value="@quote.QUANTITY.ToString("#,##0")" /> </td>
                                                                 }
 
@@ -169,12 +194,12 @@
                                                                     <td>@(i)</td>
                                                                     @if (i == 1)
                                                                     {
-                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required ></textarea></td>
+                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) required></textarea></td>
                                                                         <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) required /> </td>
                                                                     }
                                                                     else
                                                                     {
-                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i) ></textarea></td>
+                                                                        <td><textarea class="form-input inputDefault" name=@("ITEM_NAME_" + i) id=@("ITEM_NAME_" + i)></textarea></td>
                                                                         <td><input class="form-input type_number inputDefault" id=@("QTY_" + i) /> </td>
                                                                     }
 
@@ -211,6 +236,18 @@
 
                                                 </tbody>
                                             </table>
+
+                                            <div class=" mt-2">
+                                                @{
+                                                    var filesQuote = Model.TICKET.FILES.Where(m => m.FILE_TYPE == FILE_TYPE.QUOTED).ToList();
+                                                    foreach (var file in filesQuote)
+                                                    {
+                                                        <a target="_blank" href="@file.FILE_URL" class="badge badge-danger">@file.FILE_NAME</a>
+                                                        <br />
+                                                    }
+                                                }
+
+                                            </div>
                                             <input type="hidden" name="quotes" id="quotes" />
 
                                             <div id="contextMenu" class="dropdown clearfix">
@@ -223,6 +260,7 @@
 
                                                 </ul>
                                             </div>
+
                                         </div>
 
                                     </div>
@@ -232,41 +270,67 @@
                                     <div class="create-quote">
                                         <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
                                         <div class="row">
-                                            <div class="col-3">
-                                                <label class="font-weight-bold lang" key="received-date">Target date</label>
+                                            <div class="col text-right">
+                                                <label class="font-weight-bold lang d-inline" key="received-date">Target date</label>
+
                                             </div>
-                                            <div class="col-9">
-                                                <input class="form-control" name="RECEIVE_DATE" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                            <div class="col">
+
+                                                <input class="form-control " name="RECEIVE_DATE" type="date" value=@Model.TICKET.RECEIVE_DATE.ToString("yyyy-MM-dd")>
+                                            </div>
+                                            <div class="col text-right">
+                                                <label class="font-weight-bold lang" key="">Lead time:</label>
+                                                <p class="font-italic">(After get approval from GD)</p>
+
+                                            </div>
+                                            <div class="col">
+                                                <input class="form-control type_number requiredValue" name="LEAD_TIME_NUMBER" value="@Model.TICKET.LEAD_TIME_NUMBER">
                                             </div>
                                         </div>
                                         <br />
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <label class="font-weight-bold lang" key="">Lead time:</label>
-                                                <p class="font-italic">(After get approval from GD)</p>
-                                            </div>
-                                            <div class="col-9">
-                                                <input class="form-control" name="LEAD_TIME" type="date" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+
+                                        <p>
+                                            ** Nếu số hạng mục yêu cầu quá nhiều, bấm vào
+                                            <a class="text-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                COPY/PASTE EXCEL DATA
+                                            </a>
+                                            để sử dụng chức năng copy paste từ Excel
+                                        </p>
+
+
+                                        <div class="collapse" id="collapseExample">
+                                            <div class="m-2">
+                                                <div class="form-group">
+                                                    <label for="exampleTextarea">
+                                                        <span id="inline-forms" class="btn-outline-success">Copy dữ liệu từ Excel rồi Paste vào đây:</span>
+                                                        <span class="font-italic text-danger">(Lưu ý: Dữ liệu bạn copy sẽ được hiển thị vào mục unit price)</span>
+                                                    </label>
+                                                    <textarea name="excel_data" class="form-control" rows="10"></textarea>
+                                                </div>
+                                                <input type="button" class="btn btn-outline-success" onclick="javascript:generateUnitToTable()" value="Paste dữ liệu vào bảng báo giá bên dưới" />
                                             </div>
                                         </div>
 
                                         <div class="table-responsive">
                                             <table class="table-border-dark">
-                                                <tr>
-                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                                                </tr>
-                                                <tr>
+                                                <thead class="bg-primary-light">
+                                                    <tr>
+                                                        <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                                        <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                                        <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                                        <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                                        <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                                    </tr>
+                                                    <tr>
 
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
 
-                                                </tr>
+                                                    </tr>
+                                                </thead>
+
 
                                                 <tbody id="tableInfo">
                                                     @{
@@ -319,7 +383,27 @@
                                         </div>
 
                                         <br />
+                                        <div class="row mt-2">
+                                            <div class="form-inline">
+                                                <button type="button" class="btn btn-warning font-weight-bold lang" key="quote_attach">**File báo giá đính kèm**</button>
+                                                <input type="file" name="fileQuoteAttach" id="fileQuoteAttach" class="ml-3" multiple>
+                                                <input type="hidden" name="listFilesQuote" id="listFilesQuote">
+                                            </div>
+                                        </div>
+                                        <div class=" mt-2">
+                                          
+                                            @{
+                                                var filesQuote = Model.TICKET.FILES.Where(m => m.FILE_TYPE == FILE_TYPE.QUOTED).ToList();
+                                                foreach (var file in filesQuote)
+                                                {
+                                                    <a target="_blank" href="@file.FILE_URL" class="badge badge-danger">@file.FILE_NAME</a>
+                                                    <br />
+                                                }
+                                            }
 
+                                        </div>
+                                        <div class=" mt-2 fileQuotes"></div>
+                                        <br />
                                     </div>
                                 }
 
@@ -329,26 +413,29 @@
                                         <div class="row">
                                             <h5 class="text-uppercase lang font-weight-bold mb-4" key="lca_bao_gia">LCA Báo giá</h5>
                                             <label class="col lang text-right">受付日／Ngày nhận: <span name="RECEIVE_DATE">@Html.DisplayFor(m => m.TICKET.RECEIVE_DATE)</span></label>
-                                            <label class="lang col text-right">Lead time: <span name="LEAD_TIME">@Html.DisplayFor(m => m.TICKET.LEAD_TIME)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
+                                            <label class="lang col text-right">Lead time: <span name="LEAD_TIME_NUMBER">@Html.DisplayFor(m => m.TICKET.LEAD_TIME_NUMBER)</span><br /><span class="font-italic">(After get approval from GD)</span></label>
                                         </div>
 
                                         <div class="table-responsive">
                                             <table class="table-border-dark">
-                                                <tr>
-                                                    <th class="lang" key="table-no" rowspan="2" align="center">No</th>
-                                                    <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
-                                                    <th class="lang" key="table-qty" rowspan="2">Qty</th>
-                                                    <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
-                                                    <th class="lang" key="" colspan="2">Customer charge (USD)</th>
-                                                </tr>
-                                                <tr>
+                                                <thead class="bg-primary-light">
+                                                    <tr>
+                                                        <th class="lang" key="table-no" rowspan="2" align="center">No</th>
+                                                        <th class="lang" key="table-item-req" width="300px" rowspan="2">Item name</th>
+                                                        <th class="lang" key="table-qty" rowspan="2">Qty</th>
+                                                        <th class="lang" key="" colspan="2">LCA Material Cost (USD)</th>
+                                                        <th class="lang" key="" colspan="2">Customer charge (USD)</th>
+                                                    </tr>
+                                                    <tr>
 
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
-                                                    <td class="lang text-center" width="">Unit price</td>
-                                                    <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
+                                                        <td class="lang text-center" width="">Unit price</td>
+                                                        <td class="lang text-center" width="">Total cost</td>
 
-                                                </tr>
+                                                    </tr>
+
+                                                </thead>
 
                                                 <tbody id="tableInfo">
                                                     @{
@@ -398,7 +485,19 @@
                                             </table>
 
                                         </div>
+                                        <div class=" mt-2">
+                                            <p class="btn btn-warning font-weight-bold lang" key="quote_attach">**File báo giá đính kèm**</p>
+                                            <br />
+                                            @{
+                                                var filesQuote = Model.TICKET.FILES.Where(m => m.FILE_TYPE == FILE_TYPE.QUOTED).ToList();
+                                                foreach (var file in filesQuote)
+                                                {
+                                                    <a target="_blank" href="@file.FILE_URL" class="badge badge-danger">@file.FILE_NAME</a>
+                                                    <br />
+                                                }
+                                            }
 
+                                        </div>
                                     </div>
                                 }
 
@@ -409,7 +508,7 @@
                                 <p class="font-weight-bold m-3">ID<span class="font-weight-normal font-italic"> (Do LCA nhập)</span></p>
                                 @if (Model.PERMISSION.Contains(PERMISSION.ADD_ID))
                                 {
-                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control " + ((Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE) && Model.SUBMITS.Contains(SUBMIT.APPROVE)) ? "requiredValue" : "") })
+                                    @Html.TextBoxFor(m => m.TICKET.LCA_ID, new { id = "LCA_ID", @Name = "LCA_ID", @class = "form-control requiredValue" })
                                 }
                                 else
                                 {
@@ -470,14 +569,17 @@
                                 {
                                     <p class="btn btn-warning font-weight-bold lang" key="attach">**File đính kèm**</p>
                                 }
-                                <div class=" mt-2">
-
-                                    @foreach (var file in Model.TICKET.FILES)
-                                    {
-                                        <a target="_blank" href="@file.FILE_URL" class="badge badge-danger">@file.FILE_NAME</a>
-                                        <br />
-                                    }
-                                </div>
+                                    <div class=" mt-2">
+                                        @{
+                                            var files = Model.TICKET.FILES.Where(m => string.IsNullOrEmpty(m.FILE_TYPE)).ToList();
+                                            foreach (var file in files)
+                                            {
+                                                <a target="_blank" href="@file.FILE_URL" class="badge badge-danger">@file.FILE_NAME</a>
+                                                <br />
+                                            }
+                                        }
+                                        
+                                    </div>
                                 <div class=" mt-2 files">
                                 </div>
                             }
@@ -523,13 +625,20 @@
     </div>
 </div>
 @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }));
+<script>
+    var filter = localStorage.getItem('filter')
+    if (filter == null) filter = 'SENDTOME';
+    $('#RedirectTo').val('/Home?type=' + filter);
+
+</script>
+
 @Html.Hidden("LoadTicket", Url.Action("Details", "LCA", new { ticket = Model.TICKET.TICKET }));
 @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
 @Scripts.Render("~/Scripts/jquery.validate.min.js")
-@Scripts.Render("~/Content/js/mention.js")
-@Scripts.Render("~/Content/js/moment.js")
-@Scripts.Render("~/Content/js/jquery.simplePagination.js")
-@Scripts.Render("~/Content/js/bootstrap-typeahead.js")
-@Scripts.Render("~/Content/js/form_common.js")
-@Scripts.Render("~/Content/js/lca/form_lca.js")
-@Scripts.Render("~/Content/js/comment.js")
+@Scripts.Render(Url.ContentVersioned("~/Content/js/mention", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
+@Scripts.Render("~/Scripts/jquery.simplePagination.js")
+@Scripts.Render("~/Scripts/bootstrap-typeahead.js")
+@Scripts.Render(Url.ContentVersioned("~/Content/js/form_common", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/lca/form_lca", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/comment", "js"))

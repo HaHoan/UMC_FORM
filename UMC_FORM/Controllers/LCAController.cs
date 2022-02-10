@@ -25,6 +25,7 @@ namespace UMC_FORM.Controllers
         // GET: LCA
         public ActionResult Create()
         {
+           
             using (var db = new DataContext())
             {
                 _sess = Session["user"] as Form_User;
@@ -301,7 +302,7 @@ namespace UMC_FORM.Controllers
         {
             if (ticket == null)
             {
-                return Json(new { result = STATUS.ERROR, message = "Ticket không có dữ liệu" }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = STATUS.ERROR, message = "Ticket not have data!" }, JsonRequestBehavior.AllowGet);
             }
             try
             {
@@ -383,7 +384,7 @@ namespace UMC_FORM.Controllers
                             if (!sendMail(summary, STATUS.ACCEPT))
                             {
                                 transaction.Rollback();
-                                ModelState.AddModelError("Error", "Gửi mail bị lỗi!");
+                                ModelState.AddModelError("Error", "Error when send mail!");
                                 return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
                             }
                             return Json(new
@@ -537,7 +538,7 @@ namespace UMC_FORM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket, string listFiles)
+        public JsonResult Details(string status, string quotes, LCA_FORM_01 infoTicket, string listFiles,string listFilesQuote)
         {
             try
             {
@@ -560,12 +561,12 @@ namespace UMC_FORM.Controllers
 
                         if (checkUserHavePermissionToChangeData(db, formDb.TICKET) == false)
                         {
-                            return Json(new { result = STATUS.ERROR, message = "Bạn không có quyền sửa ticket này" }, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR, message = "You not have permission to edit this ticket!" }, JsonRequestBehavior.AllowGet);
                         }
 
                         if (status == STATUS.ACCEPT)
                         {
-                            var result = Accept(formDb, db, infoTicket, quotes, listFiles);
+                            var result = Accept(formDb, db, infoTicket, quotes, listFiles,listFilesQuote);
                             if (result.Item1 == STATUS.ERROR)
                             {
                                 return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
@@ -599,7 +600,7 @@ namespace UMC_FORM.Controllers
                         }
                         else if (status == STATUS.EDIT_QUOTE)
                         {
-                            var result = EditQuote(formDb, db, infoTicket, quotes, listFiles);
+                            var result = EditQuote(formDb, db, infoTicket, quotes, listFiles,listFilesQuote);
                             if (result.Item1 == STATUS.ERROR)
                             {
                                 return Json(new { result = STATUS.ERROR, message = result.Item2 }, JsonRequestBehavior.AllowGet);
@@ -616,7 +617,7 @@ namespace UMC_FORM.Controllers
                         }
                         else
                         {
-                            return Json(new { result = STATUS.ERROR, message = "Không tồn tại trạng thái này" }, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR, message = "Not have this status!" }, JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -648,7 +649,7 @@ namespace UMC_FORM.Controllers
                     if (process == null)
                     {
                         ModelState.AddModelError("Error", "Error System!!!");
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại reject process!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Check reject process again!");
                     }
 
                     form.PROCEDURE_INDEX = process.RETURN_INDEX is int returnIndex ? returnIndex - 1 : 0;
@@ -676,8 +677,8 @@ namespace UMC_FORM.Controllers
                     if (!sendMail(summary, STATUS.REJECT))
                     {
                         transaction.Rollback();
-                        ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
+                        ModelState.AddModelError("Error", "Error when send mail!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Error when send mail!");
                     };
                     return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }
@@ -709,12 +710,16 @@ namespace UMC_FORM.Controllers
                 }
                 if (lcaQuotes == null || lcaQuotes.Count == 0)
                 {
-                    return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại thông tin báo giá");
+                    return Tuple.Create<string, string>(STATUS.ERROR, "Check quote info again!");
                 }
                 foreach (var quote in lcaQuotes)
                 {
+                    if(quote.QUANTITY == 0)
+                    {
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Item  " + quote.NO + " not have quantity!");
+                    }
                     if (status == STATUS.EDIT_QUOTE && quote.LCA_UNIT_PRICE == 0)
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Bạn không được phép để giá bằng 0");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Item  " + quote.NO + " not have price!");
                     var quoteDb = new LCA_QUOTE
                     {
                         ID_TICKET = currentTicket.ID,
@@ -739,7 +744,7 @@ namespace UMC_FORM.Controllers
 
 
         }
-        private Tuple<string, string> AddFilesToForm(string listFiles, LCA_FORM_01 form, DataContext db)
+        private Tuple<string, string> AddFilesToForm(string listFiles, LCA_FORM_01 form, DataContext db, string type = null)
         {
             if (string.IsNullOrEmpty(listFiles))
             {
@@ -755,6 +760,7 @@ namespace UMC_FORM.Controllers
                     lcaFile.ID_TICKET = form.ID;
                     lcaFile.FILE_URL = file.FILE_URL;
                     lcaFile.FILE_NAME = file.FILE_NAME;
+                    lcaFile.FILE_TYPE = type;
                     string fullPath = Request.MapPath("~" + file.FILE_URL);
                     if (System.IO.File.Exists(fullPath))
                     {
@@ -762,7 +768,7 @@ namespace UMC_FORM.Controllers
                     }
                     else
                     {
-                        return Tuple.Create<string, string>(STATUS.ERROR, "File " + file.FILE_URL + " chưa được upload thành công!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "File " + file.FILE_URL + " upload not success!");
                     }
 
                 }
@@ -770,11 +776,11 @@ namespace UMC_FORM.Controllers
             }
             else
             {
-                return Tuple.Create<string, string>(STATUS.ERROR, "File chưa được upload thành công!");
+                return Tuple.Create<string, string>(STATUS.ERROR, "File upload not success!");
             }
         }
 
-        private Tuple<string, string> Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles)
+        private Tuple<string, string> Accept(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles, string listFileQuote)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -851,7 +857,12 @@ namespace UMC_FORM.Controllers
                     if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.QUOTE).FirstOrDefault() != null)
                     {
                         form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
-                        form.LEAD_TIME = infoTicket.LEAD_TIME;
+                        if(infoTicket.LEAD_TIME_NUMBER == 0)
+                        {
+                            return Tuple.Create<string, string>(STATUS.ERROR, "Lead time không được bằng 0");
+                        }
+                           
+                        form.LEAD_TIME_NUMBER = infoTicket.LEAD_TIME_NUMBER;
 
                     }
                     if (listPermission.Where(m => m.ITEM_COLUMN == PERMISSION.ADD_ID).FirstOrDefault() != null)
@@ -895,13 +906,19 @@ namespace UMC_FORM.Controllers
                         transaction.Rollback();
                         return saveFile;
                     }
+                    var saveFileQuote = AddFilesToForm(listFileQuote, form, db,FILE_TYPE.QUOTED);
+                    if (saveFileQuote.Item1 == STATUS.ERROR)
+                    {
+                        transaction.Rollback();
+                        return saveFileQuote;
+                    }
                     #endregion
 
 
                     var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
                     form.STATION_NAME = process.Where(m => m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1)).FirstOrDefault().STATION_NAME;
                     form.STATION_NO = process.Where(m => m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1)).FirstOrDefault().STATION_NO;
-                    db.LCA_FORM_01.Add(form);
+                   
                     #endregion
 
                     #region SUMARY
@@ -911,8 +928,10 @@ namespace UMC_FORM.Controllers
                     if (form.PROCEDURE_INDEX == summary.LAST_INDEX)
                     {
                         summary.IS_FINISH = true;
+                        form.LEAD_TIME = form.UPD_DATE.AddDays(form.LEAD_TIME_NUMBER);
                     }
 
+                    db.LCA_FORM_01.Add(form);
                     #endregion
 
                     // Thay đổi payer => change process
@@ -980,7 +999,7 @@ namespace UMC_FORM.Controllers
 
 
         }
-        private Tuple<string, string> EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles)
+        private Tuple<string, string> EditQuote(LCA_FORM_01 formDb, DataContext db, LCA_FORM_01 infoTicket, string quotes, string listFiles,string listFileQuote)
         {
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
@@ -999,13 +1018,19 @@ namespace UMC_FORM.Controllers
                     form.IS_SIGNATURE = 0;
                     form.LCA_ID = infoTicket.LCA_ID;
                     form.ID = Guid.NewGuid().ToString();
-
+                    if (infoTicket.LEAD_TIME_NUMBER == 0)
+                    {
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Lead time must > 0");
+                    }
+                    form.LEAD_TIME_NUMBER = infoTicket.LEAD_TIME_NUMBER;
+                    form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
                     #region Quote
                     var saveQuote = AddQuotes(quotes, db, infoTicket, form, STATUS.EDIT_QUOTE);
                     if (saveQuote.Item1 == STATUS.ERROR)
                     {
                         return saveQuote;
                     }
+
                     #endregion
                     #region Files
                     var saveFile = AddFilesToForm(listFiles, form, db);
@@ -1013,6 +1038,12 @@ namespace UMC_FORM.Controllers
                     {
                         transaction.Rollback();
                         return saveFile;
+                    }
+                    var saveFileQuote = AddFilesToForm(listFileQuote, form, db, FILE_TYPE.QUOTED);
+                    if (saveFileQuote.Item1 == STATUS.ERROR)
+                    {
+                        transaction.Rollback();
+                        return saveFileQuote;
                     }
                     #endregion
                     var process = db.Form_Procedures.Where(m => m.TICKET == form.TICKET).ToList();
@@ -1024,15 +1055,15 @@ namespace UMC_FORM.Controllers
                     #region SUMARY
 
                     summary.UPD_DATE = DateTime.Now;
-
+                    summary.STATUS = STATUS.QUOTED;
                     #endregion
                     db.SaveChanges();
                     transaction.Commit();
                     if (!sendMail(summary, STATUS.EDIT_QUOTE))
                     {
                         transaction.Rollback();
-                        ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
+                        ModelState.AddModelError("Error", "Error when send mail!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Error when send mail!");
                     };
                     return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }

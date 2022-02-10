@@ -21,9 +21,61 @@ function enableButton() {
     $('#lca_reject').html("Reject")
     $('#lca_edit_quote').html("Save Changes")
 }
+function generateUnitToTable() {
+    var data = $('textarea[name=excel_data]').val();
+    var rows = data.split("\n");
 
+    for (var y in rows) {
+        var index = parseInt(y) + 1
+        var cells = rows[y].split("\t");
+        if (cells.length > 0) {
+            var textCommas = addCommas(cells[0]);
+            $('#UNIT_PRICE_LCA_' + index).val(textCommas)
+            var originValue = textCommas.split(",").join("");
+            $('#UNIT_PRICE_LCA_HIDDEN_' + index + '').val(originValue);
+            updateEachRowAmount(index - 1)
+        }
+
+    }
+    updateQuote();
+}
+function generateTable() {
+    var data = $('textarea[name=excel_data]').val();
+    var rows = data.split("\n");
+    var currentRow = $('.row-info').length;
+    if (currentRow > rows.length) {
+        $('#tableInfo tr').each(function (index, value) {
+            if (index >= rows.length) {
+                $(value).remove();
+                $('.totalLCA').text(getTotalAmountLCA())
+                $('.totalCustomer').text(getTotalAmountCustomer())
+                updateSTT();
+            }
+        })
+    } else {
+        for (var y in rows) {
+            if (parseInt(y) > currentRow) {
+                addRow();
+            }
+        }
+    }
+
+    for (var y in rows) {
+        var index = parseInt(y) + 1
+        var cells = rows[y].split("\t");
+        if (cells.length > 0) {
+            $('#ITEM_NAME_' + index).val(cells[0])
+        }
+        if (cells.length > 1) {
+            $('#QTY_' + index).val(cells[1])
+        }
+    }
+    updateQuote()
+}
 $(function () {
-
+    $('#backTo').click(function () {
+        window.location.href = $("#RedirectTo").val()
+    })
     $('input').keyup(function (e) {
         $('#isChange').val('yes')
     });
@@ -100,8 +152,8 @@ $(function () {
         },
         submitHandler: function (form) {
             var status = $('#status').val();
-            if (status == 'reject' || status == 'edit_quote') {
-                if (confirm('Bạn có muốn submit không?')) {
+            if (status == 'reject') {
+                if (confirm('Do you want to reject?')) {
                     disableButtonWhenSubmit('#lca_' + status)
                     form.ajax.submit()
                 } else {
@@ -131,14 +183,15 @@ $(function () {
                 var val = $('#isChange').val();
 
                 if (val == 'no') {
-                    if (confirm('Bạn có muốn thay đổi gì trước khi ' + status + ' không?')) {
+                    if (confirm('Do you want to change something before ' + status + '?')) {
                         disableButtonWhenSubmit('#lca_' + status)
                         form.ajax.submit()
                     } else {
                         return false;
                     }
                 } else {
-                    if (confirm('Bạn có muốn ' + status + ' không?')) {
+                   
+                    if (confirm('Do you want to submit?')) {
                         disableButtonWhenSubmit('#lca_' + status)
                         form.ajax.submit()
                     } else {
@@ -175,42 +228,9 @@ $(function () {
     $(".type_number").keypress(function (e) {
         return onlyNumber(e)
     });
+
     $("#contextMenu li a").click(function (e) {
-        var index = $('.row-info').length + 1;
-
-        var row = $('<tr/>', {
-            class: "row-info"
-        });
-        var col1 = $('<td/>', {
-            text: (index)
-        })
-        row.append(col1);
-        row.append(addTd("ITEM_NAME_" + index));
-        row.append(addTdQty(index));
-        row.append(addTdUnitPrice('UNIT_PRICE_LCA_', index, 15));
-        row.append(addTdUnitPrice('TOTAL_LCA_', index, 15));
-        row.append(addTdUnitPrice('UNIT_PRICE_CUSTOMER_', index, 20));
-        row.append(addTdUnitPrice('TOTAL_CUSTOMER_', index, 20));
-
-        var rowDelete = $('<td/>');
-        var btnXoa = $('<button/>', {
-            text: 'Xóa',
-            type: 'button',
-            class: 'btnXoa btn btn-danger',
-            click: function () {
-                deleteRow(this)
-            }
-        });
-
-        rowDelete.append(btnXoa);
-        row.append(rowDelete);
-
-        $('#tableInfo').append(row);
-        $('.summary').remove();
-
-        $('#tableInfo').append(addTdSumary);
-        $('.totalLCA').text(getTotalAmountLCA())
-        $('.totalCustomer').text(getTotalAmountCustomer())
+        addRow();
     });
     $(".btnXoa").on('click', function () {
         deleteRow(this);
@@ -295,6 +315,42 @@ $(function () {
         $(this).addClass('text-center')
     })
 });
+function addRow() {
+    var index = $('.row-info').length + 1;
+    var row = $('<tr/>', {
+        class: "row-info"
+    });
+    var col1 = $('<td/>', {
+        text: (index)
+    })
+    row.append(col1);
+    row.append(addTd("ITEM_NAME_" + index));
+    row.append(addTdQty(index));
+    row.append(addTdUnitPrice('UNIT_PRICE_LCA_', index, 15));
+    row.append(addTdUnitPrice('TOTAL_LCA_', index, 15));
+    row.append(addTdUnitPrice('UNIT_PRICE_CUSTOMER_', index, 20));
+    row.append(addTdUnitPrice('TOTAL_CUSTOMER_', index, 20));
+
+    var rowDelete = $('<td/>');
+    var btnXoa = $('<button/>', {
+        text: 'Xóa',
+        type: 'button',
+        class: 'btnXoa btn btn-danger',
+        click: function () {
+            deleteRow(this)
+        }
+    });
+
+    rowDelete.append(btnXoa);
+    row.append(rowDelete);
+
+    $('#tableInfo').append(row);
+    $('.summary').remove();
+
+    $('#tableInfo').append(addTdSumary);
+    $('.totalLCA').text(getTotalAmountLCA())
+    $('.totalCustomer').text(getTotalAmountCustomer())
+}
 function OnSuccess(response) {
     if (response.result == 'success') {
         window.location.href = $("#RedirectTo").val()
@@ -325,7 +381,7 @@ function updateQuote() {
             var item = $('#ITEM_NAME_' + index).val()
             if (item == "") return true
             var quantity = $('#QTY_' + index).val()
-            if (quantity == "") return true;
+            //if (quantity == "") return true;
             quantity = $('#QTY_' + index).val().split(",").join("")
             var lca_unit_price = $('#UNIT_PRICE_LCA_' + index).val().split(",").join("")
             var lca_total = $('#TOTAL_LCA_' + index).val().split(",").join("")
@@ -362,7 +418,7 @@ function addTd(name) {
 function addTdQty(rowIndex) {
     var col = $('<td/>');
     var input1 = $('<input/>', {
-        class: 'form-input type_number inputDefault',
+        class: 'form-input type_number inputDefault text-center',
         keyup: function (e) {
             var id = $(this).attr('id')
             var rStr = id.substr(4, id.length - 4)
@@ -479,9 +535,10 @@ function getTotalPriceCustomer(rowIndex) {
     var totalCustomer = 0;
 
     var qty = $('#QTY_' + (rowIndex + 1)).val();
-    qty = qty.split(",").join("");
+    if (qty != null)
+        qty = qty.split(",").join("");
     if (typeof qty === "undefined") {
-        qty = $('#QTY_' + (index + 1)).text();
+        qty = $('#QTY_' + (rowIndex + 1)).text();
     }
     var unit_price_customer = $('#UNIT_PRICE_CUSTOMER_' + (rowIndex + 1)).val();
     if (typeof unit_price_customer === "undefined") {
@@ -500,7 +557,8 @@ function getTotalPriceLCA(rowIndex) {
     var totalLCA = 0;
 
     var qty = $('#QTY_' + (rowIndex + 1)).val();
-    qty = qty.split(",").join("");
+    if (qty != null)
+        qty = qty.split(",").join("");
     if (typeof qty === "undefined") {
         qty = $('#tableInfo tr:eq(' + rowIndex + ') td:eq(2)').text();
     }

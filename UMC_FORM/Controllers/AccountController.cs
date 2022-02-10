@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -20,10 +21,46 @@ namespace UMC_FORM.Controllers
 {
     public class AccountController : Controller
     {
+        private void updateVersionJS()
+        {
+            try
+            {
+                var version = Bet.Util.Config.GetValue("version");
+                string folderJS = (Server.MapPath("~/") + @"Content\js\").Replace("\\", @"\");
+                string[] files = Directory.GetFiles(folderJS, "*.*", SearchOption.AllDirectories);
+                foreach (var file in files)
+                {
+                    var filePath = Path.GetFileNameWithoutExtension(file);
+                    var startIndex = filePath.IndexOf("[");
+                    var endIndex = filePath.IndexOf("]");
+                    string name = filePath;
+                    if (startIndex > 0 && endIndex > 0)
+                    {
+                        name = filePath.Substring(0, filePath.Length - startIndex);
+                        var oldVersion = filePath.Substring(startIndex, endIndex - startIndex);
+                        if (oldVersion != version)
+                        {
+                            System.IO.File.Move(file, $"{name}[{version}].js");
+                        }
+                    }
+                    else
+                    {
+                        System.IO.File.Move(file, $"{name}[{version}].js");
+                    }
+
+
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message.ToString());
+            }
+
+        }
         // GET: Login
         public ActionResult Index(string returnUrl)
         {
-
+            updateVersionJS();
             ViewBag.ReturnUrl = returnUrl;
             var account = checkCookies();
             if (account == null)

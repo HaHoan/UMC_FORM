@@ -19,6 +19,7 @@ namespace UMC_FORM.Models
         public string PROCESS_ID { get; set; }
 
         public bool IS_FINISH { get; set; }
+        public string STATUS { get; set; }
 
         public bool IS_REJECT { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿@using UMC_FORM.Models
 @using UMC_FORM.Business
-
+@using UMC_FORM.Ultils
 @{
     var _session = Session["user"] as Form_User;
 
@@ -15,8 +15,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link href="~/Content/css/styles.css" rel="stylesheet" />
-    <link href="~/Content/css/simplePagination.css" rel="stylesheet" />
+    <link href="@Url.ContentVersioned("~/Content/css/styles","css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.ContentVersioned("~/Content/css/simplePagination","css")" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
@@ -58,7 +58,7 @@
                             $("#btnSearch").on('click', function () {
                                 var keySearch = $("#search").val();
                                 document.location = '@Url.Action("Search","Home")?search=' + keySearch;
-                                
+
                             });
                         });
                     </script>
@@ -126,7 +126,7 @@
                                         <label class=" lang" key="Summary">Tổng kết</label>
                                     </a>
                                 }
-                                if(user.ROLE_ID == ROLE.CanEdit)
+                                if (user.ROLE_ID == ROLE.CanEdit)
                                 {
                                     <button class="btn btn-light ml-3 mr-5 mt-3" data-toggle="modal"
                                             data-target="#findRequestForm">
@@ -156,7 +156,24 @@
                         </div>
                         <div class="custom-control custom-checkbox ml-3 mt-4">
                             <input type="checkbox" class="custom-control-input" id="myFollow">
-                            <a class="custom-control-label lang" key="follow-request" for="myFollow" href="@Url.Action("Index","Home", new { type = SendType.FOLLOW})">Đã hoàn thành</a>
+                            <a class="custom-control-label lang" for="myFollow" href="@Url.Action("Index","Home", new { type = SendType.FOLLOW})">
+                                <h6>
+                                    <span class="lang" key="follow-request">Đang theo dõi</span>
+
+
+                                    @{
+                                        if (ViewBag.NumberFollowNotYet != null && ViewBag.NumberFollowNotYet != 0)
+                                        {
+                                            <span class="badge badge-danger">
+                                                @ViewBag.NumberFollowNotYet
+                                            </span>
+                                        }
+                                    }
+
+
+
+                                </h6>
+                            </a>
                         </div>
                         <div class="sb-sidenav-menu-heading lang" key="form_bieu">Form biểu</div>
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts"
@@ -265,8 +282,8 @@
         </div>
     </div>
 
-  
+
     @RenderSection("scripts", required: false)
-    <script src="~/Content/js/lang.js"></script>
+    <script src="@Url.ContentVersioned("~/Content/js/lang","js")"></script>
 </body>
 </html>

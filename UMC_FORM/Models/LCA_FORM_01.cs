@@ -83,7 +83,7 @@ namespace UMC_FORM.Models
 
         [Column(TypeName = "date")]
         [DisplayFormat(DataFormatString = "{0:d/M/yyyy}")]
-        public DateTime? RECEIVE_DATE { get; set; }
+        public DateTime RECEIVE_DATE { get; set; }
 
         [StringLength(500)]
         public string COMMENT { get; set; }
@@ -113,6 +113,7 @@ namespace UMC_FORM.Models
         public string PURPOSE { get; set; }
 
         public string STATION_NO { get; set; }
+        public int LEAD_TIME_NUMBER { get; set; }
 
         
         

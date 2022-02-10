@@ -60,7 +60,7 @@ namespace UMC_FORM.Business
         public static string ERROR = "error";
         public static string WAIT = "wait";
         public static string CHANGE_QUOTE = "change_quote";
-
+        public static string QUOTED = "quoted";
     }
 
     public static class PAYER
@@ -68,7 +68,10 @@ namespace UMC_FORM.Business
         public static string CUSTOMER = "Customer";
         public static string UMCVN = "UMCVN";
     }
-
+    public static class FILE_TYPE
+    {
+        public static string QUOTED = "QUOTED";
+    }
     public static class POSITION
     {
         public static int MANAGER = 1;

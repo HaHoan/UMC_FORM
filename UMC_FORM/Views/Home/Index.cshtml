@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<UMC_FORM.Models.Form_Summary>
 @using UMC_FORM.Business
+@using UMC_FORM.Ultils
 @{
     ViewBag.Title = "Home Page";
     Layout = "~/Views/Shared/_Layout_Custom1.cshtml";
@@ -17,31 +18,31 @@
 
                     <ul class="nav mt-4" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="all-tab" data-toggle="tab" aria-controls="inbox"
-                               href="#inbox" role="tab" aria-selected="true">
-                                <span class="d-block d-md-none"><i class="ti-email"></i></span>
-                                <span class="d-none d-md-block lang" key="all">Tất cả</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="comming-tab" data-toggle="tab" aria-controls="sent"
-                               href="#sent" role="tab" aria-selected="false">
-                                <span class="d-block d-md-none"><i class="ti-export"></i></span>
-                                <span class="d-none d-md-block lang" key="in-turn">Đến lượt</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="dealine-tab" data-toggle="tab" aria-controls="spam"
-                               href="#spam" role="tab" aria-selected="false">
+                            <a class="nav-link active" id="not-yet-tab" data-toggle="tab" aria-controls="not-yet"
+                               href="#not-yet" role="tab" aria-selected="true">
                                 <span class="d-block d-md-none"><i class="ti-panel"></i></span>
-                                <span class="d-none d-md-block lang" key="overdue">Quá hạn</span>
+                                <span class="d-none d-md-block lang" key="overdue">Not Yet</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="done-tab" data-toggle="tab" aria-controls="done"
+                               href="#done" role="tab" aria-selected="false">
+                                <span class="d-block d-md-none"><i class="ti-export"></i></span>
+                                <span class="d-none d-md-block lang" key="in-turn">Done</span>
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link " id="all-tab" data-toggle="tab" aria-controls="all"
+                               href="#all" role="tab" aria-selected="false">
+                                <span class="d-block d-md-none"><i class="ti-email"></i></span>
+                                <span class="d-none d-md-block lang" key="all">All</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade active show " id="inbox" aria-labelledby="inbox-tab"
+                    <div class="tab-pane fade  " id="all" aria-labelledby="all-tab"
                          role="tabpanel">
                         <!-- Request list-->
                         <div class="table-responsive">
@@ -86,13 +87,13 @@
 
                                                     @if (item.IS_REJECT)
                                                     {
-                                                        <span class="badge badge-pill text-white font-medium badge-danger mr-2">Reject</span>
+                                                        <span class="badge badge-pill text-white font-medium badge-danger mr-2 status-ticket">Reject</span>
                                                     }
                                                     else
                                                     {
-                                                        <span class="badge badge-pill text-white font-medium badge-success mr-2">Work</span>
+                                                        <span class="badge badge-pill text-white font-medium badge-success mr-2 status-ticket">Work</span>
                                                     }
-                                                        <span class="text-dark"><span class="text-success">@Html.DisplayFor(m => item.TITLE)</span> @Html.DisplayFor(m => item.PURPOSE)</span>
+                                                    <span class="text-dark"><span class="text-success">@Html.DisplayFor(m => item.TITLE)</span> @Html.DisplayFor(m => item.PURPOSE)</span>
                                                 </a>
                                             </td>
                                             <td><i class="fa fa-paperclip text-muted"></i></td>
@@ -111,49 +112,154 @@
                         </div>
 
                     </div>
-                    <div class="tab-pane fade" id="sent" aria-labelledby="sent-tab" role="tabpanel">
-                        <div class="row p-3 text-dark">
-                            <div class="col-md-6">
-                                <h3 class="font-light">Lets check profile</h3>
-                                <h4 class="font-light">you can use it with the small code</h4>
-                            </div>
-                            <div class="col-md-6 text-right">
-                                <p>
-                                    Donec pede justo, fringilla vel, aliquet nec, vulputate eget,
-                                    arcu.
-                                    In enim justo, rhoncus ut, imperdiet a.
-                                </p>
-                            </div>
+                    <div class="tab-pane fade" id="done" aria-labelledby="done-tab" role="tabpanel">
+                        <!-- done list-->
+                        <div class="table-responsive">
+                            <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
+                                <tbody class="list-request">
+                                    @{
+                                        var listDone = Model.Where(m => m.STATUS == STATUS.QUOTED).ToList();
+                                        foreach (var item in listDone)
+                                        {
+                                            var id = "cst" + _no;
+                                            <tr class="list-request-item">
+                                                <td class="pl-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id=@id />
+                                                        <label class="custom-control-label" for=@id>&nbsp;</label>
+                                                    </div>
+                                                </td>
+
+                                                <td><i class="fa fa-star text-warning"></i></td>
+                                                @{
+                                                    var controller = "";
+
+                                                    if (item.TITLE == Constant.PR_ACC_F06_TITLE)
+                                                    {
+                                                        controller = "PurAccF06";
+                                                    }
+                                                    else if (item.TITLE == Constant.LCA_FORM_01_TITLE)
+                                                    {
+                                                        controller = "LCA";
+                                                    }
+                                                }
+                                                <td>
+
+                                                    <a class="link request-item" href="@Url.Action("Details",controller, new {ticket = item.TICKET })" data-slide="next" name="1">
+                                                        <span class="mb-0 text-muted">@Html.DisplayFor(m => item.TICKET)</span>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <i class="fas fa-user-edit text-muted"></i>
+                                                    <span class="mb-0 text-muted">@Html.DisplayFor(m => item.CREATE_USER)</span>
+                                                </td>
+                                                <td>
+                                                    <a class="link request-item" href="@Url.Action("Details",controller, new {ticket = item.TICKET })" data-slide="next" name="1">
+
+                                                        @if (item.IS_REJECT)
+                                                        {
+                                                            <span class="badge badge-pill text-white font-medium badge-danger mr-2 status-ticket">Reject</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-pill text-white font-medium badge-success mr-2 status-ticket">Work</span>
+                                                        }
+                                                        <span class="text-dark"><span class="text-success">@Html.DisplayFor(m => item.TITLE)</span> @Html.DisplayFor(m => item.PURPOSE)</span>
+                                                    </a>
+                                                </td>
+                                                <td><i class="fa fa-paperclip text-muted"></i></td>
+                                                <td class="text-muted">
+                                                    @item.UPD_DATE.ToString("yyyy-MM-dd")
+                                                </td>
+                                            </tr>
+                                            _no++;
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-inline">
+                            <div id="pagination-container-list"></div>
+                            <i class="fas fa-redo-alt"></i>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="spam" aria-labelledby="spam-tab" role="tabpanel">
-                        <div class="row p-3 text-dark">
-                            <div class="col-md-6">
-                                <h3 class="font-light">Come on you have a lot message</h3>
-                                <h4 class="font-light">you can use it with the small code</h4>
-                            </div>
-                            <div class="col-md-6 text-right">
-                                <p>
-                                    Donec pede justo, fringilla vel, aliquet nec, vulputate eget,
-                                    arcu.
-                                    In enim justo, rhoncus ut, imperdiet a.
-                                </p>
-                            </div>
+
+                    <div class="tab-pane active show" id="not-yet" aria-labelledby="not-yet-tab" role="tabpanel">
+                        <!-- not yet list-->
+                        <div class="table-responsive">
+                            <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
+                                <tbody class="list-request">
+                                    @{
+                                        var listNotYet = Model;
+                                        if (ViewBag.type == 5)
+                                        {
+                                            listNotYet = Model.Where(m => m.STATUS != STATUS.QUOTED).ToList();
+                                        }
+
+                                        foreach (var item in listNotYet)
+                                        {
+                                            var id = "cst" + _no;
+                                            <tr class="list-request-item">
+                                                <td class="pl-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id=@id />
+                                                        <label class="custom-control-label" for=@id>&nbsp;</label>
+                                                    </div>
+                                                </td>
+
+                                                <td><i class="fa fa-star text-warning"></i></td>
+                                                @{
+                                                    var controller = "";
+
+                                                    if (item.TITLE == Constant.PR_ACC_F06_TITLE)
+                                                    {
+                                                        controller = "PurAccF06";
+                                                    }
+                                                    else if (item.TITLE == Constant.LCA_FORM_01_TITLE)
+                                                    {
+                                                        controller = "LCA";
+                                                    }
+                                                }
+                                                <td>
+
+                                                    <a class="link request-item" href="@Url.Action("Details",controller, new {ticket = item.TICKET })" data-slide="next" name="1">
+                                                        <span class="mb-0 text-muted">@Html.DisplayFor(m => item.TICKET)</span>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <i class="fas fa-user-edit text-muted"></i>
+                                                    <span class="mb-0 text-muted">@Html.DisplayFor(m => item.CREATE_USER)</span>
+                                                </td>
+                                                <td>
+                                                    <a class="link request-item" href="@Url.Action("Details",controller, new {ticket = item.TICKET })" data-slide="next" name="1">
+
+                                                        @if (item.IS_REJECT)
+                                                        {
+                                                            <span class="badge badge-pill text-white font-medium badge-danger mr-2 status-ticket">Reject</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-pill text-white font-medium badge-success mr-2 status-ticket">Work</span>
+                                                        }
+                                                        <span class="text-dark"><span class="text-success">@Html.DisplayFor(m => item.TITLE)</span> @Html.DisplayFor(m => item.PURPOSE)</span>
+                                                    </a>
+                                                </td>
+                                                <td><i class="fa fa-paperclip text-muted"></i></td>
+                                                <td class="text-muted">
+                                                    @item.UPD_DATE.ToString("yyyy-MM-dd")
+                                                </td>
+                                            </tr>
+                                            _no++;
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="delete" aria-labelledby="delete-tab" role="tabpanel">
-                        <div class="row p-3 text-dark">
-                            <div class="col-md-6">
-                                <h3 class="font-light">Just do Settings</h3>
-                                <h4 class="font-light">you can use it with the small code</h4>
-                            </div>
-                            <div class="col-md-6 text-right">
-                                <p>
-                                    Donec pede justo, fringilla vel, aliquet nec, vulputate eget,
-                                    arcu.
-                                    In enim justo, rhoncus ut, imperdiet a.
-                                </p>
-                            </div>
+                        <div class="form-inline">
+                            <div id="pagination-not-yet-list"></div>
+                            <i class="fas fa-redo-alt"></i>
                         </div>
                     </div>
                 </div>
@@ -161,59 +267,15 @@
 
 
         </div>
-
     </div>
+
+    <input type="hidden" value="@ViewBag.type" id="filter" />
 </div>
-@Scripts.Render("~/Content/js/mention.js")
-@Scripts.Render("~/Content/js/moment.js")
-@Scripts.Render("~/Content/js/jquery.simplePagination.js")
-@Scripts.Render("~/Content/js/pagination.js")
-@Scripts.Render("~/Content/js/scripts.js")
+
+
+@Scripts.Render(@Url.ContentVersioned("~/Content/js/mention", "js"))
+@Scripts.Render(@Url.ContentVersioned("~/Content/js/moment", "js"))
+@Scripts.Render("~/Scripts/jquery.simplePagination.js")
+@Scripts.Render(@Url.ContentVersioned("~/Content/js/pagination", "js"))
+@Scripts.Render(@Url.ContentVersioned("~/Content/js/scripts", "js"))
 @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
-
-
-<script type="text/javascript">
-        $(document).ready(function () {
-                                                    if (@ViewBag.type == 1) { // Gửi cho tôi
-                                                        document.getElementById("sendToMe").checked = true;
-                                                        document.getElementById("myRequest").checked = false;
-                                                        document.getElementById("myCancel").checked = false;
-                                                        document.getElementById("myFinish").checked = false;
-                                                        document.getElementById("myFollow").checked = false;
-                                                        } else if(@ViewBag.type == 2){ //Tôi cần phê duyệt
-                $("#sendToMe").prop('checked', false);
-                $("#myRequest").prop('checked', true);
-                $("#myCancel").prop('checked', false);
-                $("#myFinish").prop('checked', false);
-                $("#myFollow").prop('checked', false);
-                                                        } else if (@ViewBag.type == 3) { //Bị từ chối
-                $("#sendToMe").prop('checked', false);
-                $("#myRequest").prop('checked', false);
-                $("#myCancel").prop('checked', true);
-                $("#myFinish").prop('checked', false);
-                $("#myFollow").prop('checked', false);
-                $(".badge").text("Reject");
-                $(".badge").addClass("badge-danger").removeClass("badge-success");
-                                                        }
-                                                        else if (@ViewBag.type == 4) { //Đã hoàn thành
-                $("#sendToMe").prop('checked', false);
-                $("#myRequest").prop('checked', false);
-                $("#myCancel").prop('checked', false);
-                                                        $("#myFinish").prop('checked', true);
-                                                        $("#myFollow").prop('checked', false);
-                $(".badge").text("Finish");
-                                                    } else if (@ViewBag.type == 5) { // Tôi cần hoàn thành
-                                                        $("#sendToMe").prop('checked', false);
-                                                        $("#myRequest").prop('checked', false);
-                                                        $("#myCancel").prop('checked', false);
-                                                        $("#myFinish").prop('checked', false);
-                                                        $("#myFollow").prop('checked', true);
-                                                    }
-                                                    else {
-
-                                                        }
-                                                        });
-
-
-
-</script>
