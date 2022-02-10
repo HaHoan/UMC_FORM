@@ -190,7 +190,8 @@ $(function () {
                         return false;
                     }
                 } else {
-                    if (confirm('Do you want to ' + status + '?')) {
+                   
+                    if (confirm('Do you want to submit?')) {
                         disableButtonWhenSubmit('#lca_' + status)
                         form.ajax.submit()
                     } else {

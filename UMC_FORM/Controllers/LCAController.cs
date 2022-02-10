@@ -302,7 +302,7 @@ namespace UMC_FORM.Controllers
         {
             if (ticket == null)
             {
-                return Json(new { result = STATUS.ERROR, message = "Ticket không có dữ liệu" }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = STATUS.ERROR, message = "Ticket not have data!" }, JsonRequestBehavior.AllowGet);
             }
             try
             {
@@ -384,7 +384,7 @@ namespace UMC_FORM.Controllers
                             if (!sendMail(summary, STATUS.ACCEPT))
                             {
                                 transaction.Rollback();
-                                ModelState.AddModelError("Error", "Gửi mail bị lỗi!");
+                                ModelState.AddModelError("Error", "Error when send mail!");
                                 return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
                             }
                             return Json(new
@@ -561,7 +561,7 @@ namespace UMC_FORM.Controllers
 
                         if (checkUserHavePermissionToChangeData(db, formDb.TICKET) == false)
                         {
-                            return Json(new { result = STATUS.ERROR, message = "Bạn không có quyền sửa ticket này" }, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR, message = "You not have permission to edit this ticket!" }, JsonRequestBehavior.AllowGet);
                         }
 
                         if (status == STATUS.ACCEPT)
@@ -617,7 +617,7 @@ namespace UMC_FORM.Controllers
                         }
                         else
                         {
-                            return Json(new { result = STATUS.ERROR, message = "Không tồn tại trạng thái này" }, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR, message = "Not have this status!" }, JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -649,7 +649,7 @@ namespace UMC_FORM.Controllers
                     if (process == null)
                     {
                         ModelState.AddModelError("Error", "Error System!!!");
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại reject process!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Check reject process again!");
                     }
 
                     form.PROCEDURE_INDEX = process.RETURN_INDEX is int returnIndex ? returnIndex - 1 : 0;
@@ -677,8 +677,8 @@ namespace UMC_FORM.Controllers
                     if (!sendMail(summary, STATUS.REJECT))
                     {
                         transaction.Rollback();
-                        ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
+                        ModelState.AddModelError("Error", "Error when send mail!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Error when send mail!");
                     };
                     return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }
@@ -710,16 +710,16 @@ namespace UMC_FORM.Controllers
                 }
                 if (lcaQuotes == null || lcaQuotes.Count == 0)
                 {
-                    return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại thông tin báo giá");
+                    return Tuple.Create<string, string>(STATUS.ERROR, "Check quote info again!");
                 }
                 foreach (var quote in lcaQuotes)
                 {
                     if(quote.QUANTITY == 0)
                     {
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Item số " + quote.NO + " đang chưa điền số lượng!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Item  " + quote.NO + " not have quantity!");
                     }
                     if (status == STATUS.EDIT_QUOTE && quote.LCA_UNIT_PRICE == 0)
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Item số " + quote.NO + " đang chưa điền giá!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Item  " + quote.NO + " not have price!");
                     var quoteDb = new LCA_QUOTE
                     {
                         ID_TICKET = currentTicket.ID,
@@ -768,7 +768,7 @@ namespace UMC_FORM.Controllers
                     }
                     else
                     {
-                        return Tuple.Create<string, string>(STATUS.ERROR, "File " + file.FILE_URL + " chưa được upload thành công!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "File " + file.FILE_URL + " upload not success!");
                     }
 
                 }
@@ -776,7 +776,7 @@ namespace UMC_FORM.Controllers
             }
             else
             {
-                return Tuple.Create<string, string>(STATUS.ERROR, "File chưa được upload thành công!");
+                return Tuple.Create<string, string>(STATUS.ERROR, "File upload not success!");
             }
         }
 
@@ -1020,7 +1020,7 @@ namespace UMC_FORM.Controllers
                     form.ID = Guid.NewGuid().ToString();
                     if (infoTicket.LEAD_TIME_NUMBER == 0)
                     {
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Lead time không được bằng 0");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Lead time must > 0");
                     }
                     form.LEAD_TIME_NUMBER = infoTicket.LEAD_TIME_NUMBER;
                     form.RECEIVE_DATE = infoTicket.RECEIVE_DATE;
@@ -1062,8 +1062,8 @@ namespace UMC_FORM.Controllers
                     if (!sendMail(summary, STATUS.EDIT_QUOTE))
                     {
                         transaction.Rollback();
-                        ModelState.AddModelError("Error", "Gửi mail bị lỗi");
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Gửi mail bị lỗi");
+                        ModelState.AddModelError("Error", "Error when send mail!");
+                        return Tuple.Create<string, string>(STATUS.ERROR, "Error when send mail!");
                     };
                     return Tuple.Create<string, string>(STATUS.SUCCESS, "");
                 }
