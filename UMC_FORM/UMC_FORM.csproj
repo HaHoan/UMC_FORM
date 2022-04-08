@@ -178,6 +178,8 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DeptController.cs" />
+    <Compile Include="Controllers\FormPaidLeaveController.cs" />
+    <Compile Include="Controllers\FormUnPaidLeaveController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\LCAController.cs" />
@@ -415,6 +417,7 @@
     <Content Include="Content\images\Spinner-1s-200px.gif" />
     <Content Include="Content\js\comment.js" />
     <Content Include="Content\js\form_edit.js" />
+    <Content Include="Content\js\form_leave.js" />
     <Content Include="Content\js\lca\form_lca.js" />
     <Content Include="Content\js\PR_ACC_F06.js" />
     <Content Include="Content\js\form.js" />
@@ -2402,6 +2405,12 @@
     <Content Include="Views\LCA\_TicketEdit.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\FormPaidLeave\Create.cshtml" />
+    <Content Include="Views\FormPaidLeave\Print.cshtml" />
+    <Content Include="Views\FormPaidLeave\Detail.cshtml" />
+    <Content Include="Views\FormUnPaidLeave\Create.cshtml" />
+    <Content Include="Views\FormUnPaidLeave\Details.cshtml" />
+    <Content Include="Views\FormUnPaidLeave\Print.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

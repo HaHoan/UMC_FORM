@@ -114,8 +114,16 @@
     "received-date": "Ngày nhận:",
     "table-item-req": "Hạng mục yêu cầu",
     "title-lca-req": "GIẤY YÊU CẦU PHÒNG CƠ KHÍ ",
-    "form_bieu": "Form List"
-
+    "form_bieu": "Form List",
+    "count-subscriber": "Count subscriber",
+    "subscribe-date": "Subscribe date",
+    "reason-leave": "Reason for leave",
+    "special-leave": "Special leave",
+    "total-date": "Total date",
+    "frmpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ CÓ LƯƠNG",
+    "request_dept_sub": "Bộ phận đăng ký",
+    "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
+    "request_date_sub": "Ngày đăng ký"
   },
   "vi": {
     "Home": "TRANG CHỦ",
@@ -233,7 +241,16 @@
     "edit_quote": "Sửa Báo Giá",
     "follow-request": "Đang theo dõi",
     "title_request": "Tiêu đề",
-    "form_bieu": "Form Biểu"
+    "form_bieu": "Form Biểu",
+    "count-subscriber": "Số người đăng ký",
+    "subscribe-date": "Đăng ký ngày nghỉ",
+    "reason-leave": "Lý do nghỉ",
+    "special-leave": "Nghỉ đặc biệt",
+    "total-date": "Tổng ngày",
+    "frmpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ CÓ LƯƠNG",
+    "request_dept_sub": "Bộ phận đăng ký",
+    "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
+    "request_date_sub": "Ngày đăng ký"
   },
   "ja": {
     "reaccept": "Re-accept",
@@ -279,6 +296,10 @@
     "in-turn": "Done",
     "overdue": "Not Yet",
     "attach": "**File Attach**",
-    "quote_attach": "**File Quote Attach**"
+    "quote_attach": "**File Quote Attach**",
+    "frmpaidleave_title": "慶弔休暇、リフレッシュ休暇",
+    "request_dept_sub": "部署",
+    "frmunpaidleave_title": "無給休暇届 ",
+    "request_date_sub": "申請日"
   }
 }
