@@ -4,6 +4,7 @@ namespace UMC_FORM.Models
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
+    using UMC_FORM.Models.GA;
 
     public partial class DataContext : DbContext
     {
@@ -21,7 +22,6 @@ namespace UMC_FORM.Models
         public virtual DbSet<Form_Role> Form_Roles { get; set; }
         public virtual DbSet<Form_Stations> Form_Stations { get; set; }
         public virtual DbSet<Form_User> Form_User { get; set; }
-        public virtual DbSet<LCA_F01> LCA_F01 { get; set; }
         public virtual DbSet<LCA_FILE> LCA_FILE { get; set; }
         public virtual DbSet<LCA_FORM_01> LCA_FORM_01 { get; set; }
         public virtual DbSet<LCA_PERMISSION> LCA_PERMISSION { get; set; }
@@ -29,6 +29,9 @@ namespace UMC_FORM.Models
         public virtual DbSet<PR_ACC_F06> PR_ACC_F06 { get; set; }
         public virtual DbSet<Form_Summary> Form_Summary { get; set; }
         public virtual DbSet<Form_Log> Form_Logs { get; set; }
+        public virtual DbSet<GA_LEAVE_FORM> GA_LEAVE_FORM { get; set; }
+        public virtual DbSet<GA_LEAVE_FORM_ITEM> GA_LEAVE_FORM_ITEM { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -48,13 +51,6 @@ namespace UMC_FORM.Models
                 .Property(e => e.DEPT)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<LCA_F01>()
-                .Property(e => e.ID)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<LCA_F01>()
-                .Property(e => e.TICKET)
-                .IsUnicode(false);
 
             modelBuilder.Entity<PR_ACC_F06>()
                 .Property(e => e.ID)

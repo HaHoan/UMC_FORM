@@ -63,13 +63,17 @@
                                             @{
                                                 var controller = "";
 
-                                                if (item.TITLE == Constant.PR_ACC_F06_TITLE)
+                                                if (item.PROCESS_ID.Contains("PR-ACC"))
                                                 {
                                                     controller = "PurAccF06";
                                                 }
-                                                else if (item.TITLE == Constant.LCA_FORM_01_TITLE)
+                                                else if (item.PROCESS_ID.Contains("LCA"))
                                                 {
                                                     controller = "LCA";
+                                                }
+                                                else if (item.PROCESS_ID.Contains(Constant.GA_LEAVE_FORM))
+                                                {
+                                                    controller = "GAFormLeave";
                                                 }
                                             }
                                             <td>
@@ -134,13 +138,17 @@
                                                 @{
                                                     var controller = "";
 
-                                                    if (item.TITLE == Constant.PR_ACC_F06_TITLE)
+                                                    if (item.PROCESS_ID.Contains("PR-ACC"))
                                                     {
                                                         controller = "PurAccF06";
                                                     }
-                                                    else if (item.TITLE == Constant.LCA_FORM_01_TITLE)
+                                                    else if (item.PROCESS_ID.Contains("LCA"))
                                                     {
                                                         controller = "LCA";
+                                                    }
+                                                    else if (item.PROCESS_ID.Contains(Constant.GA_LEAVE_FORM))
+                                                    {
+                                                        controller = "GAFormLeave";
                                                     }
                                                 }
                                                 <td>
@@ -212,13 +220,16 @@
                                                 @{
                                                     var controller = "";
 
-                                                    if (item.TITLE == Constant.PR_ACC_F06_TITLE)
+                                                    if (item.PROCESS_ID.Contains("PR-ACC"))
                                                     {
                                                         controller = "PurAccF06";
                                                     }
-                                                    else if (item.TITLE == Constant.LCA_FORM_01_TITLE)
+                                                    else if (item.PROCESS_ID.Contains("LCA"))
                                                     {
                                                         controller = "LCA";
+                                                    }else if (item.PROCESS_ID.Contains(Constant.GA_LEAVE_FORM))
+                                                    {
+                                                        controller = "GAFormLeave";
                                                     }
                                                 }
                                                 <td>

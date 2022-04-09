@@ -1,0 +1,252 @@
+﻿
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout_Custom1.cshtml";
+}
+<div id="layoutSidenav_content">
+    <div class="container-fluid content">
+        <div class="">
+            <div class=" row">
+                <div class="col-md-10 border-right">
+                    <input type="hidden" id="users" value="@*@Model.USERS*@" />
+                    <button class="border-0 bg-white" id="backTo" type="button">
+                        <i class="fas fa-angle-left font-title text-muted"></i>
+                        <span class="font-weight-bold ml-2 text-muted lang text-uppercase" key="frmpaidleave_title" style="font-size: 18px;">YÊU CẦU CUNG CẤP</span>
+                    </button>
+                    <div class="row">
+                        <div class="col-11 form-inline">
+                            <span class="font-italic text-muted lang" key="state">Trạng thái:</span>
+                            <span class="badge badge-pill badge-primary ml-2 lang font-italic" key="">...</span>
+                        </div>
+                        <div class="col-1">
+                            <a href="" class="text-dark" target="_blank">
+                                <i class="fas fa-print"></i>
+                            </a>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <input id="status" name="status" type="hidden" />
+                    @*if (Model.SUBMITS.Contains(SUBMIT.RE_APPROVE))
+                        {
+
+                        <button class="spinner-button btn btn-danger mb-2 lang col" key="reaccept" id="lca_accept" type="submit" value="accept">Chấp thuận</button>
+                        }
+                        else if (Model.SUBMITS.Contains(SUBMIT.APPROVE))
+                        {
+                        <div class="row">
+                            <div class="col">
+                                <button class="spinner-button btn btn-danger mb-2 lang col" key="reject" id="lca_reject" value="reject" type="submit">Từ chối</button>
+                            </div>
+                            <div class="col">
+                                <button class="spinner-button btn btn-success mb-2 lang col" key="accept" id="lca_accept" value="accept" type="submit">Chấp thuận</button>
+                            </div>
+
+                        </div>
+                        }
+
+                        else if (Model.SUBMITS.Contains(SUBMIT.EDIT_QUOTE))
+                        {
+                        <button class="spinner-button btn btn-success mb-2 lang col" key="edit_quote" id="lca_edit_quote" type="submit" value="edit_quote">Chấp thuận</button>
+                        }*@
+                    <div class="info-edit">
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="request_dept_sub">Request Dept</label>
+                            </div>
+                            <div class="col-9">
+                                <select class="form-control">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" type="date" name="REQUEST_DATE" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="font-weight-bold lang" key="count-subscriber">Count subscriber</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" type="number" name="" value="">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-12">
+                                <p style="font-style:italic;font-weight:bold;">
+                                    Giấy này được sử dụng cho nghỉ ưu đãi và nghỉ đặc biệt. Đối với các trường hợp nghỉ đặc biệt hãy đánh dấu √ vào cột "Nghỉ đặc biệt", ngoài ra sẽ được hiểu là nghỉ ưu đãi.
+                                </p>
+                            </div>
+                        </div>
+
+                        @if (ViewBag.listManager != null)
+                        {
+                            <br />
+                            <div class="row">
+                                <div class="col-3">
+                                    <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                </div>
+                                <div class="col-9">
+                                    <select class="custom-select" id="deptManager" name="deptManager">
+                                        @foreach (var mng in ViewBag.listManager)
+                                        {
+                                            <option value="@mng.CODE">@mng.NAME</option>
+
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered mt-3">
+                                <tr>
+                                    <th class="lang" key="table-no" rowspan="2">No</th>
+                                    <th class="lang" rowspan="2" key="name">Name <br /> 氏名</th>
+                                    <th class="lang" rowspan="2" key="table-code" style="width:100px;">Code No<br /> コード </th>
+                                    <th class="lang" colspan="3" key="subscribe-date">Subscribe date<br /> 取得日 </th>
+                                    <th class="lang" rowspan="2" key="reason-leave">Reason for leave<br />理由</th>
+                                    <th class="lang" rowspan="2" key="special-leave" style="width:100px;">
+                                        Special leave<br />慶弔<br /> 休暇
+                                    </th>
+                                    <th class="lang" rowspan="2" key="">Rmks</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center p-2" key="">
+                                        From <br />
+                                        Từ ngày or giờ
+                                    </th>
+                                    <th class="text-center p-2">
+                                        To <br />
+                                        Đến ngày or giờ
+                                    </th>
+                                    <th class="lang" key="total-date" style="width:100px;"> Total date <br />日間</th>
+                                </tr>
+                                <tbody id="tableInfo">
+                                    @{
+                                        for (int i = 1; i <= 5; i++)
+                                        {
+                                            <tr class="row-info">
+                                                <td class="">@(i)</td>
+                                                <td>
+                                                    <input class="form-input inputDefault" id=@("NAME_" + i) />
+                                                </td>
+                                                <td>
+                                                    <input class="form-input inputDefault" id=@("CODE_" + i) />
+                                                </td>
+                                                <td>
+                                                    <input type="datetime-local" class="form-input  inputDefault" id=@("START_LEAVE"+i) name=@("START_LEAVE"+i) />
+                                                </td>
+                                                <td>
+                                                    <input class="form-input inputDefault" type="datetime-local" id=@("FINISH_LEAVE" + i) name=@("FINISH_LEAVE" + i) />
+                                                </td>
+                                                <td>
+                                                    <input class="form-input text-right inputDefault" id=@("TOTAL_DAY" + i) />
+                                                </td>
+                                                <td>
+                                                    <input class="form-input  inputDefault" id=@("REASON_LEAVE" + i) />
+                                                </td>
+                                                <td class="text-center p-2">
+
+                                                    <input type="checkbox" id="SPECIAL_LEAVE" name="" value="" />
+                                                </td>
+                                                <td>
+                                                    <input class="form-input  inputDefault" id=@("RMKS" + i) />
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+
+                                </tbody>
+                            </table>
+                            <div id="contextMenu" class="dropdown clearfix">
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
+                                    style="display:block;position:static;margin-bottom:5px; color:red">
+                                    <li>
+                                        <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
+                                           class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="table-responsive">
+                            <table class="table table-bordered ">
+                                <thead>
+                                    <tr>
+                                        <th class="font-italic lang" rowspan="2"><span>1. </span><span class="lang" key="">リーダー</span><br /><b>Trưởng nhóm</b></th>
+                                        <th class="font-italic lang" rowspan="2"><span>2. </span><span class="lang" key="" placeholder="Phê duyệt">勤怠管理者 <br /><b>Quản lý ca bộ phận</b></span></th>
+                                        <th class="font-italic lang" rowspan="2"><span>3. </span><span class="lang" key="">部門長 <br /><b>Trưởng bộ phận</b></span></th>
+                                        <th class="font-italic lang" rowspan="2"><span>4. </span><span class="lang" key="">GA 部門長 <br /><b>Trưởng bộ phận GA</b></span></th>
+                                        <th class="font-italic lang" rowspan="2"><span>5. </span><span class="lang" key="">総務処理日時 <br /><b>Nhóm tính lương</b></span></th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <tr height="100px">
+                                        <td style="vertical-align: middle;" class="text-center"></td>
+                                        <td style="vertical-align: middle;" class="text-center"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="col">
+                        <p class="font-italic font-weight-bold row text-underline">Note</p>
+                        <span class="border p-2 row" style="font-size:9px;">
+                            1. Giấy đăng ký nghỉ gửi cho GA trước 17 giờ ngày hôm sau.
+                            <br />
+                            2. Để xử lý nhanh các dữ liệu liên quan đến tỷ lệ đi làm, tăng ca, đề nghị bộ phận gửi file mềm danh sách nghỉ theo địa chỉ email hiện tại cho GA.
+                            <br />
+                            3. Nội dung xin nghỉ cần ghi rõ lý do (lý do phải cụ thể)
+                            <br />
+                        </span>
+                    </div>
+                    <br />
+                </div>
+                <div class="col-md-2">
+                    <h5 class="mt-4 text-success text-uppercase lang" key="comment">THẢO LUẬN</h5>
+                    <hr>
+                    <div class="row">
+                        <script type="text/javascript">
+                            var base_url = window.location.origin;
+                        </script>
+                        <div class="d-inline ml-2">
+                            <img class="avatar" id="avatar" src="~/Content/images/icons8-user-100.png" />
+                        </div>
+                        <div class="d-inline ml-2">
+                            <div class="chat-with" id="user">@*@_session.NAME*@</div>
+                            <div class="chat-num-messages">@*@_session.EMAIL*@</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <textarea id="txbComment" class="form-control ml-2 mt-2"></textarea>
+                        <p id="txbViewComment"></p>
+                    </div>
+                    <button class="btn btn-success lang" key="send" id="btnAddComment">Gửi</button>
+                    <p class="mt-4 text-muted">
+                        <span id="totalComment">0</span> <span class="lang text-uppercase" key="comment">Thảo luận</span>
+                    </p>
+                    <hr>
+                    <ul class="list-group list-group-flush list-comment"></ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
