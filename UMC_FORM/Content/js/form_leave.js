@@ -99,7 +99,39 @@ function addTdtotalday(rowIndex) {
     return col2;
 }
 
+function OnSuccess(response) {
+    if (response.result == 'success') {
+        window.location.href = $("#RedirectTo").val()
+    } else if (response.result == 'wait') {
+        if (confirm('Ticket vừa có người thay đổi,Nếu muốn tiếp tục thì hãy nhấn OK để load lại ticket để cập nhật?')) {
+            window.location.href = $("#LoadTicket").val()
+        } else {
+            window.location.href = $("#RedirectTo").val()
+        }
+    }
+    else {
+        if (response.message != null) {
+            alert(response.message)
+        }
+        else alert('error')
+        enableButton()
+    }
+}
+function OnFailure(response) {
+    alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?" + "Detail:" + response.responseText)
+    enableButton()
+}
 
+function enableButton() {
+    $('#frmpaidleave_create').prop("disabled", false);
+    $('#frmpaidleave_create').html("Create")
+}
+function disableButtonWhenSubmit(btn) {
+    $('#frmpaidleave_create').prop("disabled", true);
+    $(btn).html(
+        '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
+    );
+}
 
 $(function () {
     var formType = document.getElementById("formCreate");
@@ -228,5 +260,20 @@ $(function () {
 
 
 
+    //$("#formCreate").validate({
+    //    rules: {
+
+    //    },
+    //    messages: {
+
+    //    },
+    //    submitHandler: function (form) {
+    //        disableButtonWhenSubmit('#frmpaidleave_create')
+    //        form.ajax.submit()
+    //    }
+
+    //});
 
 })
+
+

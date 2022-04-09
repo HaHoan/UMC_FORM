@@ -14,6 +14,12 @@ namespace UMC_FORM.Business
         public static string PR_ACC_F06_TITLE = "F06-PR ACC 03-01 Giấy yêu cầu nhà cung cấp  購入申請書";
         public static string LCA_FORM_01_TITLE = "F01-LCA GIẤY YÊU CẦU PHÒNG CƠ KHÍ  冶工具　加工依頼書";
         public static string LCA_FORM_SUBTITLE = "F01-LCA";
+        public static string GA_LEAVE_FORM_GA_35 = "GIẤY ĐĂNG KÍ NGHỈ CÓ LƯƠNG";
+        public static string GA_LEAVE_FORM_GA_34 = "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG 無給休暇届";
+        public static string GA_LEAVE_FORM = "GA_LEAVE_FORM";
+        public static string GA_PAID_LEAVE_ID = "GA_35";
+        public static string GA_UNPAID_LEAVE_ID = "GA_34";
+
         public static string FM = "IWASAKI";
         public static string GD = "YOKOUCHI";
         //public static readonly string MAIL = "quyetpv@umcvn.com";
@@ -77,7 +83,8 @@ namespace UMC_FORM.Business
         public static int MANAGER = 1;
         public static int FM = 2;
         public static int GD = 3;
-
+        public static int SHIFT_MANAGER = 4;
+        public static int SALARY_GROUP = 5;
     }
     public static class ROLE
     {
@@ -92,5 +99,4 @@ namespace UMC_FORM.Business
         CHANGE_PASS = 0
     }
 
-    
 }
