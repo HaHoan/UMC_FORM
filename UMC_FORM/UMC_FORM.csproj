@@ -192,6 +192,7 @@
     <Compile Include="Models\ApprovalEntity.cs" />
     <Compile Include="Models\AssetEntity.cs" />
     <Compile Include="Models\AuthorEntity.cs" />
+    <Compile Include="Models\BaseDetailModel.cs" />
     <Compile Include="Models\CostChangeEntity.cs" />
     <Compile Include="Models\DataContext.cs" />
     <Compile Include="Models\FormProcessJsonEntity.cs" />
@@ -207,9 +208,10 @@
     <Compile Include="Models\Form_Summary.cs" />
     <Compile Include="Models\Form_User.cs" />
     <Compile Include="Models\GA\GA_LEAVE_FORM.cs" />
+    <Compile Include="Models\GA\GA_LEAVE_FORM_DETAIL_MODEL.cs" />
     <Compile Include="Models\GA\GA_LEAVE_FORM_ITEM.cs" />
     <Compile Include="Models\LCA\LCADetailModel.cs" />
-    <Compile Include="Models\LCA\StationApproveModel.cs" />
+    <Compile Include="Models\StationApproveModel.cs" />
     <Compile Include="Models\LCA_FILE.cs" />
     <Compile Include="Models\LCA_FORM_01.cs" />
     <Compile Include="Models\LCA_PERMISSION.cs" />
@@ -2240,7 +2242,7 @@
     <Content Include="Views\LCA\PrintView.cshtml" />
     <Content Include="Views\LCA\Details.cshtml" />
     <Content Include="Views\Summary\Index.cshtml" />
-    <Content Include="Views\LCA\_StationApprove.cshtml" />
+    <Content Include="Views\Common\_StationApprove.cshtml" />
     <Content Include="Views\LCA\_TicketView.cshtml" />
     <Content Include="Views\LCA\_TicketEdit.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace UMC_FORM.Models.LCA
+namespace UMC_FORM.Models
 {
     public class StationApproveModel
     {

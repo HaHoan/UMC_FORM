@@ -795,7 +795,7 @@ namespace UMC_FORM.Controllers
                     #region FORM
                     if (summary.IS_REJECT)
                     {
-                        var stationByIndex = db.Form_Process.Where(m => m.FORM_INDEX == (form.PROCEDURE_INDEX + 1)).FirstOrDefault();
+                        var stationByIndex = db.Form_Process.Where(m => m.FORM_INDEX == (form.PROCEDURE_INDEX + 1) && m.FORM_NAME == summary.PROCESS_ID).FirstOrDefault();
                         if (stationByIndex != null)
                         {
                             var stationIsSinging = db.LCA_FORM_01.Where(m => m.TICKET == form.TICKET
