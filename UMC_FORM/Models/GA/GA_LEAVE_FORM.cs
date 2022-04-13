@@ -13,23 +13,18 @@ namespace UMC_FORM.Models.GA
         [StringLength(50)]
         public string ID { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string TICKET { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string DEPT { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string CREATOR { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:d/M/yyyy}")]
-        [Required]
         public DateTime DATE_REGISTER { get; set; }
 
-        [Required]
         public int NUMBER_REGISTER { get; set; }
         public string FORM_NAME { get; set; }
 
@@ -47,7 +42,6 @@ namespace UMC_FORM.Models.GA
 
         public int ORDER_HISTORY { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string STATION_NAME { get; set; }
         public string STATION_NO { get; set; }

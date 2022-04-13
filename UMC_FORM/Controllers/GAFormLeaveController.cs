@@ -115,49 +115,32 @@ namespace UMC_FORM.Controllers
             }
             return "";
         }
-        private Tuple<string, string> AddLeaveItem(string leaveItems, DataContext db, GA_LEAVE_FORM prevTicket, GA_LEAVE_FORM currentTicket)
+        private Tuple<string, string,int> AddLeaveItem(string leaveItems, DataContext db, GA_LEAVE_FORM prevTicket, GA_LEAVE_FORM currentTicket)
         {
             try
             {
                 List<GA_LEAVE_FORM_ITEM> listLeaveItems = new List<GA_LEAVE_FORM_ITEM>();
-                // không sửa giá
+                // không sửa gì
                 if (string.IsNullOrEmpty(leaveItems))
                 {
                     listLeaveItems = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == prevTicket.ID).ToList();
                 }
 
-                // Khi sửa đổi quotes
+                // Khi sửa đổi items
                 else
                 {
                     listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems);
                 }
 
-                // test
-                //var leave = new GA_LEAVE_FORM_ITEM()
-                //{
-                //    TICKET = currentTicket.ID,
-                //    NO = 1,
-                //    FULLNAME = "Ha Thi Hoan",
-                //    CODE = "34811",
-                //    TIME_FROM = DateTime.Now,
-                //    TIME_TO = DateTime.Now,
-                //    TOTAL = 2,
-                //    REASON = "Nghỉ ốm",
-                //    SPEACIAL_LEAVE = false,
-                //    REMARK = "alaaa",
-                //};
-                //listLeaveItems.Add(leave);
-                //listLeaveItems.Add(leave);
-                //
                 if (listLeaveItems == null || listLeaveItems.Count == 0)
                 {
-                    return Tuple.Create<string, string>(STATUS.ERROR, "Kiểm tra lại thông tin danh sách người đăng ký!");
+                    return Tuple.Create<string, string,int>(STATUS.ERROR, "Kiểm tra lại thông tin danh sách người đăng ký!",0);
                 }
                 foreach (var item in listLeaveItems)
                 {
                     if (string.IsNullOrEmpty(item.CODE))
                     {
-                        return Tuple.Create<string, string>(STATUS.ERROR, "Thông tin người thứ  " + item.NO + " chưa có mã code!");
+                        return Tuple.Create<string, string,int>(STATUS.ERROR, "Thông tin người thứ  " + item.NO + " chưa có mã code!",0);
                     }
 
                     //test
@@ -182,11 +165,11 @@ namespace UMC_FORM.Controllers
                 }
                 db.SaveChanges();
 
-                return Tuple.Create<string, string>(STATUS.SUCCESS, "");
+                return Tuple.Create<string, string,int>(STATUS.SUCCESS, "",listLeaveItems.Count);
             }
             catch (Exception e)
             {
-                return Tuple.Create<string, string>(STATUS.ERROR, e.Message.ToString());
+                return Tuple.Create<string, string,int>(STATUS.ERROR, e.Message.ToString(),0);
             }
 
 
@@ -332,8 +315,7 @@ namespace UMC_FORM.Controllers
                         var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.GA_LEAVE_FORM).ToList();
                         ticket.STATION_NAME = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                         ticket.STATION_NO = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
-                        db.GA_LEAVE_FORM.Add(ticket);
-                        db.SaveChanges();
+                       
 
                         SetUpFormProceduce(Constant.GA_LEAVE_FORM, db, ticket.TICKET, ticket.DEPT_MANAGER, ticket.SHIFT_MANAGER, process);
 
@@ -343,7 +325,9 @@ namespace UMC_FORM.Controllers
                             transaction.Rollback();
                             return Json(new { result = STATUS.ERROR, message = saveItems.Item2 }, JsonRequestBehavior.AllowGet);
                         }
-
+                        ticket.NUMBER_REGISTER = saveItems.Item3;
+                        db.GA_LEAVE_FORM.Add(ticket);
+                        db.SaveChanges();
                         var summary = new Form_Summary()
                         {
                             ID = Guid.NewGuid().ToString(),
@@ -466,8 +450,6 @@ namespace UMC_FORM.Controllers
                         var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.GA_LEAVE_FORM).ToList();
                         form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                         form.STATION_NO = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
-                        db.GA_LEAVE_FORM.Add(form);
-                        db.SaveChanges();
 
                         var saveItems = AddLeaveItem(leaveItems, db, formDB, form);
                         if (saveItems.Item1 == STATUS.ERROR)
@@ -475,7 +457,8 @@ namespace UMC_FORM.Controllers
                             transaction.Rollback();
                             return Json(new { result = STATUS.ERROR, message = saveItems.Item2 }, JsonRequestBehavior.AllowGet);
                         }
-
+                        form.NUMBER_REGISTER = saveItems.Item3;
+                        db.GA_LEAVE_FORM.Add(form);
                         db.SaveChanges();
                         transaction.Commit();
                         if (!sendMail(summary, STATUS.ACCEPT))
@@ -540,7 +523,7 @@ namespace UMC_FORM.Controllers
                             transaction.Rollback();
                             return Json(new { result = STATUS.ERROR, message = saveItems.Item2 }, JsonRequestBehavior.AllowGet);
                         }
-
+                        form.NUMBER_REGISTER = saveItems.Item3;
                         db.GA_LEAVE_FORM.Add(form);
 
                         summary.IS_REJECT = true;
