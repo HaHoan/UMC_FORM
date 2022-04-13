@@ -52,15 +52,13 @@ function addTd(name) {
 }
 function addTdstartleave(rowIndex) {
     var col2 = $('<td/>');
+    var date = new Date();
+    var result = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' '
+        + date.getHours() + ':' + date.getMinutes();
     var input1 = $('<input/>', {
         class: 'form-input inputDefault',
-        type: 'datetime-local',
-        change: function () {
-            var id = $(this).attr('id')
-            var rStr = id.substr(4, id.length - 4)
-            var rowIndex = parseInt(rStr) - 1
-            updateEachRowAmount(rowIndex)
-        }
+        type: 'datetime',
+        value: result ,
     })
 
     col2.append(input1);
@@ -70,9 +68,13 @@ function addTdstartleave(rowIndex) {
 }
 function addTdFinishleave(rowIndex) {
     var col2 = $('<td/>');
+    var date = new Date();
+    var result = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' '
+        + date.getHours() + ':' + date.getMinutes();
     var input1 = $('<input/>', {
         class: 'form-input inputDefault',
-        type: 'datetime-local',
+        type: 'datetime',
+        value: result
     })
 
     col2.append(input1);
@@ -201,11 +203,26 @@ $(function () {
         row.append(addTdstartleave(index));
         row.append(addTdFinishleave(index));
         row.append(addTdtotalday(index));
-        row.append(addTd('REASON_LEAVE' + index));
-        row.append(addTd('SPECIAL_LEAVE' + index));
+        var col3 = $("<td/>");
+        var input3 = $('<textarea/>', {
+            class: 'form-input  inputDefault',
+            name: "REASON_LEAVE" + index,
+        });
+        col3.append(input3);
+        row.append(col3);
+        if (window.location.pathname == "/GAFormLeave/CreateFormPaidLeave") {
+            var col4 = $("<td/>", {
+                class: 'text-center p-2'
+            });
+            var input4 = $('<input/>', {
+                type: 'checkbox',
+                name: "SPECIAL_LEAVE" + index,
+                checked: false
+            });
+            col4.append(input4);
+            row.append(col4);
+        }
         row.append(addTd('RMKS' + index));
-        /* row.append(addTdAmount(index));*/
-
         var rowDelete = $('<td/>');
         var btnXoa = $('<button/>', {
             text: 'Xóa',
@@ -215,13 +232,9 @@ $(function () {
                 deleteRow(this)
             }
         });
-        //row.append(addTd('ACOUNT_CODE_' + index))
-        //row.append(addTd('ASSET_NO_' + index))
         rowDelete.append(btnXoa);
-
         row.append(rowDelete);
-        $('#tableInfo').append(row);
-        K
+        $('#tableInfo').append(row);       
     });
     $(".btnXoa").on('click', function () {
         deleteRow(this);
@@ -256,10 +269,6 @@ $(function () {
         });
         return false;
     });
-
-
-
-
     //$("#formCreate").validate({
     //    rules: {
 

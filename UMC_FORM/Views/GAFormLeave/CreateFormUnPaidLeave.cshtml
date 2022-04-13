@@ -104,18 +104,17 @@
                                         </div>
                                     </div>
                                 }
+                                <br />
 
                                 <div class="table-responsive">
-                                    <table class="table table-bordered mt-3">
+                                    <table class="table-border-dark">
                                         <tr>
                                             <th class="lang" key="table-no" rowspan="2">No</th>
                                             <th class="lang" rowspan="2" key="name">Name <br /> 氏名</th>
                                             <th class="lang" rowspan="2" key="table-code" style="width:100px;">Code No<br /> コード </th>
                                             <th class="lang" colspan="3" key="subscribe-date">Subscribe date<br /> 取得日 </th>
                                             <th class="lang" rowspan="2" key="reason-leave">Reason for leave<br />理由</th>
-                                            <th class="lang" rowspan="2" key="special-leave" style="width:100px;">
-                                                Special leave<br />慶弔<br /> 休暇
-                                            </th>
+                                           
                                             <th class="lang" rowspan="2" key="">Rmks</th>
                                         </tr>
                                         <tr>
@@ -142,20 +141,16 @@
                                                             <input class="form-input inputDefault" id=@("CODE_" + i) />
                                                         </td>
                                                         <td>
-                                                            <input type="datetime-local" class="form-input  inputDefault" id=@("START_LEAVE"+i) name=@("START_LEAVE"+i) />
+                                                            <input type="datetime" class="form-input  inputDefault" id=@("START_LEAVE"+i) name=@("START_LEAVE"+i) value=@DateTime.Now.ToString("dd-mm-yyyy hh:mm") />
                                                         </td>
                                                         <td>
-                                                            <input class="form-input inputDefault" type="datetime-local" id=@("FINISH_LEAVE" + i) name=@("FINISH_LEAVE" + i) />
+                                                            <input class="form-input inputDefault" type="datetime" id=@("FINISH_LEAVE" + i) name=@("FINISH_LEAVE" + i) value=@DateTime.Now.ToString("dd-mm-yyyy hh:mm") />
                                                         </td>
                                                         <td>
                                                             <input class="form-input text-right inputDefault" id=@("TOTAL_DAY" + i) />
                                                         </td>
                                                         <td>
-                                                            <input class="form-input  inputDefault" id=@("REASON_LEAVE" + i) />
-                                                        </td>
-                                                        <td class="text-center p-2">
-
-                                                            <input type="checkbox" id="SPECIAL_LEAVE" name="" value="" />
+                                                            <textarea class="form-input  inputDefault" id=@("REASON_LEAVE" + i) ></textarea>
                                                         </td>
                                                         <td>
                                                             <input class="form-input  inputDefault" id=@("RMKS" + i) />
@@ -172,7 +167,7 @@
                                             style="display:block;position:static;margin-bottom:5px; color:red">
                                             <li>
                                                 <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                                   class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
+                                                   class="text-muted ml-2" name="unleave"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
                                             </li>
 
                                         </ul>

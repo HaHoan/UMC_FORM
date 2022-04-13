@@ -148,7 +148,7 @@
                     }
 
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table-border-dark">
 
                             <tr>
                                 <th class="lang " key="" rowspan="2"><b>STT</b> <br />No. </th>
@@ -156,9 +156,6 @@
                                 <th class="lang " rowspan="2" key=""><b>Mã số</b><br /> コード </th>
                                 <th class="lang " colspan="3" key=""><b>Đăng ký ngày nghỉ</b><br /> 取得日 </th>
                                 <th class="lang " rowspan="2" key=""><b>Lý do nghỉ</b><br />理由</th>
-                                <th class="lang " rowspan="2" key="">
-                                    <b>Nghỉ đặc biệt</b> <br />慶弔<br /> 休暇
-                                </th>
                                 <th class="lang" rowspan="2" key=""><b>Rmks</b></th>
                             </tr>
                             <tr>
@@ -200,10 +197,6 @@
                                             <td class="td2">
                                                 <input class="form-input  inputDefault" id=@("REASON_LEAVE" + i) />
                                             </td>
-                                            <td class="text-center p-2">
-
-                                                <input type="checkbox" id="SPECIAL_LEAVE" name="" value="" />
-                                            </td>
                                             <td>
                                                 <input class="form-input  inputDefault" id=@("RMKS" + i) />
                                             </td>
@@ -228,14 +221,14 @@
                     <br />
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered ">
+                    <table class="table-border-dark">
                         <thead>
                             <tr>
-                                <th class="font-italic lang" rowspan="2"><span>1. </span><span class="lang" key="">リーダー</span><br /><b>Trưởng nhóm</b></th>
-                                <th class="font-italic lang" rowspan="2"><span>2. </span><span class="lang" key="" placeholder="Phê duyệt">勤怠管理者 <br /><b>Quản lý ca bộ phận</b></span></th>
-                                <th class="font-italic lang" rowspan="2"><span>3. </span><span class="lang" key="">部門長 <br /><b>Trưởng bộ phận</b></span></th>
-                                <th class="font-italic lang" rowspan="2"><span>4. </span><span class="lang" key="">GA 部門長 <br /><b>Trưởng bộ phận GA</b></span></th>
-                                <th class="font-italic lang" rowspan="2"><span>5. </span><span class="lang" key="">総務処理日時 <br /><b>Nhóm tính lương</b></span></th>
+                                <th class=" lang" rowspan="2"><span>1. </span><span class="lang" key="">リーダー</span><br />Trưởng nhóm</th>
+                                <th class=" lang" rowspan="2"><span>2. </span><span class="lang" key="" placeholder="Phê duyệt">勤怠管理者 <br />Quản lý ca bộ phận</span></th>
+                                <th class=" lang" rowspan="2"><span>3. </span><span class="lang" key="">部門長 <br />Trưởng bộ phận</span></th>
+                                <th class=" lang" rowspan="2"><span>4. </span><span class="lang" key="">GA 部門長 <br />Trưởng bộ phận GA</span></th>
+                                <th class=" lang" rowspan="2"><span>5. </span><span class="lang" key="">総務処理日時 <br />Nhóm tính lương</span></th>
                             </tr>
 
                         </thead>
