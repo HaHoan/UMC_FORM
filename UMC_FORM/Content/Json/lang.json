@@ -123,7 +123,8 @@
     "frmpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ CÓ LƯƠNG",
     "request_dept_sub": "Bộ phận đăng ký",
     "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
-    "request_date_sub": "Ngày đăng ký"
+    "request_date_sub": "Ngày đăng ký",
+    "manager_shift": "Quản lý ca bộ phận"
   },
   "vi": {
     "Home": "TRANG CHỦ",
@@ -250,7 +251,8 @@
     "frmpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ CÓ LƯƠNG",
     "request_dept_sub": "Bộ phận đăng ký",
     "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
-    "request_date_sub": "Ngày đăng ký"
+    "request_date_sub": "Ngày đăng ký",
+    "manager_shift": "Quản lý ca bộ phận"
   },
   "ja": {
     "reaccept": "Re-accept",
@@ -300,6 +302,7 @@
     "frmpaidleave_title": "慶弔休暇、リフレッシュ休暇",
     "request_dept_sub": "部署",
     "frmunpaidleave_title": "無給休暇届 ",
-    "request_date_sub": "申請日"
+    "request_date_sub": "申請日",
+    "manager_shift": "  勤怠管理者"
   }
 }

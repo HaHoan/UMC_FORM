@@ -262,7 +262,7 @@
     <Content Include="Content\images\Spinner-1s-200px.gif" />
     <Content Include="Content\js\comment.js" />
     <Content Include="Content\js\form_edit.js" />
-    <Content Include="Content\js\form_leave.js" />
+    <Content Include="Content\js\GA\form_leave.js" />
     <Content Include="Content\js\lca\form_lca.js" />
     <Content Include="Content\js\PR_ACC_F06.js" />
     <Content Include="Content\js\form.js" />

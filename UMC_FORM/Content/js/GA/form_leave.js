@@ -1,14 +1,25 @@
-﻿function updateEachRowAmount(rowIndex) {
+﻿
+function enableButton() {
+    $('#frmpaidleave_create').prop("disabled", false);
+    $('#frmpaidleave_create').html("Create")
+}
+function disableButtonWhenSubmit(btn) {
+    $('#frmpaidleave_create').prop("disabled", true);
+    $(btn).html(
+        '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
+    );
+}
+function updateEachRowAmount(rowIndex) {
     var amount = getTotalDay(rowIndex)
-    $('#TOTAL_DAY' + (rowIndex + 1)).val(amount)
-    $('#TOTAL_DAY' + (rowIndex + 1) + "_VIEW").text(addCommas(amount.toString()))
+    $('#TOTAL' + (rowIndex + 1)).val(amount)
+    $('#TOTAL' + (rowIndex + 1) + "_VIEW").text(addCommas(amount.toString()))
     $('#tableInfo tr:eq(' + rowIndex + ') td:eq(8) .form-input').val(addCommas(amount.toString()))
     $('.total').text(getTotalAmount())
 }
 function getTotalDay(rowIndex) {
     var total = 0;
-    var startleave = Math.floor($('#START_LEAVE' + (rowIndex)).getTime());
-    var finishleave = Math.floor($('#FINISH_LEAVE' + (rowIndex + 1)).getTime());
+    var startleave = Math.floor($('#TIME_FROM' + (rowIndex)).getTime());
+    var finishleave = Math.floor($('#TIME_TO' + (rowIndex + 1)).getTime());
     if (typeof qty === "undefined") {
         qty = $('#tableInfo tr:eq(' + rowIndex + ') td:eq(6)').text();
     }
@@ -36,7 +47,42 @@ function deleteRow(e) {
     updateSTT();
 }
 
+function updateleaveItems() {
+    try {
+        leaveItems = []
+        $('.row-info').each(function (rowIndex) {
+            index = rowIndex + 1
+            var item = $('#FULLNAME' + index).val()
+            if (item == "") return true
+            var code = $('#CODE' + index).val()
+            var time_from = $('#TIME_FROM' + index).val()
+            time_from.toLocaleString()
+            var time_to = $('#TIME_TO' + index).val()
+            var total = $('#TOTAL' + index).val()
+            total = $('#TOTAL' + index).val().split(",").join("")
+            var reason = $('#REASON' + index).val()
+            var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked");
+            var remark = $('#REMARK' + index).val()
+            var obj = {
+                NO: index,
+                FULLNAME: item,
+                CODE: code,
+                TIME_FROM: time_from.toLocaleString(),
+                TIME_TO: time_to.toLocaleString(),
+                TOTAL: total == "" ? 0 : parseInt(total),           
+                REASON: reason,
+                SPEACIAL_LEAVE: speacial_leave,
+                REMARK: remark
+            }
+            leaveItems.push(obj)
+        });
 
+        $('#leaveItems').val(JSON.stringify(leaveItems))
+    } catch (e) {
+        alert(e)
+    }
+
+}
 function addTd(name) {
     var col2 = $('<td/>');
     var input2 = $('<input/>', {
@@ -53,28 +99,27 @@ function addTd(name) {
 function addTdstartleave(rowIndex) {
     var col2 = $('<td/>');
     var date = new Date();
-    var result = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' '
-        + date.getHours() + ':' + date.getMinutes();
+     date.setMinutes(now.getMinutes() - date.getTimezoneOffset());
     var input1 = $('<input/>', {
         class: 'form-input inputDefault',
-        type: 'datetime',
-        value: result ,
+        type: 'datetime-local',
+        value: date.toISOString().slice(0, 16),
+
     })
 
     col2.append(input1);
-    input1.attr('id', 'START_LEAVE' + rowIndex);
-    input1.attr('name', 'START_LEAVE' + rowIndex);
+    input1.attr('id', 'TIME_FROM' + rowIndex);
+    input1.attr('name', 'TIME_FROM' + rowIndex);
     return col2;
 }
 function addTdFinishleave(rowIndex) {
     var col2 = $('<td/>');
     var date = new Date();
-    var result = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' '
-        + date.getHours() + ':' + date.getMinutes();
+    date.setMinutes(now.getMinutes() - date.getTimezoneOffset());
     var input1 = $('<input/>', {
         class: 'form-input inputDefault',
-        type: 'datetime',
-        value: result
+        type: 'datetime-local',
+        value: date.toISOString().slice(0, 16),
     })
 
     col2.append(input1);
@@ -101,6 +146,8 @@ function addTdtotalday(rowIndex) {
     return col2;
 }
 
+
+
 function OnSuccess(response) {
     if (response.result == 'success') {
         window.location.href = $("#RedirectTo").val()
@@ -124,17 +171,6 @@ function OnFailure(response) {
     enableButton()
 }
 
-function enableButton() {
-    $('#frmpaidleave_create').prop("disabled", false);
-    $('#frmpaidleave_create').html("Create")
-}
-function disableButtonWhenSubmit(btn) {
-    $('#frmpaidleave_create').prop("disabled", true);
-    $(btn).html(
-        '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
-    );
-}
-
 $(function () {
     var formType = document.getElementById("formCreate");
     // Create Form
@@ -146,13 +182,13 @@ $(function () {
 
     }
     for (var i = 1; i <= $('#tableInfo tr').length; i++) {
-        $('#FINISH_LEAVE' + i).change(function (e) {
+        $('#TIME_TO' + i).change(function (e) {
             var id = $(this).attr('id')
             var rStr = id.substr(4, id.length - 4)
             var rowIndex = parseInt(rStr) - 1
             updateEachRowAmount(rowIndex)
         })
-        $('#START_LEAVE' + i).change(function () {
+        $('#TIME_FROM' + i).change(function () {
             var id = $(this).attr('id')
             var rStr = id.substr(11, id.length - 11)
             var rowIndex = parseInt(rStr) - 1
@@ -161,27 +197,7 @@ $(function () {
 
     }
 
-    $('#robinAttach').hide();
-    $('#customer-checkout-info').hide();
-
-    $('input[type=radio][name=robin]').change(function () {
-        if (this.value == 'y') {
-            $('#robinAttach').show();
-        }
-        else if (this.value == 'n') {
-            $('#robinAttach').hide();
-        }
-    });
-    $('input[type=radio][name=IS_CUS_PAY]').change(function () {
-        if (this.value == 'True') {
-            $('#customer-checkout-info').show();
-        }
-        else if (this.value == 'False') {
-            $('#customer-checkout-info').hide();
-        }
-    });
-
-
+    
     $(".type_number").keypress(function (e) {
         return onlyNumber(e)
     });
@@ -198,15 +214,15 @@ $(function () {
             text: (index)
         })
         row.append(col1);
-        row.append(addTd("NAME_" + index));
-        row.append(addTd("CODE_" + index));
+        row.append(addTd("FULLNAME" + index));
+        row.append(addTd("CODE" + index));
         row.append(addTdstartleave(index));
         row.append(addTdFinishleave(index));
         row.append(addTdtotalday(index));
         var col3 = $("<td/>");
         var input3 = $('<textarea/>', {
             class: 'form-input  inputDefault',
-            name: "REASON_LEAVE" + index,
+            name: "REASON" + index,
         });
         col3.append(input3);
         row.append(col3);
@@ -216,13 +232,13 @@ $(function () {
             });
             var input4 = $('<input/>', {
                 type: 'checkbox',
-                name: "SPECIAL_LEAVE" + index,
+                name: "SPEACIAL_LEAVE" + index,
                 checked: false
             });
             col4.append(input4);
             row.append(col4);
         }
-        row.append(addTd('RMKS' + index));
+        row.append(addTd('REMARK' + index));
         var rowDelete = $('<td/>');
         var btnXoa = $('<button/>', {
             text: 'Xóa',
@@ -282,6 +298,16 @@ $(function () {
     //    }
 
     //});
+    $("#formCreate").validate({
+      
+        submitHandler: function (form) {
+            disableButtonWhenSubmit('#frmpaidleave_create')
+            updateleaveItems()
+            form.ajax.submit()
+        }
+
+    });
+
 
 })
 

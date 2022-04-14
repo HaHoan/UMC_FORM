@@ -1,6 +1,9 @@
-﻿@using UMC_FORM.Business
+﻿@model UMC_FORM.Models.GA.GA_LEAVE_FORM_ITEM
+@using UMC_FORM.Models 
+@using UMC_FORM.Business
 @{
     Layout = null;
+    var _session = Session["user"] as Form_User;
 }
 
 <!DOCTYPE html>
@@ -23,7 +26,7 @@
     <script src="~/Scripts/bootstrap-typeahead.js"></script>
     <script src="~/Content/js/lang.js"></script>
     <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/form_leave.js"></script>
+    <script src="~/Content/js/GA/form_leave.js"></script>
 </head>
 <body>
     <div>
@@ -49,132 +52,151 @@
                             </div>
                             <hr>
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            <div class="info-edit">
+                        <div class="info-edit">
+
+                            <div class="row">
+                                <div class="col-3">
+                                    <label class="font-weight-bold lang" key="request_dept_sub" name="DEPT">Request Dept</label>
+                                </div>
+                                <div class="col-9">
+                                   
+                                    <input  class="form-control" value="@_session.DEPT" name="DEPT" readonly="readonly"/>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-3">
+                                    <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
+                                </div>
+                                <div class="col-9">
+                                    <input class="form-control" type="date" name ="DATE_REGISTER" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                </div>
+                            </div>
+                            <br />
+
+                            @if (ViewBag.listManager != null)
+                            {
+                                <br />
                                 <div class="row">
                                     <div class="col-3">
-                                        <label class="font-weight-bold lang" key="request_dept_sub" name ="DEPT">Request Dept</label>
+                                        <label class="font-weight-bold lang" key="dept_manager">Name</label>
                                     </div>
                                     <div class="col-9">
-                                        <select class="form-control">
-                                            <option></option>
+                                        <select class="custom-select" id="deptManager" name="DEPT_MANAGER">
+                                            @foreach (var mng in ViewBag.listManager)
+                                            {
+                                                <option value="@mng.CODE">@mng.NAME</option>
+                                            }
                                         </select>
                                     </div>
                                 </div>
-                                <br />
+                            }
+                            <br />
+                            @if (ViewBag.listShiftManager != null)
+                            {
                                 <div class="row">
                                     <div class="col-3">
-                                        <label class="font-weight-bold lang" key="request_date_sub" >Request Date</label>
+                                        <label class="font-weight-bold lang" key="manager_shift">Name</label>
                                     </div>
                                     <div class="col-9">
-                                        <input class="form-control" type="date" name="REQUEST_DATE" name="DATE_REGISTER" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                        <select class="custom-select" id="shiftManager" name="SHIFT_MANAGER">
+                                            @foreach (var shift_mng in ViewBag.listShiftManager)
+                                               {
+                                                    <option value="@shift_mng.CODE">@shift_mng.NAME</option>
+                                              }
+                                        </select>
                                     </div>
                                 </div>
-                                <br />
-                                @*<div class="row">
-                                        <div class="col-3">
-                                            <label class="font-weight-bold lang" key="count-subscriber">Count subscriber</label>
-                                        </div>
-                                        <div class="col-9">
-                                            <input class="form-control" type="number" name="" value="">
-                                        </div>
-                                    </div>*@
-                                <br>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <p style="font-style:italic;font-weight:bold;">
-                                            Giấy này được sử dụng cho nghỉ ưu đãi và nghỉ đặc biệt. Đối với các trường hợp nghỉ đặc biệt hãy đánh dấu √ vào cột "Nghỉ đặc biệt", ngoài ra sẽ được hiểu là nghỉ ưu đãi.
-                                        </p>
-                                    </div>
-                                </div>
-                                @*@if (ViewBag.listManager != null)
-                                    {
-                                        <br />
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <label class="font-weight-bold lang" key="dept_manager">Name</label>
-                                            </div>
-                                            <div class="col-9">
-                                                <select class="custom-select" id="deptManager" name="deptManager">
-                                                    @foreach (var mng in ViewBag.listManager)
-                                                    {
-                                                        <option value="@mng.CODE">@mng.NAME</option>
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
-                                    }*@
-                                <div class="table-responsive">
-                                    <table class="table-border-dark">
-                                        <tr>
-                                            <th class="lang" key="table-no" rowspan="2">No</th>
-                                            <th class="lang" rowspan="2" key="name">Name <br /> 氏名</th>
-                                            <th class="lang" rowspan="2" key="table-code" style="width:100px;">Code No<br /> コード </th>
-                                            <th class="lang" colspan="3" key="subscribe-date">Subscribe date<br /> 取得日 </th>
-                                            <th class="lang" rowspan="2" key="reason-leave">Reason for leave<br />理由</th>
-                                            <th class="lang" rowspan="2" key="special-leave" style="width:100px;">
-                                                Special leave<br />慶弔<br /> 休暇
-                                            </th>
-                                            <th class="lang" rowspan="2" key="">Rmks</th>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-center p-2" key="">
-                                                From <br />
-                                                Từ ngày or giờ
-                                            </th>
-                                            <th class="text-center p-2">
-                                                To <br />
-                                                Đến ngày or giờ
-                                            </th>
-                                            <th class="lang" key="total-date" style="width:100px;"> Total date <br />日間</th>
-                                        </tr>
-                                        <tbody id="tableInfo">
-                                            @{
-                                                for (int i = 1; i <= 5; i++)
-                                                {
-                                                    <tr class="row-info">
-                                                        <td class="">@(i)</td>
-                                                        <td>
-                                                            <input class="form-input inputDefault" id=@("NAME_" + i) />
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-input inputDefault" id=@("CODE_" + i) />
-                                                        </td>
-                                                        <td>
-                                                            <input type="datetime" class="form-input  inputDefault"  value=@DateTime.Now.ToString("yyyy-MM-dd HH:mm") id=@("START_LEAVE"+i) name=@("START_LEAVE"+i) />
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-input inputDefault"  type="datetime"  value=@DateTime.Now.ToString("yyyy-MM-dd HH:mm") id=@("FINISH_LEAVE" + i) name=@("FINISH_LEAVE" + i) />
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-input text-right inputDefault" id=@("TOTAL_DAY" + i) />
-                                                        </td>
-                                                        <td>
-                                                            <textarea class="form-input  inputDefault" id=@("REASON_LEAVE" + i)></textarea>
-                                                        </td>
-                                                        <td class="text-center p-2">
+                            }
 
-                                                            <input type="checkbox" id=@("SPECIAL_LEAVE"+i) name="" value="" />
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-input  inputDefault" id=@("RMKS" + i) />
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            }
-                                        </tbody>
-                                    </table>
-                                    <div id="contextMenu" class="dropdown clearfix">
-                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
-                                            style="display:block;position:static;margin-bottom:5px; color:red">
-                                            <li>
-                                                <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                                   class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <p style="font-style:italic;font-weight:bold;">
+                                        Giấy này được sử dụng cho nghỉ ưu đãi và nghỉ đặc biệt. Đối với các trường hợp nghỉ đặc biệt hãy đánh dấu √ vào cột "Nghỉ đặc biệt", ngoài ra sẽ được hiểu là nghỉ ưu đãi.
+                                    </p>
                                 </div>
-                                <br />
                             </div>
+                            <br />
+                            <div class="table-responsive">
+                                <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_35" name="purpose" />
+                                <input type="hidden" value="@Constant.GA_PAID_LEAVE_ID" name="formName" />
+                                <table class="table-border-dark">
+                                    <tr>
+                                        <th class="lang" key="table-no" rowspan="2">No</th>
+                                        <th class="lang" rowspan="2" key="name">Name <br /> 氏名</th>
+                                        <th class="lang" rowspan="2" key="table-code" style="width:100px;">Code No<br /> コード </th>
+                                        <th class="lang" colspan="3" key="subscribe-date">Subscribe date<br /> 取得日 </th>
+                                        <th class="lang" rowspan="2" key="reason-leave">Reason for leave<br />理由</th>
+                                        <th class="lang" rowspan="2" key="special-leave" style="width:100px;">
+                                            Special leave<br />慶弔<br /> 休暇
+                                        </th>
+                                        <th class="lang" rowspan="2" key="">Rmks</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center p-2" key="">
+                                            From <br />
+                                            Từ ngày or giờ
+                                        </th>
+                                        <th class="text-center p-2">
+                                            To <br />
+                                            Đến ngày or giờ
+                                        </th>
+                                        <th class="lang" key="total-date" style="width:100px;"> Total date <br />日間</th>
+                                    </tr>
+
+
+                                    <tbody id="tableInfo">
+                                        @{
+                                            for (int i = 1; i <= 5; i++)
+                                            {
+                                                <tr class="row-info">
+                                                    <td class="">@(i)</td>
+                                                    <td>
+                                                        <input class="form-input inputDefault" id=@("FULLNAME" + i) required />
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-input inputDefault" id=@("CODE" + i) required/>
+                                                    </td>
+                                                    <td>
+                                                        <input type="datetime-local" class="form-input  inputDefault" 	 id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) />
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-input inputDefault" type="datetime-local"  id=@("TIME_TO" + i) name=@("TIME_TO" + i) />
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-input type_number inputDefault" id=@("TOTAL" + i) required />
+                                                    </td>
+                                                    <td>
+                                                        <textarea class="form-input inputDefault" id=@("REASON" + i) required></textarea>
+                                                    </td>
+                                                    <td class="text-center p-2">
+
+                                                        <input type="checkbox" id=@("SPEACIAL_LEAVE"+i) name="" value="" />
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-input  inputDefault" id=@("REMARK" + i)  />
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+           
+                                </table>
+                            
+                                <input type="hidden" name="leaveItems" id="leaveItems" />
+                                <div id="contextMenu" class="dropdown clearfix">
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
+                                        style="display:block;position:static;margin-bottom:5px; color:red">
+                                        <li>
+                                            <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
+                                               class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
                             <hr>
                             <br />
                             <div class="col">
@@ -202,6 +224,7 @@
                             </div>
                         </div>
                         <br>
+
                     }
                 </div>
             </div>
@@ -210,5 +233,16 @@
         {@*type = @SendType.SENDTOME*@}));
     </div>
    
+                            <script type="text/javascript">
+                                var now = new Date();
+                                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                                for (var i = 1; i <= 5; i++) {
+                                    document.getElementById('TIME_FROM' + i).value = now.toISOString().slice(0, 16);
+                                }
+                                
+                                for (var i = 1; i <= 5; i++) {
+                                    document.getElementById('TIME_TO' + i).value = now.toISOString().slice(0, 16);
+                                }
+                            </script>
 </body>
 </html>
