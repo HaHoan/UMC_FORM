@@ -29,7 +29,7 @@ namespace UMC_FORM.Models.GA
 
         public int TOTAL { get; set; }
         public int NO { get; set; }
-
+        [Required]
         public string REASON { get; set; }
 
         public bool SPEACIAL_LEAVE { get; set; }
