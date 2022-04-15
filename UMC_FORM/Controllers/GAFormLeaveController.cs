@@ -637,25 +637,35 @@ namespace UMC_FORM.Controllers
 
         public ActionResult Details(string ticket)
         {
-            var ticketDb = GetDetailTicket(ticket);
-            if (ticketDb == null) return HttpNotFound();
-            else if(ticketDb.TICKET.FORM_NAME == Constant.GA_PAID_LEAVE_ID){
-                return RedirectToAction("DetailFormPaidLeave", new { ticketDb = ticketDb });
+            using(var db = new DataContext())
+            {
+                var ticketDb = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).FirstOrDefault();
+                if (ticketDb == null) return HttpNotFound();
+                else if (ticketDb.FORM_NAME == Constant.GA_PAID_LEAVE_ID)
+                {
+                    return RedirectToAction("DetailFormPaidLeave", new { ticket = ticket });
+                }
+                else if (ticketDb.FORM_NAME == Constant.GA_UNPAID_LEAVE_ID)
+                {
+                    return RedirectToAction("DetailFormUnPaidLeave", new { ticket = ticket });
+                }
+                return HttpNotFound();
             }
-            else if(ticketDb.TICKET.FORM_NAME == Constant.GA_UNPAID_LEAVE_ID){
-                return RedirectToAction("DetailFormUnPaidLeave", new { ticketDb = ticketDb });
-            }
-            return HttpNotFound();
+           
         }
 
         
-        public ActionResult DetailFormPaidLeave(GA_LEAVE_FORM_DETAIL_MODEL ticketDb)
+        public ActionResult DetailFormPaidLeave(string ticket)
         {
+            var ticketDb = GetDetailTicket(ticket);
+            if (ticketDb == null) return HttpNotFound();
             return View(ticketDb);
         }
 
-        public ActionResult DetailFormUnPaidLeave(GA_LEAVE_FORM_DETAIL_MODEL ticketDb)
+        public ActionResult DetailFormUnPaidLeave(string ticket)
         {
+            var ticketDb = GetDetailTicket(ticket);
+            if (ticketDb == null) return HttpNotFound();
             return View(ticketDb);
         }
         public ActionResult PrintFormUnPaidLeave(string ticket)
