@@ -283,6 +283,7 @@ namespace UMC_FORM.Controllers
             }
 
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult CreateNew(GA_LEAVE_FORM ticket, string leaveItems, string purpose, string formName)
@@ -363,6 +364,18 @@ namespace UMC_FORM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public JsonResult Details(GA_LEAVE_FORM ticket, string leaveItems,string status)
+        {
+            if(status == STATUS.ACCEPT)
+            {
+                return Accept(ticket, leaveItems);
+            }else if(status == STATUS.REJECT)
+            {
+                return Reject(ticket, leaveItems);
+            }
+            return Json(new { result = STATUS.ERROR, message = "Chưa có status này" }, JsonRequestBehavior.AllowGet);
+        }
+       
         public JsonResult Accept(GA_LEAVE_FORM ticket, string leaveItems)
         {
             using (var db = new DataContext())
@@ -482,7 +495,6 @@ namespace UMC_FORM.Controllers
             }
         }
 
-        [HttpPost]
         public JsonResult Reject(GA_LEAVE_FORM ticket, string leaveItems)
         {
             using (var db = new DataContext())
