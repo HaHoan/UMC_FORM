@@ -27,7 +27,7 @@ namespace UMC_FORM.Models.GA
         [DisplayFormat(DataFormatString = "{0:d/M/yyyy HH:mm}")]
         public DateTime TIME_TO { get; set; }
 
-        public int TOTAL { get; set; }
+        public float TOTAL { get; set; }
         public int NO { get; set; }
         [Required]
         public string REASON { get; set; }
