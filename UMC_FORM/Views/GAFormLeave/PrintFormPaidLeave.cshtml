@@ -1,4 +1,7 @@
-﻿
+﻿@model UMC_FORM.Models.GA.GA_LEAVE_FORM_DETAIL_MODEL
+@using UMC_FORM.Business
+@using UMC_FORM.Models
+@using UMC_FORM.Ultils
 @{
     Layout = null;
 }
@@ -59,7 +62,7 @@
         <div class="row">
 
             <label class="col lang text-right"></label>
-            <label class="col text-right font-weight-bold">ID :  @*@Model.TICKET.LCA_ID*@</label>
+            <label class="col text-right font-weight-bold">ID :  @Model.TICKET.TICKET</label>
         </div>
 
 
@@ -87,29 +90,29 @@
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col-3">
-                            <label class="font-weight-bold lang" key=""><b>Bộ phận đăng ký</b> &ensp; 部署</label>
+                        <div class="col-2">
+                            <label class="font-weight-bold lang" key="request_dept_sub">Bộ phận đăng ký &ensp; 部署</label>
                         </div>
-                        <div class="col-9">
-
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-3">
-                            <label class="font-weight-bold lang" key=""><b>Ngày đăng ký</b> &ensp; 申請日</label>
-                        </div>
-                        <div class="col-9">
-
+                        <div class="col-10">
+                            @Model.TICKET.DEPT
                         </div>
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col-3">
-                            <label class="font-weight-bold lang" key=""><b>Số người đăng ký </b>&ensp; 人数</label>
+                        <div class="col-2">
+                            <label class="font-weight-bold lang" key="request_date_sub">Ngày đăng ký &ensp; 申請日</label>
                         </div>
-                        <div class="col-9">
-
+                        <div class="col-10">
+                            @Model.TICKET.DATE_REGISTER.ToString("dd-MM-yyyy")
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-2">
+                            <label class="font-weight-bold lang" key="count_subscriber">Số người đăng ký &ensp; 人数</label>
+                        </div>
+                        <div class="col-10">
+                            @Model.TICKET.NUMBER_REGISTER
                         </div>
                     </div>
                     <br>
@@ -123,121 +126,128 @@
 
                         </div>
                     </div>
-                    @if (ViewBag.listManager != null)
-                    {
-                        <br />
-                        <div class="row">
-                            <div class="col-3">
-                                <label class="font-weight-bold lang" key="dept_manager">Name</label>
-                            </div>
-                            <div class="col-9">
-                                <select class="custom-select" id="deptManager" name="deptManager">
-                                    @foreach (var mng in ViewBag.listManager)
-                                    {
-                                        <option value="@mng.CODE">@mng.NAME</option>
 
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                    }
 
                     <div class="table-responsive">
                         <table class="table-border-dark">
 
                             <tr>
-                                <th class="lang " key="" rowspan="2"><b>STT</b> <br />No. </th>
-                                <th class="lang " rowspan="2" key=""><b>Họ tên</b> <br /> 氏名</th>
-                                <th class="lang " rowspan="2" key=""><b>Mã số</b><br /> コード </th>
-                                <th class="lang " colspan="3" key=""><b>Đăng ký ngày nghỉ</b><br /> 取得日 </th>
-                                <th class="lang " rowspan="2" key=""><b>Lý do nghỉ</b><br />理由</th>
+                                <th class="lang " key="" rowspan="2">STT <br />No. </th>
+                                <th class="lang " rowspan="2" key="">Họ tên <br /> 氏名</th>
+                                <th class="lang " rowspan="2" key="">Mã số<br /> コード </th>
+                                <th class="lang " colspan="3" key="">Đăng ký ngày nghỉ<br /> 取得日 </th>
+                                <th class="lang " rowspan="2" key="">Lý do nghỉ<br />理由</th>
                                 <th class="lang " rowspan="2" key="">
-                                    <b>Nghỉ đặc biệt</b> <br />慶弔<br /> 休暇
+                                    Nghỉ đặc biệt<br />慶弔<br /> 休暇
                                 </th>
-                                <th class="lang" rowspan="2" key=""><b>Rmks</b></th>
+                                <th class="lang" rowspan="2" key="">Rmks</th>
                             </tr>
                             <tr>
                                 <th class="text-center p-2" key="">
-                                    <b>
+                                    
                                         From <br />
                                         Từ ngày or giờ
-                                    </b>
+                                    
                                 </th>
                                 <th class="text-center p-2">
-                                    <b>
+                                    
                                         To <br />
                                         Đến ngày or giờ
-                                    </b>
+                                    
                                 </th>
-                                <th class="lang p-1" key=""> <b>Tổng ngày </b><br />日間</th>
+                                <th class="lang p-1" key=""> Tổng ngày <br />日間</th>
                             </tr>
                             <tbody id="tableInfo">
                                 @{
-                                    for (int i = 1; i <= 1; i++)
+                                    var i = 1;
+                                    foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
                                     {
                                         <tr class="row-info">
                                             <td class="">@(i)</td>
-                                            <td style="width:100px;">
-                                                Phạm Thị Hằng
+                                            <td>
+                                                @item.FULLNAME
                                             </td>
                                             <td>
-                                                U00001
+                                                @item.CODE
                                             </td>
                                             <td>
-                                                4/4/2022
+                                                @item.TIME_FROM.ToString("dd-MM-yyyy HH:mm")
                                             </td>
                                             <td>
-                                                10/4/2022
+                                                @item.TIME_TO.ToString("dd-MM-yyyy HH:mm")
                                             </td>
                                             <td>
-                                                5
+                                                @item.TOTAL
                                             </td>
-                                            <td class="td2">
-                                                Nghỉ 70% lương 70% lương 70% lương style="width:auto;" style="width:auto;" style="width:auto;" style="width:auto;"
-                                                style="width:auto;" style="width:auto;" style="width:auto;"
+                                            <td>
+                                                @*<input class="form-input  inputDefault" id=@("REASON" + i) value="@item.REASON" />*@
+                                                @item.REASON
                                             </td>
-                                            <td class="text-center p-2" style="width:50px;">
-                                                √
+                                            <td class="text-center p-2">
+                                                @if (item.SPEACIAL_LEAVE == true)
+                                                {
+                                                    <input type="checkbox" name=@("SPECIAL_LEAVE" + i) id=@("SPECIAL_LEAVE" + i) checked="@item.SPEACIAL_LEAVE" onclick="return false" />
+                                                }
                                             </td>
-                                            <td></td>
+                                            <td>
+                                                @item.REMARK
+                                            </td>
                                         </tr>
+                                        i++;
                                     }
+
                                 }
                             </tbody>
                         </table>
-                        <div id="contextMenu" class="dropdown clearfix">
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
-                                style="display:block;position:static;margin-bottom:5px; color:red">
-                                <li>
-                                    <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                       class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
-                                </li>
-                            </ul>
-                        </div>
+
                     </div>
                     <br />
                 </div>
+                <br />
+                @*@Html.Partial("~/Views/Common/_StationApprove.cshtml", Model.STATION_APPROVE)*@
                 <div class="table-responsive">
-                    <table class="table-border-dark">
+                    <table class="table-border-dark ">
                         <thead>
                             <tr>
-                                <th class="lang" rowspan="2"><span>1. </span><span class="lang" key="">リーダー</span><br />Trưởng nhóm</th>
-                                <th class="lang" rowspan="2"><span>2. </span><span class="lang" key="" placeholder="Phê duyệt">勤怠管理者 <br />Quản lý ca bộ phận</span></th>
-                                <th class="lang" rowspan="2"><span>3. </span><span class="lang" key="">部門長 <br />Trưởng bộ phận</span></th>
-                                <th class="lang" rowspan="2"><span>4. </span><span class="lang" key="">GA 部門長 <br />Trưởng bộ phận GA</span></th>
-                                <th class="lang" rowspan="2"><span>5. </span><span class="lang" key="">総務処理日時 <br />Nhóm tính lương</span></th>
+                                @{
+                                    var index = 1;
+                                }
+                                @foreach (var station in Model.STATION_APPROVE)
+                                {
+                                    <th class="font-italic lang" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="@station.STATION_NAME">@station.STATION_NAME</span></th>
+                                }
                             </tr>
+
                         </thead>
                         <tbody>
                             <tr height="100px">
-                                <td style="vertical-align: middle;" class="text-center"></td>
-                                <td style="vertical-align: middle;" class="text-center"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                @{
+                                    index = 1;
+                                }
+                                @foreach (var station in Model.STATION_APPROVE)
+                                {
+                                   
+                                    if (station.IS_APPROVED)
+                                    {
+                                        <td>
+                                            <div class="rubber_stamp">
+                                                <p>@station.COMPANY</p>
+                                                <p>@station.APPROVE_DATE.ToShortDateString()</p>
+                                                <p>@station.SIGNATURE</p>
+                                            </div>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+
+                                }
+
                             </tr>
                         </tbody>
                     </table>
+
                 </div>
                 <hr>
                 <div class="col">
@@ -258,7 +268,6 @@
     <script src="~/Content/js/moment.js"></script>
     <script src="~/Content/js/lang.js"></script>
     <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/lca/form_lca.js"></script>
     <script src="~/Content/js/GA/form_leave.js"></script>
 </body>
 </html>

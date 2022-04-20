@@ -69,7 +69,7 @@
                                     <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
                                 </div>
                                 <div class="col-9">
-                                    <input class="form-control" type="date" name ="DATE_REGISTER" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                    <input class="form-control" type="datetime" name ="DATE_REGISTER" value=@DateTime.Now.ToString("yyyy-MM-dd")>
                                 </div>
                             </div>
                             <br />
@@ -159,10 +159,10 @@
                                                         <input class="form-input inputDefault" id=@("CODE" + i) required/>
                                                     </td>
                                                     <td>
-                                                        <input type="datetime-local" class="form-input  inputDefault" 	 id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) />
+                                                        <input type="datetime-local" class="form-input  inputDefault" 	 id=@("TIME_FROM"+i) name=@("TIME_FROM"+i)  />
                                                     </td>
                                                     <td>
-                                                        <input class="form-input inputDefault" type="datetime-local"  id=@("TIME_TO" + i) name=@("TIME_TO" + i) />
+                                                        <input class="form-input inputDefault" type="datetime-local"  id=@("TIME_TO" + i) name=@("TIME_TO" + i)  />
                                                     </td>
                                                     <td>
                                                         <input class="form-input type_number inputDefault" id=@("TOTAL" + i) required />
@@ -229,20 +229,18 @@
                 </div>
             </div>
         </div>
-        @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new
-        {@*type = @SendType.SENDTOME*@}));
+        @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new{type = @SendType.SENDTOME}))
     </div>
    
-                            <script type="text/javascript">
-                                var now = new Date();
-                                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-                                for (var i = 1; i <= 5; i++) {
-                                    document.getElementById('TIME_FROM' + i).value = now.toISOString().slice(0, 16);
-                                }
-                                
-                                for (var i = 1; i <= 5; i++) {
-                                    document.getElementById('TIME_TO' + i).value = now.toISOString().slice(0, 16);
-                                }
-                            </script>
+ <script type="text/javascript">
+     var now = new Date();
+     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+     for (var i = 1; i <= 5; i++) {
+     document.getElementById('TIME_FROM' + i).value = now.toISOString().slice(0, 16);
+     }
+     for (var i = 1; i <= 5; i++) {
+     document.getElementById('TIME_TO' + i).value = now.toISOString().slice(0, 16);
+       }
+ </script>
 </body>
 </html>
