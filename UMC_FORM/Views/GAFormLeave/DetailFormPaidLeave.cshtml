@@ -9,6 +9,7 @@
     var keyState = Model.SUMARY.IS_REJECT ? "cancel-request" : Model.SUMARY.IS_FINISH ? "finish-request" : "waitting";
     var _session = Session["user"] as Form_User;
 }
+@Styles.Render("~/Content/jquery.datetimepicker.css")
 <div id="layoutSidenav_content">
     <div class="container-fluid content">
         <div class="">
@@ -76,15 +77,13 @@
                         <hr class="mt-1">
                         <div class="info-edit">
                             @{
-                                if (Model.SUMARY.IS_REJECT==true)
-                                {
+                               
                                     <div class="row">
                                         <div class="col-3">
                                             <label class="font-weight-bold lang" key="request_dept_sub">Request Dept </label>
                                         </div>
                                         <div class="col-9">
                                             @Html.TextBoxFor(m => m.TICKET.DEPT, new { @name = "DEPT", @class = "form-control", @readonly = "readonly" })
-                                            @*<input class="form-control" value="@Model.TICKET.DEPT" name="DEPT" readonly />*@
                                         </div>
                                     </div>
                                     <br />
@@ -94,7 +93,6 @@
                                         </div>
                                         <div class="col-9">
                                             @Html.TextBoxFor(m => m.TICKET.DATE_REGISTER, "{0:yyyy-MM-dd}", new { @name = "DATE_REGISTER", @class = "form-control", @type = "date", @readonly = "readonly" })
-                                            @*<input class="form-control" type="datetime" name="DATE_REGISTER" value="@Model.TICKET.DATE_REGISTER" readonly>*@
                                         </div>
                                     </div>
                                     <br />
@@ -114,7 +112,8 @@
                                             </p>
                                         </div>
                                     </div>
-
+                                if (Model.PERMISSION.Contains(PERMISSION.EDIT_INFO))
+                                {
                                     <div class="table-responsive">
                                         <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_35" name="purpose" />
                                         <input type="hidden" value="@Constant.GA_PAID_LEAVE_ID" name="formName" />
@@ -155,16 +154,15 @@
                                                                 <input class="form-input inputDefault" id=@("CODE" + i) value="@item.CODE" />
                                                             </td>
                                                             <td>
-                                                                <input type="datetime-local" class="form-input  inputDefault" id=@("TIME_FROM" + i) value="@item.TIME_FROM.ToString("yyyy-MM-dd HH:mm") "/>
+                                                                <input class="form-input  inputDefault" id=@("TIME_FROM" + i) value="@item.TIME_FROM.ToString("dd/MM/yyyy HH:mm") " />
                                                             </td>
                                                             <td>
-                                                                <input type="date" class="form-input inputDefault" type="" id=@("TIME_TO" + i) value="@item.TIME_TO.ToString("yyyy-MM-dd HH:mm")" />
+                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) value="@item.TIME_TO.ToString("dd/MM/yyyy HH:mm")" />
                                                             </td>
                                                             <td>
                                                                 <input class="form-input text-right inputDefault" id=@("TOTAL" + i) value="@item.TOTAL" required />
                                                             </td>
                                                             <td>
-                                                                @*<input class="form-input  inputDefault" id=@("REASON" + i) value="@item.REASON" />*@
                                                                 <textarea class="form-input inputDefault bg-white" id=@("REASON" + i) required>@item.REASON</textarea>
                                                             </td>
                                                             <td class="text-center p-2">
@@ -174,7 +172,7 @@
                                                                 <input class="form-input  inputDefault" id=@("REMARK" + i) value="@item.REMARK" />
                                                             </td>
                                                         </tr>
-                                                       
+
                                                         i++;
                                                     }
                                                 }
@@ -196,43 +194,6 @@
                                 }
                                 else
                                 {
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <label class="font-weight-bold lang" key="request_dept_sub">Request Dept </label>
-                                        </div>
-                                        <div class="col-9">
-                                            @Html.TextBoxFor(m => m.TICKET.DEPT, new { @name = "DEPT", @class = "form-control", @readonly = "readonly" })
-                                            @*<input class="form-control" value="@Model.TICKET.DEPT" name="DEPT" readonly />*@
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
-                                        </div>
-                                        <div class="col-9">
-                                            @Html.TextBoxFor(m => m.TICKET.DATE_REGISTER, "{0:dd-MM-yyyy}", new { @name = "DATE_REGISTER", @class = "form-control", @type = "date", @readonly = "readonly" })
-                                            @*<input class="form-control" type="datetime" name="DATE_REGISTER" value="@Model.TICKET.DATE_REGISTER" readonly>*@
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <label class="font-weight-bold lang" key="count_subscriber">Count subscriber</label>
-                                        </div>
-                                        <div class="col-9">
-                                            <input class="form-control" type="number" name="NUMBER_REGISTER" value="@Model.TICKET.NUMBER_REGISTER" readonly>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <p style="font-style:italic;font-weight:bold;">
-                                                Giấy này được sử dụng cho nghỉ ưu đãi và nghỉ đặc biệt. Đối với các trường hợp nghỉ đặc biệt hãy đánh dấu √ vào cột "Nghỉ đặc biệt", ngoài ra sẽ được hiểu là nghỉ ưu đãi.
-                                            </p>
-                                        </div>
-                                    </div>
-
                                     <div class="table-responsive">
                                         <table class="table-border-dark">
                                             <tr>
@@ -271,11 +232,10 @@
                                                                 <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) value="@item.CODE" readonly />
                                                             </td>
                                                             <td>
-                                                                <input type="" class="form-input  inputDefault" id=@("TIME_FROM" + i) name=@("TIME_FROM" + i) value="@item.TIME_FROM.ToString("dd-MM-yyyy HH:mm")" readonly />
-
+                                                                @item.TIME_FROM.ToString("dd/MM/yyyy HH:mm")
                                                             </td>
                                                             <td>
-                                                                <input class="form-input inputDefault" type="" id=@("TIME_TO" + i) name=@("TIME_TO" + i) value="@item.TIME_TO.ToString("dd-MM-yyyy HH:mm")" readonly />
+                                                                @item.TIME_TO.ToString("dd/MM/yyyy HH:mm")
                                                             </td>
                                                             <td>
                                                                 <input class="form-input text-right inputDefault" id=@("TOTAL" + i) value="@item.TOTAL" />
@@ -300,7 +260,7 @@
                                                     }
                                                 }
                                             </tbody>
-                                        </table>                                     
+                                        </table>
                                     </div>
                                     <br />
                                 }
@@ -361,7 +321,7 @@
 </script>
 
 @Html.Hidden("LoadTicket", Url.Action("Details", "GAFormLeave", new { ticket = Model.TICKET.TICKET }))
-<script src="~/Content/js/GA/form_leave.js"></script>
+
 @Scripts.Render(Url.ContentVersioned("~/Content/js/mention", "js"))
 @Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
 <script src="~/Content/js/comment.js"></script>
@@ -369,3 +329,5 @@
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.simplePagination.js"></script>
 <script src="~/Scripts/bootstrap-typeahead.js"></script>
+<script src="~/Scripts/jquery.datetimepicker.js"></script>
+<script src="~/Content/js/GA/form_leave.js"></script>
