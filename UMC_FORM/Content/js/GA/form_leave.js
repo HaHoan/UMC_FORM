@@ -1,20 +1,27 @@
 ﻿
 function enableButton() {
     $('#frmpaidleave_create').prop("disabled", false);
-    $('#frmpaidleave_create').html("Create")
+    $('#frmpaidleave_accept').prop("disabled", false);
+    $('#frmpaidleave_reject').prop("disabled", false);
+    $('#frmpaidleave_create').html("Create");
+    $('#frmpaidleave_accept').html("Accept")
+    $('#frmpaidleave_reject').html("Reject")
 }
 function disableButtonWhenSubmit(btn) {
     $('#frmpaidleave_create').prop("disabled", true);
+    $('#frmpaidleave_accept').prop("disabled", true);
+    $('#frmpaidleave_reject').prop("disabled", true);
     $(btn).html(
         '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
     );
+ 
 }
 function updateEachRowAmount(rowIndex) {
     var amount = getTotalDay(rowIndex)
     $('#TOTAL' + (rowIndex + 1)).val(amount)
     $('#TOTAL' + (rowIndex + 1) + "_VIEW").text(addCommas(amount.toString()))
     $('#tableInfo tr:eq(' + rowIndex + ') td:eq(8) .form-input').val(addCommas(amount.toString()))
-    $('.total').text(getTotalAmount())
+  //  $('.total').text(getTotalAmount())
 }
 function getTotalDay(rowIndex) {
     var total = 0;
@@ -58,17 +65,18 @@ function updateleaveItems() {
             var time_from = $('#TIME_FROM' + index).val()
             time_from.toLocaleString()
             var time_to = $('#TIME_TO' + index).val()
+            time_to.toLocaleString()
             var total = $('#TOTAL' + index).val()
             total = $('#TOTAL' + index).val().split(",").join("")
             var reason = $('#REASON' + index).val()
-            var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked");
+            var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked")
             var remark = $('#REMARK' + index).val()
             var obj = {
                 NO: index,
                 FULLNAME: item,
                 CODE: code,
-                TIME_FROM: time_from.toLocaleString(),
-                TIME_TO: time_to.toLocaleString(),
+                TIME_FROM: time_from,
+                TIME_TO: time_to,
                 TOTAL: total == "" ? 0 : parseInt(total),           
                 REASON: reason,
                 SPEACIAL_LEAVE: speacial_leave,
@@ -76,7 +84,6 @@ function updateleaveItems() {
             }
             leaveItems.push(obj)
         });
-
         $('#leaveItems').val(JSON.stringify(leaveItems))
     } catch (e) {
         alert(e)
@@ -88,7 +95,7 @@ function addTd(name) {
     var input2 = $('<input/>', {
         class: 'form-input',
         change: function () {
-            $('.total').text(getTotalAmount())
+            $('.total').text(getTotalDay())
         }
     })
     col2.append(input2);
@@ -99,7 +106,7 @@ function addTd(name) {
 function addTdstartleave(rowIndex) {
     var col2 = $('<td/>');
     var date = new Date();
-     date.setMinutes(now.getMinutes() - date.getTimezoneOffset());
+     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     var input1 = $('<input/>', {
         class: 'form-input inputDefault',
         type: 'datetime-local',
@@ -115,7 +122,7 @@ function addTdstartleave(rowIndex) {
 function addTdFinishleave(rowIndex) {
     var col2 = $('<td/>');
     var date = new Date();
-    date.setMinutes(now.getMinutes() - date.getTimezoneOffset());
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     var input1 = $('<input/>', {
         class: 'form-input inputDefault',
         type: 'datetime-local',
@@ -187,22 +194,31 @@ $(function () {
             var rStr = id.substr(4, id.length - 4)
             var rowIndex = parseInt(rStr) - 1
             updateEachRowAmount(rowIndex)
+            updateleaveItems()
         })
         $('#TIME_FROM' + i).change(function () {
             var id = $(this).attr('id')
             var rStr = id.substr(11, id.length - 11)
             var rowIndex = parseInt(rStr) - 1
             updateEachRowAmount(rowIndex)
+            updateleaveItems()
         });
 
     }
-
+    $('#frmpaidleave_accept').click(function (e) {
+        $('#status').val("accept")
+    })
+    $('#frmpaidleave_reject').click(function (e) {
+        $('#status').val("reject")
+    })
     
     $(".type_number").keypress(function (e) {
         return onlyNumber(e)
     });
-
-
+   
+    $('#backTo').click(function () {
+        window.location.href = $("#RedirectTo").val()
+    })
     $('html').click(function () {
         $contextMenu.hide();
     });
@@ -218,7 +234,7 @@ $(function () {
         row.append(addTd("CODE" + index));
         row.append(addTdstartleave(index));
         row.append(addTdFinishleave(index));
-        row.append(addTdtotalday(index));
+        row.append(addTd("TOTAL"+index));
         var col3 = $("<td/>");
         var input3 = $('<textarea/>', {
             class: 'form-input  inputDefault',
@@ -226,7 +242,9 @@ $(function () {
         });
         col3.append(input3);
         row.append(col3);
-        if (window.location.pathname == "/GAFormLeave/CreateFormPaidLeave") {
+        var pathname_local = "/GAFormLeave";
+        var host_local = window.location.pathname
+        if (host_local.includes(pathname_local)) {
             var col4 = $("<td/>", {
                 class: 'text-center p-2'
             });
@@ -255,13 +273,19 @@ $(function () {
     $(".btnXoa").on('click', function () {
         deleteRow(this);
     })
+    $('#frmpaidleave_accept').click(function (e) {
+        $('#status').val("accept")
+    })
+    $('#frmpaidleave_reject').click(function (e) {
+        $('#status').val("reject")
 
+    })
     $('.form-input').on('change', function () {
-        $('.total').text(getTotalAmount())
+       // $('.total').text(getTotalAmount())
     });
     $('.form-input').keypress(function (e) {
         if (e.which == 13) {
-            $('.total').text(getTotalAmount())
+          //  $('.total').text(getTotalAmount())
         }
     });
     $('form input').keydown(function (e) {
@@ -285,30 +309,34 @@ $(function () {
         });
         return false;
     });
-    //$("#formCreate").validate({
-    //    rules: {
-
-    //    },
-    //    messages: {
-
-    //    },
-    //    submitHandler: function (form) {
-    //        disableButtonWhenSubmit('#frmpaidleave_create')
-    //        form.ajax.submit()
-    //    }
-
-    //});
-    $("#formCreate").validate({
-      
+   
+    $("#formCreate").validate({    
         submitHandler: function (form) {
             disableButtonWhenSubmit('#frmpaidleave_create')
             updateleaveItems()
             form.ajax.submit()
         }
-
     });
-
-
+    $("#submitForm").validate({
+        submitHandler: function (form) {
+            var status = $('#status').val();
+            if (status == 'reject') {
+                if (confirm('Do you want to reject?')) {
+                    disableButtonWhenSubmit('#frmpaidleave_' + status)
+                    updateleaveItems()
+                    form.ajax.submit()
+                } else {
+                    return false;
+                }
+            }
+            else {
+                disableButtonWhenSubmit('#frmpaidleave_' + status)
+                updateleaveItems()
+                form.ajax.submit()
+            }
+        }
+    });
+   
 })
 
 
