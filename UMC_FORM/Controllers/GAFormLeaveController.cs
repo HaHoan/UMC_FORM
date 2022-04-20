@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Data.Entity;
 using Hangfire;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json.Converters;
 
 namespace UMC_FORM.Controllers
 {
@@ -129,7 +130,13 @@ namespace UMC_FORM.Controllers
                 // Khi sửa đổi items
                 else
                 {
-                    listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems);
+                    //var format = "dd-MM-yyyy HH:mm"; // your datetime format
+                    //var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
+                 
+                    string[] stringArray = new string[] { leaveItems };
+                    stringArray = leaveItems.Split(',');
+
+                    listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems/*dateTimeConverter*/);
                 }
 
                 if (listLeaveItems == null || listLeaveItems.Count == 0)
