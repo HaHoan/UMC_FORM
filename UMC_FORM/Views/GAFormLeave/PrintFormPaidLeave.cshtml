@@ -52,6 +52,9 @@
         .td2 {
             width: 250px;
         }
+        .font-italic {
+            font-size: 13px;
+        }
     </style>
 </head>
 
@@ -61,14 +64,14 @@
     <div>
         <div class="row">
 
-            <label class="col lang text-right"></label>
-            <label class="col text-right font-weight-bold">ID :  @Model.TICKET.TICKET</label>
+         
         </div>
 
 
         <div class="card-body border border-dark pt-1">
             <div class="row">
                 <div class="info-edit">
+                    <br />
                     <div class="row">
                         <div class="col-1">
                             <img src="/Content/assets/img/logo.png">
@@ -89,16 +92,16 @@
                         </div>
                     </div>
                     <br />
-                    <div class="row">
+                    <div class="row" style="font-size:12px;">
                         <div class="col-2">
                             <label class="font-weight-bold lang" key="request_dept_sub">Bộ phận đăng ký &ensp; 部署</label>
                         </div>
                         <div class="col-10">
-                            @Model.TICKET.DEPT
+                            <p> @Model.TICKET.DEPT</p>
                         </div>
                     </div>
                     <br />
-                    <div class="row">
+                    <div class="row" style="font-size:12px;">
                         <div class="col-2">
                             <label class="font-weight-bold lang" key="request_date_sub">Ngày đăng ký &ensp; 申請日</label>
                         </div>
@@ -107,7 +110,7 @@
                         </div>
                     </div>
                     <br />
-                    <div class="row">
+                    <div class="row" style="font-size:12px;">
                         <div class="col-2">
                             <label class="font-weight-bold lang" key="count_subscriber">Số người đăng ký &ensp; 人数</label>
                         </div>
@@ -116,7 +119,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class="row">
+                    <div class="row" style="font-size:12px;">
                         <div class="col-12">
                             <span style="font-weight:bold;">
                                 <p style="font-style:italic;">
@@ -129,7 +132,7 @@
 
 
                     <div class="table-responsive">
-                        <table class="table-border-dark">
+                        <table class="table-border-dark" style="font-size:10px;">
 
                             <tr>
                                 <th class="lang " key="" rowspan="2">STT <br />No. </th>
@@ -144,16 +147,16 @@
                             </tr>
                             <tr>
                                 <th class="text-center p-2" key="">
-                                    
-                                        From <br />
-                                        Từ ngày or giờ
-                                    
+
+                                    From <br />
+                                    Từ ngày or giờ
+
                                 </th>
                                 <th class="text-center p-2">
-                                    
-                                        To <br />
-                                        Đến ngày or giờ
-                                    
+
+                                    To <br />
+                                    Đến ngày or giờ
+
                                 </th>
                                 <th class="lang p-1" key=""> Tổng ngày <br />日間</th>
                             </tr>
@@ -163,7 +166,7 @@
                                     foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
                                     {
                                         <tr class="row-info">
-                                            <td class="">@(i)</td>
+                                            <td class="text-center">@(i)</td>
                                             <td>
                                                 @item.FULLNAME
                                             </td>
@@ -176,7 +179,7 @@
                                             <td>
                                                 @item.TIME_TO.ToString("dd-MM-yyyy HH:mm")
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @item.TOTAL
                                             </td>
                                             <td>
@@ -204,51 +207,8 @@
                     <br />
                 </div>
                 <br />
-                @*@Html.Partial("~/Views/Common/_StationApprove.cshtml", Model.STATION_APPROVE)*@
-                <div class="table-responsive">
-                    <table class="table-border-dark ">
-                        <thead>
-                            <tr>
-                                @{
-                                    var index = 1;
-                                }
-                                @foreach (var station in Model.STATION_APPROVE)
-                                {
-                                    <th class="font-italic lang" rowspan="2"><span>@(index++ + ". ")</span><span class="lang" key="@station.STATION_NAME">@station.STATION_NAME</span></th>
-                                }
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            <tr height="100px">
-                                @{
-                                    index = 1;
-                                }
-                                @foreach (var station in Model.STATION_APPROVE)
-                                {
-                                   
-                                    if (station.IS_APPROVED)
-                                    {
-                                        <td>
-                                            <div class="rubber_stamp">
-                                                <p>@station.COMPANY</p>
-                                                <p>@station.APPROVE_DATE.ToShortDateString()</p>
-                                                <p>@station.SIGNATURE</p>
-                                            </div>
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td></td>
-                                    }
-
-                                }
-
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
+                @Html.Partial("~/Views/Common/_StationApprove.cshtml", Model.STATION_APPROVE)
+              
                 <hr>
                 <div class="col">
                     <p class="font-italic font-weight-bold row text-underline">Note</p>
