@@ -260,6 +260,7 @@
     <Content Include="Content\images\loader4.gif" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\Spinner-1s-200px.gif" />
+    <Content Include="Content\jquery.datetimepicker.css" />
     <Content Include="Content\js\comment.js" />
     <Content Include="Content\js\form_edit.js" />
     <Content Include="Content\js\GA\form_leave.js" />
@@ -2106,6 +2107,7 @@
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.datetimepicker.js" />
     <Content Include="Scripts\jquery.simplePagination.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />

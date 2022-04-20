@@ -14,14 +14,14 @@ function disableButtonWhenSubmit(btn) {
     $(btn).html(
         '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
     );
- 
+
 }
 function updateEachRowAmount(rowIndex) {
     var amount = getTotalDay(rowIndex)
     $('#TOTAL' + (rowIndex + 1)).val(amount)
     $('#TOTAL' + (rowIndex + 1) + "_VIEW").text(addCommas(amount.toString()))
     $('#tableInfo tr:eq(' + rowIndex + ') td:eq(8) .form-input').val(addCommas(amount.toString()))
-  //  $('.total').text(getTotalAmount())
+    //  $('.total').text(getTotalAmount())
 }
 function getTotalDay(rowIndex) {
     var total = 0;
@@ -63,9 +63,7 @@ function updateleaveItems() {
             if (item == "") return true
             var code = $('#CODE' + index).val()
             var time_from = $('#TIME_FROM' + index).val()
-            time_from.toLocaleString()
             var time_to = $('#TIME_TO' + index).val()
-            time_to.toLocaleString()
             var total = $('#TOTAL' + index).val()
             total = $('#TOTAL' + index).val().split(",").join("")
             var reason = $('#REASON' + index).val()
@@ -77,7 +75,7 @@ function updateleaveItems() {
                 CODE: code,
                 TIME_FROM: time_from,
                 TIME_TO: time_to,
-                TOTAL: total == "" ? 0 : parseInt(total),           
+                TOTAL: total == "" ? 0 : parseInt(total),
                 REASON: reason,
                 SPEACIAL_LEAVE: speacial_leave,
                 REMARK: remark
@@ -106,7 +104,7 @@ function addTd(name) {
 function addTdstartleave(rowIndex) {
     var col2 = $('<td/>');
     var date = new Date();
-     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     var input1 = $('<input/>', {
         class: 'form-input inputDefault',
         type: 'datetime-local',
@@ -189,6 +187,18 @@ $(function () {
 
     }
     for (var i = 1; i <= $('#tableInfo tr').length; i++) {
+        $('#TIME_FROM' + i).datetimepicker({
+            rtl: false,
+            format: 'd/m/Y H:i',
+
+        });
+        $('#TIME_TO' + i).datetimepicker({
+            rtl: false,
+            format: 'd/m/Y H:i',
+
+        });
+    }
+    for (var i = 1; i <= $('#tableInfo tr').length; i++) {
         $('#TIME_TO' + i).change(function (e) {
             var id = $(this).attr('id')
             var rStr = id.substr(4, id.length - 4)
@@ -205,17 +215,18 @@ $(function () {
         });
 
     }
+
     $('#frmpaidleave_accept').click(function (e) {
         $('#status').val("accept")
     })
     $('#frmpaidleave_reject').click(function (e) {
         $('#status').val("reject")
     })
-    
+
     $(".type_number").keypress(function (e) {
         return onlyNumber(e)
     });
-   
+
     $('#backTo').click(function () {
         window.location.href = $("#RedirectTo").val()
     })
@@ -268,7 +279,7 @@ $(function () {
         });
         rowDelete.append(btnXoa);
         row.append(rowDelete);
-        $('#tableInfo').append(row);       
+        $('#tableInfo').append(row);
     });
     $(".btnXoa").on('click', function () {
         deleteRow(this);
@@ -281,11 +292,11 @@ $(function () {
 
     })
     $('.form-input').on('change', function () {
-       // $('.total').text(getTotalAmount())
+        // $('.total').text(getTotalAmount())
     });
     $('.form-input').keypress(function (e) {
         if (e.which == 13) {
-          //  $('.total').text(getTotalAmount())
+            //  $('.total').text(getTotalAmount())
         }
     });
     $('form input').keydown(function (e) {
@@ -309,8 +320,8 @@ $(function () {
         });
         return false;
     });
-   
-    $("#formCreate").validate({    
+
+    $("#formCreate").validate({
         submitHandler: function (form) {
             disableButtonWhenSubmit('#frmpaidleave_create')
             updateleaveItems()
@@ -336,7 +347,7 @@ $(function () {
             }
         }
     });
-   
+
 })
 
 

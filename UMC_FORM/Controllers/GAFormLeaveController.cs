@@ -130,13 +130,13 @@ namespace UMC_FORM.Controllers
                 // Khi sửa đổi items
                 else
                 {
-                    //var format = "dd-MM-yyyy HH:mm"; // your datetime format
-                    //var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
-                 
+                    var format = "dd/MM/yyyy HH:mm";
+                    var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
+
                     string[] stringArray = new string[] { leaveItems };
                     stringArray = leaveItems.Split(',');
 
-                    listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems/*dateTimeConverter*/);
+                    listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems,dateTimeConverter);
                 }
 
                 if (listLeaveItems == null || listLeaveItems.Count == 0)
@@ -353,6 +353,11 @@ namespace UMC_FORM.Controllers
                         db.Form_Summary.Add(summary);
                         db.SaveChanges();
                         transaction.Commit();
+                        if (!sendMail(summary, STATUS.ACCEPT))
+                        {
+                            transaction.Rollback();
+                            return Json(new { result = STATUS.ERROR, message = "Error when send mail!" }, JsonRequestBehavior.AllowGet);
+                        };
                         return Json(new
                         {
                             result = STATUS.SUCCESS,
@@ -595,9 +600,17 @@ namespace UMC_FORM.Controllers
                 _sess = Session["user"] as Form_User;
 
                 modelDetail.PERMISSION = new List<string>();
+
                 modelDetail.SUBMITS = new List<string>();
                 if (_sess.ROLE_ID == ROLE.CanEdit)
                 {
+                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (modelDetail.SUMARY.PROCEDURE_INDEX + 1).ToString()
+                    && m.PROCESS == modelDetail.SUMARY.PROCESS_ID).ToList();
+                    foreach (var permission in listPermission)
+                    {
+                        modelDetail.PERMISSION.Add(permission.ITEM_COLUMN);
+                    }
+
                     var userApprover = db.Form_Procedures.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1)
                                        && m.FORM_NAME == modelDetail.SUMARY.PROCESS_ID && m.TICKET == modelDetail.TICKET.TICKET).ToList();
                     if (userApprover.Where(m => m.APPROVAL_NAME == _sess.CODE).FirstOrDefault() != null)
@@ -702,106 +715,6 @@ namespace UMC_FORM.Controllers
             if (ticketDb == null) return HttpNotFound();
             return View(ticketDb);
         }
-        [HttpPost]
-        public JsonResult SendMail(string ticket, string typeMail)
-        {
-            try
-            {
-                using (var db = new DataContext())
-                {
-                    var summary = db.Form_Summary.Where(m => m.TICKET == ticket).FirstOrDefault();
-                    List<string> userMails = new List<string>();
-                    var dear = "Dear All !";
-                    if (summary.PROCEDURE_INDEX == -1)
-                    {
-                        var userCreate = UserRepository.GetUser(summary.CREATE_USER);
-                        userMails.Add(userCreate.EMAIL);
-                        dear = $"Dear {userCreate.SHORT_NAME} san !";
-                    }
-                    else
-                    {
-                        var stations = db.Form_Procedures.Where(m => m.TICKET == ticket &&
-                        m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1) &&
-                        m.FORM_NAME == summary.PROCESS_ID).Select(m => m.APPROVAL_NAME).ToList();
-                        userMails = UserRepository.GetUsers((List<string>)stations);
-                        if (userMails.Count == 1)
-                        {
-                            var userApproval = db.Form_User.Where(m => m.CODE == stations.FirstOrDefault()).FirstOrDefault();
-                            dear = $"Dear {userApproval.SHORT_NAME} san !";
-                        }
-                    }
-
-                    var cc = new List<string>();
-                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (summary.PROCEDURE_INDEX + 1).ToString()
-                 && m.PROCESS == summary.PROCESS_ID).ToList();
-                    var deptSubmit = listPermission.Where(m => !string.IsNullOrEmpty(m.DEPT)).FirstOrDefault();
-                    if (deptSubmit != null)
-                    {
-                        var userCC = UserRepository.GetUsersByDept(deptSubmit.DEPT);
-                        foreach (var user in userCC)
-                        {
-                            if (!userMails.Contains(user.EMAIL))
-                            {
-                                cc.Add(user.EMAIL);
-                            }
-                        }
-
-                    }
-
-
-                    string body = "";
-                    if (typeMail == STATUS.REJECT)
-                    {
-                        body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >Request reject. Please click below link view details:</h3>
-	                                            <a href='http://172.28.10.17:82/GAFormLeave/DetailFormPaidLeave?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-                    }
-                    else if (typeMail == STATUS.ACCEPT)
-                    {
-                        body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='http://172.28.10.17:82/GAFormLeave/DetailFormPaidLeave?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-                    }
-                    else if (typeMail == STATUS.EDIT_QUOTE)
-                    {
-                        body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-                    }
-                    BackgroundJob.Enqueue(() => MailHelper.SenMailOutlookAsync(userMails, body, cc));
-
-                }
-            }
-            catch (Exception)
-            {
-                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
-
-            }
-            return Json(new { result = STATUS.SUCCESS }, JsonRequestBehavior.AllowGet);
-        }
+      
     }
 }
