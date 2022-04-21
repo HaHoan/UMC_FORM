@@ -7,6 +7,8 @@ $(function () {
         changeFileAttach(this, '#listFilesQuote','.fileQuotes')
     })
 })
+
+
 function changeFileAttach(e,listFilesToElement,viewFileElement) {
     var fileInput = $(e);
 
