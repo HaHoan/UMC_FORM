@@ -324,7 +324,6 @@ namespace UMC_FORM.Controllers
                         ticket.STATION_NAME = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                         ticket.STATION_NO = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
                        
-
                         SetUpFormProceduce(Constant.GA_LEAVE_FORM, db, ticket.TICKET, ticket.DEPT_MANAGER, ticket.SHIFT_MANAGER, process);
 
                         var saveItems = AddLeaveItem(leaveItems, db, ticket, ticket);
@@ -353,6 +352,14 @@ namespace UMC_FORM.Controllers
                         db.Form_Summary.Add(summary);
                         db.SaveChanges();
                         transaction.Commit();
+
+                        // Nếu người tạo trùng với quản lý ca => thực hiện tự động accept bước tiếp theo
+                        var currentProceduce = db.Form_Procedures.Where(m => m.TICKET == ticket.TICKET && m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault();
+
+                        if(_sess.CODE == currentProceduce.APPROVAL_NAME)
+                        {
+                            return Accept(ticket, leaveItems);
+                        }
                         if (!sendMail(summary, STATUS.ACCEPT))
                         {
                             transaction.Rollback();
