@@ -44,15 +44,23 @@ function updateleaveItems() {
             var time_from = $('#TIME_FROM' + index).val()
             var time_to = $('#TIME_TO' + index).val()
             var total = $('#TOTAL' + index).val()
+            if (time_to < time_from) {
+                alert('Thời gian ngày kết thúc nghỉ phải lớn hơn ngày bắt đầu nghỉ! ');
+                return false;
+            }
+            else if (total < 0) {
+                alert('Tổng ngày nghỉ không được nhỏ hơn 0! ');
+                return false;
+            }
             var reason = $('#REASON' + index).val()
-            var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked")
+            var speacial_leave = $('#speacial_detail').is(":checked")
             var remark = $('#REMARK' + index).val()
             var obj = {
                 NO: index,
                 FULLNAME: item,
                 CODE: code,
-                TIME_FROM: time_from,
-                TIME_TO: time_to,
+                TIME_FROM: time_from.trim(),
+                TIME_TO: time_to.trim(),
                 TOTAL: total == "" ? 0 : total,
                 REASON: reason,
                 SPEACIAL_LEAVE: speacial_leave,
@@ -61,10 +69,11 @@ function updateleaveItems() {
             leaveItems.push(obj)
         });
         $('#leaveItems').val(JSON.stringify(leaveItems))
-    } catch (e) {
+    }
+    catch (e) {
         alert(e)
     }
-
+       
 }
 function addTd(name) {
     var col2 = $('<td/>');
@@ -129,6 +138,7 @@ $(function () {
             format: 'd/m/Y H:i',
 
         });
+        
     }
   
 
@@ -161,6 +171,7 @@ $(function () {
         row.append(addTd("CODE" + index));
         row.append(addTdTime("TIME_FROM" + index));
         row.append(addTdTime("TIME_TO" + index));
+       
         row.append(addTd("TOTAL" + index));
 
         var col3 = $("<td/>");
@@ -223,6 +234,7 @@ $(function () {
     });
 
     $("#formCreate").validate({
+
         submitHandler: function (form) {
             disableButtonWhenSubmit('#frmpaidleave_create')
             updateleaveItems()
@@ -235,7 +247,7 @@ $(function () {
             if (status == 'reject') {
                 if (confirm('Do you want to reject?')) {
                     disableButtonWhenSubmit('#frmpaidleave_' + status)
-                    updateleaveItems()
+                    updateleaveItems()         
                     form.ajax.submit()
                 } else {
                     return false;
@@ -247,6 +259,7 @@ $(function () {
                 form.ajax.submit()
             }
         }
+       
     });
 
 })

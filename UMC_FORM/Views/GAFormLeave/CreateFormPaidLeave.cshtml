@@ -17,7 +17,7 @@
     <title>Tạo form đăng ký nghỉ có lương</title>
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="@Url.ContentVersioned("~/Content/css/styles", "css")" rel="stylesheet" />
     <link rel="stylesheet" href="~/Content/jquery.datetimepicker.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
@@ -27,11 +27,10 @@
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Scripts/bootstrap-typeahead.js"></script>
     <script src="~/Scripts/jquery.datetimepicker.js"></script>
-    <script src="~/Content/js/lang.js"></script>
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/lang", "js"))
     @Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
-    <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/GA/form_leave.js"></script>
-
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/form_common", "js"))
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/GA/form_leave", "js"))
 </head>
 <body>
     <div>
@@ -166,10 +165,10 @@
                                                                 <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) required />
                                                             </td>
                                                             <td>
-                                                                <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) required />
+                                                                <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete = “off” required />
                                                             </td>
                                                             <td>
-                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i) required />
+                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i) autocomplete = “off” required />
                                                             </td>
                                                             <td>
                                                                 <input class="form-input type_number inputDefault" name=@("TOTAL" + i)  id=@("TOTAL" + i)  required />
@@ -197,10 +196,10 @@
                                                                 <input class="form-input inputDefault" id=@("CODE" + i)  />
                                                             </td>
                                                             <td>
-                                                                <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i)  />
+                                                                <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete = “off”  />
                                                             </td>
                                                             <td>
-                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i)  />
+                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i)  autocomplete = “off” />
                                                             </td>
                                                             <td>
                                                                 <input class="form-input type_number inputDefault" id=@("TOTAL" + i)  />
