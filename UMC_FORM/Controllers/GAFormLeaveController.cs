@@ -116,7 +116,7 @@ namespace UMC_FORM.Controllers
             }
             return "";
         }
-        private Tuple<string, string,int> AddLeaveItem(string leaveItems, DataContext db, GA_LEAVE_FORM prevTicket, GA_LEAVE_FORM currentTicket)
+        private Tuple<string, string, int> AddLeaveItem(string leaveItems, DataContext db, GA_LEAVE_FORM prevTicket, GA_LEAVE_FORM currentTicket)
         {
             try
             {
@@ -137,13 +137,13 @@ namespace UMC_FORM.Controllers
 
                 if (listLeaveItems == null || listLeaveItems.Count == 0)
                 {
-                    return Tuple.Create<string, string,int>(STATUS.ERROR, "Kiểm tra lại thông tin danh sách người đăng ký!",0);
+                    return Tuple.Create<string, string, int>(STATUS.ERROR, "Kiểm tra lại thông tin danh sách người đăng ký!", 0);
                 }
                 foreach (var item in listLeaveItems)
                 {
                     if (string.IsNullOrEmpty(item.CODE))
                     {
-                        return Tuple.Create<string, string,int>(STATUS.ERROR, "Thông tin người thứ  " + item.NO + " chưa có mã code!",0);
+                        return Tuple.Create<string, string, int>(STATUS.ERROR, "Thông tin người thứ  " + item.NO + " chưa có mã code!", 0);
                     }
 
                     //test
@@ -168,11 +168,11 @@ namespace UMC_FORM.Controllers
                 }
                 db.SaveChanges();
 
-                return Tuple.Create<string, string,int>(STATUS.SUCCESS, "",listLeaveItems.Count);
+                return Tuple.Create<string, string, int>(STATUS.SUCCESS, "", listLeaveItems.Count);
             }
             catch (Exception e)
             {
-                return Tuple.Create<string, string,int>(STATUS.ERROR, e.Message.ToString(),0);
+                return Tuple.Create<string, string, int>(STATUS.ERROR, e.Message.ToString(), 0);
             }
 
 
@@ -319,7 +319,6 @@ namespace UMC_FORM.Controllers
                         var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.GA_LEAVE_FORM).ToList();
                         ticket.STATION_NAME = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                         ticket.STATION_NO = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
-                       
 
                         SetUpFormProceduce(Constant.GA_LEAVE_FORM, db, ticket.TICKET, ticket.DEPT_MANAGER, ticket.SHIFT_MANAGER, process);
 
@@ -349,6 +348,14 @@ namespace UMC_FORM.Controllers
                         db.Form_Summary.Add(summary);
                         db.SaveChanges();
                         transaction.Commit();
+
+                        // Nếu người tạo trùng với quản lý ca => thực hiện tự động accept bước tiếp theo
+                        var currentProceduce = db.Form_Procedures.Where(m => m.TICKET == ticket.TICKET && m.FORM_INDEX == (ticket.PROCEDURE_INDEX + 1)).FirstOrDefault();
+
+                        if (_sess.CODE == currentProceduce.APPROVAL_NAME)
+                        {
+                            return Accept(ticket, leaveItems);
+                        }
                         if (!sendMail(summary, STATUS.ACCEPT))
                         {
                             transaction.Rollback();
@@ -372,18 +379,19 @@ namespace UMC_FORM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Details(GA_LEAVE_FORM ticket, string leaveItems,string status)
+        public JsonResult Details(GA_LEAVE_FORM ticket, string leaveItems, string status)
         {
-            if(status == STATUS.ACCEPT)
+            if (status == STATUS.ACCEPT)
             {
                 return Accept(ticket, leaveItems);
-            }else if(status == STATUS.REJECT)
+            }
+            else if (status == STATUS.REJECT)
             {
                 return Reject(ticket, leaveItems);
             }
             return Json(new { result = STATUS.ERROR, message = "Chưa có status này" }, JsonRequestBehavior.AllowGet);
         }
-       
+
         public JsonResult Accept(GA_LEAVE_FORM ticket, string leaveItems)
         {
             using (var db = new DataContext())
@@ -480,7 +488,17 @@ namespace UMC_FORM.Controllers
                         form.NUMBER_REGISTER = saveItems.Item3;
                         db.GA_LEAVE_FORM.Add(form);
                         db.SaveChanges();
+
+
                         transaction.Commit();
+
+                        // Nếu người tạo trùng với quản lý ca => thực hiện tự động accept bước tiếp theo
+                        var currentProceduce = db.Form_Procedures.Where(m => m.TICKET == ticket.TICKET && m.FORM_INDEX == (form.PROCEDURE_INDEX + 1)).FirstOrDefault();
+
+                        if (_sess.CODE == currentProceduce.APPROVAL_NAME)
+                        {
+                            return Accept(ticket, leaveItems);
+                        }
                         if (!sendMail(summary, STATUS.ACCEPT))
                         {
                             transaction.Rollback();
@@ -620,7 +638,7 @@ namespace UMC_FORM.Controllers
                         }
 
                     }
-                   
+
                 }
 
                 modelDetail.STATION_APPROVE = getListApproved(modelDetail.SUMARY, db, list);
@@ -664,7 +682,7 @@ namespace UMC_FORM.Controllers
 
         public ActionResult Details(string ticket)
         {
-            using(var db = new DataContext())
+            using (var db = new DataContext())
             {
                 var ticketDb = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).FirstOrDefault();
                 if (ticketDb == null) return HttpNotFound();
@@ -678,10 +696,10 @@ namespace UMC_FORM.Controllers
                 }
                 return HttpNotFound();
             }
-           
+
         }
 
-        
+
         public ActionResult DetailFormPaidLeave(string ticket)
         {
             var ticketDb = GetDetailTicket(ticket);
@@ -710,6 +728,6 @@ namespace UMC_FORM.Controllers
             if (ticketDb == null) return HttpNotFound();
             return View(ticketDb);
         }
-      
+
     }
 }
