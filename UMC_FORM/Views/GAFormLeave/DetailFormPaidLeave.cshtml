@@ -114,6 +114,7 @@
                                         </p>
                                     </div>
                                 </div>
+
                                 if (Model.PERMISSION.Contains(PERMISSION.EDIT_INFO))
                                 {
                                     <div class="table-responsive">
@@ -255,48 +256,40 @@
                                                             <td class="">@(i)</td>
                                                             <td style="width:20%;">
                                                                 @item.FULLNAME
-                                                                <input type="hidden" id=@("FULLNAME" +i) name=@("FULLNAME" +i) value="@item.FULLNAME" />
+                                                               
                                                             </td>
                                                             <td>
                                                                 @item.CODE
-                                                                <input type="hidden" id=@("CODE" +i) name=@("CODE" +i) value="@item.CODE" />
+                                                           
                                                             </td>
                                                             <td style="width:15%;">
                                                                 @item.TIME_FROM.ToString("dd/MM/yyyy HH:mm")
-                                                                <input type="hidden" id=@("TIME_FROM" +i) name=@("TIME_FROM" +i) value="@item.TIME_FROM.ToString("dd/MM/yyyy HH:mm")" />
+                                                              
                                                             </td>
                                                             <td style="width:15%;">
                                                                 @item.TIME_TO.ToString("dd/MM/yyyy HH:mm")
-                                                                <input type="hidden" id=@("TIME_TO" +i) name=@("TIME_TO" +i) value="@item.TIME_TO.ToString("dd/MM/yyyy HH:mm")" />
+                                                                
                                                             </td>
                                                             <td>
                                                                 @item.TOTAL
-                                                                <input type="hidden" id=@("TOTAL" +i) name=@("TOTAL" +i) value="@item.TOTAL" />
+                                                                
                                                             </td>
                                                             <td style="width:30%;">
                                                                 <span>
                                                                     @item.REASON
                                                                 </span>
-                                                                <input type="hidden" id=@("REASON" +i) name=@("REASON" +i) value="@item.REASON" />
+                                                                
                                                             </td>
                                                             <td class="text-center p-2">
-                                                                <input type="checkbox" id="speacial_detail" onclick="return false" />
-                                                                <input type="hidden" name=@("SPECIAL_LEAVE" + i) id=@("SPECIAL_LEAVE" + i) value="@item.SPEACIAL_LEAVE.ToString()" />
-                                                            </td>
-                                                            <script>
-                                                                    $(function () {
+                                                                @if (item.SPEACIAL_LEAVE == true)
+                                                                {
+                                                                    <p>√</p>
+                                                                }
 
-                                                                        var result = $('#SPECIAL_LEAVE' + @i).val();
-                                                                         if (result == "True") {
-                                                                             $('#speacial_detail').prop('checked', true);
-                                                                         } else {
-                                                                             $('#speacial_detail').prop('checked', false);
-                                                                         }
-                                                                    })
-                                                            </script>
+                                                            </td>
                                                             <td>
                                                                 @item.REMARK
-                                                                <input type="hidden" id=@("REMARK" +i) name=@("REMARK" +i) value="@item.REMARK" />
+                                                               
                                                             </td>
                                                         </tr>
 

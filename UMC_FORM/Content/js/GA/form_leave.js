@@ -45,15 +45,18 @@ function updateleaveItems() {
             var time_to = $('#TIME_TO' + index).val()
             var total = $('#TOTAL' + index).val()
             if (time_to < time_from) {
-                alert('Thời gian ngày kết thúc nghỉ phải lớn hơn ngày bắt đầu nghỉ! ');
+                alert('Ngày kết thúc nghỉ phải lớn hơn ngày bắt đầu nghỉ!');
                 return false;
             }
-            else if (total < 0) {
+            if (time_to == null || time_from == null) {
+                return false;
+            } 
+            if (total < 0) {
                 alert('Tổng ngày nghỉ không được nhỏ hơn 0! ');
                 return false;
             }
             var reason = $('#REASON' + index).val()
-            var speacial_leave = $('#speacial_detail').is(":checked")
+            var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked")
             var remark = $('#REMARK' + index).val()
             var obj = {
                 NO: index,
@@ -101,7 +104,6 @@ function addTdTime(name){
     });
     return col2; 
 }
-
 function OnSuccess(response) {
     if (response.result == 'success') {
         window.location.href = $("#RedirectTo").val()
@@ -124,7 +126,6 @@ function OnFailure(response) {
     alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?" + "Detail:" + response.responseText)
     enableButton()
 }
-
 $(function () {
     
     for (var i = 1; i <= $('#tableInfo tr').length; i++) {
@@ -137,11 +138,11 @@ $(function () {
             rtl: false,
             format: 'd/m/Y H:i',
 
-        });
-        
+        });     
     }
-  
-
+    $('#DATE_REGISTER').datetimepicker({
+        format: 'd/m/Y',
+    });
     $('#frmpaidleave_accept').click(function (e) {
         $('#status').val("accept")
     })
@@ -219,11 +220,8 @@ $(function () {
     })
     $('#frmpaidleave_reject').click(function (e) {
         $('#status').val("reject")
-
-    })
-    
+    }) 
     var $contextMenu = $("#contextMenu");
-
     $("body").on("contextmenu", "table tr", function (e) {
         $contextMenu.css({
             display: "block",
@@ -232,9 +230,7 @@ $(function () {
         });
         return false;
     });
-
     $("#formCreate").validate({
-
         submitHandler: function (form) {
             disableButtonWhenSubmit('#frmpaidleave_create')
             updateleaveItems()
@@ -258,10 +254,8 @@ $(function () {
                 updateleaveItems()
                 form.ajax.submit()
             }
-        }
-       
+        }     
     });
-
 })
 
 
