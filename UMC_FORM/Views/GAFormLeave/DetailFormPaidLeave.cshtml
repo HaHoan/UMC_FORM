@@ -61,6 +61,8 @@
 
                             </div>
                         }
+
+
                         <div class="row mt-4">
                             <div class="col">
                                 <p class=" font-weight-bold text-uppercase lang" key="req-info">
@@ -77,41 +79,42 @@
                         <hr class="mt-1">
                         <div class="info-edit">
                             @{
-                               
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <label class="font-weight-bold lang" key="request_dept_sub">Request Dept </label>
-                                        </div>
-                                        <div class="col-9">
-                                            @Html.TextBoxFor(m => m.TICKET.DEPT, new { @name = "DEPT", @class = "form-control", @readonly = "readonly" })
-                                        </div>
+
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="request_dept_sub">Request Dept </label>
                                     </div>
-                                    <br />
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
-                                        </div>
-                                        <div class="col-9">
-                                            @Html.TextBoxFor(m => m.TICKET.DATE_REGISTER, "{0:yyyy-MM-dd}", new { @name = "DATE_REGISTER", @class = "form-control", @type = "date", @readonly = "readonly" })
-                                        </div>
+                                    <div class="col-9">
+                                        @Html.TextBoxFor(m => m.TICKET.DEPT, new { @name = "DEPT", @class = "form-control", @readonly = "readonly" })
                                     </div>
-                                    <br />
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <label class="font-weight-bold lang" key="count_subscriber">Count subscriber</label>
-                                        </div>
-                                        <div class="col-9">
-                                            <input class="form-control" type="number" name="NUMBER_REGISTER" value="@Model.TICKET.NUMBER_REGISTER" readonly>
-                                        </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
                                     </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <p style="font-style:italic;font-weight:bold;">
-                                                Giấy này được sử dụng cho nghỉ ưu đãi và nghỉ đặc biệt. Đối với các trường hợp nghỉ đặc biệt hãy đánh dấu √ vào cột "Nghỉ đặc biệt", ngoài ra sẽ được hiểu là nghỉ ưu đãi.
-                                            </p>
-                                        </div>
+                                    <div class="col-9">
+                                        @Html.TextBoxFor(m => m.TICKET.DATE_REGISTER, "{0:yyyy-MM-dd}", new { @name = "DATE_REGISTER", @class = "form-control", @type = "date", @readonly = "readonly" })
                                     </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="count_subscriber">Count subscriber</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="number" name="NUMBER_REGISTER" value="@Model.TICKET.NUMBER_REGISTER" readonly>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p style="font-style:italic;font-weight:bold;">
+                                            Giấy này được sử dụng cho nghỉ ưu đãi và nghỉ đặc biệt. Đối với các trường hợp nghỉ đặc biệt hãy đánh dấu √ vào cột "Nghỉ đặc biệt", ngoài ra sẽ được hiểu là nghỉ ưu đãi.
+                                        </p>
+                                    </div>
+                                </div>
+
                                 if (Model.PERMISSION.Contains(PERMISSION.EDIT_INFO))
                                 {
                                     <div class="table-responsive">
@@ -147,37 +150,59 @@
                                                     {
                                                         <tr class="row-info">
                                                             <td class="">@(i)</td>
-                                                            <td>
+                                                            <td style="width:20%;">
                                                                 <input class="form-input inputDefault" id=@("FULLNAME" + i) value="@item.FULLNAME" />
                                                             </td>
                                                             <td>
                                                                 <input class="form-input inputDefault" id=@("CODE" + i) value="@item.CODE" />
                                                             </td>
-                                                            <td>
-                                                                <input class="form-input  inputDefault" id=@("TIME_FROM" + i) value="@item.TIME_FROM.ToString("dd/MM/yyyy HH:mm") " />
+                                                            <td style="width:15%;">
+                                                                <input class="form-input  inputDefault" id=@("TIME_FROM" + i) value="@item.TIME_FROM.ToString("dd/MM/yyyy HH:mm") " autocomplete=“off” />
                                                             </td>
-                                                            <td>
-                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) value="@item.TIME_TO.ToString("dd/MM/yyyy HH:mm")" />
+                                                            <td style="width:15%;">
+                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) value="@item.TIME_TO.ToString("dd/MM/yyyy HH:mm")" autocomplete=“off” />
                                                             </td>
                                                             <td>
                                                                 <input class="form-input text-right inputDefault" id=@("TOTAL" + i) value="@item.TOTAL" required />
                                                             </td>
-                                                            <td>
-                                                                <textarea class="form-input inputDefault bg-white" id=@("REASON" + i) required>@item.REASON</textarea>
+                                                            <td style="width:30%;">
+                                                                <textarea class="form-input inputDefault bg-white" id=@("REASON" + i) required cols="50">@item.REASON</textarea>
                                                             </td>
                                                             <td class="text-center p-2">
-                                                                <input type="checkbox" id=@("SPECIAL_LEAVE" + i) checked="@item.SPEACIAL_LEAVE" />
+
+                                                                <input type="checkbox" id="speacial_detail" />
+                                                                <input type="hidden" id=@("SPECIAL_LEAVE" + i) name=@("SPECIAL_LEAVE" + i) value="@item.SPEACIAL_LEAVE.ToString()" />
                                                             </td>
+
                                                             <td>
                                                                 <input class="form-input  inputDefault" id=@("REMARK" + i) value="@item.REMARK" />
                                                             </td>
                                                         </tr>
-
+                                                        <script>
+                                                                $(function () {
+                                                                   var result = $('#SPECIAL_LEAVE' + @i).val();
+                                                                         if (result == "True") {
+                                                                             $('#speacial_detail').prop('checked', true);
+                                                                         } else {
+                                                                             $('#speacial_detail').prop('checked', false);
+                                                                         }
+                                                                        $('#speacial_detail').change(function () {
+                                                                            if ($('#speacial_detail').prop('checked') == true) {
+                                                                                $('#SPECIAL_LEAVE' + @i).prop('checked', true);
+                                                                            }
+                                                                            else {
+                                                                                $('#SPECIAL_LEAVE' + @i).prop('checked', false);
+                                                                            }
+                                                                         })
+                                                                })
+                                                        </script>
                                                         i++;
+
                                                     }
                                                 }
                                             </tbody>
                                         </table>
+
                                         <input type="hidden" name="leaveItems" id="leaveItems" />
                                         <div id="contextMenu" class="dropdown clearfix">
                                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
@@ -194,6 +219,9 @@
                                 }
                                 else
                                 {
+
+
+
                                     <div class="table-responsive">
                                         <table class="table-border-dark">
                                             <tr>
@@ -223,35 +251,45 @@
                                                     var i = 1;
                                                     foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
                                                     {
+
                                                         <tr class="row-info">
                                                             <td class="">@(i)</td>
-                                                            <td  style="width:200px;">
-                                                                <input class="form-input inputDefault" id=@("FULLNAME" + i) name=@("FULLNAME" + i) value="@item.FULLNAME" readonly />
+                                                            <td style="width:20%;">
+                                                                @item.FULLNAME
+                                                               
                                                             </td>
                                                             <td>
-                                                                <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) value="@item.CODE" readonly />
+                                                                @item.CODE
+                                                           
                                                             </td>
-                                                            <td  style="width:200px;">
+                                                            <td style="width:15%;">
                                                                 @item.TIME_FROM.ToString("dd/MM/yyyy HH:mm")
+                                                              
                                                             </td>
-                                                            <td  style="width:200px;">
+                                                            <td style="width:15%;">
                                                                 @item.TIME_TO.ToString("dd/MM/yyyy HH:mm")
+                                                                
                                                             </td>
                                                             <td>
-                                                                <input class="form-input text-right inputDefault" id=@("TOTAL" + i) value="@item.TOTAL" />
+                                                                @item.TOTAL
+                                                                
                                                             </td>
-                                                            <td>
-                                                                <input class="form-input  inputDefault" id=@("REASON" + i) value="@item.REASON" readonly />
+                                                            <td style="width:30%;">
+                                                                <span>
+                                                                    @item.REASON
+                                                                </span>
+                                                                
                                                             </td>
                                                             <td class="text-center p-2">
                                                                 @if (item.SPEACIAL_LEAVE == true)
                                                                 {
-                                                                    <input type="checkbox" name=@("SPECIAL_LEAVE" + i) id=@("SPECIAL_LEAVE" + i) checked="@item.SPEACIAL_LEAVE" onclick="return false" />
+                                                                    <p>√</p>
                                                                 }
 
                                                             </td>
                                                             <td>
-                                                                <input class="form-input  inputDefault" id=@("REMARK" + i) name=@("REMARK" + i) value="@item.REMARK" />
+                                                                @item.REMARK
+                                                               
                                                             </td>
                                                         </tr>
 
@@ -324,10 +362,9 @@
 
 @Scripts.Render(Url.ContentVersioned("~/Content/js/mention", "js"))
 @Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
-<script src="~/Content/js/comment.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.simplePagination.js"></script>
-<script src="~/Scripts/bootstrap-typeahead.js"></script>
-<script src="~/Scripts/jquery.datetimepicker.js"></script>
-<script src="~/Content/js/GA/form_leave.js"></script>
+@Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+@Scripts.Render("~/Scripts/jquery.validate.min.js")
+@Scripts.Render("~/Scripts/jquery.simplePagination.js")
+@Scripts.Render("~/Scripts/bootstrap-typeahead.js")
+@Scripts.Render("~/Scripts/jquery.datetimepicker.js")
+@Scripts.Render(Url.ContentVersioned("~/Content/js/GA/form_leave", "js"))

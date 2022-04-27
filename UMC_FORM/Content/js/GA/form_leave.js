@@ -44,6 +44,17 @@ function updateleaveItems() {
             var time_from = $('#TIME_FROM' + index).val()
             var time_to = $('#TIME_TO' + index).val()
             var total = $('#TOTAL' + index).val()
+            if (time_to < time_from) {
+                alert('Ngày kết thúc nghỉ phải lớn hơn ngày bắt đầu nghỉ!');
+                return false;
+            }
+            if (time_to == null || time_from == null) {
+                return false;
+            } 
+            if (total < 0) {
+                alert('Tổng ngày nghỉ không được nhỏ hơn 0! ');
+                return false;
+            }
             var reason = $('#REASON' + index).val()
             var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked")
             var remark = $('#REMARK' + index).val()
@@ -51,8 +62,8 @@ function updateleaveItems() {
                 NO: index,
                 FULLNAME: item,
                 CODE: code,
-                TIME_FROM: time_from,
-                TIME_TO: time_to,
+                TIME_FROM: time_from.trim(),
+                TIME_TO: time_to.trim(),
                 TOTAL: total == "" ? 0 : total,
                 REASON: reason,
                 SPEACIAL_LEAVE: speacial_leave,
@@ -61,10 +72,11 @@ function updateleaveItems() {
             leaveItems.push(obj)
         });
         $('#leaveItems').val(JSON.stringify(leaveItems))
-    } catch (e) {
+    }
+    catch (e) {
         alert(e)
     }
-
+       
 }
 function addTd(name) {
     var col2 = $('<td/>');
@@ -92,7 +104,6 @@ function addTdTime(name){
     });
     return col2; 
 }
-
 function OnSuccess(response) {
     if (response.result == 'success') {
         window.location.href = $("#RedirectTo").val()
@@ -115,7 +126,6 @@ function OnFailure(response) {
     alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?" + "Detail:" + response.responseText)
     enableButton()
 }
-
 $(function () {
     
     for (var i = 1; i <= $('#tableInfo tr').length; i++) {
@@ -128,10 +138,11 @@ $(function () {
             rtl: false,
             format: 'd/m/Y H:i',
 
-        });
+        });     
     }
-  
-
+    $('#DATE_REGISTER').datetimepicker({
+        format: 'd/m/Y',
+    });
     $('#frmpaidleave_accept').click(function (e) {
         $('#status').val("accept")
     })
@@ -161,6 +172,7 @@ $(function () {
         row.append(addTd("CODE" + index));
         row.append(addTdTime("TIME_FROM" + index));
         row.append(addTdTime("TIME_TO" + index));
+       
         row.append(addTd("TOTAL" + index));
 
         var col3 = $("<td/>");
@@ -208,11 +220,8 @@ $(function () {
     })
     $('#frmpaidleave_reject').click(function (e) {
         $('#status').val("reject")
-
-    })
-    
+    }) 
     var $contextMenu = $("#contextMenu");
-
     $("body").on("contextmenu", "table tr", function (e) {
         $contextMenu.css({
             display: "block",
@@ -221,7 +230,6 @@ $(function () {
         });
         return false;
     });
-
     $("#formCreate").validate({
         submitHandler: function (form) {
             disableButtonWhenSubmit('#frmpaidleave_create')
@@ -235,7 +243,7 @@ $(function () {
             if (status == 'reject') {
                 if (confirm('Do you want to reject?')) {
                     disableButtonWhenSubmit('#frmpaidleave_' + status)
-                    updateleaveItems()
+                    updateleaveItems()         
                     form.ajax.submit()
                 } else {
                     return false;
@@ -246,9 +254,8 @@ $(function () {
                 updateleaveItems()
                 form.ajax.submit()
             }
-        }
+        }     
     });
-
 })
 
 

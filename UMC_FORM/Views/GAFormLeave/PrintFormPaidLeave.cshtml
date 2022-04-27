@@ -17,7 +17,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Print</title>
-    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="@Url.ContentVersioned("~/Content/css/styles", "css")" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
@@ -52,6 +52,7 @@
         .td2 {
             width: 250px;
         }
+
         .font-italic {
             font-size: 13px;
         }
@@ -64,7 +65,7 @@
     <div>
         <div class="row">
 
-         
+
         </div>
 
 
@@ -167,32 +168,33 @@
                                     {
                                         <tr class="row-info">
                                             <td class="text-center">@(i)</td>
-                                            <td>
+                                            <td style=" width:20%;">
                                                 @item.FULLNAME
-                                            </td>
-                                            <td>
+                                            </td >
+                                            <td  style=" width:5%;">
                                                 @item.CODE
                                             </td>
-                                            <td>
+                                            <td style ="width:14%;">
                                                 @item.TIME_FROM.ToString("dd-MM-yyyy HH:mm")
                                             </td>
-                                            <td>
+                                            <td style ="width:14%;">
                                                 @item.TIME_TO.ToString("dd-MM-yyyy HH:mm")
                                             </td>
                                             <td class="text-center">
                                                 @item.TOTAL
                                             </td>
-                                            <td>
-                                                @*<input class="form-input  inputDefault" id=@("REASON" + i) value="@item.REASON" />*@
-                                                @item.REASON
+                                            <td style=" width:32%;">
+                                                <span>
+                                                    @item.REASON
+                                                </span>
                                             </td>
-                                            <td class="text-center p-2">
+                                            <td class="text-center p-2" style=" width:5%;">
                                                 @if (item.SPEACIAL_LEAVE == true)
                                                 {
-                                                    <input type="checkbox" name=@("SPECIAL_LEAVE" + i) id=@("SPECIAL_LEAVE" + i) checked="@item.SPEACIAL_LEAVE" onclick="return false" />
+                                                <p>√</p>
                                                 }
                                             </td>
-                                            <td>
+                                            <td  style=" width:10%;">
                                                 @item.REMARK
                                             </td>
                                         </tr>
@@ -208,7 +210,7 @@
                 </div>
                 <br />
                 @Html.Partial("~/Views/Common/_StationApprove.cshtml", Model.STATION_APPROVE)
-              
+
                 <hr>
                 <div class="col">
                     <p class="font-italic font-weight-bold row text-underline" style="font-size:12px;">Chú ý</p>
@@ -225,9 +227,9 @@
             </div>
         </div>
     </div>
-    <script src="~/Content/js/moment.js"></script>
-    <script src="~/Content/js/lang.js"></script>
-    <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/GA/form_leave.js"></script>
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/lang", "js"))
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/form_common", "js"))
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/GA/form_leave", "js"))
 </body>
 </html>

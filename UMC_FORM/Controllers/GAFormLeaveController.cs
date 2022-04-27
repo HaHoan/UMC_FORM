@@ -132,11 +132,7 @@ namespace UMC_FORM.Controllers
                 {
                     var format = "dd/MM/yyyy HH:mm";
                     var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
-
-                    string[] stringArray = new string[] { leaveItems };
-                    stringArray = leaveItems.Split(',');
-
-                    listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems, dateTimeConverter);
+                    listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems,dateTimeConverter);
                 }
 
                 if (listLeaveItems == null || listLeaveItems.Count == 0)
@@ -483,7 +479,6 @@ namespace UMC_FORM.Controllers
                         var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.GA_LEAVE_FORM).ToList();
                         form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                         form.STATION_NO = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
-
                         var saveItems = AddLeaveItem(leaveItems, db, formDB, form);
                         if (saveItems.Item1 == STATUS.ERROR)
                         {
