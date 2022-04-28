@@ -11542,3 +11542,7 @@ table td {
 .btn-image, .btn-image.hover {
     background-color: transparent;
 }
+.colGroup {
+    white-space: pre-wrap;
+    /*margin-top: -10px !important;*/
+}

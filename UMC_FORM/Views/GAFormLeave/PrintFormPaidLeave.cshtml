@@ -184,9 +184,7 @@
                                                 @item.TOTAL
                                             </td>
                                             <td style=" width:32%;">
-                                                <span>
-                                                    @item.REASON
-                                                </span>
+                                                <p class="colGroup"> @item.REASON</p>
                                             </td>
                                             <td class="text-center p-2" style=" width:5%;">
                                                 @if (item.SPEACIAL_LEAVE == true)
@@ -227,9 +225,5 @@
             </div>
         </div>
     </div>
-    @Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
-    @Scripts.Render(Url.ContentVersioned("~/Content/js/lang", "js"))
-    @Scripts.Render(Url.ContentVersioned("~/Content/js/form_common", "js"))
-    @Scripts.Render(Url.ContentVersioned("~/Content/js/GA/form_leave", "js"))
 </body>
 </html>

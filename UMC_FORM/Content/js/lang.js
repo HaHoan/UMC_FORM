@@ -65,7 +65,7 @@ var arrLang = {
         "type-supply": "Type Supply",
         "staff_code": "Staff Code:",
         "table-no": "No",
-        "table-code": "Code No",
+        "table-code": "Staff Code",
         "table-item-name": "Item Name",
         "table-desc": "Description",
         "table-vendor": "Vendor",
@@ -281,7 +281,7 @@ var arrLang = {
         "title_request": "Tiêu đề",
         "form_bieu": "Form Biểu",
         "count_subscriber": "Số người đăng ký",
-        "subscribe-date": "Ngày đăng ký",
+        "subscribe-date": "Ngày đăng ký nghỉ",
         "reason-leave": "Lý do nghỉ",
         "special-leave": "Nghỉ đặc biệt",
         "total-date": "Tổng ngày",
@@ -343,8 +343,11 @@ var arrLang = {
         "manager_shift": "  勤怠管理者",
         "count_subscriber": "人数",
         "table-code": "コード",
-        "subscribe-date": "Ngày đăng ký",
+        "subscribe-date": "取得日",
         "reason-leave": "理由",
-        "special-leave": "慶弔休暇"
+        "special-leave": "慶弔休暇",
+        "name": "氏名",
+        "total-date": "日間",
+        "cancel-request": "キャンセル",
     }
 };

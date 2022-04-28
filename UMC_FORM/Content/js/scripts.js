@@ -73,7 +73,7 @@
         $('#form_edit').submit()
     })
     $("#reject").on("click", function (e) {
-    
+
         $('.loading').show()
         e.preventDefault();
         var base_url = window.location.origin;
@@ -82,7 +82,7 @@
             type: "POST",
             url: base_url + "/PurAccF06/Reject",
             data: {
-               
+
                 ticket: ticket
             },
 
@@ -100,8 +100,8 @@
 function filter() {
     var filter = $('#filter').val()
     $('#myTab').addClass('d-none')
-  
-    if (filter == 1) { // Gửi cho tôi
+
+    if (filter == 'SENDTOME') { // Gửi cho tôi
         $("#sendToMe").prop('checked', true)
         $("#myRequest").prop('checked', false)
         $("#myCancel").prop('checked', false)
@@ -109,14 +109,14 @@ function filter() {
         $("#myFollow").prop('checked', false)
 
         localStorage.setItem('filter', 'SENDTOME');
-    } else if (filter == 2) { //Tôi cần phê duyệt
+    } else if (filter == 'MYREQUEST') { //Tôi cần phê duyệt
         $("#sendToMe").prop('checked', false)
         $("#myRequest").prop('checked', true)
         $("#myCancel").prop('checked', false)
         $("#myFinish").prop('checked', false)
         $("#myFollow").prop('checked', false)
         localStorage.setItem('filter', 'MYREQUEST');
-    } else if (filter == 3) { //Bị từ chối
+    } else if (filter == 'CANCEL') { //Bị từ chối
         $("#sendToMe").prop('checked', false)
         $("#myRequest").prop('checked', false)
         $("#myCancel").prop('checked', true)
@@ -125,7 +125,7 @@ function filter() {
         localStorage.setItem('filter', 'CANCEL');
         $(".status-ticket").addClass("badge-danger").removeClass("badge-success");
     }
-    else if (filter == 4) { //Đã hoàn thành
+    else if (filter == 'FINISH') { //Đã hoàn thành
         $("#sendToMe").prop('checked', false)
         $("#myRequest").prop('checked', false)
         $("#myCancel").prop('checked', false)
@@ -134,7 +134,7 @@ function filter() {
 
         $(".status-ticket").text("Finish");
         localStorage.setItem('filter', 'FINISH');
-    } else if (filter == 5) { // Tôi cần hoàn thành
+    } else if (filter == 'FOLLOW') { // Tôi cần hoàn thành
         $("#sendToMe").prop('checked', false)
         $("#myRequest").prop('checked', false)
         $("#myCancel").prop('checked', false)
@@ -147,4 +147,10 @@ function filter() {
     else {
 
     }
+}
+function searchByText() {
+    var value = $('#searchRequestForm').val().toLowerCase();
+    $("#listRequestForm li").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
 }

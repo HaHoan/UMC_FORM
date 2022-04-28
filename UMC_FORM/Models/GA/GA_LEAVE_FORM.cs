@@ -22,7 +22,6 @@ namespace UMC_FORM.Models.GA
         [StringLength(50)]
         public string CREATOR { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:d/M/yyyy}")]
         public DateTime DATE_REGISTER { get; set; }
 
         public int NUMBER_REGISTER { get; set; }

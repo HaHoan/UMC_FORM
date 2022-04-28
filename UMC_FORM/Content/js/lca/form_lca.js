@@ -429,6 +429,9 @@ function addTdQty(rowIndex) {
             $('#QTY_HIDDEN_' + rowIndex).val(originValue);
             updateEachRowAmount(rowIndex)
             updateQuote()
+        },
+        keypress: function (e) {
+            return onlyNumber(e)
         }
     })
     col.append(input1);
@@ -455,6 +458,9 @@ function addTdUnitPrice(name, rowIndex, length) {
             $('#' + name + '_HIDDEN_' + rowIndex).val(originValue);
             updateEachRowAmount(rowIndex)
             updateQuote()
+        },
+        keypress: function (e) {
+            return onlyNumber(e)
         }
     })
     input1.prop('readonly', true)

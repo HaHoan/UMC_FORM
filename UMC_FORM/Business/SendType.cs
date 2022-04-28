@@ -8,8 +8,13 @@ namespace UMC_FORM.Business
     /// <summary>
     /// Trạng thái Form
     /// </summary>
-    public  enum SendType
+    public  static class SendType
     {
-        SENDTOME, MYREQUEST,CANCEL,FINISH,FOLLOW, ALL
+        public static string SENDTOME = "SENDTOME";
+        public static string MYREQUEST = "MYREQUEST";
+        public static string CANCEL = "CANCEL";
+        public static string FINISH = "FINISH";
+        public static string FOLLOW = "FOLLOW";
+        public static string ALL = "ALL";
     }
 }

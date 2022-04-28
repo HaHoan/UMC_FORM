@@ -40,7 +40,7 @@ namespace UMC_FORM.Controllers
         }
 
 
-        public ActionResult Index(SendType? type)
+        public ActionResult Index(string type, string formKey = "ALL")
         {
 
             if (type is null)
@@ -49,75 +49,75 @@ namespace UMC_FORM.Controllers
             }
             var session = Session["user"] as Form_User;
             List<Form_Summary> formSummaries = new List<Form_Summary>();
-            var list = db.Form_Summary.ToList();
-            switch (type)
+            List<Form_Summary> list = new List<Form_Summary>();
+            if (string.IsNullOrEmpty(formKey) || formKey == "ALL")
             {
-                case SendType.SENDTOME:
-                    var listNotFinish = list.Where(r => r.IS_FINISH == false).ToList();
-
-                    foreach (var item in listNotFinish)
-                    {
-                        var index = item.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
-                        if (IsApprover(item, index, session.CODE))
-                        {
-                            formSummaries.Add(item);
-                        }
-
-                    }
-                    ViewBag.type = 1;
-                    break;
-                case SendType.MYREQUEST:
-                    formSummaries = list.Where(r => r.CREATE_USER == session.CODE)
-                       .ToList();
-
-                    ViewBag.type = 2;
-                    break;
-                case SendType.CANCEL:
-                    ViewBag.type = 3;
-                    var listReject = list.Where(r => r.IS_REJECT == true).ToList();
-                    foreach (var item in listReject)
-                    {
-                        var index = item.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
-                        if (IsApprover(item, index, session.CODE))
-                        {
-                            formSummaries.Add(item);
-                        }
-
-                    }
-                    break;
-                case SendType.FINISH:
-                    ViewBag.type = 4;
-                    if (session.POSITION == POSITION.FM || session.POSITION == POSITION.GD)
-                    {
-                        formSummaries = list.Where(r => r.IS_FINISH == true).ToList();
-                    }
-                    else
-                    {
-                        var deptHavePermission = db.LCA_PERMISSION.Where(m => m.DEPT == session.DEPT).Select(m => m.PROCESS).ToList();
-                        var tickets = db.Form_Procedures.Where(m => m.APPROVAL_NAME == session.CODE || deptHavePermission.Contains(m.FORM_NAME)).Select(m => m.TICKET).ToList();
-                        formSummaries = list.Where(m => m.IS_FINISH == true && tickets.Contains(m.TICKET)).ToList();
-
-                    }
-
-                    break;
-                case SendType.FOLLOW:
-                    ViewBag.type = 5;
-                    var listFollow = list.Where(r => r.IS_FINISH == false).ToList();
-                    var listPermission = db.LCA_PERMISSION.ToList();
-                    foreach (var item in listFollow)
-                    {
-                        var listPermission1 = listPermission.Where(m => m.ITEM_COLUMN_PERMISSION == (item.PROCEDURE_INDEX + 1).ToString()
-                                          && m.PROCESS == item.PROCESS_ID).ToList();
-                        if (listPermission1.Where(m => m.DEPT == session.DEPT).FirstOrDefault() != null)
-                        {
-                            formSummaries.Add(item);
-                        }
-                    }
-                    ViewBag.NumberFollowNotYet = formSummaries.Where(m => m.STATUS != STATUS.QUOTED).Count();
-                    break;
-                default:
-                    break;
+                list = db.Form_Summary.ToList();
             }
+            else
+            {
+                list = db.Form_Summary.Where(m => m.TITLE.Contains(formKey)).ToList();
+            }
+            if(type == SendType.SENDTOME)
+            {
+                var listNotFinish = list.Where(r => r.IS_FINISH == false).ToList();
+
+                foreach (var item in listNotFinish)
+                {
+                    var index = item.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
+                    if (IsApprover(item, index, session.CODE))
+                    {
+                        formSummaries.Add(item);
+                    }
+
+                }
+               
+            }else if(type == SendType.MYREQUEST)
+            {
+                formSummaries = list.Where(r => r.CREATE_USER == session.CODE)
+                        .ToList();
+
+            }else if(type == SendType.CANCEL)
+            {
+                var listReject = list.Where(r => r.IS_REJECT == true).ToList();
+                foreach (var item in listReject)
+                {
+                    var index = item.PROCEDURE_INDEX + 1;// Tìm index của trạm tiếp theo
+                    if (IsApprover(item, index, session.CODE))
+                    {
+                        formSummaries.Add(item);
+                    }
+
+                }
+            }else if(type == SendType.FINISH)
+            {
+                if (session.POSITION == POSITION.FM || session.POSITION == POSITION.GD)
+                {
+                    formSummaries = list.Where(r => r.IS_FINISH == true).ToList();
+                }
+                else
+                {
+                    var deptHavePermission = db.LCA_PERMISSION.Where(m => m.DEPT == session.DEPT).Select(m => m.PROCESS).ToList();
+                    var tickets = db.Form_Procedures.Where(m => m.APPROVAL_NAME == session.CODE || deptHavePermission.Contains(m.FORM_NAME)).Select(m => m.TICKET).ToList();
+                    formSummaries = list.Where(m => m.IS_FINISH == true && tickets.Contains(m.TICKET)).ToList();
+
+                }
+            }else if(type == SendType.FOLLOW)
+            {
+                var listFollow = list.Where(r => r.IS_FINISH == false).ToList();
+                var listPermission = db.LCA_PERMISSION.ToList();
+                foreach (var item in listFollow)
+                {
+                    var listPermission1 = listPermission.Where(m => m.ITEM_COLUMN_PERMISSION == (item.PROCEDURE_INDEX + 1).ToString()
+                                      && m.PROCESS == item.PROCESS_ID).ToList();
+                    if (listPermission1.Where(m => m.DEPT == session.DEPT).FirstOrDefault() != null)
+                    {
+                        formSummaries.Add(item);
+                    }
+                }
+                ViewBag.NumberFollowNotYet = formSummaries.Where(m => m.STATUS != STATUS.QUOTED).Count();
+            }
+            ViewBag.type = type;
             if (ViewBag.NumberFollowNotYet == null)
             {
                 list = db.Form_Summary.Where(r => r.IS_FINISH == false).ToList();

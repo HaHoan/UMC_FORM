@@ -200,7 +200,7 @@
                                 <tbody class="list-request">
                                     @{
                                         var listNotYet = Model;
-                                        if (ViewBag.type == 5)
+                                        if (ViewBag.type == SendType.FOLLOW)
                                         {
                                             listNotYet = Model.Where(m => m.STATUS != STATUS.QUOTED).ToList();
                                         }

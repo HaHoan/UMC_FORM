@@ -159,7 +159,30 @@ function getTotalAmount() {
     else
         return addCommas(total.toString());
 }
+function convertDateToValid(dateStr) {
+    if (!dateStr) return
+    var from = dateStr.split("/")
+    var f = new Date(from[2], from[1] - 1, from[0])
+    return from[2] + '-' + from[1] + '-' + from[0]
+}
 
+function convertDateTimeToDateValid(dateStr) {
+    try {
+        if (!dateStr) return
+        var dt = dateStr.split(" ")
+        var date = dt[0]
+        var time = dt[1]
+        var dateArr = date.split("/")
+        var timeArr = time.split(":")
+        return new Date(dateArr[2], dateArr[1] - 1, dateArr[0], timeArr[0], timeArr[1])
+    } catch {
+        return null;
+    }
+}
+function getRowIndexFromId(id) {
+    var suffix = id.match(/\d+/);
+    return parseInt(suffix)
+}
 
 function deleteFiles(name) {
     try {

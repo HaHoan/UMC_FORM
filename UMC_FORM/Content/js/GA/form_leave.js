@@ -34,33 +34,48 @@ function deleteRow(e) {
 }
 
 function updateleaveItems() {
-    try {
-        leaveItems = []
-        $('.row-info').each(function (rowIndex) {
-            index = rowIndex + 1
-            var item = $('#FULLNAME' + index).val()
-            if (item == "") return true
-            var code = $('#CODE' + index).val()
-            var time_from = $('#TIME_FROM' + index).val()
-            var time_to = $('#TIME_TO' + index).val()
-            var total = $('#TOTAL' + index).val()
-            if (time_to < time_from) {
-                alert('Ngày kết thúc nghỉ phải lớn hơn ngày bắt đầu nghỉ!');
-                return false;
-            }
-            if (time_to == null || time_from == null) {
-                return false;
-            } 
-            if (total < 0) {
-                alert('Tổng ngày nghỉ không được nhỏ hơn 0! ');
-                return false;
-            }
-            var reason = $('#REASON' + index).val()
-            var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked")
-            var remark = $('#REMARK' + index).val()
+    leaveItems = []
+    var checkTime = 0;
+    $('.row-info').each(function (rowIndex) {
+        index = rowIndex + 1
+        var fullname = $('#FULLNAME' + index).val()
+        var code = $('#CODE' + index).val()
+        if (fullname == "" && code != '') {
+            $('#FULLNAME' + index + '_ERROR').text('Tên không được để trống')
+            checkTime = 1
+        }
+        if (code == '' && fullname != '') {
+            $('#CODE' + index + '_ERROR').text('Mã số không được để trống')
+            checkTime = 1
+        }
+        var time_from = $('#TIME_FROM' + index).val()
+
+        if (time_from == '' && code != '') {
+            $('#TIME_FROM' + index + '_ERROR').text('Thời gian bắt đầu không được để trống')
+            checkTime = 1
+        }
+        var time_to = $('#TIME_TO' + index).val()
+        if (time_to == '' && code != '') {
+            $('#TIME_TO' + index + '_ERROR').text('Thời gian bắt đầu không được để trống')
+            checkTime = 1
+        }
+        var total = $('#TOTAL' + index).val()
+        if (total <= 0 && code != '') {
+            $('#TOTAL' + index + '_ERROR').text('Tổng số không được bằng 0')
+            checkTime = 1
+        }
+        var reason = $('#REASON' + index).val()
+        if (reason == '' && code != '') {
+            $('#REASON' + index + '_ERROR').text('Lý do nghỉ không được để trống')
+            checkTime = 1
+        }
+
+        var speacial_leave = $('#SPECIAL_LEAVE' + index).is(":checked")
+        var remark = $('#REMARK' + index).val()
+        if (fullname != '') {
             var obj = {
                 NO: index,
-                FULLNAME: item,
+                FULLNAME: fullname,
                 CODE: code,
                 TIME_FROM: time_from.trim(),
                 TIME_TO: time_to.trim(),
@@ -70,39 +85,122 @@ function updateleaveItems() {
                 REMARK: remark
             }
             leaveItems.push(obj)
-        });
-        $('#leaveItems').val(JSON.stringify(leaveItems))
-    }
-    catch (e) {
-        alert(e)
-    }
-       
-}
-function addTd(name) {
-    var col2 = $('<td/>');
-    var input2 = $('<input/>', {
-        class: 'form-input'
-    })
-    col2.append(input2);
-    input2.attr('id', name)
-    input2.attr('name', name)
-    return col2;
-}
-function addTdTime(name){
-    var col2 = $('<td/>');
-    var input1 = $('<input/>', {
-        class: 'form-input inputDefault',
-       
-    })
-    col2.append(input1);
-    input1.attr('id', name);
-    input1.attr('name', name);
-    input1.datetimepicker({
-        rtl: false,
-        format: 'd/m/Y H:i',
+        }
 
     });
-    return col2; 
+    if (leaveItems.length == 0 && $('.row-info').length > 0) {
+        $('#FULLNAME' + 1 + '_ERROR').text('Tên không được để trống')
+        checkTime = 1
+    }
+    $('#leaveItems').val(JSON.stringify(leaveItems))
+    return checkTime;
+}
+function addTd(name) {
+    var col = $('<td/>');
+    var input = $('<input/>', {
+        class: 'form-input inputDefault',
+        keypress: function () {
+            $('#' + name + '_ERROR').text('')
+        }
+    })
+    col.append(input);
+    input.attr('id', name)
+    input.attr('name', name)
+    var span = $('<span />', {
+        class: 'error'
+    })
+    col.append(span)
+    span.attr('id', name + '_ERROR');
+    return col;
+}
+function eraseTextError(name) {
+    $('#' + name).change(function () {
+        $('#' + name + '_ERROR').text('')
+    })
+}
+function addTdNumber(name) {
+    var col = $('<td/>');
+    var input = $('<input/>', {
+        class: 'form-input inputDefault type_number',
+        keypress: function (e) {
+            return onlyNumber(e)
+        },
+        change: function (e) {
+            $('#' + name + '_ERROR').text('')
+        }
+    })
+    col.append(input);
+    input.attr('id', name)
+    input.attr('name', name)
+    var span = $('<span />', {
+        class: 'error'
+    })
+    col.append(span)
+    span.attr('id', name + '_ERROR');
+    return col;
+}
+function addTdTime(name) {
+    var col = $('<td/>');
+    var input = $('<input/>', {
+        class: 'form-input inputDefault',
+
+    })
+    col.append(input);
+    input.attr('id', name);
+    input.attr('name', name);
+    if (name.includes('FROM')) {
+        input.datetimepicker({
+            format: FORMAT_DATE_TIME,
+            formatDate: FORMAT_DATE_TIME,
+            onShow: function (ct, $input) {
+                timeFromOnShow($input, this)
+            },
+            onChangeDateTime: function (currentTime, $input) {
+                validateTime(getRowIndexFromId($input.attr('id')))
+            }
+        });
+    } else if (name.includes('TO')) {
+        input.datetimepicker({
+            format: FORMAT_DATE_TIME,
+            formatDate: FORMAT_DATE_TIME,
+            onShow: function (ct, $input) {
+                timeToOnShow($input, this)
+            },
+            onChangeDateTime: function (currentTime, $input) {
+                validateTime(getRowIndexFromId($input.attr('id')))
+            }
+
+        });
+
+    }
+    input.change(function () {
+        validateTime(getRowIndexFromId($(this).attr('id')))
+    })
+
+    var span = $('<span />', {
+        class: 'error'
+    })
+    col.append(span)
+    span.attr('id', name + '_ERROR');
+    return col;
+}
+function addTdReason(name) {
+    var col = $("<td/>");
+    var input = $('<textarea/>', {
+        class: 'form-input  inputDefault',
+        name: name,
+        id: name,
+        keypress: function () {
+            $('#' + name + '_ERROR').text('')
+        }
+    });
+    col.append(input);
+    var span = $('<span />', {
+        class: 'error'
+    })
+    col.append(span)
+    span.attr('id', name + '_ERROR');
+    return col;
 }
 function OnSuccess(response) {
     if (response.result == 'success') {
@@ -126,23 +224,83 @@ function OnFailure(response) {
     alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?" + "Detail:" + response.responseText)
     enableButton()
 }
+function validateTime(index) {
+    var time_from = $('#TIME_FROM' + index).val()
+    var time_to = $('#TIME_TO' + index).val()
+    if (!time_from || !time_to) return
+    if (convertDateTimeToDateValid(time_from) >= convertDateTimeToDateValid(time_to)) {
+        $('#TIME_TO' + index + '_ERROR').text("Ngày kết thúc phải lớn hơn ngày bắt đầu")
+    } else {
+        $('#TIME_TO' + index + '_ERROR').text("")
+    }
+}
+function timeFromOnShow($input, context) {
+    var rowIndex = getRowIndexFromId($input.attr('id'))
+    var time_to = $('#TIME_TO' + rowIndex).val();
+    if (time_to != '') {
+        context.setOptions({
+            maxDate: time_to,
+        })
+    }
+    $('#TIME_FROM' + rowIndex + '_ERROR').text("")
+}
+function timeToOnShow($input, context) {
+    var rowIndex = getRowIndexFromId($input.attr('id'))
+    var time_from = $('#TIME_FROM' + rowIndex).val();
+    if (time_from != '') {
+        context.setOptions({
+            minDate: time_from,
+        })
+    }
+    $('#TIME_TO' + rowIndex + '_ERROR').text("")
+}
+const FORMAT_DATE_TIME = 'd/m/Y H:i'
+const FORMAT_DATE = 'd/m/Y'
 $(function () {
-    
+
     for (var i = 1; i <= $('#tableInfo tr').length; i++) {
+
         $('#TIME_FROM' + i).datetimepicker({
-            rtl: false,
-            format: 'd/m/Y H:i',
+            format: FORMAT_DATE_TIME,
+            formatDate: FORMAT_DATE_TIME,
+            onShow: function (ct, $input) {
+                timeFromOnShow($input, this)
+            },
+            onChangeDateTime: function (currentTime, $input) {
+                validateTime(getRowIndexFromId($input.attr('id')))
+            }
+        });
+        $('#TIME_FORM' + i).change(function () {
+            validateTime(getRowIndexFromId($(this).attr('id')))
+        })
+        $('#TIME_TO' + i).datetimepicker({
+            format: FORMAT_DATE_TIME,
+            formatDate: FORMAT_DATE_TIME,
+            onShow: function (ct, $input) {
+                timeToOnShow($input, this)
+            },
+            onChangeDateTime: function (currentTime, $input) {
+                validateTime(getRowIndexFromId($input.attr('id')))
+            }
 
         });
-        $('#TIME_TO' + i).datetimepicker({
-            rtl: false,
-            format: 'd/m/Y H:i',
-
-        });     
+        $('#TIME_TO' + i).change(function () {
+            validateTime(getRowIndexFromId($(this).attr('id')))
+        })
+        eraseTextError('FULLNAME' + i)
+        eraseTextError('CODE' + i)
+        eraseTextError('REASON' + i)
+        eraseTextError('TOTAL' + i)
     }
-    $('#DATE_REGISTER').datetimepicker({
-        format: 'd/m/Y',
+    $('#DATE_REGISTER_VIEW').datetimepicker({
+        format: FORMAT_DATE,
+        formatDate: FORMAT_DATE,
+        value: moment().format(),
+        onChangeDateTime() {
+            $('#DATE_REGISTER').val(convertDateToValid($("#DATE_REGISTER_VIEW").val()))
+        }
     });
+    $('#DATE_REGISTER').val(convertDateToValid($("#DATE_REGISTER_VIEW").val()))
     $('#frmpaidleave_accept').click(function (e) {
         $('#status').val("accept")
     })
@@ -163,25 +321,21 @@ $(function () {
 
     $("#contextMenu li a").click(function (e) {
         var index = $('#tableInfo tr').length + 1;
-        var row = $('<tr/>');
-        var col1 = $('<td/>', {
-            text: (index)
+        var row = $('<tr/>', {
+            class: 'row-info'
+        });
+
+        var col = $('<td/>', {
+            text: (index),
+            class: 'text-center'
         })
-        row.append(col1);
+        row.append(col);
         row.append(addTd("FULLNAME" + index));
         row.append(addTd("CODE" + index));
         row.append(addTdTime("TIME_FROM" + index));
         row.append(addTdTime("TIME_TO" + index));
-       
-        row.append(addTd("TOTAL" + index));
-
-        var col3 = $("<td/>");
-        var input3 = $('<textarea/>', {
-            class: 'form-input  inputDefault',
-            name: "REASON" + index,
-        });
-        col3.append(input3);
-        row.append(col3);
+        row.append(addTdNumber("TOTAL" + index));
+        row.append(addTdReason("REASON" + index));
 
         var pathname_local = "/GAFormLeave";
         var host_local = window.location.pathname
@@ -220,7 +374,7 @@ $(function () {
     })
     $('#frmpaidleave_reject').click(function (e) {
         $('#status').val("reject")
-    }) 
+    })
     var $contextMenu = $("#contextMenu");
     $("body").on("contextmenu", "table tr", function (e) {
         $contextMenu.css({
@@ -230,11 +384,17 @@ $(function () {
         });
         return false;
     });
+
     $("#formCreate").validate({
         submitHandler: function (form) {
             disableButtonWhenSubmit('#frmpaidleave_create')
-            updateleaveItems()
-            form.ajax.submit()
+            var result = updateleaveItems()
+            if (result == 0) {
+                form.ajax.submit()
+            } else {
+                enableButton()
+            }
+
         }
     });
     $("#submitForm").validate({
@@ -243,7 +403,6 @@ $(function () {
             if (status == 'reject') {
                 if (confirm('Do you want to reject?')) {
                     disableButtonWhenSubmit('#frmpaidleave_' + status)
-                    updateleaveItems()         
                     form.ajax.submit()
                 } else {
                     return false;
@@ -251,10 +410,14 @@ $(function () {
             }
             else {
                 disableButtonWhenSubmit('#frmpaidleave_' + status)
-                updateleaveItems()
-                form.ajax.submit()
+                var result = updateleaveItems()
+                if (result == 0) {
+                    form.ajax.submit()
+                } else {
+                    enableButton()
+                }
             }
-        }     
+        }
     });
 })
 

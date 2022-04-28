@@ -104,18 +104,7 @@ namespace UMC_FORM.Controllers
 
             }
         }
-        private string validateTicket(GA_LEAVE_FORM ticket)
-        {
-            if (string.IsNullOrEmpty(ticket.DEPT))
-            {
-                return "Chưa chọn phòng ban!";
-            }
-            if (ticket.DATE_REGISTER == null)
-            {
-                return "Cần chọn ngày đăng kí!";
-            }
-            return "";
-        }
+       
         private Tuple<string, string, int> AddLeaveItem(string leaveItems, DataContext db, GA_LEAVE_FORM prevTicket, GA_LEAVE_FORM currentTicket)
         {
             try
@@ -298,13 +287,6 @@ namespace UMC_FORM.Controllers
                     try
                     {
                         _sess = Session["user"] as Form_User;
-
-                        string validate = validateTicket(ticket);
-                        if (!string.IsNullOrEmpty(validate))
-                        {
-                            return Json(new { result = STATUS.ERROR, message = validate }, JsonRequestBehavior.AllowGet);
-                        }
-
                         ticket.ID = Guid.NewGuid().ToString();
                         ticket.TICKET = DateTime.Now.ToString("yyyyMMddHHmmss");
                         ticket.CREATOR = _sess.CODE;
@@ -341,8 +323,8 @@ namespace UMC_FORM.Controllers
                             CREATE_USER = _sess.CODE,
                             UPD_DATE = DateTime.Now,
                             TITLE = purpose,
+                            PURPOSE = "",
                             PROCESS_ID = Constant.GA_LEAVE_FORM,
-                            PURPOSE = purpose,
                             LAST_INDEX = process.Count() - 1
                         };
                         db.Form_Summary.Add(summary);
@@ -401,11 +383,6 @@ namespace UMC_FORM.Controllers
                     try
                     {
                         _sess = Session["user"] as Form_User;
-                        string validate = validateTicket(ticket);
-                        if (!string.IsNullOrEmpty(validate))
-                        {
-                            return Json(new { result = STATUS.ERROR, message = validate }, JsonRequestBehavior.AllowGet);
-                        }
                         var formDB = db.GA_LEAVE_FORM.Where(m => m.ID == ticket.ID).FirstOrDefault();
                         if (formDB == null) return Json(new { result = STATUS.ERROR, message = "Ticket không tồn tại!" }, JsonRequestBehavior.AllowGet);
                         var form = formDB.CloneObject() as GA_LEAVE_FORM;

@@ -73,11 +73,10 @@
                                         <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
                                     </div>
                                     <div class="col-9">
-                                        <input class="form-control" id="DATE_REGISTER" name="DATE_REGISTER" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                        <input type="hidden" name="DATE_REGISTER" id="DATE_REGISTER" />
+                                        <input class="form-control" id="DATE_REGISTER_VIEW" name="DATE_REGISTER_VIEW">
                                     </div>
                                 </div>
-                                <br />
-
                                 @if (ViewBag.listManager != null)
                                 {
                                     <br />
@@ -121,7 +120,6 @@
                                         </p>
                                     </div>
                                 </div>
-                                <br />
                                 <div class="table-responsive">
                                     <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_35" name="purpose" />
                                     <input type="hidden" value="@Constant.GA_PAID_LEAVE_ID" name="formName" />
@@ -154,68 +152,41 @@
                                             @{
                                                 for (int i = 1; i <= 5; i++)
                                                 {
-                                                    if (i == 1)
-                                                    {
-                                                        <tr class="row-info">
-                                                            <td class="">@(i)</td>
-                                                            <td>
-                                                                <input class="form-input inputDefault" id=@("FULLNAME" + i) required />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) required />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete = “off” required />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i) autocomplete = “off” required />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input type_number inputDefault" name=@("TOTAL" + i)  id=@("TOTAL" + i)  required />
-                                                            </td>
-                                                            <td>
-                                                                <textarea class="form-input inputDefault" id=@("REASON" + i)  name=@("REASON" + i)  required></textarea>
-                                                            </td>
-                                                            <td class="text-center p-2">
 
-                                                                <input type="checkbox" id=@("SPEACIAL_LEAVE"+i) name=@("SPEACIAL_LEAVE"+i) value="" />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input  inputDefault" id=@("REMARK" + i) />
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                    else
-                                                    {
-                                                        <tr class="row-info">
-                                                            <td class="">@(i)</td>
-                                                            <td>
-                                                                <input class="form-input inputDefault" id=@("FULLNAME" + i)  />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input inputDefault" id=@("CODE" + i)  />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete = “off”  />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i)  autocomplete = “off” />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input type_number inputDefault" id=@("TOTAL" + i)  />
-                                                            </td>
-                                                            <td>
-                                                                <textarea class="form-input inputDefault" id=@("REASON" + i) ></textarea>
-                                                            </td>
-                                                            <td class="text-center p-2">
+                                                    <tr class="row-info">
+                                                        <td class="text-center">@(i)</td>
+                                                        <td>
+                                                            <input class="form-input inputDefault" id=@("FULLNAME" + i) />
+                                                            <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) />
+                                                            <span class="error" id=@("CODE"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete="off" />
+                                                            <span class="error" id=@("TIME_FROM"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i) autocomplete="off" />
+                                                            <span class="error" id=@("TIME_TO"+i+"_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input type_number inputDefault" name=@("TOTAL" + i) id=@("TOTAL" + i) />
+                                                            <span class="error" id=@("TOTAL"+i+"_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
+                                                            <span class="error" id=@("REASON"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td class="text-center p-2">
 
-                                                                <input type="checkbox" id=@("SPEACIAL_LEAVE"+i) name="" value="" />
-                                                            </td>
-                                                            <td>
-                                                                <input class="form-input  inputDefault" id=@("REMARK" + i) />
-                                                            </td>
-                                                        </tr>
-                                                    }
+                                                            <input type="checkbox" id=@("SPEACIAL_LEAVE"+i) name=@("SPEACIAL_LEAVE"+i) value="" />
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input  inputDefault" id=@("REMARK" + i) />
+                                                        </td>
+                                                    </tr>
 
                                                 }
                                             }
@@ -269,5 +240,7 @@
         </div>
         @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }))
     </div>
+
 </body>
+
 </html>

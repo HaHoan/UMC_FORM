@@ -22,7 +22,6 @@
             crossorigin="anonymous"></script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
-
     <style type="text/css">
         a, a:hover {
             color: #000000;
@@ -128,7 +127,7 @@
                                 }
                                 if (user.ROLE_ID == ROLE.CanEdit)
                                 {
-                                    <button class="btn btn-light ml-3 mr-5 mt-3" data-toggle="modal"
+                                    <button class="btn btn-light ml-3 mr-2 mt-3" data-toggle="modal"
                                             data-target="#findRequestForm">
                                         <i class="fas fa-plus text-dark"></i>
                                         <span class="lang" key="create-request">Tạo đề xuất mới</span>
@@ -176,59 +175,36 @@
                             </a>
                         </div>
                         <div class="sb-sidenav-menu-heading lang" key="form_bieu">Form biểu</div>
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts"
+                        <a class="nav-link collapsed" href="@Url.Action("Index","Home", new { type = ViewBag.type,formKey="ALL"})">
+                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                            ALL
+                        </a>
+                        <a class="nav-link collapsed" href="javascript:void(0)" data-toggle="collapse" data-target="#ga"
                            aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             GA
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                        <div class="collapse" id="ga" aria-labelledby="headingOne"
                              data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="#/">Static Navigation</a>
-                                <a class="nav-link" href="#/">Light Sidenav</a>
+                                <a class="nav-link" href="@Url.Action("Index","Home", new { type = ViewBag.type,formKey="GA-34"})">GA-34 Form nghỉ không lương</a>
+                                <a class="nav-link" href="@Url.Action("Index","Home", new { type = ViewBag.type,formKey="GA-35"})">GA-35 Form nghỉ có lương</a>
                             </nav>
                         </div>
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                        <a class="nav-link collapsed" href="javascript:void(0)" data-toggle="collapse" data-target="#lca"
                            aria-expanded="false" aria-controls="collapsePages">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            IT
+                            LCA
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                        <div class="collapse" id="lca" aria-labelledby="headingOne"
                              data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                                   data-target="#pagesCollapseAuth" aria-expanded="false"
-                                   aria-controls="pagesCollapseAuth">
-                                    Authentication
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
-                                     data-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="login.html">Login</a>
-                                        <a class="nav-link" href="register.html">Register</a>
-                                        <a class="nav-link" href="password.html">Forgot Password</a>
-                                    </nav>
-                                </div>
-                                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                                   data-target="#pagesCollapseError" aria-expanded="false"
-                                   aria-controls="pagesCollapseError">
-                                    Error
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
-                                     data-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="401.html">401 Page</a>
-                                        <a class="nav-link" href="404.html">404 Page</a>
-                                        <a class="nav-link" href="500.html">500 Page</a>
-                                    </nav>
-                                </div>
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="@Url.Action("Index","Home", new { type = ViewBag.type,formKey="F01-LCA"})">F01-Giấy yêu cầu phòng cơ khí</a>
                             </nav>
                         </div>
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pur"
+                        <a class="nav-link collapsed" href="javascript:void(0)" data-toggle="collapse" data-target="#pur"
                            aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             PUR
@@ -263,18 +239,13 @@
                 <div class="modal-body">
                     <div class="form-inline">
                         <i class="fas fa-search text-muted" style="font-size: 13px;"></i>
-                        <input class="input-material" id="searchRequestForm" type="text"
-                               placeholder="Type to quicly search...">
+                        <input type="text" class="input-material" id="searchRequestForm" onkeyup="searchByText()" placeholder="Search...">
                     </div>
 
                     <br>
                     <ul class="list-group list-group-flush" id="listRequestForm">
-                        <li class="list-group-item">
-                            @* <a href="./form.html">PR ACC Form 6</a>*@
-                            @Html.ActionLink("PR ACC Form 6", "Create", "PurAccF06")
-                        </li>
-                        <li class="list-group-item">IT Form</li>
-                        <li class="list-group-item"> @Html.ActionLink("LCA Form", "Create", "LCA")</li>
+                        <li class="list-group-item">@Html.ActionLink("PR ACC Form 6", "Create", "PurAccF06")</li>
+                        <li class="list-group-item"> @Html.ActionLink("F01-LCA GIẤY YÊU CẦU PHÒNG CƠ KHÍ", "Create", "LCA")</li>
                         <li class="list-group-item"> @Html.ActionLink("GA-34 GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG", "CreateFormUnPaidLeave", "GAFormLeave")</li>
                         <li class="list-group-item"> @Html.ActionLink("GA-35 GIẤY ĐĂNG KÝ NGHỈ CÓ LƯƠNG", "CreateFormPaidLeave", "GAFormLeave")</li>
                     </ul>
@@ -287,5 +258,15 @@
 
     @RenderSection("scripts", required: false)
     <script src="@Url.ContentVersioned("~/Content/js/lang","js")"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myList li").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
 </body>
 </html>

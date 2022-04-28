@@ -2255,6 +2255,7 @@
     <Content Include="Views\GAFormLeave\CreateFormUnPaidLeave.cshtml" />
     <Content Include="Views\GAFormLeave\DetailFormUnPaidLeave.cshtml" />
     <Content Include="Views\GAFormLeave\PrintFormUnPaidLeave.cshtml" />
+    <Content Include="Views\Home\_ListRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
