@@ -172,6 +172,11 @@ namespace UMC_FORM.Controllers
             SetUpViewBagForCreate();
             return View();
         }
+        public ActionResult CreateFormUnPaidLeave()
+        {
+            SetUpViewBagForCreate();
+            return View();
+        }
         private void SetUpFormProceduce(string processName, DataContext db, string ticket, string deptManager, string shift, List<Form_Process> process)
         {
             var formStation = db.Form_Stations.Where(m => m.PROCESS == processName).ToList();

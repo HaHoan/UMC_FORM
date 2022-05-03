@@ -69,8 +69,7 @@ function updateleaveItems() {
             $('#REASON' + index + '_ERROR').text('Lý do nghỉ không được để trống')
             checkTime = 1
         }
-
-        var speacial_leave = $('#SPECIAL_LEAVE' + index).is(":checked")
+        var speacial_leave = $('#SPEACIAL_LEAVE' + index ).is(":checked")
         var remark = $('#REMARK' + index).val()
         if (fullname != '') {
             var obj = {
@@ -336,17 +335,15 @@ $(function () {
         row.append(addTdTime("TIME_TO" + index));
         row.append(addTdNumber("TOTAL" + index));
         row.append(addTdReason("REASON" + index));
-
-        var pathname_local = "/GAFormLeave";
-        var host_local = window.location.pathname
-        if (host_local.includes(pathname_local)) {
+        var name_page = $('input[name="formName"]').val();
+        if (name_page=="GA_35") {
             var col4 = $("<td/>", {
                 class: 'text-center p-2'
             });
             var input4 = $('<input/>', {
                 type: 'checkbox',
+                id: "SPEACIAL_LEAVE" + index,
                 name: "SPEACIAL_LEAVE" + index,
-                checked: false
             });
             col4.append(input4);
             row.append(col4);
