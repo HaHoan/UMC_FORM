@@ -1,6 +1,10 @@
-﻿@using UMC_FORM.Business
+﻿@model UMC_FORM.Models.GA.GA_LEAVE_FORM_ITEM
+@using UMC_FORM.Models
+@using UMC_FORM.Ultils
+@using UMC_FORM.Business
 @{
     Layout = null;
+    var _session = Session["user"] as Form_User;
 }
 
 <!DOCTYPE html>
@@ -13,13 +17,20 @@
     <title>Tạo form đăng ký nghỉ không lương</title>
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link href="~/Content/css/styles.css" rel="stylesheet" />
+    <link href="@Url.ContentVersioned("~/Content/css/styles", "css")" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/jquery.datetimepicker.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
             crossorigin="anonymous"></script>
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/bootstrap-typeahead.js"></script>
+    <script src="~/Scripts/jquery.datetimepicker.js"></script>
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/lang", "js"))
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/form_common", "js"))
+    @Scripts.Render(Url.ContentVersioned("~/Content/js/GA/form_leave", "js"))
 </head>
 <body>
     <div>
@@ -27,8 +38,7 @@
         <div>
             <div>
                 <div>
-
-                    @using (Ajax.BeginForm("CreateFormUnPaidLeave", "GAFormLeave", new AjaxOptions
+                    @using (Ajax.BeginForm("CreateNew", "GAFormLeave", new AjaxOptions
                     {
                         OnSuccess = "OnSuccess",
                         OnFailure = "OnFailure",
@@ -40,23 +50,21 @@
                         <div class="modal-body">
                             <div>
                                 <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
-
                                     <i class="fas fa-angle-left font-title text-muted d-inline"></i>
                                     <h5 class="rext-dark d-inline lang text-uppercase" key="create-request">TẠO ĐỀ XUẤT MỚI</h5>
                                 </a>
-
                             </div>
                             <hr>
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                             <div class="info-edit">
+
                                 <div class="row">
                                     <div class="col-3">
-                                        <label class="font-weight-bold lang" key="request_dept_sub">Request Dept</label>
+                                        <label class="font-weight-bold lang" key="request_dept_sub" name="DEPT">Request Dept</label>
                                     </div>
                                     <div class="col-9">
-                                        <select class="form-control">
-                                            <option></option>
-                                        </select>
+
+                                        <input class="form-control" value="@_session.DEPT" name="DEPT" readonly="readonly" />
                                     </div>
                                 </div>
                                 <br />
@@ -65,27 +73,10 @@
                                         <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
                                     </div>
                                     <div class="col-9">
-                                        <input class="form-control" type="date" name="REQUEST_DATE" value=@DateTime.Now.ToString("yyyy-MM-dd")>
+                                        <input type="hidden" name="DATE_REGISTER" id="DATE_REGISTER" />
+                                        <input class="form-control" id="DATE_REGISTER_VIEW" name="DATE_REGISTER_VIEW">
                                     </div>
                                 </div>
-                                <br />
-                                @*<div class="row">
-                                        <div class="col-3">
-                                            <label class="font-weight-bold lang" key="count-subscriber">Count subscriber</label>
-                                        </div>
-                                        <div class="col-9">
-                                            <input class="form-control" type="number" name="" value="">
-                                        </div>
-                                    </div>*@
-                                <br>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <p style="font-style:italic;font-weight:bold;">
-                                            Ghi rõ họ tên, mã số những người đăng ký nghỉ ngày phép ở bảng dưới đây:
-                                        </p>
-                                    </div>
-                                </div>
-
                                 @if (ViewBag.listManager != null)
                                 {
                                     <br />
@@ -94,19 +85,44 @@
                                             <label class="font-weight-bold lang" key="dept_manager">Name</label>
                                         </div>
                                         <div class="col-9">
-                                            <select class="custom-select" id="deptManager" name="deptManager">
+                                            <select class="custom-select" id="deptManager" name="DEPT_MANAGER">
                                                 @foreach (var mng in ViewBag.listManager)
                                                 {
                                                     <option value="@mng.CODE">@mng.NAME</option>
-
                                                 }
                                             </select>
                                         </div>
                                     </div>
                                 }
                                 <br />
+                                @if (ViewBag.listShiftManager != null)
+                                {
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label class="font-weight-bold lang" key="manager_shift">Name</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <select class="custom-select" id="shiftManager" name="SHIFT_MANAGER">
+                                                @foreach (var shift_mng in ViewBag.listShiftManager)
+                                                {
+                                                    <option value="@shift_mng.CODE">@shift_mng.NAME</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                }
 
+                                <br />
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p style="font-style:italic;font-weight:bold;">
+                                            Giấy này được sử dụng cho nghỉ ưu đãi và nghỉ đặc biệt. Đối với các trường hợp nghỉ đặc biệt hãy đánh dấu √ vào cột "Nghỉ đặc biệt", ngoài ra sẽ được hiểu là nghỉ ưu đãi.
+                                        </p>
+                                    </div>
+                                </div>
                                 <div class="table-responsive">
+                                    <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_34" name="purpose" />
+                                    <input type="hidden" value="@Constant.GA_UNPAID_LEAVE_ID" name="formName" />
                                     <table class="table-border-dark">
                                         <tr>
                                             <th class="lang" key="table-no" rowspan="2">No</th>
@@ -114,7 +130,6 @@
                                             <th class="lang" rowspan="2" key="table-code" style="width:100px;">Code No<br /> コード </th>
                                             <th class="lang" colspan="3" key="subscribe-date">Subscribe date<br /> 取得日 </th>
                                             <th class="lang" rowspan="2" key="reason-leave">Reason for leave<br />理由</th>
-                                           
                                             <th class="lang" rowspan="2" key="">Rmks</th>
                                         </tr>
                                         <tr>
@@ -128,48 +143,58 @@
                                             </th>
                                             <th class="lang" key="total-date" style="width:100px;"> Total date <br />日間</th>
                                         </tr>
+
+
                                         <tbody id="tableInfo">
                                             @{
                                                 for (int i = 1; i <= 5; i++)
                                                 {
+
                                                     <tr class="row-info">
-                                                        <td class="">@(i)</td>
+                                                        <td class="text-center">@(i)</td>
                                                         <td>
-                                                            <input class="form-input inputDefault" id=@("NAME_" + i) />
+                                                            <input class="form-input inputDefault" id=@("FULLNAME" + i) />
+                                                            <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
                                                         </td>
                                                         <td>
-                                                            <input class="form-input inputDefault" id=@("CODE_" + i) />
+                                                            <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) />
+                                                            <span class="error" id=@("CODE"+i + "_ERROR")></span>
                                                         </td>
                                                         <td>
-                                                            <input type="datetime" class="form-input  inputDefault" id=@("START_LEAVE"+i) name=@("START_LEAVE"+i) value=@DateTime.Now.ToString("dd-mm-yyyy hh:mm") />
+                                                            <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete="off" />
+                                                            <span class="error" id=@("TIME_FROM"+i + "_ERROR")></span>
                                                         </td>
                                                         <td>
-                                                            <input class="form-input inputDefault" type="datetime" id=@("FINISH_LEAVE" + i) name=@("FINISH_LEAVE" + i) value=@DateTime.Now.ToString("dd-mm-yyyy hh:mm") />
+                                                            <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i) autocomplete="off" />
+                                                            <span class="error" id=@("TIME_TO"+i+"_ERROR")></span>
                                                         </td>
                                                         <td>
-                                                            <input class="form-input text-right inputDefault" id=@("TOTAL_DAY" + i) />
+                                                            <input class="form-input type_number inputDefault" name=@("TOTAL" + i) id=@("TOTAL" + i) />
+                                                            <span class="error" id=@("TOTAL"+i+"_ERROR")></span>
                                                         </td>
                                                         <td>
-                                                            <textarea class="form-input  inputDefault" id=@("REASON_LEAVE" + i) ></textarea>
+                                                            <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
+                                                            <span class="error" id=@("REASON"+i + "_ERROR")></span>
                                                         </td>
                                                         <td>
-                                                            <input class="form-input  inputDefault" id=@("RMKS" + i) />
+                                                            <input class="form-input  inputDefault" id=@("REMARK" + i) />
                                                         </td>
                                                     </tr>
+
                                                 }
                                             }
-
-
                                         </tbody>
+
                                     </table>
+
+                                    <input type="hidden" name="leaveItems" id="leaveItems" />
                                     <div id="contextMenu" class="dropdown clearfix">
                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
                                             style="display:block;position:static;margin-bottom:5px; color:red">
                                             <li>
                                                 <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                                   class="text-muted ml-2" name="unleave"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
+                                                   class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
                                             </li>
-
                                         </ul>
                                     </div>
                                 </div>
@@ -184,6 +209,8 @@
                                     <br />
                                     2. Để xử lý nhanh các dữ liệu liên quan đến tỷ lệ đi làm, tăng ca, đề nghị bộ phận gửi file mềm danh sách nghỉ theo địa chỉ email hiện tại cho GA.
                                     <br />
+                                    3. Nội dung xin nghỉ cần ghi rõ lý do (lý do phải cụ thể)
+                                    <br />
                                 </span>
                             </div>
                             <br />
@@ -197,24 +224,15 @@
                                 <button type="submit" class="spinner-button btn btn-success mb-2 lang col" key="create" id="frmpaidleave_create">
                                     Đề xuất
                                 </button>
-
                             </div>
-
                         </div>
                         <br>
                     }
                 </div>
-
             </div>
         </div>
-        @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new
-        {@*type = @SendType.SENDTOME*@}));
+        @Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }))
     </div>
-    <script src="~/Scripts/bootstrap-typeahead.js"></script>
-    <script src="~/Content/js/mention.js"></script>
-    <script src="~/Content/js/scripts.js"></script>
-    <script src="~/Content/js/lang.js"></script>
-    <script src="~/Content/js/form_common.js"></script>
-    <script src="~/Content/js/GA/form_leave.js"></script>
+
 </body>
 </html>
