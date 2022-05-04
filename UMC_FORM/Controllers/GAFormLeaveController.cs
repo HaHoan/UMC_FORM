@@ -477,7 +477,7 @@ namespace UMC_FORM.Controllers
                         // Nếu người tạo trùng với quản lý ca => thực hiện tự động accept bước tiếp theo
                         var currentProceduce = db.Form_Procedures.Where(m => m.TICKET == ticket.TICKET && m.FORM_INDEX == (form.PROCEDURE_INDEX + 1)).FirstOrDefault();
 
-                        if (_sess.CODE == currentProceduce.APPROVAL_NAME)
+                        if (currentProceduce != null && _sess.CODE == currentProceduce.APPROVAL_NAME)
                         {
                             return Accept(ticket, leaveItems);
                         }
