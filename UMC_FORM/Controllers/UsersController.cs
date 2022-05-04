@@ -104,7 +104,6 @@ namespace UMC_FORM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string code)
         {
-            //var userId = UserRepository.GetUser(code);
             UserRepository.Remove(code);
             return RedirectToAction("Index");
 
