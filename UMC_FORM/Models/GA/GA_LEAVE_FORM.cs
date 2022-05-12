@@ -31,7 +31,7 @@ namespace UMC_FORM.Models.GA
         public string DEPT_MANAGER { get; set; }
 
         [NotMapped]
-        public string SHIFT_MANAGER { get; set; }
+        public string GROUP_LEADER { get; set; }
 
         public int PROCEDURE_INDEX { get; set; }
 

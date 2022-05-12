@@ -83,7 +83,7 @@ namespace UMC_FORM.Business
         public static int MANAGER = 1;
         public static int FM = 2;
         public static int GD = 3;
-        public static int SHIFT_MANAGER = 4;
+        public static int GROUP_LEADER = 4;
         public static int SALARY_GROUP = 5;
     }
     public static class ROLE

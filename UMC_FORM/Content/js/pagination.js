@@ -1,7 +1,7 @@
 $(function () {
     var items = $(".table-request .row-request");
     var numItems = items.length;
-    var perPage = 20;
+    var perPage = 19;
 
     items.slice(perPage).hide();
 

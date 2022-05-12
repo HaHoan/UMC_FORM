@@ -95,17 +95,17 @@
                                     </div>
                                 }
                                 <br />
-                                @if (ViewBag.listShiftManager != null)
+                                @if (ViewBag.listGroupLeader != null)
                                 {
                                     <div class="row">
                                         <div class="col-3">
-                                            <label class="font-weight-bold lang" key="manager_shift">Name</label>
+                                            <label class="font-weight-bold lang" key="group_leader">Name</label>
                                         </div>
                                         <div class="col-9">
-                                            <select class="custom-select" id="shiftManager" name="SHIFT_MANAGER">
-                                                @foreach (var shift_mng in ViewBag.listShiftManager)
+                                            <select class="custom-select" name="GROUP_LEADER">
+                                                @foreach (var leader in ViewBag.listGroupLeader)
                                                 {
-                                                    <option value="@shift_mng.CODE">@shift_mng.NAME</option>
+                                                    <option value="@leader.CODE">@leader.NAME</option>
                                                 }
                                             </select>
                                         </div>

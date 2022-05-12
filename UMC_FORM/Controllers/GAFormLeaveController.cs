@@ -28,7 +28,7 @@ namespace UMC_FORM.Controllers
             {
                 _sess = Session["user"] as Form_User;
                 ViewBag.listManager = db.Form_User.Where(m => m.POSITION == POSITION.MANAGER && m.DEPT == _sess.DEPT).ToList();
-                ViewBag.listShiftManager = db.Form_User.Where(m => m.POSITION == POSITION.SHIFT_MANAGER && m.DEPT == _sess.DEPT).ToList();
+                ViewBag.listGroupLeader = db.Form_User.Where(m => m.POSITION == POSITION.GROUP_LEADER && m.DEPT == _sess.DEPT).ToList();
             }
 
         }
@@ -177,7 +177,7 @@ namespace UMC_FORM.Controllers
             SetUpViewBagForCreate();
             return View();
         }
-        private void SetUpFormProceduce(string processName, DataContext db, string ticket, string deptManager, string shift, List<Form_Process> process)
+        private void SetUpFormProceduce(string processName, DataContext db, string ticket, string deptManager, string groupLeader, List<Form_Process> process)
         {
             var formStation = db.Form_Stations.Where(m => m.PROCESS == processName).ToList();
 
@@ -223,7 +223,7 @@ namespace UMC_FORM.Controllers
                         UPDATE_DATE = pro.UPDATE_DATE,
                         DES = pro.DES,
                         RETURN_STATION_NO = pro.RETURN_STATION_NO,
-                        APPROVAL_NAME = shift
+                        APPROVAL_NAME = groupLeader
                     };
                     db.Form_Procedures.Add(proceduce);
                 }
@@ -307,7 +307,7 @@ namespace UMC_FORM.Controllers
                         ticket.STATION_NAME = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                         ticket.STATION_NO = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
 
-                        SetUpFormProceduce(Constant.GA_LEAVE_FORM, db, ticket.TICKET, ticket.DEPT_MANAGER, ticket.SHIFT_MANAGER, process);
+                        SetUpFormProceduce(Constant.GA_LEAVE_FORM, db, ticket.TICKET, ticket.DEPT_MANAGER, ticket.GROUP_LEADER, process);
 
                         var saveItems = AddLeaveItem(leaveItems, db, ticket, ticket);
                         if (saveItems.Item1 == STATUS.ERROR)

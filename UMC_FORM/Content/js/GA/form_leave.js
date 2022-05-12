@@ -384,13 +384,18 @@ $(function () {
 
     $("#formCreate").validate({
         submitHandler: function (form) {
-            disableButtonWhenSubmit('#frmpaidleave_create')
-            var result = updateleaveItems()
-            if (result == 0) {
-                form.ajax.submit()
+            if (confirm('Do you want to create?')) {
+                disableButtonWhenSubmit('#frmpaidleave_create')
+                var result = updateleaveItems()
+                if (result == 0) {
+                    form.ajax.submit()
+                } else {
+                    enableButton()
+                }
             } else {
-                enableButton()
+                return false;
             }
+           
 
         }
     });
@@ -406,13 +411,18 @@ $(function () {
                 }
             }
             else {
-                disableButtonWhenSubmit('#frmpaidleave_' + status)
-                var result = updateleaveItems()
-                if (result == 0) {
-                    form.ajax.submit()
+                if (confirm('Do you want to ' + status + '?')) {
+                    disableButtonWhenSubmit('#frmpaidleave_' + status)
+                    var result = updateleaveItems()
+                    if (result == 0) {
+                        form.ajax.submit()
+                    } else {
+                        enableButton()
+                    }
                 } else {
-                    enableButton()
+                    return false;
                 }
+               
             }
         }
     });

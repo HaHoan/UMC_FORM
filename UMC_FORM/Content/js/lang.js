@@ -161,7 +161,7 @@ var arrLang = {
         "request_dept_sub": "Bộ phận đăng ký",
         "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
         "request_date_sub": "Ngày đăng ký",
-        "manager_shift": "Quản lý ca bộ phận"
+        "group_leader": "Leader"
     },
     "vi": {
         "Home": "TRANG CHỦ",
@@ -289,7 +289,7 @@ var arrLang = {
         "request_dept_sub": "Bộ phận đăng ký",
         "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
         "request_date_sub": "Ngày đăng ký",
-        "manager_shift": "Quản lý ca bộ phận",
+        "group_leader": "Trưởng Nhóm",
     },
     "ja": {
         "reaccept": "Re-accept",
@@ -340,7 +340,7 @@ var arrLang = {
         "request_dept_sub": "部署",
         "frmunpaidleave_title": "無給休暇届 ",
         "request_date_sub": "申請日",
-        "manager_shift": "  勤怠管理者",
+        "group_leader": "リーダー",
         "count_subscriber": "人数",
         "table-code": "コード",
         "subscribe-date": "取得日",

@@ -1,113 +1,7 @@
 ﻿
 var users = [];
 var listStep = [];
-//var listStep = [
 
-//    {
-//        index: 0,
-//        key: 'step-1',
-//        name: 'Applicant',
-//        return: {
-
-//        }
-
-//    },
-//    {
-//        index: 1,
-//        key: 'step-2',
-//        name: 'Dept Manager',
-//        return: {
-//            "name": "Back to",
-//            "items": {
-//                "step-1": { "name": "Applicant" }
-
-//            }
-//        },
-//        returnTo: 0
-
-//    },
-//    {
-//        index: 2,
-//        key: 'step-3',
-//        name: 'Assets',
-//        return: {
-//            "name": "Back to",
-//            "items": {
-//                "step-1": { "name": "Applicant" },
-//                "step-2": { "name": "Dept Manager" }
-
-//            }
-//        },
-//        returnTo: 0
-//    },
-//    {
-//        index: 3,
-//        key: 'step-4',
-//        name: 'Factory Manager',
-//        return: {
-//            "name": "Back to",
-//            "items": {
-//                "step-1": { "name": "Applicant" },
-//                "step-2": { "name": "Dept Manager" },
-//                "step-3": { "name": "Assets" }
-//            }
-//        },
-//        returnTo: 0
-//    },
-
-//    {
-//        index: 4,
-//        key: 'step-5',
-//        name: 'General Director',
-//        return: {
-//            "name": "Back to",
-//            "items": {
-//                "step-1": { "name": "Applicant" },
-//                "step-2": { "name": "Dept Manager" },
-//                "step-3": { "name": "Assets" },
-//                "step-4": { "name": "Factory Manager" }
-//            }
-//        },
-//        returnTo: 0
-//    },
-
-//    {
-//        index: 5,
-//        key: 'step-6',
-//        name: 'Purchasing Dept',
-//        return: {
-//            "name": "Back to",
-//            "items": {
-//                "step-1": { "name": "Applicant" },
-//                "step-2": { "name": "Dept Manager" },
-//                "step-3": { "name": "Assets" },
-//                "step-4": { "name": "Factory Manager" },
-//                "step-5": { "name": "General Director" }
-
-//            }
-//        },
-//        returnTo: 0
-//    },
-
-//    {
-//        index: 6,
-//        key: 'step-7',
-//        name: 'Applicant',
-//        return: {
-//            "name": "Back to",
-//            "items": {
-//                "step-1": { "name": "Applicant" },
-//                "step-2": { "name": "Dept Manager" },
-//                "step-3": { "name": "Assets" },
-//                "step-4": { "name": "Factory Manager" },
-//                "step-5": { "name": "General Director" },
-//                "step-6": { "name": "Purchasing Dept" }
-
-//            }
-
-//        },
-//        returnTo: 0
-//    },
 
 //    {
 //        index: 7,
@@ -406,9 +300,10 @@ function drawStation() {
 
                         $("#submitors").fadeOut(1);
                         $("#submitors").fadeIn();
-                    } else if (key == "Return") {
+                    } else if (key.includes('step-')) {
+                        
                         var step = listStep.find(x => x.key === key);
-
+                      
                         if (stepStart.returnTo != null) {
                             removeReturnLine(stepStart.index, stepStart.returnTo);
                         }
