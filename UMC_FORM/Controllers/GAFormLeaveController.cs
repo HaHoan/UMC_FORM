@@ -12,6 +12,9 @@ using System.Data.Entity;
 using Hangfire;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json.Converters;
+using System.Threading.Tasks;
+using System.IO;
+using UMC_FORM.Ultils;
 
 namespace UMC_FORM.Controllers
 {
@@ -104,7 +107,7 @@ namespace UMC_FORM.Controllers
 
             }
         }
-       
+
         private Tuple<string, string, int> AddLeaveItem(string leaveItems, DataContext db, GA_LEAVE_FORM prevTicket, GA_LEAVE_FORM currentTicket)
         {
             try
@@ -121,7 +124,7 @@ namespace UMC_FORM.Controllers
                 {
                     var format = "dd/MM/yyyy HH:mm";
                     var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
-                    listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems,dateTimeConverter);
+                    listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems, dateTimeConverter);
                 }
 
                 if (listLeaveItems == null || listLeaveItems.Count == 0)
@@ -710,6 +713,30 @@ namespace UMC_FORM.Controllers
             if (ticketDb == null) return HttpNotFound();
             return View(ticketDb);
         }
+        public ActionResult Export(string ticket)
+        {
+            MemoryStream bufferStream = null;
+            using (var db = new DataContext())
+            {
+                var item = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();
+                if (item == null) return HttpNotFound();
+                item.GA_LEAVE_FORM_ITEMs = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == item.ID).ToList();
+                var stream = ExcelHelper.CreateExcelFile(null, item);
+                // Tạo buffer memory strean để hứng file excel
+                bufferStream = stream as MemoryStream;
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                // Dòng này rất quan trọng, vì chạy trên firefox hay IE thì dòng này sẽ hiện Save As dialog cho người dùng chọn thư mục để lưu
+                // File name của Excel này là ExcelDemo
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + ticket + ".xlsx");
+                // Lưu file excel của chúng ta như 1 mảng byte để trả về response
+                Response.BinaryWrite(bufferStream.ToArray());
+                Console.WriteLine("done!");
+                // Send tất cả ouput bytes về phía clients
+                Response.Flush();
+                Response.End();
+                return View("Index");
+            }
 
+        }
     }
 }

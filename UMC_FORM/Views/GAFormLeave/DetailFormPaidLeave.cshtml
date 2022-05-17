@@ -36,9 +36,20 @@
                                 <span class="badge badge-pill badge-primary ml-2 lang font-italic" key="@keyState">...</span>
                             </div>
                             <div class="col-1">
-                                <a href="@Url.Action("PrintFormPaidLeave", "GAFormLeave",new { ticket = Model.TICKET.TICKET })" )" class="text-dark" target="_blank">
-                                    <i class="fas fa-print"></i>
-                                </a>
+                                <div class="row">
+                                    <div class="col">
+                                        <a href="@Url.Action("Export", "GAFormLeave",new { ticket = Model.TICKET.TICKET })" )" class="text-success " target="_blank">
+                                            <i class="fa-regular fa-file-excel"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col">
+                                        <a href="@Url.Action("PrintFormPaidLeave", "GAFormLeave",new { ticket = Model.TICKET.TICKET })" )" class="text-dark" target="_blank">
+                                            <i class="fas fa-print"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+
                             </div>
                         </div>
                         <hr>
@@ -107,7 +118,7 @@
                                     </div>
                                 </div>
                                 <br>
-                                
+
                                 <div class="row">
                                     <div class="col-12">
                                         <p style="font-style:italic;font-weight:bold;">
@@ -182,7 +193,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <input type="checkbox" id=@("SPEACIAL_LEAVE" + i) name=@("SPEACIAL_LEAVE" + i)/>
+                                                                    <input type="checkbox" id=@("SPEACIAL_LEAVE" + i) name=@("SPEACIAL_LEAVE" + i) />
                                                                 }
                                                             </td>
                                                             <td>
