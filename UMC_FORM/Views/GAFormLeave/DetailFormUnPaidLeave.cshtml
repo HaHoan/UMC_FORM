@@ -31,26 +31,21 @@
                         </button>
 
                         <div class="row">
-                            <div class="col-11 form-inline">
+                            <div class="col-10 form-inline">
                                 <span class="font-italic text-muted lang" key="state">Trạng thái:</span>
                                 <span class="badge badge-pill badge-primary ml-2 lang font-italic" key="@keyState">...</span>
                             </div>
                           
-                            <div class="col-1">
-                                <div class="row">
-                                    <div class="col">
-                                        <a href="@Url.Action("Export", "GAFormLeave",new { ticket = Model.TICKET.TICKET })" )" class="text-success " target="_blank">
-                                            <i class="fa-regular fa-file-excel"></i>
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <a href="@Url.Action("PrintFormUnPaidLeave", "GAFormLeave",new { ticket = Model.TICKET.TICKET })" )" class="text-dark" target="_blank">
-                                            <i class="fas fa-print"></i>
-                                        </a>
-                                    </div>
+                            <div class="col-2">
+                                <div class="row d-flex justify-content-end">
+                                    <a href="@Url.Action("Export", "GAFormLeave",new { ticket = Model.TICKET.TICKET })" )" class="text-success ">
+                                        <i class="fa-regular fa-file-excel"></i>
+                                    </a>
+                                    <a href="@Url.Action("PrintFormUnPaidLeave", "GAFormLeave",new { ticket = Model.TICKET.TICKET })" )" class="text-dark ml-3 mr-3">
+                                        <i class="fas fa-print"></i>
+                                    </a>
 
                                 </div>
-
                             </div>
                         </div>
                         <hr>
