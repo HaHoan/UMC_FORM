@@ -27,7 +27,7 @@
                         <br />
                         <button class="border-0 bg-white" id="backTo" type="button">
                             <i class="fas fa-angle-left font-title text-muted"></i>
-                            <span class="font-weight-bold ml-2 text-muted lang text-uppercase" key="frmpaidleave_title" style="font-size: 18px;">YÊU CẦU CUNG CẤP</span>
+                            <span class="font-weight-bold ml-2 text-muted lang text-uppercase" key="frmunpaidleave_title" style="font-size: 18px;">YÊU CẦU CUNG CẤP</span>
                         </button>
 
                         <div class="row">
@@ -114,15 +114,24 @@
                                     </div>
                                 </div>
                                 <br>
-
-                                <div class="row">
-                                    <div class="col-12">
-                                        <p style="font-style:italic;font-weight:bold;">
-                                            Giấy này được sử dụng cho nghỉ ưu đãi và nghỉ đặc biệt. Đối với các trường hợp nghỉ đặc biệt hãy đánh dấu √ vào cột "Nghỉ đặc biệt", ngoài ra sẽ được hiểu là nghỉ ưu đãi.
-                                        </p>
+                                if (Model.PERMISSION.Contains(PERMISSION.ADD_DEPT_MANAGER) && ViewBag.listManager != null)
+                                {
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <select class="custom-select" id="TICKET.DEPT_MANAGER" name="TICKET.DEPT_MANAGER">
+                                                <option value="0">Chọn trưởng phòng có quyền approve</option>
+                                                @foreach (var mng in ViewBag.listManager)
+                                                {
+                                                    <option value="@mng.CODE">@mng.NAME</option>
+                                                }
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-
+                                }
+                                <br />
                                 if (Model.PERMISSION.Contains(PERMISSION.EDIT_INFO))
                                 {
                                     <div class="table-responsive">
@@ -159,7 +168,7 @@
                                                                 <input class="form-input inputDefault" id=@("FULLNAME" + i) value="@item.FULLNAME" />
                                                                 <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
                                                             </td>
-                                                            <td  style="width:5%;">
+                                                            <td style="width:5%;">
                                                                 <input class="form-input inputDefault" id=@("CODE" + i) value="@item.CODE" />
                                                                 <span class="error" id=@("CODE"+i + "_ERROR")></span>
                                                             </td>
@@ -258,7 +267,7 @@
                                                             </td>
                                                             <td style="width:30%;">
                                                                 <p class="colGroup"> @item.REASON</p>
-                                                            </td>  
+                                                            </td>
                                                             <td>
                                                                 @item.REMARK
 

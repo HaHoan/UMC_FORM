@@ -48,6 +48,7 @@ namespace UMC_FORM.Business
         public static string EDIT_INFO = "EDIT_INFO";
         public static string ADD_ID = "ADD_ID";
         public static string COMMENT = "COMMENT";
+        public static string ADD_DEPT_MANAGER = "ADD_DEPT_MANAGER";
     }
 
     public static class SUBMIT

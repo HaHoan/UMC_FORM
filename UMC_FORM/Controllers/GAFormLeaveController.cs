@@ -164,7 +164,7 @@ namespace UMC_FORM.Controllers
             }
             catch (Exception e)
             {
-                return Tuple.Create<string, string, int>(STATUS.ERROR, e.Message.ToString(), 0);
+                return Tuple.Create<string, string, int>(STATUS.ERROR, e.ToString(), 0);
             }
 
 
@@ -232,6 +232,7 @@ namespace UMC_FORM.Controllers
                 }
                 else if (pro.FORM_INDEX == 2)
                 {
+
                     var proceduce = new Form_Procedures()
                     {
                         ID = Guid.NewGuid().ToString(),
@@ -283,7 +284,13 @@ namespace UMC_FORM.Controllers
             }
 
         }
-
+        private void UpdateFormProceduce(string processName, DataContext db, string ticket, string deptManager)
+        {
+            if (string.IsNullOrEmpty(deptManager)) return;
+            var deptStation = db.Form_Procedures.Where(m => m.TICKET == ticket && m.STATION_NO == "DEPT_MANAGER").FirstOrDefault();
+            deptStation.APPROVAL_NAME = deptManager;
+            db.SaveChanges();
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult CreateNew(GA_LEAVE_FORM ticket, string leaveItems, string purpose, string formName)
@@ -311,7 +318,7 @@ namespace UMC_FORM.Controllers
                         ticket.STATION_NO = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
 
                         SetUpFormProceduce(Constant.GA_LEAVE_FORM, db, ticket.TICKET, ticket.DEPT_MANAGER, ticket.GROUP_LEADER, process);
-
+                        
                         var saveItems = AddLeaveItem(leaveItems, db, ticket, ticket);
                         if (saveItems.Item1 == STATUS.ERROR)
                         {
@@ -361,7 +368,7 @@ namespace UMC_FORM.Controllers
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        return Json(new { result = STATUS.ERROR, message = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+                        return Json(new { result = STATUS.ERROR, message = ex.ToString() }, JsonRequestBehavior.AllowGet);
                     }
                 }
             }
@@ -394,7 +401,6 @@ namespace UMC_FORM.Controllers
                         var formDB = db.GA_LEAVE_FORM.Where(m => m.ID == ticket.ID).FirstOrDefault();
                         if (formDB == null) return Json(new { result = STATUS.ERROR, message = "Ticket không tồn tại!" }, JsonRequestBehavior.AllowGet);
                         var form = formDB.CloneObject() as GA_LEAVE_FORM;
-
                         var summary = db.Form_Summary.Where(m => m.TICKET == ticket.TICKET).FirstOrDefault();
                         if (summary.IS_REJECT)
                         {
@@ -462,6 +468,8 @@ namespace UMC_FORM.Controllers
                         form.UPD_DATE = DateTime.Now;
                         form.ORDER_HISTORY++;
                         var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.GA_LEAVE_FORM).ToList();
+                        UpdateFormProceduce(Constant.GA_LEAVE_FORM, db, ticket.TICKET, ticket.DEPT_MANAGER);
+
                         form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
                         form.STATION_NO = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NO;
                         var saveItems = AddLeaveItem(leaveItems, db, formDB, form);
@@ -478,12 +486,15 @@ namespace UMC_FORM.Controllers
                         transaction.Commit();
 
                         // Nếu người tạo trùng với quản lý ca => thực hiện tự động accept bước tiếp theo
-                        var currentProceduce = db.Form_Procedures.Where(m => m.TICKET == ticket.TICKET && m.FORM_INDEX == (form.PROCEDURE_INDEX + 1)).FirstOrDefault();
-
-                        if (currentProceduce != null && _sess.CODE == currentProceduce.APPROVAL_NAME)
+                        var currentProceduces = db.Form_Procedures.Where(m => m.TICKET == ticket.TICKET && m.FORM_INDEX == (form.PROCEDURE_INDEX + 1)).ToList();
+                        foreach(var currentProceduce in currentProceduces)
                         {
-                            return Accept(ticket, leaveItems);
+                            if (currentProceduce != null && _sess.CODE == currentProceduce.APPROVAL_NAME)
+                            {
+                                return Accept(form, leaveItems);
+                            }
                         }
+                        
                         if (!sendMail(summary, STATUS.ACCEPT))
                         {
                             transaction.Rollback();
@@ -670,6 +681,7 @@ namespace UMC_FORM.Controllers
             using (var db = new DataContext())
             {
                 var ticketDb = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).FirstOrDefault();
+                
                 if (ticketDb == null) return HttpNotFound();
                 else if (ticketDb.FORM_NAME == Constant.GA_PAID_LEAVE_ID)
                 {
@@ -689,6 +701,7 @@ namespace UMC_FORM.Controllers
         {
             var ticketDb = GetDetailTicket(ticket);
             if (ticketDb == null) return HttpNotFound();
+            SetUpViewBagForCreate();
             return View(ticketDb);
         }
 
@@ -696,6 +709,7 @@ namespace UMC_FORM.Controllers
         {
             var ticketDb = GetDetailTicket(ticket);
             if (ticketDb == null) return HttpNotFound();
+            SetUpViewBagForCreate();
             return View(ticketDb);
         }
         public ActionResult PrintFormUnPaidLeave(string ticket)

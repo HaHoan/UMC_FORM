@@ -69,15 +69,15 @@ function updateleaveItems() {
             $('#REASON' + index + '_ERROR').text('Lý do nghỉ không được để trống')
             checkTime = 1
         }
-        var speacial_leave = $('#SPEACIAL_LEAVE' + index ).is(":checked")
+        var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked")
         var remark = $('#REMARK' + index).val()
         if (fullname != '') {
             var obj = {
                 NO: index,
                 FULLNAME: fullname,
                 CODE: code,
-                TIME_FROM: time_from.trim(),
-                TIME_TO: time_to.trim(),
+                TIME_FROM: convertStringToCorrectFormat(time_from.trim()),
+                TIME_TO: convertStringToCorrectFormat(time_to.trim()),
                 TOTAL: total == "" ? 0 : total,
                 REASON: reason,
                 SPEACIAL_LEAVE: speacial_leave,
@@ -336,7 +336,7 @@ $(function () {
         row.append(addTdNumber("TOTAL" + index));
         row.append(addTdReason("REASON" + index));
         var name_page = $('input[name="formName"]').val();
-        if (name_page=="GA_35") {
+        if (name_page == "GA_35") {
             var col4 = $("<td/>", {
                 class: 'text-center p-2'
             });
@@ -381,8 +381,16 @@ $(function () {
         });
         return false;
     });
+    $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        return arg !== value;
+    }, "")
 
     $("#formCreate").validate({
+        rules: {
+            "GROUP_LEADER": {
+                valueNotEquals: '0'
+            }
+        },
         submitHandler: function (form) {
             if (confirm('Do you want to create?')) {
                 disableButtonWhenSubmit('#frmpaidleave_create')
@@ -395,11 +403,17 @@ $(function () {
             } else {
                 return false;
             }
-           
+
 
         }
     });
     $("#submitForm").validate({
+
+        rules: {
+            "TICKET.DEPT_MANAGER": {
+                valueNotEquals: '0'
+            }
+        },
         submitHandler: function (form) {
             var status = $('#status').val();
             if (status == 'reject') {
@@ -422,7 +436,7 @@ $(function () {
                 } else {
                     return false;
                 }
-               
+
             }
         }
     });

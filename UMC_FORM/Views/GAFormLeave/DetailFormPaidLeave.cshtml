@@ -43,7 +43,7 @@
                                     <a href="@Url.Action("PrintFormPaidLeave", "GAFormLeave",new { ticket = Model.TICKET.TICKET })" )" class="text-dark ml-3 mr-3">
                                         <i class="fas fa-print"></i>
                                     </a>
-                                   
+
                                 </div>
 
                             </div>
@@ -114,6 +114,26 @@
                                     </div>
                                 </div>
                                 <br>
+                                if (Model.PERMISSION.Contains(PERMISSION.ADD_DEPT_MANAGER) && ViewBag.listManager != null)
+                                {
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                        </div>
+                                        <div class="col-9">
+
+                                            <select class="custom-select" id="DEPT_MANAGER" name="TICKET.DEPT_MANAGER">
+                                                <option value="0">Chọn trưởng phòng có quyền approve</option>
+                                                @foreach (var mng in ViewBag.listManager)
+                                                {
+                                                    <option value="@mng.CODE">@mng.NAME</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <br />
+                                }
 
                                 <div class="row">
                                     <div class="col-12">

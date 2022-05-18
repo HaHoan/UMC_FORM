@@ -1,15 +1,15 @@
 ﻿
 $(function () {
     $("#fileAttach").change(function () {
-        changeFileAttach(this, '#listFiles','.files')
+        changeFileAttach(this, '#listFiles', '.files')
     })
     $('#fileQuoteAttach').change(function () {
-        changeFileAttach(this, '#listFilesQuote','.fileQuotes')
+        changeFileAttach(this, '#listFilesQuote', '.fileQuotes')
     })
 })
 
 
-function changeFileAttach(e,listFilesToElement,viewFileElement) {
+function changeFileAttach(e, listFilesToElement, viewFileElement) {
     var fileInput = $(e);
 
     var filePath = fileInput.val();
@@ -232,4 +232,19 @@ function checkUnicode(text) {
         return false
     }
 }
+function convertStringToCorrectFormat(dateStr) {
+    var arr = dateStr.split(' ')
+    var dates = arr[0].split('/')
+    var hours = arr[1].split(':')
+    var date = dates[0]
+    var month = dates[1]
+    var year = dates[2]
+    var hour = hours[0]
+    var minute = hours[1]
 
+    if (date.length < 2) date = '0' + date
+    if (month.length < 2) month = '0' + month
+    if (hour.length < 2) hour = '0' + hour
+    if (minute.length < 2) minute = '0' + minute
+    return date + '/' + month + '/' + year + ' ' + hour + ':' + minute
+}
