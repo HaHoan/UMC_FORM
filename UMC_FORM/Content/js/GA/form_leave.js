@@ -409,11 +409,11 @@ $(function () {
     });
     $("#submitForm").validate({
 
-        rules: {
-            "TICKET.DEPT_MANAGER": {
-                valueNotEquals: '0'
-            }
-        },
+        //rules: {
+        //    "TICKET.DEPT_MANAGER": {
+        //        valueNotEquals: '0'
+        //    }
+        //},
         submitHandler: function (form) {
             var status = $('#status').val();
             if (status == 'reject') {

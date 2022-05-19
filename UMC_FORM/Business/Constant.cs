@@ -92,6 +92,7 @@ namespace UMC_FORM.Business
         public static int Admin = 1;
         public static int CanEdit = 2;
         public static int ReadOnly = 3;
+        public static int Approval = 4;
     }
     public  enum EXECUTE_RESULT
     {

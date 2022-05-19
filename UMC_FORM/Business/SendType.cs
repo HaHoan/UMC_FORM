@@ -15,6 +15,7 @@ namespace UMC_FORM.Business
         public static string CANCEL = "CANCEL";
         public static string FINISH = "FINISH";
         public static string FOLLOW = "FOLLOW";
+        public static string IN_PROGRESS = "IN_PROGRESS";
         public static string ALL = "ALL";
     }
 }

@@ -6,7 +6,7 @@ $(function () {
 
 })
 function changeLanguage(lang) {
-    if (lang == null || lang == '') lang = 'en'
+    if (lang == null || lang == '') lang = 'vi'
     var base_url = window.location.origin;
     if (lang == "en") {
         $(".icon-lang").attr('src', base_url + "/Content/assets/img/united-states.png");
@@ -161,7 +161,8 @@ var arrLang = {
         "request_dept_sub": "Bộ phận đăng ký",
         "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
         "request_date_sub": "Ngày đăng ký",
-        "group_leader": "Leader"
+        "group_leader": "Leader",
+        "my-approve":"Approved"
     },
     "vi": {
         "Home": "TRANG CHỦ",
@@ -290,6 +291,7 @@ var arrLang = {
         "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
         "request_date_sub": "Ngày đăng ký",
         "group_leader": "Trưởng Nhóm",
+        "my-approve": "Đã phê duyệt"
     },
     "ja": {
         "reaccept": "Re-accept",
@@ -349,5 +351,6 @@ var arrLang = {
         "name": "氏名",
         "total-date": "日間",
         "cancel-request": "キャンセル",
+        "my-approve": "Approved"
     }
 };

@@ -154,11 +154,12 @@ namespace UMC_FORM.Business
             List<string> result = new List<string>();
             using (DataContext context = new DataContext())
             {
-                foreach (var item in context.Form_User)
+                foreach(var item in lstCode)
                 {
-                    if (lstCode.Contains(item.CODE))
+                    var user = context.Form_User.Where(m => m.CODE == item).FirstOrDefault();
+                    if(user != null && !string.IsNullOrEmpty(user.EMAIL))
                     {
-                        result.Add(item.EMAIL);
+                        result.Add(user.EMAIL);
                     }
                 }
             }

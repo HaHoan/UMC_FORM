@@ -58,7 +58,7 @@ namespace UMC_FORM.Controllers
             {
                 list = db.Form_Summary.Where(m => m.TITLE.Contains(formKey)).ToList();
             }
-            if(type == SendType.SENDTOME)
+            if (type == SendType.SENDTOME)
             {
                 var listNotFinish = list.Where(r => r.IS_FINISH == false).ToList();
 
@@ -71,13 +71,54 @@ namespace UMC_FORM.Controllers
                     }
 
                 }
-               
-            }else if(type == SendType.MYREQUEST)
-            {
-                formSummaries = list.Where(r => r.CREATE_USER == session.CODE)
-                        .ToList();
 
-            }else if(type == SendType.CANCEL)
+            }
+            else if (type == SendType.MYREQUEST)
+            {
+                if(session.ROLE_ID == ROLE.Approval)
+                {
+                    var result = from p in db.Form_Summary
+                                 join c in db.Form_Procedures on p.TICKET equals c.TICKET
+                                 where c.APPROVAL_NAME == session.CODE && p.PROCEDURE_INDEX >= c.FORM_INDEX
+                                 select new 
+                                 {
+                                     ID = p.ID,
+                                     IS_FINISH = p.IS_FINISH,
+                                     IS_REJECT = p.IS_REJECT,
+                                     PROCEDURE_INDEX = p.PROCEDURE_INDEX,
+                                     TICKET = p.TICKET,
+                                     CREATE_USER = p.CREATE_USER,
+                                     UPD_DATE = p.UPD_DATE,
+                                     TITLE = p.TITLE,
+                                     PROCESS_ID = p.PROCESS_ID,
+                                     PURPOSE = p.PURPOSE
+                                 };
+                    foreach(var p in result)
+                    {
+                        formSummaries.Add(new Form_Summary()
+                        {
+                            ID = p.ID,
+                            IS_FINISH = p.IS_FINISH,
+                            IS_REJECT = p.IS_REJECT,
+                            PROCEDURE_INDEX = p.PROCEDURE_INDEX,
+                            TICKET = p.TICKET,
+                            CREATE_USER = p.CREATE_USER,
+                            UPD_DATE = p.UPD_DATE,
+                            TITLE = p.TITLE,
+                            PROCESS_ID = p.PROCESS_ID,
+                            PURPOSE = p.PURPOSE
+                        });
+                    }
+
+                }
+                else
+                {
+                    formSummaries = list.Where(r => r.CREATE_USER == session.CODE)
+                     .ToList();
+                }
+
+            }
+            else if (type == SendType.CANCEL)
             {
                 var listReject = list.Where(r => r.IS_REJECT == true).ToList();
                 foreach (var item in listReject)
@@ -89,7 +130,8 @@ namespace UMC_FORM.Controllers
                     }
 
                 }
-            }else if(type == SendType.FINISH)
+            }
+            else if (type == SendType.FINISH)
             {
                 if (session.POSITION == POSITION.FM || session.POSITION == POSITION.GD)
                 {
@@ -102,7 +144,8 @@ namespace UMC_FORM.Controllers
                     formSummaries = list.Where(m => m.IS_FINISH == true && tickets.Contains(m.TICKET)).ToList();
 
                 }
-            }else if(type == SendType.FOLLOW)
+            }
+            else if (type == SendType.FOLLOW)
             {
                 var listFollow = list.Where(r => r.IS_FINISH == false).ToList();
                 var listPermission = db.LCA_PERMISSION.ToList();
@@ -117,6 +160,7 @@ namespace UMC_FORM.Controllers
                 }
                 ViewBag.NumberFollowNotYet = formSummaries.Where(m => m.STATUS != STATUS.QUOTED).Count();
             }
+
             ViewBag.type = type;
             if (ViewBag.NumberFollowNotYet == null)
             {

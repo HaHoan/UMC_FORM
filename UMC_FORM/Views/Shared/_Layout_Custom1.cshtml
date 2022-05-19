@@ -143,7 +143,14 @@
                         </div>
                         <div class="custom-control custom-checkbox ml-3 mt-4">
                             <input type="checkbox" class="custom-control-input" id="myRequest" />
-                            <a class="custom-control-label lang" key="my-request" for="myRequest" href="@Url.Action("Index","Home", new { type = SendType.MYREQUEST})">Tôi gửi đi</a>
+                            @{ 
+                                var key = "my-request";
+                                if(_session.ROLE_ID == ROLE.Approval)
+                                {
+                                    key = "my-approve";
+                                }
+                            }
+                            <a class="custom-control-label lang" key= "@key" for="myRequest" href="@Url.Action("Index","Home", new { type = SendType.MYREQUEST})">Tôi gửi đi</a>
                         </div>
                         <div class="custom-control custom-checkbox ml-3 mt-4">
                             <input type="checkbox" class="custom-control-input" id="myCancel">
