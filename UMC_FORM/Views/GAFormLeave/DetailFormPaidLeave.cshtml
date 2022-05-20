@@ -60,7 +60,7 @@
                         {
                             <div class="row">
                                 <div class="col">
-                                    <button class="spinner-button btn btn-danger mb-2 lang col" key="reject" id="frmpaidleave_reject" value="reject" type="submit">Từ chối</button>
+                                    <button class="spinner-button btn btn-danger mb-2 lang col" key="reject" id="frmpaidleave_reject" value="reject" type="button">Từ chối</button>
                                 </div>
                                 <div class="col">
                                     <button class="spinner-button btn btn-success mb-2 lang col" key="accept" id="frmpaidleave_accept" value="accept" type="submit">Chấp thuận</button>
@@ -187,11 +187,11 @@
                                                                 <span class="error" id=@("CODE"+i + "_ERROR")></span>
                                                             </td>
                                                             <td style="width:15%;">
-                                                                <input class="form-input  inputDefault" id=@("TIME_FROM" + i) value="@item.TIME_FROM.ToString("dd/MM/yyyy HH:mm") " autocomplete="off" />
+                                                                <input class="form-input  inputDefault" id=@("TIME_FROM" + i) value="@item.TIME_FROM.ToString("dd/MM/yyyy") " autocomplete="off" />
                                                                 <span class="error" id=@("TIME_FROM"+i + "_ERROR")></span>
                                                             </td>
                                                             <td style="width:15%;">
-                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) value="@item.TIME_TO.ToString("dd/MM/yyyy HH:mm")" autocomplete="off" />
+                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) value="@item.TIME_TO.ToString("dd/MM/yyyy")" autocomplete="off" />
                                                                 <span class="error" id=@("TIME_TO"+i + "_ERROR")></span>
                                                             </td>
                                                             <td>
@@ -280,11 +280,11 @@
 
                                                             </td>
                                                             <td style="width:15%;">
-                                                                @item.TIME_FROM.ToString("dd/MM/yyyy HH:mm")
+                                                                @item.TIME_FROM.ToString("dd/MM/yyyy")
 
                                                             </td>
                                                             <td style="width:15%;">
-                                                                @item.TIME_TO.ToString("dd/MM/yyyy HH:mm")
+                                                                @item.TIME_TO.ToString("dd/MM/yyyy")
 
                                                             </td>
                                                             <td>

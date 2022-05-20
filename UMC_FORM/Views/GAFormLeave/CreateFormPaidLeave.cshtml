@@ -27,10 +27,13 @@
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Scripts/bootstrap-typeahead.js"></script>
     <script src="~/Scripts/jquery.datetimepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script>
     @Scripts.Render(Url.ContentVersioned("~/Content/js/lang", "js"))
     @Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
     @Scripts.Render(Url.ContentVersioned("~/Content/js/form_common", "js"))
     @Scripts.Render(Url.ContentVersioned("~/Content/js/GA/form_leave", "js"))
+
 </head>
 <body>
     <div>
@@ -51,7 +54,7 @@
                             <div>
                                 <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
                                     <i class="fas fa-angle-left font-title text-muted d-inline"></i>
-                                    <h5 class="rext-dark d-inline lang text-uppercase" key="create-request">TẠO ĐỀ XUẤT MỚI</h5>
+                                    <h5 class="rext-dark d-inline lang text-uppercase" key="frmpaidleave_title">TẠO ĐỀ XUẤT MỚI</h5>
                                 </a>
                             </div>
                             <hr>
@@ -78,6 +81,7 @@
                                     </div>
                                 </div>
                                 <br />
+
                                 @if (ViewBag.listGroupLeader != null)
                                 {
                                     <div class="row">
@@ -85,7 +89,7 @@
                                             <label class="font-weight-bold lang" key="group_leader">Name</label>
                                         </div>
                                         <div class="col-9">
-                                            <select class="custom-select"id="GROUP_LEADER" name="GROUP_LEADER">
+                                            <select class="custom-select" id="GROUP_LEADER" name="GROUP_LEADER">
                                                 <option value="0">Chọn trưởng nhóm có quyền approve</option>
                                                 @foreach (var group_leader in ViewBag.listGroupLeader)
                                                 {
@@ -97,7 +101,15 @@
                                     <br />
                                 }
 
-
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="count_subscriber">Count subscriber</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <p id="NUMBER_REGISTER">0</p>
+                                    </div>
+                                </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-12">
                                         <p style="font-style:italic;font-weight:bold;">
@@ -105,6 +117,27 @@
                                         </p>
                                     </div>
                                 </div>
+                                <p>
+                                    ** Nếu số người nghỉ quá nhiều, bấm vào
+                                    <a class="text-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        COPY/PASTE EXCEL DATA
+                                    </a>
+                                    để sử dụng chức năng copy paste từ Excel
+                                </p>
+
+
+                                <div class="collapse" id="collapseExample">
+                                    <div class="m-2">
+                                        <div class="form-group">
+                                            <label for="exampleTextarea">
+                                                <span id="inline-forms" class="btn-outline-success">Copy dữ liệu từ Excel rồi Paste vào đây:</span>
+                                            </label>
+                                            <textarea name="excel_data" class="form-control" rows="10"></textarea>
+                                        </div>
+                                        <button class="btn btn-outline-success" onclick="javascript:generateTable(this)">Paste dữ liệu vào bảng bên dưới</button>
+                                    </div>
+                                </div>
+
                                 <div class="table-responsive">
                                     <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_35" name="purpose" />
                                     <input type="hidden" value="@Constant.GA_PAID_LEAVE_ID" name="formName" />

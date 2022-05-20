@@ -125,7 +125,7 @@ namespace UMC_FORM.Controllers
                 // Khi sửa đổi items
                 else
                 {
-                    var format = "dd/MM/yyyy HH:mm";
+                    var format = "dd/MM/yyyy";
                     var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
                     listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems, dateTimeConverter);
                 }

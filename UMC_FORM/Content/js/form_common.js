@@ -232,7 +232,7 @@ function checkUnicode(text) {
         return false
     }
 }
-function convertStringToCorrectFormat(dateStr) {
+function convertStringToCorrectFormatTime(dateStr) {
     var arr = dateStr.split(' ')
     var dates = arr[0].split('/')
     var hours = arr[1].split(':')
@@ -247,4 +247,15 @@ function convertStringToCorrectFormat(dateStr) {
     if (hour.length < 2) hour = '0' + hour
     if (minute.length < 2) minute = '0' + minute
     return date + '/' + month + '/' + year + ' ' + hour + ':' + minute
+}
+function convertStringToCorrectFormat(dateStr) {
+    var arr = dateStr.split(' ')
+    var dates = arr[0].split('/')
+    var date = dates[0]
+    var month = dates[1]
+    var year = dates[2]
+
+    if (date.length < 2) date = '0' + date
+    if (month.length < 2) month = '0' + month
+    return date + '/' + month + '/' + year
 }

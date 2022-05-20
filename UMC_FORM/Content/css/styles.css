@@ -2010,7 +2010,6 @@ pre {
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    max-height: 500px;
     overflow-y: auto;
 }
 

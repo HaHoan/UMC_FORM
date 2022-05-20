@@ -173,11 +173,11 @@
                                                                 <span class="error" id=@("CODE"+i + "_ERROR")></span>
                                                             </td>
                                                             <td style="width:15%;">
-                                                                <input class="form-input  inputDefault" id=@("TIME_FROM" + i) value="@item.TIME_FROM.ToString("dd/MM/yyyy HH:mm") " autocomplete="off" />
+                                                                <input class="form-input  inputDefault" id=@("TIME_FROM" + i) value="@item.TIME_FROM.ToString("dd/MM/yyyy") " autocomplete="off" />
                                                                 <span class="error" id=@("TIME_FROM"+i + "_ERROR")></span>
                                                             </td>
                                                             <td style="width:15%;">
-                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) value="@item.TIME_TO.ToString("dd/MM/yyyy HH:mm")" autocomplete="off" />
+                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) value="@item.TIME_TO.ToString("dd/MM/yyyy")" autocomplete="off" />
                                                                 <span class="error" id=@("TIME_TO"+i + "_ERROR")></span>
                                                             </td>
                                                             <td>
@@ -254,11 +254,11 @@
 
                                                             </td>
                                                             <td style="width:15%;">
-                                                                @item.TIME_FROM.ToString("dd/MM/yyyy HH:mm")
+                                                                @item.TIME_FROM.ToString("dd/MM/yyyy")
 
                                                             </td>
                                                             <td style="width:15%;">
-                                                                @item.TIME_TO.ToString("dd/MM/yyyy HH:mm")
+                                                                @item.TIME_TO.ToString("dd/MM/yyyy")
 
                                                             </td>
                                                             <td>

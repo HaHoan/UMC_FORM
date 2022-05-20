@@ -75,46 +75,37 @@ namespace UMC_FORM.Controllers
             }
             else if (type == SendType.MYREQUEST)
             {
-                if(session.ROLE_ID == ROLE.Approval)
+                var result = from p in db.Form_Summary
+                             join c in db.Form_Procedures on p.TICKET equals c.TICKET
+                             where c.APPROVAL_NAME == session.CODE && p.PROCEDURE_INDEX >= c.FORM_INDEX
+                             select new
+                             {
+                                 ID = p.ID,
+                                 IS_FINISH = p.IS_FINISH,
+                                 IS_REJECT = p.IS_REJECT,
+                                 PROCEDURE_INDEX = p.PROCEDURE_INDEX,
+                                 TICKET = p.TICKET,
+                                 CREATE_USER = p.CREATE_USER,
+                                 UPD_DATE = p.UPD_DATE,
+                                 TITLE = p.TITLE,
+                                 PROCESS_ID = p.PROCESS_ID,
+                                 PURPOSE = p.PURPOSE
+                             };
+                foreach (var p in result)
                 {
-                    var result = from p in db.Form_Summary
-                                 join c in db.Form_Procedures on p.TICKET equals c.TICKET
-                                 where c.APPROVAL_NAME == session.CODE && p.PROCEDURE_INDEX >= c.FORM_INDEX
-                                 select new 
-                                 {
-                                     ID = p.ID,
-                                     IS_FINISH = p.IS_FINISH,
-                                     IS_REJECT = p.IS_REJECT,
-                                     PROCEDURE_INDEX = p.PROCEDURE_INDEX,
-                                     TICKET = p.TICKET,
-                                     CREATE_USER = p.CREATE_USER,
-                                     UPD_DATE = p.UPD_DATE,
-                                     TITLE = p.TITLE,
-                                     PROCESS_ID = p.PROCESS_ID,
-                                     PURPOSE = p.PURPOSE
-                                 };
-                    foreach(var p in result)
+                    formSummaries.Add(new Form_Summary()
                     {
-                        formSummaries.Add(new Form_Summary()
-                        {
-                            ID = p.ID,
-                            IS_FINISH = p.IS_FINISH,
-                            IS_REJECT = p.IS_REJECT,
-                            PROCEDURE_INDEX = p.PROCEDURE_INDEX,
-                            TICKET = p.TICKET,
-                            CREATE_USER = p.CREATE_USER,
-                            UPD_DATE = p.UPD_DATE,
-                            TITLE = p.TITLE,
-                            PROCESS_ID = p.PROCESS_ID,
-                            PURPOSE = p.PURPOSE
-                        });
-                    }
-
-                }
-                else
-                {
-                    formSummaries = list.Where(r => r.CREATE_USER == session.CODE)
-                     .ToList();
+                        ID = p.ID,
+                        IS_FINISH = p.IS_FINISH,
+                        IS_REJECT = p.IS_REJECT,
+                        PROCEDURE_INDEX = p.PROCEDURE_INDEX,
+                        TICKET = p.TICKET,
+                        CREATE_USER = p.CREATE_USER,
+                        UPD_DATE = p.UPD_DATE,
+                        TITLE = p.TITLE,
+                        PROCESS_ID = p.PROCESS_ID,
+                        PURPOSE = p.PURPOSE
+                    });
                 }
 
             }

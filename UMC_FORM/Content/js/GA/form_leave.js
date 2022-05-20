@@ -100,6 +100,7 @@ function addTd(name) {
         class: 'form-input inputDefault',
         keypress: function () {
             $('#' + name + '_ERROR').text('')
+            updateNumberRegister()
         }
     })
     col.append(input);
@@ -149,8 +150,8 @@ function addTdTime(name) {
     input.attr('name', name);
     if (name.includes('FROM')) {
         input.datetimepicker({
-            format: FORMAT_DATE_TIME,
-            formatDate: FORMAT_DATE_TIME,
+            format: FORMAT_DATE,
+            formatDate: FORMAT_DATE,
             onShow: function (ct, $input) {
                 timeFromOnShow($input, this)
             },
@@ -160,8 +161,8 @@ function addTdTime(name) {
         });
     } else if (name.includes('TO')) {
         input.datetimepicker({
-            format: FORMAT_DATE_TIME,
-            formatDate: FORMAT_DATE_TIME,
+            format: FORMAT_DATE,
+            formatDate: FORMAT_DATE,
             onShow: function (ct, $input) {
                 timeToOnShow($input, this)
             },
@@ -227,7 +228,7 @@ function validateTime(index) {
     var time_from = $('#TIME_FROM' + index).val()
     var time_to = $('#TIME_TO' + index).val()
     if (!time_from || !time_to) return
-    if (convertDateTimeToDateValid(time_from) >= convertDateTimeToDateValid(time_to)) {
+    if (convertDateTimeToDateValid(time_from) > convertDateTimeToDateValid(time_to)) {
         $('#TIME_TO' + index + '_ERROR').text("Ngày kết thúc phải lớn hơn ngày bắt đầu")
     } else {
         $('#TIME_TO' + index + '_ERROR').text("")
@@ -258,10 +259,12 @@ const FORMAT_DATE = 'd/m/Y'
 $(function () {
 
     for (var i = 1; i <= $('#tableInfo tr').length; i++) {
-
+        $('#CODE' + i).keypress(function () {
+            updateNumberRegister()
+        })
         $('#TIME_FROM' + i).datetimepicker({
-            format: FORMAT_DATE_TIME,
-            formatDate: FORMAT_DATE_TIME,
+            format: FORMAT_DATE,
+            formatDate: FORMAT_DATE,
             onShow: function (ct, $input) {
                 timeFromOnShow($input, this)
             },
@@ -273,8 +276,8 @@ $(function () {
             validateTime(getRowIndexFromId($(this).attr('id')))
         })
         $('#TIME_TO' + i).datetimepicker({
-            format: FORMAT_DATE_TIME,
-            formatDate: FORMAT_DATE_TIME,
+            format: FORMAT_DATE,
+            formatDate: FORMAT_DATE,
             onShow: function (ct, $input) {
                 timeToOnShow($input, this)
             },
@@ -319,49 +322,7 @@ $(function () {
     });
 
     $("#contextMenu li a").click(function (e) {
-        var index = $('#tableInfo tr').length + 1;
-        var row = $('<tr/>', {
-            class: 'row-info'
-        });
-
-        var col = $('<td/>', {
-            text: (index),
-            class: 'text-center'
-        })
-        row.append(col);
-        row.append(addTd("FULLNAME" + index));
-        row.append(addTd("CODE" + index));
-        row.append(addTdTime("TIME_FROM" + index));
-        row.append(addTdTime("TIME_TO" + index));
-        row.append(addTdNumber("TOTAL" + index));
-        row.append(addTdReason("REASON" + index));
-        var name_page = $('input[name="formName"]').val();
-        if (name_page == "GA_35") {
-            var col4 = $("<td/>", {
-                class: 'text-center p-2'
-            });
-            var input4 = $('<input/>', {
-                type: 'checkbox',
-                id: "SPEACIAL_LEAVE" + index,
-                name: "SPEACIAL_LEAVE" + index,
-            });
-            col4.append(input4);
-            row.append(col4);
-        }
-        row.append(addTd('REMARK' + index));
-
-        var rowDelete = $('<td/>');
-        var btnXoa = $('<button/>', {
-            text: 'Xóa',
-            type: 'button',
-            class: 'btnXoa btn btn-danger',
-            click: function () {
-                deleteRow(this)
-            }
-        });
-        rowDelete.append(btnXoa);
-        row.append(rowDelete);
-        $('#tableInfo').append(row);
+        addRow();
     });
     $(".btnXoa").on('click', function () {
         deleteRow(this);
@@ -407,13 +368,13 @@ $(function () {
 
         }
     });
-    $("#submitForm").validate({
 
-        //rules: {
-        //    "TICKET.DEPT_MANAGER": {
-        //        valueNotEquals: '0'
-        //    }
-        //},
+    $("#submitForm").validate({
+        rules: {
+            "TICKET.DEPT_MANAGER": {
+                valueNotEquals: '0'
+            }
+        },
         submitHandler: function (form) {
             var status = $('#status').val();
             if (status == 'reject') {
@@ -440,6 +401,118 @@ $(function () {
             }
         }
     });
+
 })
+function addRow() {
+    var index = $('#tableInfo tr').length + 1;
+    var row = $('<tr/>', {
+        class: 'row-info'
+    });
 
+    var col = $('<td/>', {
+        text: (index),
+        class: 'text-center'
+    })
+    row.append(col);
+    row.append(addTd("FULLNAME" + index));
+    row.append(addTd("CODE" + index));
+    row.append(addTdTime("TIME_FROM" + index));
+    row.append(addTdTime("TIME_TO" + index));
+    row.append(addTdNumber("TOTAL" + index));
+    row.append(addTdReason("REASON" + index));
+    var name_page = $('input[name="formName"]').val();
+    if (name_page == "GA_35") {
+        var col4 = $("<td/>", {
+            class: 'text-center p-2'
+        });
+        var input4 = $('<input/>', {
+            type: 'checkbox',
+            id: "SPEACIAL_LEAVE" + index,
+            name: "SPEACIAL_LEAVE" + index,
+        });
+        col4.append(input4);
+        row.append(col4);
+    }
+    row.append(addTd('REMARK' + index));
 
+    var rowDelete = $('<td/>');
+    var btnXoa = $('<button/>', {
+        text: 'Xóa',
+        type: 'button',
+        class: 'btnXoa btn btn-danger',
+        click: function () {
+            deleteRow(this)
+        }
+    });
+    rowDelete.append(btnXoa);
+    row.append(rowDelete);
+    $('#tableInfo').append(row);
+}
+
+function generateTable(e) {
+    $(e).html(
+        '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
+    );
+
+    var data = $('textarea[name=excel_data]').val();
+    var rows = data.split("\n");
+    var firstIndexToAdd = 0
+    $('.row-info').each(function (rowIndex) {
+        rowIndex++
+        var fullname = $('#FULLNAME' + rowIndex).val()
+        var code = $('#CODE' + rowIndex).val()
+        if (fullname == '' && code == '') {
+            firstIndexToAdd = rowIndex
+            return false
+        }
+    });
+    var totalRow = firstIndexToAdd + rows.length - 1
+    var y = 0;
+    for (var index = firstIndexToAdd; index <= totalRow; index++) {
+
+        var cells = rows[y].split("\t");
+        if ($('.row-info').length < index) {
+            addRow()
+        }
+        if (cells.length > 1) {
+            $('#FULLNAME' + index).val(cells[1])
+        }
+        if (cells.length > 2) {
+            $('#CODE' + index).val(cells[2])
+        }
+        if (cells.length > 3) {
+            $('#TIME_FROM' + index).val(cells[3])
+        }
+        if (cells.length > 4) {
+            $('#TIME_TO' + index).val(cells[4])
+        }
+        if (cells.length > 5) {
+            $('#TOTAL' + index).val(cells[5])
+        }
+        if (cells.length > 6) {
+            $('#REASON' + index).val(cells[6])
+        }
+        if (cells.length > 7) {
+            if (cells[7] != '')
+                $('#SPEACIAL_LEAVE' + index).prop('checked',true)
+        }
+        y++
+    }
+    updateNumberRegister()
+    
+    $(e).html(
+        'Paste dữ liệu vào bảng bên dưới'
+    );
+}
+function updateNumberRegister() {
+    var total = 0
+    $('.row-info').each(function (rowIndex) {
+        rowIndex++
+        var fullname = $('#FULLNAME' + rowIndex).val()
+        var code = $('#CODE' + rowIndex).val()
+        if (fullname != '' && code != '') {
+            total ++ 
+        }
+    });
+    $('#NUMBER_REGISTER').text(total)
+}

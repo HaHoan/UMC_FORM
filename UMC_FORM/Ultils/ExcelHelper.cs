@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using UMC_FORM.Business;
 using UMC_FORM.Models.GA;
 
 namespace UMC_FORM.Ultils
@@ -42,59 +43,94 @@ namespace UMC_FORM.Ultils
             try
             {
                 worksheet.Cells.Style.WrapText = true;
-                worksheet.Cells["A1"].Value = "ĐĂNG KÝ NGHỈ CHO NHIỀU NHÂN VIÊN";
-                worksheet.Cells["A1:H1"].Merge = true;
-                worksheet.Cells["A1:H1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Cells["B3"].Value = "Tháng";
-                worksheet.Cells["B4"].Value = "Bộ phận";
-                worksheet.Cells["C4"].Value = ticket.DEPT;
-                worksheet.Cells["E3"].Value = "Loại ngày nghỉ : AL, SL, NP, AL3, KT, BH";
-                worksheet.Cells["E3:H3"].Merge = true;
-                worksheet.Cells["E4"].Value = "Nửa ngày : TRUE, FALSE";
-                worksheet.Cells["E4:H4"].Merge = true;
+              
+                worksheet.Cells["A1"].Value = ticket.TITLE.ToUpper();
+                worksheet.Cells["A1:I1"].Style.Font.Size = 16;
+                worksheet.Cells["A1:I1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:I1"].Merge = true;
+                worksheet.Cells["A1:I1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["B2"].Value = "Bộ phận đăng ký:" + ticket.DEPT;
+                worksheet.Cells["B2:I2"].Style.Font.Bold = true;
+                worksheet.Cells["B2:I2"].Merge = true;
+                worksheet.Cells["B3"].Value = "Ngày đăng ký:" + ticket.DATE_REGISTER.ToString("dd/MM/yyyy");
 
-                worksheet.Cells["A6"].Value = "STT";
-                worksheet.Cells["B6"].Value = "Mã nhân viên";
-                worksheet.Cells["C6"].Value = "Họ tên";
-                worksheet.Cells["D6"].Value = "Bộ phận";
-                worksheet.Cells["E6"].Value = "Ngày";
-                worksheet.Cells["F6"].Value = "Loại ngày nghỉ";
-                worksheet.Cells["G6"].Value = "Nửa ngày";
-                worksheet.Cells["H6"].Value = "Lý do";
+                worksheet.Cells["B3:I3"].Merge = true;
+                worksheet.Cells["B3:I3"].Style.Font.Bold = true;
 
-                using (var range = worksheet.Cells["A6:H6"])
+                worksheet.Cells["B4"].Value = "Số người đăng ký:" + ticket.NUMBER_REGISTER;
+                worksheet.Cells["B4:I4"].Merge = true;
+                worksheet.Cells["B4:I4"].Style.Font.Bold = true;
+
+                worksheet.Cells["A5"].Value = "STT";
+                worksheet.Cells["A5"].Style.Font.Bold = true;
+                worksheet.Cells["B5"].Value = "Họ tên";
+                worksheet.Cells["B5"].Style.Font.Bold = true;
+                worksheet.Cells["C5"].Value = "Mã nhân viên";
+                worksheet.Cells["C5"].Style.Font.Bold = true;
+                worksheet.Cells["D5"].Value = "From";
+                worksheet.Cells["D5"].Style.Font.Bold = true;
+                worksheet.Cells["E5"].Value = "To";
+                worksheet.Cells["E5"].Style.Font.Bold = true;
+                worksheet.Cells["F5"].Value = "Tổng";
+                worksheet.Cells["F5"].Style.Font.Bold = true;
+                worksheet.Cells["G5"].Value = "Lý do nghỉ";
+                worksheet.Cells["G5"].Style.Font.Bold = true;
+                if (ticket.FORM_NAME == Constant.GA_PAID_LEAVE_ID)
+                {
+                    worksheet.Cells["H5"].Value = "Nghỉ đặc biệt";
+                    worksheet.Cells["H5"].Style.Font.Bold = true;
+                }
+              
+
+                using (var range = worksheet.Cells["A5:H5"])
                 {
                     // Set PatternType
-                    range.Style.Fill.PatternType = ExcelFillStyle.DarkGray;
+                    //range.Style.Fill.PatternType = ExcelFillStyle.DarkGray;
                     // Set Màu cho Background
-                    range.Style.Fill.BackgroundColor.SetColor(Color.Yellow);
+                    //range.Style.Fill.BackgroundColor.SetColor(Color.Yellow);
                     // Canh giữa cho các text
                     range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    range.AutoFitColumns();
+                    //range.AutoFitColumns();
 
                 }
-                int i = 7;
+                int i = 6;
                 foreach (var item in ticket.GA_LEAVE_FORM_ITEMs)
                 {
-                    worksheet.Cells["A" + i].Value = (i-6).ToString();
-                    worksheet.Cells["B" + i].Value = item.CODE;
-                    worksheet.Cells["C" + i].Value = item.FULLNAME;
-                    worksheet.Cells["D" + i].Value = ticket.DEPT;
-                    worksheet.Cells["E" + i].Value = "";
-                    worksheet.Cells["F" + i].Value = "";
-                    worksheet.Cells["G" + i].Value = item.TOTAL < 1 ? "TRUE" : "FALSE";
-                    worksheet.Cells["H" + i].Value = item.REASON;
+                    worksheet.Cells["A" + i].Value = (i-5).ToString();
+                    worksheet.Cells["B" + i].Value = item.FULLNAME;
+                    worksheet.Cells["C" + i].Value = item.CODE;
+                    worksheet.Cells["C" + i].Style.Numberformat.Format = "####0";
+                    worksheet.Cells["D" + i].Value = item.TIME_FROM;
+                    worksheet.Cells["D" + i].Style.Numberformat.Format = "dd/MM/yyyy";
+                    worksheet.Cells["E" + i].Value = item.TIME_TO.ToString("dd/MM/yyyy");
+                    worksheet.Cells["E" + i].Style.Numberformat.Format = "dd/MM/yyyy";
+                    worksheet.Cells["F" + i].Value = item.TOTAL;
+                    worksheet.Cells["G" + i].Value = item.REASON;
+                    if(ticket.FORM_NAME == Constant.GA_PAID_LEAVE_ID && item.SPEACIAL_LEAVE)
+                    {
+                        worksheet.Cells["H" + i].Value = "√";
+                    }
+                    worksheet.Cells["A" + i+":H" + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells["A" + i + ":H" + i].AutoFitColumns();
                     i++;
                 }
 
-                worksheet.Cells["A6:H" + i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["A6:H" + i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["A6:H" + i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["A6:H" + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["A6:H" + i].Style.Border.Top.Color.SetColor(Color.Black);
-                worksheet.Cells["A6:H" + i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                worksheet.Cells["A6:H" + i].Style.Border.Left.Color.SetColor(Color.Black);
-                worksheet.Cells["A6:H" + i].Style.Border.Right.Color.SetColor(Color.Black);
+                worksheet.Cells["A5:H" + i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["A5:H" + i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["A5:H" + i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["A5:H" + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["A5:H" + i].Style.Border.Top.Color.SetColor(Color.Black);
+                worksheet.Cells["A5:H" + i].Style.Border.Bottom.Color.SetColor(Color.Black);
+                worksheet.Cells["A5:H" + i].Style.Border.Left.Color.SetColor(Color.Black);
+                worksheet.Cells["A5:H" + i].Style.Border.Right.Color.SetColor(Color.Black);
+                worksheet.Column(1).Width = 5;
+                worksheet.Column(2).Width = 20;
+                worksheet.Column(3).Width = 10;
+                worksheet.Column(4).Width = 15;
+                worksheet.Column(5).Width = 15;
+                worksheet.Column(6).Width = 5;
+                worksheet.Column(7).Width = 30;
+                worksheet.Column(8).Width = 15;
                 return 1;
             }
             catch (Exception e)
