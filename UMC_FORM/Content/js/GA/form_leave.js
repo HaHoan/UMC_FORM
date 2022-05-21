@@ -30,9 +30,32 @@ function updateSTT() {
 }
 function deleteRow(e) {
     $(e).parent().parent().remove();
-    updateSTT();
+    var index = 1;
+    $('#tableInfo tr').each(function (rowIndex) {
+        var stt = $('#tableInfo tr:eq(' + rowIndex + ') td:eq(0)').text();
+        if (stt) {
+            $('#tableInfo tr:eq(' + rowIndex + ') td:eq(0)').text(index);
+            changeIdWhenDelete(rowIndex, index, 'FULLNAME', 1)
+            changeIdWhenDelete(rowIndex, index, 'CODE', 2)
+            changeIdWhenDelete(rowIndex, index, 'TIME_FROM', 3)
+            changeIdWhenDelete(rowIndex, index, 'TIME_TO', 4)
+            changeIdWhenDelete(rowIndex, index, 'TOTAL', 5)
+            changeIdWhenDelete(rowIndex, index, 'REASON', 6)
+            changeIdWhenDelete(rowIndex, index, 'REMARK', 7)
+            changeIdWhenDelete(rowIndex, index, 'SPEACIAL_LEAVE', 8)
+            index++;
+        }
+      
+    });
 }
+function changeIdWhenDelete(rowIndex, index, name, indexInTd) {
+    try {
+        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('id', name + index)
+        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') span').attr('id', name + index + "_ERROR")
+    } catch (e) {
 
+    }
+}
 function updateleaveItems() {
     leaveItems = []
     var checkTime = 0;
@@ -459,9 +482,20 @@ function generateTable(e) {
     var rows = data.split("\n");
     var firstIndexToAdd = 0
     $('.row-info').each(function (rowIndex) {
+        var cols = $(this).find('td')
+        var fullname = ''
+        var code = ''
+        cols.each(function (index, value) {
+            if (index == 1) {
+                var input = $(this).find('input')
+                fullname = input.val()
+            } else if (index == 2) {
+                var input = $(this).find('input')
+                code = input.val()
+            }
+        })
         rowIndex++
-        var fullname = $('#FULLNAME' + rowIndex).val()
-        var code = $('#CODE' + rowIndex).val()
+      
         if (fullname == '' && code == '') {
             firstIndexToAdd = rowIndex
             return false
