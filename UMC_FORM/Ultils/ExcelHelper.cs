@@ -64,9 +64,9 @@ namespace UMC_FORM.Ultils
                 worksheet.Cells["B5"].Style.Font.Bold = true;
                 worksheet.Cells["C5"].Value = "Mã nhân viên";
                 worksheet.Cells["C5"].Style.Font.Bold = true;
-                worksheet.Cells["D5"].Value = "From";
+                worksheet.Cells["D5"].Value = "Từ ngày";
                 worksheet.Cells["D5"].Style.Font.Bold = true;
-                worksheet.Cells["E5"].Value = "To";
+                worksheet.Cells["E5"].Value = "Đến ngày";
                 worksheet.Cells["E5"].Style.Font.Bold = true;
                 worksheet.Cells["F5"].Value = "Tổng";
                 worksheet.Cells["F5"].Style.Font.Bold = true;

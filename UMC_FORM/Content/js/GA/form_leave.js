@@ -47,6 +47,7 @@ function deleteRow(e) {
         }
       
     });
+    updateNumberRegister()
 }
 function changeIdWhenDelete(rowIndex, index, name, indexInTd) {
     try {
