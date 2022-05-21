@@ -51,6 +51,9 @@ function deleteRow(e) {
 function changeIdWhenDelete(rowIndex, index, name, indexInTd) {
     try {
         $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('id', name + index)
+        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('name', name + index)
+        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') textarea').attr('id', name + index)
+        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') textarea').attr('name', name + index)
         $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') span').attr('id', name + index + "_ERROR")
     } catch (e) {
 
@@ -444,6 +447,7 @@ function addRow() {
     row.append(addTdTime("TIME_TO" + index));
     row.append(addTdNumber("TOTAL" + index));
     row.append(addTdReason("REASON" + index));
+    row.append(addTd('REMARK' + index));
     var name_page = $('input[name="formName"]').val();
     if (name_page == "GA_35") {
         var col4 = $("<td/>", {
@@ -457,7 +461,7 @@ function addRow() {
         col4.append(input4);
         row.append(col4);
     }
-    row.append(addTd('REMARK' + index));
+ 
 
     var rowDelete = $('<td/>');
     var btnXoa = $('<button/>', {
@@ -501,6 +505,10 @@ function generateTable(e) {
             return false
         }
     });
+    if (firstIndexToAdd == 0) {
+        firstIndexToAdd = $('.row-info').length
+    }
+        
     var totalRow = firstIndexToAdd + rows.length - 1
     var y = 0;
     for (var index = firstIndexToAdd; index <= totalRow; index++) {
