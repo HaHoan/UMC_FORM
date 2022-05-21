@@ -506,7 +506,7 @@ function generateTable(e) {
         }
     });
     if (firstIndexToAdd == 0) {
-        firstIndexToAdd = $('.row-info').length
+        firstIndexToAdd = $('.row-info').length + 1
     }
         
     var totalRow = firstIndexToAdd + rows.length - 1
