@@ -158,36 +158,39 @@
                                                 for (int i = 1; i <= 5; i++)
                                                 {
 
-                                                    <tr class="row-info">
-                                                        <td class="text-center">@(i)</td>
-                                                        <td>
-                                                            <input class="form-input inputDefault" id=@("FULLNAME" + i) />
-                                                            <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) />
-                                                            <span class="error" id=@("CODE"+i + "_ERROR")></span>
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete="off" />
-                                                            <span class="error" id=@("TIME_FROM"+i + "_ERROR")></span>
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i) autocomplete="off" />
-                                                            <span class="error" id=@("TIME_TO"+i+"_ERROR")></span>
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-input type_number inputDefault" name=@("TOTAL" + i) id=@("TOTAL" + i) />
-                                                            <span class="error" id=@("TOTAL"+i+"_ERROR")></span>
-                                                        </td>
-                                                        <td>
-                                                            <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
-                                                            <span class="error" id=@("REASON"+i + "_ERROR")></span>
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-input  inputDefault" id=@("REMARK" + i) />
-                                                        </td>
-                                                    </tr>
+                                            <tr class="row-info">
+                                                <td class="text-center">@(i)</td>
+                                                <td>
+                                                    <input class="form-input inputDefault" id=@("FULLNAME" + i) />
+                                                    <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) />
+                                                    <span class="error" id=@("CODE"+i + "_ERROR")></span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete="off" />
+                                                    <span class="error" id=@("TIME_FROM"+i + "_ERROR")></span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i) autocomplete="off" />
+                                                    <span class="error" id=@("TIME_TO"+i+"_ERROR")></span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-input type_number inputDefault" name=@("TOTAL" + i) id=@("TOTAL" + i) />
+                                                    <span class="error" id=@("TOTAL"+i+"_ERROR")></span>
+                                                </td>
+                                                <td>
+                                                    <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
+                                                    <span class="error" id=@("REASON"+i + "_ERROR")></span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-input  inputDefault" id=@("REMARK" + i) />
+                                                </td>
+                                                <td>
+                                                    <button class="btnXoa btn btn-danger" type="button" onclick="deleteRow(this)"> Xóa</button>
+                                                </td>
+                                            </tr>
 
                                                 }
                                             }

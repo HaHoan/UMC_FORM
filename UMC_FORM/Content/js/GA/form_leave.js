@@ -71,7 +71,8 @@ function updateleaveItems() {
         }
         var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked")
         var remark = $('#REMARK' + index).val()
-        if (fullname != '') {
+
+        if (!CheckNullUndefined(fullname) && !CheckNullUndefined(time_from) && !CheckNullUndefined(time_to)) {
             var obj = {
                 NO: index,
                 FULLNAME: fullname,
@@ -493,7 +494,12 @@ function generateTable(e) {
             $('#REASON' + index).val(cells[6])
         }
         if (cells.length > 7) {
-            if (cells[7] != '')
+            if (cells[7] != '') {
+                $('#REMARK' + index).val(cells[7])
+            }
+        }
+        if (cells.length > 8) {
+            if (cells[8] != '')
                 $('#SPEACIAL_LEAVE' + index).prop('checked',true)
         }
         y++

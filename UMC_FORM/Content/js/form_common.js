@@ -259,3 +259,6 @@ function convertStringToCorrectFormat(dateStr) {
     if (month.length < 2) month = '0' + month
     return date + '/' + month + '/' + year
 }
+function CheckNullUndefined(value) {
+    return typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null;
+}

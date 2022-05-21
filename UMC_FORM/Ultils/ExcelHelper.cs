@@ -53,14 +53,11 @@ namespace UMC_FORM.Ultils
                 worksheet.Cells["B2:I2"].Style.Font.Bold = true;
                 worksheet.Cells["B2:I2"].Merge = true;
                 worksheet.Cells["B3"].Value = "Ngày đăng ký:" + ticket.DATE_REGISTER.ToString("dd/MM/yyyy");
-
                 worksheet.Cells["B3:I3"].Merge = true;
                 worksheet.Cells["B3:I3"].Style.Font.Bold = true;
-
                 worksheet.Cells["B4"].Value = "Số người đăng ký:" + ticket.NUMBER_REGISTER;
                 worksheet.Cells["B4:I4"].Merge = true;
                 worksheet.Cells["B4:I4"].Style.Font.Bold = true;
-
                 worksheet.Cells["A5"].Value = "STT";
                 worksheet.Cells["A5"].Style.Font.Bold = true;
                 worksheet.Cells["B5"].Value = "Họ tên";
@@ -75,14 +72,16 @@ namespace UMC_FORM.Ultils
                 worksheet.Cells["F5"].Style.Font.Bold = true;
                 worksheet.Cells["G5"].Value = "Lý do nghỉ";
                 worksheet.Cells["G5"].Style.Font.Bold = true;
+                worksheet.Cells["H5"].Value = "Rmks";
+                worksheet.Cells["H5"].Style.Font.Bold = true;
+
                 if (ticket.FORM_NAME == Constant.GA_PAID_LEAVE_ID)
                 {
-                    worksheet.Cells["H5"].Value = "Nghỉ đặc biệt";
-                    worksheet.Cells["H5"].Style.Font.Bold = true;
+                    worksheet.Cells["I5"].Value = "Nghỉ đặc biệt";
+                    worksheet.Cells["I5"].Style.Font.Bold = true;
                 }
               
-
-                using (var range = worksheet.Cells["A5:H5"])
+                using (var range = worksheet.Cells["A5:I5"])
                 {
                     // Set PatternType
                     //range.Style.Fill.PatternType = ExcelFillStyle.DarkGray;
@@ -106,23 +105,24 @@ namespace UMC_FORM.Ultils
                     worksheet.Cells["E" + i].Style.Numberformat.Format = "dd/MM/yyyy";
                     worksheet.Cells["F" + i].Value = item.TOTAL;
                     worksheet.Cells["G" + i].Value = item.REASON;
+                    worksheet.Cells["H" + i].Value = item.REMARK;
                     if(ticket.FORM_NAME == Constant.GA_PAID_LEAVE_ID && item.SPEACIAL_LEAVE)
                     {
-                        worksheet.Cells["H" + i].Value = "√";
+                        worksheet.Cells["I" + i].Value = "√";
                     }
-                    worksheet.Cells["A" + i+":H" + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    worksheet.Cells["A" + i + ":H" + i].AutoFitColumns();
+                    worksheet.Cells["A" + i+":I" + i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells["A" + i + ":I" + i].AutoFitColumns();
                     i++;
                 }
 
-                worksheet.Cells["A5:H" + i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["A5:H" + i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["A5:H" + i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["A5:H" + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["A5:H" + i].Style.Border.Top.Color.SetColor(Color.Black);
-                worksheet.Cells["A5:H" + i].Style.Border.Bottom.Color.SetColor(Color.Black);
-                worksheet.Cells["A5:H" + i].Style.Border.Left.Color.SetColor(Color.Black);
-                worksheet.Cells["A5:H" + i].Style.Border.Right.Color.SetColor(Color.Black);
+                worksheet.Cells["A5:I" + i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["A5:I" + i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["A5:I" + i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["A5:I" + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["A5:I" + i].Style.Border.Top.Color.SetColor(Color.Black);
+                worksheet.Cells["A5:I" + i].Style.Border.Bottom.Color.SetColor(Color.Black);
+                worksheet.Cells["A5:I" + i].Style.Border.Left.Color.SetColor(Color.Black);
+                worksheet.Cells["A5:I" + i].Style.Border.Right.Color.SetColor(Color.Black);
                 worksheet.Column(1).Width = 5;
                 worksheet.Column(2).Width = 20;
                 worksheet.Column(3).Width = 10;
