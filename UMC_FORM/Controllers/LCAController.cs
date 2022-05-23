@@ -17,7 +17,6 @@ using UMC_FORM.Models.LCA;
 namespace UMC_FORM.Controllers
 {
     [CustomAuthFilter]
-    [CustomAuthorize("Normal", "ReadOnly")]
     [NoCache]
     public class LCAController : Controller
     {
@@ -449,7 +448,7 @@ namespace UMC_FORM.Controllers
 
                     modelDetail.PERMISSION = new List<string>();
                     modelDetail.SUBMITS = new List<string>();
-                    if (_sess.ROLE_ID == ROLE.CanEdit)
+                    if (_sess.ROLE_ID == ROLE.CanEdit || _sess.ROLE_ID == ROLE.Approval)
                     {
                         var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (modelDetail.SUMARY.PROCEDURE_INDEX + 1).ToString()
                     && m.PROCESS == modelDetail.SUMARY.PROCESS_ID).ToList();
