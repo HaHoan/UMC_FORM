@@ -549,6 +549,12 @@ namespace UMC_FORM.Controllers
                         if (formDb == null) return Json(new { result = STATUS.ERROR, message = "Ticket không tồn tại" }, JsonRequestBehavior.AllowGet);
                         var form = formDb.CloneObject() as GA_LEAVE_FORM;
                         _sess = Session["user"] as Form_User;
+                        var result = UpdateFormProceduce(Constant.GA_LEAVE_FORM, db, ticket.TICKET, ticket.DEPT_MANAGER, form.PROCEDURE_INDEX + 1);
+                        if (!string.IsNullOrEmpty(result))
+                        {
+                            transaction.Rollback();
+                            return Json(new { result = STATUS.ERROR, message = result }, JsonRequestBehavior.AllowGet);
+                        }
                         var summary = db.Form_Summary.Where(m => m.TICKET == formDb.TICKET).FirstOrDefault();
 
                         // để lưu lại bước sẽ quay lại sau khi luồng reject được thực hiện xong
@@ -682,7 +688,7 @@ namespace UMC_FORM.Controllers
                     station.APPROVE_DATE = lca.UPD_DATE;
                     station.APPROVER = lca.SUBMIT_USER;
                     station.COMPANY = "UMCVN";
-                    var user = db.Form_User.Where(m => m.NAME == station.APPROVER).FirstOrDefault();
+                    var user = db.Form_User.Where(m => m.CODE == station.APPROVER).FirstOrDefault();
                     if (user != null)
                     {
                         station.SIGNATURE = user.SIGNATURE;
