@@ -31,7 +31,13 @@ namespace UMC_FORM.Models.GA
         public string DEPT_MANAGER { get; set; }
 
         [NotMapped]
+        public Form_User DEPT_MANAGER_OBJECT { get; set; }
+
+        [NotMapped]
         public string GROUP_LEADER { get; set; }
+
+        [NotMapped]
+        public Form_User GROUP_LEADER_OBJECT { get; set; }
 
         public int PROCEDURE_INDEX { get; set; }
 

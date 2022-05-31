@@ -114,6 +114,31 @@
                                     </div>
                                 </div>
                                 <br>
+                                if (Model.PERMISSION.Contains(PERMISSION.EDIT_INFO) && ViewBag.listGroupLeader != null)
+                                {
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label class="font-weight-bold lang" key="group_leader">Name</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <select class="custom-select" id="GROUP_LEADER" name="GROUP_LEADER">
+                                                <option value="0">Chọn trưởng nhóm có quyền approve</option>
+                                                @foreach (var group_leader in ViewBag.listGroupLeader)
+                                                {
+                                                    if (Model.TICKET.GROUP_LEADER_OBJECT != null && Model.TICKET.GROUP_LEADER_OBJECT.CODE == group_leader.CODE)
+                                                    {
+                                                        <option value="@group_leader.CODE" selected>@group_leader.NAME</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@group_leader.CODE">@group_leader.NAME</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br />
+                                }
                                 if (Model.PERMISSION.Contains(PERMISSION.ADD_DEPT_MANAGER) && ViewBag.listManager != null)
                                 {
                                     <div class="row">
@@ -126,7 +151,7 @@
                                                 <option value="0">Chọn trưởng phòng có quyền approve</option>
                                                 @foreach (var mng in ViewBag.listManager)
                                                 {
-                                                    if (Model.DEPT_MANAGER != null && Model.DEPT_MANAGER.CODE == mng.CODE)
+                                                    if (Model.TICKET.DEPT_MANAGER_OBJECT != null && Model.TICKET.DEPT_MANAGER_OBJECT.CODE == mng.CODE)
                                                     {
                                                         <option value="@mng.CODE" selected>@mng.NAME</option>
                                                     }
@@ -142,7 +167,8 @@
                                     </div>
                                     <br />
                                 }
-                              
+
+
                                 <div class="row">
                                     <div class="col-12">
                                         <p style="font-style:italic;font-weight:bold;">

@@ -539,12 +539,7 @@ namespace UMC_FORM.Controllers
                         if (formDb == null) return Json(new { result = STATUS.ERROR, message = "Ticket không tồn tại" }, JsonRequestBehavior.AllowGet);
                         var form = formDb.CloneObject() as GA_LEAVE_FORM;
                         _sess = Session["user"] as Form_User;
-                        var result = UpdateFormProceduce(Constant.GA_LEAVE_FORM, db, ticket.TICKET, ticket.DEPT_MANAGER, form.PROCEDURE_INDEX + 1);
-                        if (!string.IsNullOrEmpty(result))
-                        {
-                            transaction.Rollback();
-                            return Json(new { result = STATUS.ERROR, message = result }, JsonRequestBehavior.AllowGet);
-                        }
+                        
                         var summary = db.Form_Summary.Where(m => m.TICKET == formDb.TICKET).FirstOrDefault();
 
                         // để lưu lại bước sẽ quay lại sau khi luồng reject được thực hiện xong
@@ -627,9 +622,13 @@ namespace UMC_FORM.Controllers
                 var deptMng = db.Form_Procedures.Where(m => m.TICKET == ticket && m.STATION_NO == "DEPT_MANAGER").FirstOrDefault();
                 if(deptMng != null && !string.IsNullOrEmpty(deptMng.APPROVAL_NAME))
                 {
-                    modelDetail.DEPT_MANAGER = UserRepository.GetUser(deptMng.APPROVAL_NAME);
+                    modelDetail.TICKET.DEPT_MANAGER_OBJECT = UserRepository.GetUser(deptMng.APPROVAL_NAME);
                 }
-                
+                var groupLeader = db.Form_Procedures.Where(m => m.TICKET == ticket && m.STATION_NO == "GROUP_LEADER").FirstOrDefault();
+                if(groupLeader != null && !string.IsNullOrEmpty(groupLeader.APPROVAL_NAME))
+                {
+                    modelDetail.TICKET.GROUP_LEADER_OBJECT = UserRepository.GetUser(groupLeader.APPROVAL_NAME);
+                }
                 modelDetail.PERMISSION = new List<string>();
 
                 modelDetail.SUBMITS = new List<string>();
