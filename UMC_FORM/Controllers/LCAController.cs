@@ -28,7 +28,7 @@ namespace UMC_FORM.Controllers
             using (var db = new DataContext())
             {
                 _sess = Session["user"] as Form_User;
-                ViewBag.listManager = db.Form_User.Where(m => m.POSITION == POSITION.MANAGER && m.DEPT == _sess.DEPT).ToList();
+                ViewBag.listManager = UserRepository.GetManagers(_sess.DEPT);
                 return View();
             }
 

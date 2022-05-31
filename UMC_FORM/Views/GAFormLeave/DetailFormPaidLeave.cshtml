@@ -126,7 +126,15 @@
                                                 <option value="0">Chọn trưởng phòng có quyền approve</option>
                                                 @foreach (var mng in ViewBag.listManager)
                                                 {
-                                                    <option value="@mng.CODE">@mng.NAME</option>
+                                                    if (Model.DEPT_MANAGER != null && Model.DEPT_MANAGER.CODE == mng.CODE)
+                                                    {
+                                                        <option value="@mng.CODE" selected>@mng.NAME</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@mng.CODE">@mng.NAME</option>
+                                                    }
+
                                                 }
                                             </select>
 

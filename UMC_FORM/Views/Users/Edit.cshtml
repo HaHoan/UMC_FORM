@@ -1,6 +1,6 @@
 ﻿@model UMC_FORM.Models.Form_User
 @using UMC_FORM.Models
-@using UMC_FORM.Business
+@using UMC_FORM.Ultils
 
 @{
     ViewBag.Title = "Edit";
@@ -49,62 +49,6 @@
                                 }
                             </select>
                         </div>
-                        <label>Chọn chức vụ</label>
-                        <select class="form-control" name="POSITION">
-                            @{
-                                if (Model.POSITION == 0)
-                                {
-                                    <option value="0" selected>STAFF</option>
-                                }
-                                else
-                                {
-                                    <option value="0">STAFF</option>
-                                }
-                                if (Model.POSITION == POSITION.MANAGER)
-                                {
-                                    <option value="@POSITION.MANAGER" selected>TRƯỞNG BỘ PHẬN</option>
-                                }
-                                else
-                                {
-                                    <option value="@POSITION.MANAGER">TRƯỞNG BỘ PHẬN</option>
-                                }
-                                if (Model.POSITION == POSITION.FM)
-                                {
-                                    <option value="@POSITION.FM" selected>GIÁM ĐỐC NHÀ MÁY</option>
-                                }
-                                else
-                                {
-                                    <option value="@POSITION.FM">GIÁM ĐỐC NHÀ MÁY</option>
-                                }
-                                if (Model.POSITION == POSITION.GD)
-                                {
-                                    <option value="@POSITION.GD" selected>TỔNG GIÁM ĐỐC</option>
-                                }
-                                else
-                                {
-                                    <option value="@POSITION.GD">TỔNG GIÁM ĐỐC</option>
-                                }
-                                if (Model.POSITION == POSITION.SALARY_GROUP)
-                                {
-                                    <option value="@POSITION.SALARY_GROUP" selected> NHÓM TÍNH LƯƠNG </option>
-                                }
-                                else
-                                {
-                                    <option value="@POSITION.SALARY_GROUP"> NHÓM TÍNH LƯƠNG </option>
-                                }
-                                if (Model.POSITION == POSITION.GROUP_LEADER)
-                                {
-                                    <option value="@POSITION.GROUP_LEADER" selected> TRƯỞNG NHÓM</option>
-                                }
-                                else
-                                {
-                                    <option value="@POSITION.GROUP_LEADER"> TRƯỞNG NHÓM</option>
-                                }
-
-                            }
-
-
-                        </select>
 
                         <div class="form-group mt-2">
                             <label for="name">Sign</label>
@@ -118,6 +62,34 @@
                             <label for="exampleInputPassword1">Password</label>
                             <input type="password" name="PASSWORD" class="form-control" id="exampleInputPassword1" value="@Model.PASSWORD">
                         </div>
+                        <div class="btn-group">
+                            <button type="button" class="form-control dropdown-toggle" data-toggle="dropdown">
+                                Chọn chức vụ
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                @if (ViewBag.positions != null)
+                                {
+                                    foreach (var position in ViewBag.positions)
+                                    {
+                                        <li class="checkbox-in-ddl">
+                                            <label>
+                                                @if (Model.POSTION_LIST.Where(m => m.POSITION_CODE == position.POSITION_CODE).FirstOrDefault() != null)
+                                                {
+                                                    <input type="checkbox" value="@position.POSITION_CODE" checked />
+                                                }
+                                                else
+                                                { <input type="checkbox" value="@position.POSITION_CODE" />}
+
+                                                <span>@position.NAME.ToLower()</span>
+                                            </label>
+                                        </li>
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                        <input type="hidden" name="POSITIONs" id="POSITIONs" />
+                        <br />
                         <div class="form-group">
                             <label for="name">Role</label>
                             <select class="form-control" aria-label="Default select example" name="ROLE_ID">
@@ -143,3 +115,5 @@
     </div>
 </div>
 
+
+@Scripts.Render(Url.ContentVersioned("~/Content/js/users", "js"))

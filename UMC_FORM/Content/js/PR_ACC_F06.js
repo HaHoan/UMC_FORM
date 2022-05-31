@@ -25,6 +25,14 @@ var listStep = [];
 
 var current_step = 0;
 $(function () {
+    $('li').on('click', function (e) {
+        if ($(this).hasClass('checkbox-in-ddl') || $(this).hasClass('dropdown-header')) {
+            e.stopPropagation(); // <-------- POINT :D
+        }
+    });
+
+
+
     $('#process').keyup(function (e) {
         if (e.keyCode == 13) {
             $.ajax({
@@ -198,6 +206,7 @@ $(function () {
         addPermissionRow($('#permission').val(), $('#dept-permission').val())
     })
 });
+
 function resetList() {
     $('#listUser .form-check-input').prop('checked', false);
     var step = users.findIndex(obj => obj.index == current_step);

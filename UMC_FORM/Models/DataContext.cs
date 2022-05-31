@@ -22,6 +22,7 @@ namespace UMC_FORM.Models
         public virtual DbSet<Form_Role> Form_Roles { get; set; }
         public virtual DbSet<Form_Stations> Form_Stations { get; set; }
         public virtual DbSet<Form_User> Form_User { get; set; }
+        public virtual DbSet<Form_Position> Form_Position { get; set; }
         public virtual DbSet<LCA_FILE> LCA_FILE { get; set; }
         public virtual DbSet<LCA_FORM_01> LCA_FORM_01 { get; set; }
         public virtual DbSet<LCA_PERMISSION> LCA_PERMISSION { get; set; }

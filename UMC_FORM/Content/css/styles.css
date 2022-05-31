@@ -11546,3 +11546,10 @@ table td {
     /*margin-top: -10px !important;*/
     padding-top:5px;
 }
+
+
+.checkbox-in-ddl input[type=checkbox] {
+    margin-left: 4px;
+    margin-right: 4px;
+ 
+}

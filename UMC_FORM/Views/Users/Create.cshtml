@@ -1,6 +1,6 @@
 ﻿@model UMC_FORM.Models.Form_User
 @using UMC_FORM.Models
-@using UMC_FORM.Business
+@using UMC_FORM.Ultils
 @{
     ViewBag.Title = "UserCreate";
     Layout = "~/Views/Shared/_Layout_Custom2.cshtml";
@@ -54,15 +54,28 @@
                             <label for="exampleInputPassword1">Password</label>
                             <input type="password" name="PASSWORD" class="form-control" id="exampleInputPassword1" placeholder="Password">
                         </div>
-                        <label>Chọn chức vụ</label>
-                        <select class="form-control" name="POSITION">
-                            <option value="0" selected>STAFF</option>
-                            <option value="@POSITION.MANAGER">TRƯỞNG BỘ PHẬN</option>
-                            <option value="@POSITION.FM">GIÁM ĐỐC NHÀ MÁY</option>
-                            <option value="@POSITION.GD">TỔNG GIÁM ĐỐC</option>
-                            <option value="@POSITION.SALARY_GROUP">NHÓM TÍNH LƯƠNG</option>
-                            <option value="@POSITION.GROUP_LEADER">TRƯỞNG NHÓM</option>
-                        </select>
+                       
+                        <div class="btn-group">
+                            <button type="button" class="form-control dropdown-toggle" data-toggle="dropdown">
+                                Chọn chức vụ
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                @if (ViewBag.positions != null)
+                                {
+                                    foreach (var position in ViewBag.positions)
+                                    {
+                                        <li class="checkbox-in-ddl">
+                                            <label>
+                                                <input type="checkbox" value="@position.POSITION_CODE" />
+                                                <span>@position.NAME.ToLower()</span>
+                                            </label>
+                                        </li>
+                                    }
+                                }
+                              
+                            </ul>
+                        </div>
+                        <input type="hidden" name="POSITIONs" id="POSITIONs" />
 
                         <div class="form-group mt-3">
                             <label for="role">Role</label>
@@ -83,3 +96,4 @@
 </div>
 
 
+@Scripts.Render(Url.ContentVersioned("~/Content/js/users", "js"))

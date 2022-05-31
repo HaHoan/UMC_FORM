@@ -77,15 +77,13 @@ namespace UMC_FORM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(Form_User user, string ReturnUrl, string rememberPasswordCheck)
+        public ActionResult Index(Form_User user, string ReturnUrl, string rememberPasswordCheck)
         {
             try
             {
                 string message = string.Empty;
-                var t1 = UserRepository.ValidateUserAsync(user);
-                var t2 = UserRepository.GetUserAsync(user.CODE);
-                int userId = await t1;
-                var session = await t2;
+                var userId = UserRepository.ValidateUserAsync(user);
+                var session = UserRepository.GetUser(user.CODE);
                 Form_Log log = null;
                 switch (userId)
                 {

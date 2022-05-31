@@ -26,6 +26,7 @@ namespace UMC_FORM.Controllers
         {
             ViewBag.depts = DeptRepository.GetDepts();
             ViewBag.roles = RoleRepository.GetRoles();
+            ViewBag.positions = UserRepository.GetAllPosition();
             return View();
         }
 
@@ -82,6 +83,7 @@ namespace UMC_FORM.Controllers
             }
             ViewBag.depts = DeptRepository.GetDepts();
             ViewBag.roles = RoleRepository.GetRoles();
+            ViewBag.positions = UserRepository.GetAllPosition();
             return View(user);
         }
         [HttpPost]

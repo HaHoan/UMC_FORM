@@ -8,5 +8,6 @@ namespace UMC_FORM.Models.GA
     public class GA_LEAVE_FORM_DETAIL_MODEL:BaseDetailModel
     {
         public GA_LEAVE_FORM TICKET { get; set; }
+        public Form_User DEPT_MANAGER { get; set; }
     }
 }

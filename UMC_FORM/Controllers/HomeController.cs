@@ -124,7 +124,7 @@ namespace UMC_FORM.Controllers
             }
             else if (type == SendType.FINISH)
             {
-                if (session.POSITION == POSITION.FM || session.POSITION == POSITION.GD)
+                if (session.POSTION_LIST.Where(m => m.POSITION_CODE == POSITION.FM || m.POSITION_CODE == POSITION.GD).FirstOrDefault() != null)
                 {
                     formSummaries = list.Where(r => r.IS_FINISH == true).ToList();
                 }

@@ -29,8 +29,8 @@ namespace UMC_FORM.Controllers
             using (var db = new DataContext())
             {
                 _sess = Session["user"] as Form_User;
-                ViewBag.listManager = db.Form_User.Where(m => m.POSITION == POSITION.MANAGER && m.DEPT == _sess.DEPT).ToList();
-                ViewBag.listGroupLeader = db.Form_User.Where(m => m.POSITION == POSITION.GROUP_LEADER && m.DEPT == _sess.DEPT).ToList();
+                ViewBag.listManager = UserRepository.GetManagers(_sess.DEPT);
+                ViewBag.listGroupLeader = UserRepository.GetGroupLeaders(_sess.DEPT);
             }
 
         }
@@ -141,9 +141,6 @@ namespace UMC_FORM.Controllers
                         return Tuple.Create<string, string, int>(STATUS.ERROR, "Thông tin người thứ  " + item.NO + " chưa có mã code!", 0);
                     }
 
-                    //test
-
-                    //
                     var itemDB = new GA_LEAVE_FORM_ITEM
                     {
                         TICKET = currentTicket.ID,
@@ -424,14 +421,7 @@ namespace UMC_FORM.Controllers
                             var stationByIndex = db.Form_Process.Where(m => m.FORM_INDEX == (form.PROCEDURE_INDEX + 1) && m.FORM_NAME == summary.PROCESS_ID).FirstOrDefault();
                             if (stationByIndex != null)
                             {
-                                var stationIsSinging = db.GA_LEAVE_FORM.Where(m => m.TICKET == form.TICKET
-                                && m.STATION_NO.Trim() == stationByIndex.STATION_NO.Trim()
-                                && m.IS_SIGNATURE == 1).FirstOrDefault();
-                                if (stationIsSinging == null)
-                                {
-                                    form.IS_SIGNATURE = 1;
-                                }
-                                else form.IS_SIGNATURE = 0;
+                                form.IS_SIGNATURE = 1;
                             }
                             else
                             {
@@ -634,7 +624,12 @@ namespace UMC_FORM.Controllers
                     return null;
                 }
                 _sess = Session["user"] as Form_User;
-
+                var deptMng = db.Form_Procedures.Where(m => m.TICKET == ticket && m.STATION_NO == "DEPT_MANAGER").FirstOrDefault();
+                if(deptMng != null && !string.IsNullOrEmpty(deptMng.APPROVAL_NAME))
+                {
+                    modelDetail.DEPT_MANAGER = UserRepository.GetUser(deptMng.APPROVAL_NAME);
+                }
+                
                 modelDetail.PERMISSION = new List<string>();
 
                 modelDetail.SUBMITS = new List<string>();
@@ -681,7 +676,8 @@ namespace UMC_FORM.Controllers
                     IS_APPROVED = false
 
                 };
-                var lca = list.Where(m => m.STATION_NAME.Trim() == pro.STATION_NAME.Trim() && m.IS_SIGNATURE == 1).FirstOrDefault();
+                var lca = list.Where(m => m.STATION_NAME.Trim() == pro.STATION_NAME.Trim()
+                && m.IS_SIGNATURE == 1 && m.PROCEDURE_INDEX <= summary.PROCEDURE_INDEX).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();
                 if (lca != null)
                 {
                     station.IS_APPROVED = true;

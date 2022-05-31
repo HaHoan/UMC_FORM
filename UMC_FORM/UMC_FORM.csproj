@@ -220,6 +220,7 @@
     <Compile Include="Models\Form_Comment.cs" />
     <Compile Include="Models\Form_Dept.cs" />
     <Compile Include="Models\Form_Log.cs" />
+    <Compile Include="Models\Form_Position.cs" />
     <Compile Include="Models\Form_Procedures.cs" />
     <Compile Include="Models\Form_Process.cs" />
     <Compile Include="Models\Form_ProcessName.cs" />
@@ -297,6 +298,7 @@
     <Content Include="Content\js\pagination.js" />
     <Content Include="Content\js\scripts.js" />
     <Content Include="Content\js\summary\sumary.js" />
+    <Content Include="Content\js\users.js" />
     <Content Include="Content\js\utils\account.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
