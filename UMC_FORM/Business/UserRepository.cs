@@ -131,7 +131,10 @@ namespace UMC_FORM.Business
             using (DataContext context = new DataContext())
             {
                 var user = context.Form_User.FirstOrDefault(r => r.CODE == username);
-                user.POSTION_LIST = context.Form_Position.Where(m => m.CODE == username).ToList();
+                if(user != null)
+                {
+                    user.POSTION_LIST = context.Form_Position.Where(m => m.CODE == username).ToList();
+                }
                 return user;
             }
         }
