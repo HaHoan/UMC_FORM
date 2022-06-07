@@ -51,9 +51,20 @@
                         <hr>
                         @Html.ValidationMessage("Error")
                         <input id="status" name="status" type="hidden" />
-                        if (Model.SUBMITS.Contains(SUBMIT.RE_APPROVE))
+                        if (Model.SUBMITS.Contains(SUBMIT.DELETE))
                         {
+                            <div class="row">
+                                <div class="col">
+                                    <button class="spinner-button btn btn-danger mb-2 lang col" key="delete" id="frmpaidleave_delete" value="delete" type="submit" formnovalidate>Xóa</button>
+                                </div>
+                                <div class="col">
+                                    <button class="spinner-button btn btn-success mb-2 lang col" key="reaccept" id="frmpaidleave_accept" type="submit" value="accept">Chấp thuận</button>
+                                </div>
 
+                            </div>
+                        }
+                        else if (Model.SUBMITS.Contains(SUBMIT.RE_APPROVE))
+                        {
                             <button class="spinner-button btn btn-success mb-2 lang col" key="reaccept" id="frmpaidleave_accept" type="submit" value="accept">Chấp thuận</button>
                         }
                         else if (Model.SUBMITS.Contains(SUBMIT.APPROVE))

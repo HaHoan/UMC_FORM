@@ -55,6 +55,7 @@ var arrLang = {
         "waitting": "Waiting For Approval",
         "accept": "Accept",
         "reject": "Reject",
+        "delete": "Delete",
         "req-info": "Request Info",
         "code": "Code",
         "bc-dept": "BC Dept",
@@ -184,6 +185,7 @@ var arrLang = {
         "waitting": "Đang chờ duyệt",
         "accept": "Chấp thuận",
         "reject": "Từ chối",
+        "delete": "Xóa",
         "req-info": "Thông Tin Đề Xuất",
         "code": "Mã Đề Xuất: ",
         "creator": "Người Tạo",
@@ -351,6 +353,7 @@ var arrLang = {
         "name": "氏名",
         "total-date": "日間",
         "cancel-request": "キャンセル",
-        "my-approve": "Approved"
+        "my-approve": "Approved",
+        "delete": "Delete",
     }
 };

@@ -185,6 +185,7 @@
     <Compile Include="Business\Constant.cs" />
     <Compile Include="Business\DeptRepository.cs" />
     <Compile Include="Business\FormSummaryRepository.cs" />
+    <Compile Include="Business\GA\TicketGALeaveHelper.cs" />
     <Compile Include="Business\LogRepository.cs" />
     <Compile Include="Business\MailHelper.cs" />
     <Compile Include="Business\ObjectExtension.cs" />
@@ -195,6 +196,7 @@
     <Compile Include="Business\RoleRepository.cs" />
     <Compile Include="Business\SendType.cs" />
     <Compile Include="Business\StationRepository.cs" />
+    <Compile Include="Business\TicketHelper.cs" />
     <Compile Include="Business\UserRepository.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommentController.cs" />

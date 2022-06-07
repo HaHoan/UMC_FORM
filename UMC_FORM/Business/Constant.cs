@@ -56,12 +56,14 @@ namespace UMC_FORM.Business
         public static string APPROVE = "APPROVE";
         public static string RE_APPROVE = "RE_APPROVE";
         public static string EDIT_QUOTE = "EDIT_QUOTE";
+        public static string DELETE = "DELETE";
     }
 
     public static class STATUS
     {
         public static string ACCEPT = "accept";
         public static string REJECT = "reject";
+        public static string DELETE = "delete";
         public static string EDIT_QUOTE = "edit_quote";
         public static string SUCCESS = "success";
         public static string ERROR = "error";

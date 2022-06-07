@@ -11553,3 +11553,6 @@ table td {
     margin-right: 4px;
  
 }
+.code {
+    text-transform: lowercase;
+}

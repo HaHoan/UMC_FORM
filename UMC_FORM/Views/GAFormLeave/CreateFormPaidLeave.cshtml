@@ -50,6 +50,7 @@
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary();
+                        <input type="hidden" value="@(_session.CODE)" id="user_code" />
                         <div class="modal-body">
                             <div>
                                 <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
@@ -57,6 +58,7 @@
                                     <h5 class="rext-dark d-inline lang text-uppercase" key="frmpaidleave_title">TẠO ĐỀ XUẤT MỚI</h5>
                                 </a>
                             </div>
+
                             <hr>
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                             <div class="info-edit">
@@ -101,6 +103,23 @@
                                     <br />
                                 }
 
+                                <div class="row" id="select_dept_manager">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                    </div>
+                                    <div class="col-9">
+
+                                        <select class="custom-select" id="DEPT_MANAGER" name="DEPT_MANAGER">
+                                            <option value="0">Chọn trưởng phòng có quyền approve</option>
+                                            @foreach (var mng in ViewBag.listManager)
+                                            {
+                                                <option value="@mng.CODE">@mng.NAME</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <br />
                                 <div class="row">
                                     <div class="col-3">
                                         <label class="font-weight-bold lang" key="count_subscriber">Count subscriber</label>
@@ -172,45 +191,45 @@
                                                 for (int i = 1; i <= 5; i++)
                                                 {
 
-                                            <tr class="row-info">
-                                                <td class="text-center">@(i)</td>
-                                                <td>
-                                                    <input class="form-input inputDefault" id=@("FULLNAME" + i) />
-                                                    <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
-                                                </td>
-                                                <td>
-                                                    <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) />
-                                                    <span class="error" id=@("CODE"+i + "_ERROR")></span>
-                                                </td>
-                                                <td>
-                                                    <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete="off" />
-                                                    <span class="error" id=@("TIME_FROM"+i + "_ERROR")></span>
-                                                </td>
-                                                <td>
-                                                    <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i) autocomplete="off" />
-                                                    <span class="error" id=@("TIME_TO"+i+"_ERROR")></span>
-                                                </td>
-                                                <td>
-                                                    <input class="form-input type_number inputDefault" name=@("TOTAL" + i) id=@("TOTAL" + i) />
-                                                    <span class="error" id=@("TOTAL"+i+"_ERROR")></span>
-                                                </td>
-                                                <td>
-                                                    <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
-                                                    <span class="error" id=@("REASON"+i + "_ERROR")></span>
-                                                </td>
+                                                    <tr class="row-info">
+                                                        <td class="text-center">@(i)</td>
+                                                        <td>
+                                                            <input class="form-input inputDefault" id=@("FULLNAME" + i) />
+                                                            <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input inputDefault" id=@("CODE" + i) name=@("CODE" + i) />
+                                                            <span class="error" id=@("CODE"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input  inputDefault" id=@("TIME_FROM"+i) name=@("TIME_FROM"+i) autocomplete="off" />
+                                                            <span class="error" id=@("TIME_FROM"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input inputDefault" id=@("TIME_TO" + i) name=@("TIME_TO" + i) autocomplete="off" />
+                                                            <span class="error" id=@("TIME_TO"+i+"_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input type_number inputDefault" name=@("TOTAL" + i) id=@("TOTAL" + i) />
+                                                            <span class="error" id=@("TOTAL"+i+"_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
+                                                            <span class="error" id=@("REASON"+i + "_ERROR")></span>
+                                                        </td>
 
-                                                <td>
-                                                    <input class="form-input  inputDefault" id=@("REMARK" + i) />
-                                                </td>
-                                                <td class="text-center p-2">
+                                                        <td>
+                                                            <input class="form-input  inputDefault" id=@("REMARK" + i) />
+                                                        </td>
+                                                        <td class="text-center p-2">
 
-                                                    <input type="checkbox" id=@("SPEACIAL_LEAVE"+i) name=@("SPEACIAL_LEAVE"+i) value="" />
-                                                </td>
-                                                <td>
-                                                    <button class="btnXoa btn btn-danger" type="button" onclick="deleteRow(this)"> Xóa</button>
-                                                </td>
+                                                            <input type="checkbox" id=@("SPEACIAL_LEAVE"+i) name=@("SPEACIAL_LEAVE"+i) value="" />
+                                                        </td>
+                                                        <td>
+                                                            <button class="btnXoa btn btn-danger" type="button" onclick="deleteRow(this)"> Xóa</button>
+                                                        </td>
 
-                                            </tr>
+                                                    </tr>
 
                                                 }
                                             }

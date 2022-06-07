@@ -15,6 +15,7 @@ using Newtonsoft.Json.Converters;
 using System.Threading.Tasks;
 using System.IO;
 using UMC_FORM.Ultils;
+using UMC_FORM.Business.GA;
 
 namespace UMC_FORM.Controllers
 {
@@ -289,7 +290,7 @@ namespace UMC_FORM.Controllers
             var deptStation = db.Form_Procedures.Where(m => m.TICKET == ticket && m.STATION_NO == "DEPT_MANAGER").FirstOrDefault();
             if (deptManager == "0" || string.IsNullOrEmpty(deptManager))
             {
-                if(deptStation.FORM_INDEX == nextApprove)
+                if (deptStation.FORM_INDEX == nextApprove)
                 {
                     return "Bạn chưa chọn trưởng bộ phận để approve cho bước tiếp theo!";
                 }
@@ -300,7 +301,7 @@ namespace UMC_FORM.Controllers
             }
             if (deptStation.FORM_INDEX == nextApprove && string.IsNullOrEmpty(deptManager))
             {
-                
+
             }
             deptStation.APPROVAL_NAME = deptManager;
             db.SaveChanges();
@@ -364,8 +365,12 @@ namespace UMC_FORM.Controllers
                         // Nếu người tạo trùng với quản lý ca => thực hiện tự động accept bước tiếp theo
                         var currentProceduce = db.Form_Procedures.Where(m => m.TICKET == ticket.TICKET && m.FORM_INDEX == (ticket.PROCEDURE_INDEX + 1)).FirstOrDefault();
 
-                        if (_sess.CODE == currentProceduce.APPROVAL_NAME && _sess.ROLE_ID == ROLE.Approval)
+                        if (_sess.CODE == currentProceduce.APPROVAL_NAME)
                         {
+                            if (string.IsNullOrEmpty(ticket.DEPT_MANAGER))
+                            {
+                                return Json(new { result = STATUS.ERROR, message = "Bạn cần chọn trưởng phòng!" }, JsonRequestBehavior.AllowGet);
+                            }
                             return Accept(ticket, leaveItems);
                         }
                         if (!sendMail(summary, STATUS.ACCEPT))
@@ -400,9 +405,27 @@ namespace UMC_FORM.Controllers
             {
                 return Reject(ticket, leaveItems);
             }
+            else if (status == STATUS.DELETE)
+            {
+                return Delete(ticket);
+            }
             return Json(new { result = STATUS.ERROR, message = "Chưa có status này" }, JsonRequestBehavior.AllowGet);
         }
-
+        private JsonResult Delete(GA_LEAVE_FORM ticket)
+        {
+            var result = FormSummaryRepository.Delete(ticket.TICKET);
+            if (result == STATUS.SUCCESS)
+            {
+                return Json(new
+                {
+                    result = STATUS.SUCCESS,
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { result = STATUS.ERROR, message = result }, JsonRequestBehavior.AllowGet);
+            }
+        }
         public JsonResult Accept(GA_LEAVE_FORM ticket, string leaveItems)
         {
             using (var db = new DataContext())
@@ -478,7 +501,7 @@ namespace UMC_FORM.Controllers
                         if (!string.IsNullOrEmpty(result))
                         {
                             transaction.Rollback();
-                            return Json(new { result = STATUS.ERROR, message = result}, JsonRequestBehavior.AllowGet);
+                            return Json(new { result = STATUS.ERROR, message = result }, JsonRequestBehavior.AllowGet);
                         }
                         var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.GA_LEAVE_FORM).ToList();
                         form.STATION_NAME = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault().STATION_NAME;
@@ -539,7 +562,7 @@ namespace UMC_FORM.Controllers
                         if (formDb == null) return Json(new { result = STATUS.ERROR, message = "Ticket không tồn tại" }, JsonRequestBehavior.AllowGet);
                         var form = formDb.CloneObject() as GA_LEAVE_FORM;
                         _sess = Session["user"] as Form_User;
-                        
+
                         var summary = db.Form_Summary.Where(m => m.TICKET == formDb.TICKET).FirstOrDefault();
 
                         // để lưu lại bước sẽ quay lại sau khi luồng reject được thực hiện xong
@@ -620,12 +643,12 @@ namespace UMC_FORM.Controllers
                 }
                 _sess = Session["user"] as Form_User;
                 var deptMng = db.Form_Procedures.Where(m => m.TICKET == ticket && m.STATION_NO == "DEPT_MANAGER").FirstOrDefault();
-                if(deptMng != null && !string.IsNullOrEmpty(deptMng.APPROVAL_NAME))
+                if (deptMng != null && !string.IsNullOrEmpty(deptMng.APPROVAL_NAME))
                 {
                     modelDetail.TICKET.DEPT_MANAGER_OBJECT = UserRepository.GetUser(deptMng.APPROVAL_NAME);
                 }
                 var groupLeader = db.Form_Procedures.Where(m => m.TICKET == ticket && m.STATION_NO == "GROUP_LEADER").FirstOrDefault();
-                if(groupLeader != null && !string.IsNullOrEmpty(groupLeader.APPROVAL_NAME))
+                if (groupLeader != null && !string.IsNullOrEmpty(groupLeader.APPROVAL_NAME))
                 {
                     modelDetail.TICKET.GROUP_LEADER_OBJECT = UserRepository.GetUser(groupLeader.APPROVAL_NAME);
                 }
@@ -643,11 +666,15 @@ namespace UMC_FORM.Controllers
 
                     var userApprover = db.Form_Procedures.Where(m => m.FORM_INDEX == (modelDetail.SUMARY.PROCEDURE_INDEX + 1)
                                        && m.FORM_NAME == modelDetail.SUMARY.PROCESS_ID && m.TICKET == modelDetail.TICKET.TICKET).ToList();
-                    if (userApprover.Where(m => m.APPROVAL_NAME == _sess.CODE).FirstOrDefault() != null)
+                    if (userApprover.Where(m => m.APPROVAL_NAME.ToLower() == _sess.CODE.ToLower()).FirstOrDefault() != null)
                     {
                         if (modelDetail.SUMARY.IS_REJECT)
                         {
                             modelDetail.SUBMITS.Add(SUBMIT.RE_APPROVE);
+                            if (modelDetail.SUMARY.PROCEDURE_INDEX == -1)
+                            {
+                                modelDetail.SUBMITS.Add(SUBMIT.DELETE);
+                            }
                         }
                         else
                         {
