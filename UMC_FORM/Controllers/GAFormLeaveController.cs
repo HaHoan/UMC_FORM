@@ -30,7 +30,7 @@ namespace UMC_FORM.Controllers
             using (var db = new DataContext())
             {
                 _sess = Session["user"] as Form_User;
-                ViewBag.listManager = UserRepository.GetManagers(_sess.DEPT);
+                ViewBag.listManager = UserRepository.GetManagers(null);
                 ViewBag.listGroupLeader = UserRepository.GetGroupLeaders(_sess.DEPT);
             }
 
