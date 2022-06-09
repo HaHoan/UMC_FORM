@@ -184,11 +184,15 @@
     <Compile Include="Business\Common.cs" />
     <Compile Include="Business\Constant.cs" />
     <Compile Include="Business\DeptRepository.cs" />
+    <Compile Include="Business\FormProcedureResponsitory.cs" />
+    <Compile Include="Business\FormRejectResponsitory.cs" />
     <Compile Include="Business\FormSummaryRepository.cs" />
     <Compile Include="Business\GA\TicketGALeaveHelper.cs" />
     <Compile Include="Business\LogRepository.cs" />
     <Compile Include="Business\MailHelper.cs" />
+    <Compile Include="Business\MailResponsitory.cs" />
     <Compile Include="Business\ObjectExtension.cs" />
+    <Compile Include="Business\PermissionResponsitory.cs" />
     <Compile Include="Business\PurAccF06Repository.cs" />
     <Compile Include="Business\ProcessRepository.cs" />
     <Compile Include="Business\RemoteMgr.cs" />
@@ -204,6 +208,7 @@
     <Compile Include="Controllers\GAFormLeaveController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\IFormTemplateInterface.cs" />
     <Compile Include="Controllers\LCAController.cs" />
     <Compile Include="Controllers\ProcessController.cs" />
     <Compile Include="Controllers\PurAccF06Controller.cs" />
@@ -216,6 +221,7 @@
     <Compile Include="Models\AssetEntity.cs" />
     <Compile Include="Models\AuthorEntity.cs" />
     <Compile Include="Models\BaseDetailModel.cs" />
+    <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\CostChangeEntity.cs" />
     <Compile Include="Models\DataContext.cs" />
     <Compile Include="Models\FormProcessJsonEntity.cs" />

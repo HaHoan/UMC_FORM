@@ -7,15 +7,8 @@ using System.Web;
 
 namespace UMC_FORM.Models.GA
 {
-    public class GA_LEAVE_FORM
+    public class GA_LEAVE_FORM : BaseModel
     {
-        [Key]
-        [StringLength(50)]
-        public string ID { get; set; }
-
-        [StringLength(50)]
-        public string TICKET { get; set; }
-
         [StringLength(50)]
         public string DEPT { get; set; }
 
@@ -25,7 +18,6 @@ namespace UMC_FORM.Models.GA
         public DateTime DATE_REGISTER { get; set; }
 
         public int NUMBER_REGISTER { get; set; }
-        public string FORM_NAME { get; set; }
 
         [NotMapped]
         public string DEPT_MANAGER { get; set; }
@@ -39,25 +31,15 @@ namespace UMC_FORM.Models.GA
         [NotMapped]
         public Form_User GROUP_LEADER_OBJECT { get; set; }
 
-        public int PROCEDURE_INDEX { get; set; }
 
-        public DateTime UPD_DATE { get; set; }
-
-        public int IS_SIGNATURE { get; set; }
-
-        public int ORDER_HISTORY { get; set; }
-
-        [StringLength(50)]
-        public string STATION_NAME { get; set; }
-        public string STATION_NO { get; set; }
-
-
-        public string SUBMIT_USER { get; set; }
-
-        public string TITLE { get; set; }
-        public string COMMENT { get; set; }
 
         [NotMapped]
         public List<GA_LEAVE_FORM_ITEM> GA_LEAVE_FORM_ITEMs { get; set; }
+
+        [NotMapped]
+        public string leaveItems { get; set; }
+
+        [NotMapped]
+        public string status { get; set; }
     }
 }
