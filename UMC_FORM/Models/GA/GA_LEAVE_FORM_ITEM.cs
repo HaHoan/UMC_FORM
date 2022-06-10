@@ -6,7 +6,7 @@ using System.Web;
 
 namespace UMC_FORM.Models.GA
 {
-    public class GA_LEAVE_FORM_ITEM : BaseModel
+    public class GA_LEAVE_FORM_ITEM
     {
         [Key]
         public int ID { get; set; }
