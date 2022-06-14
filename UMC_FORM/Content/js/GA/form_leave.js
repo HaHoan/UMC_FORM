@@ -461,7 +461,7 @@ function addRow() {
     row.append(addTdNumber("TOTAL" + index));
     row.append(addTdReason("REASON" + index));
     row.append(addTd('REMARK' + index));
-    var name_page = $('input[name="formName"]').val();
+    var name_page = $('input[id="formName"]').val();
     if (name_page == "GA_35") {
         var col4 = $("<td/>", {
             class: 'text-center p-2'
