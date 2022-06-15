@@ -106,6 +106,7 @@ var arrLang = {
         "send": "Send",
         "name": "Name",
         "add-row": "Add row",
+        "add-column":"Add column",
         "cancel": "Cancel",
         "create": "Create",
         "return": "Back to",

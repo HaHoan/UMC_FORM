@@ -1,0 +1,183 @@
+﻿@*@model UMC_FORM.Models.GA.GA_LEAVE_FORM_DETAIL_MODEL
+@using UMC_FORM.Business
+@using UMC_FORM.Models*@
+@using UMC_FORM.Ultils
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Print</title>
+    <link href="@Url.ContentVersioned("~/Content/css/styles", "css")" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+            crossorigin="anonymous"></script>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <link href="~/Content/css/pdf.css" rel="stylesheet" />
+
+    <style>
+        table, td, th {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        body, html {
+            font-family: Arial;
+            font-size: 9px !important;
+        }
+
+        .info-edit {
+            width: 100%;
+        }
+
+        #rectangle {
+            width: 60px;
+            height: 20px;
+            border: solid 1px;
+            text-align: center;
+        }
+
+        .td2 {
+            width: 250px;
+        }
+
+        .font-italic {
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body class="container-fluid">
+    <!--Form nhập request-->
+    <div>
+        <div class="row">
+        </div>
+        <div class="card-body border border-dark pt-1">
+            <div class="row">
+                <div class="info-edit">
+                    <br />
+                    <div class="row">
+                        <div class="col-1">
+                            <img src="/Content/assets/img/logo.png">
+                        </div>
+                        <div class="col-9" style="text-align:center">
+                            <b style="font-size:18px;">
+                                GIẤY ĐĂNG KÝ NGHỈ HƯỞNG 70% LƯƠNG<br /> (Gửi giấy trực tiếp hoặc email trước 12:00 hôm trước)
+                            </b>
+                            <br />
+                            <h2>自宅待機届 </h2>
+                        </div>
+                        <div class="col-2">
+                            <div id="rectangle">
+                                <span style="font-size:12px;font-weight:bold;">
+                                    <p style="margin-top:3px;">GA-41</p>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" style="font-size:12px;">
+                        <div class="col-3">
+                            <label class="font-weight-bold lang" key="request_dept_sub">Bộ phận đăng ký &ensp; 部署</label>
+                        </div>
+                        <div class="col-9">
+                            @*<p> @Model.TICKET.DEPT</p>*@
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" style="font-size:12px;">
+                        <div class="col-3">
+                            <label class="font-weight-bold lang" key="request_date_sub">Ngày đăng ký &ensp; 申請日</label>
+                        </div>
+                        <div class="col-9">
+                            @*@Model.TICKET.DATE_REGISTER.ToString("dd-MM-yyyy")*@
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" style="font-size:12px;">
+                        <div class="col-3">
+                            <label class="font-weight-bold lang" key="count_subscriber">Số người đăng ký &ensp; 人数</label>
+                        </div>
+                        <div class="col-9">
+                            @*@Model.TICKET.NUMBER_REGISTER*@
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row" style="font-size:12px;">
+                        <div class="col-12">
+                            <span style="font-weight:bold;">
+                                <p style="font-style:italic;">
+                                    Chú ý: Bộ phận tích "v" vào cột Ngày đăng ký 70%
+                                </p>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table-border-dark" style="font-size:10px;">
+                            <tr>
+                                <th class="lang" key="table-no" rowspan="2">No</th>
+                                <th class="lang" rowspan="2" key="name">Name <br /></th>
+                                <th class="lang" rowspan="2" key="table-code" style="width:60px;">Code No</th>
+                                <th class="lang" rowspan="2" key="subscribe-date">Customer/Department<br />  </th>
+                                <th class="lang" colspan="1" key="">Registration date</th>
+                                <th class="lang" rowspan="2" key="reason-leave">Reason</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center p-2" key="">
+                                </th>
+                            </tr>
+                            <tbody id="tableInfo">
+                                @{
+                                    var i = 1;
+                                    //foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
+                                    //{
+                                        <tr class="">
+                                            <td class="text-center">@(i)</td>
+                                            <td style="width:20%;">
+                                            </td>
+                                            <td style="width:5%;">
+                                            </td>
+                                            <td style="width:15%;">
+                                            </td>
+                                            <td style="width:15%;">
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    @*}*@
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <br />
+                </div>
+                <br />
+                @*@Html.Partial("~/Views/Common/_StationApprove.cshtml", Model.STATION_APPROVE)*@
+                <hr>
+                <div class="col">
+                    <p class="font-italic font-weight-bold row text-underline" style="font-size:12px;">Chú ý</p>
+                    <span class="border p-2 row" style="font-size:9px;">
+                        #  Giấy đăng ký nghỉ 70% lương được trưởng bộ phận xác trực tiếp ---> Xác nhận trực tiếp của giám đốc nhà máy  ----> GA
+                        <br />
+                        Thời hạn gửi GA: Trước 12: 00 hôm trước.
+                        <br />
+                    </span>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

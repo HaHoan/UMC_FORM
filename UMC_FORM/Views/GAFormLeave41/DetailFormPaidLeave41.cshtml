@@ -1,0 +1,294 @@
+﻿@*@model UMC_FORM.Models.GA.GA_LEAVE_FORM_DETAIL_MODEL*@
+@using UMC_FORM.Business
+@using UMC_FORM.Models
+@using UMC_FORM.Ultils
+@{
+    ViewBag.Title = "DetailFormPaidLeave41";
+    Layout = "~/Views/Shared/_Layout_Custom1.cshtml";
+}
+@Styles.Render("~/Content/jquery.datetimepicker.css")
+<div id="layoutSidenav_content">
+    <div class="container-fluid content">
+        <div class="">
+            <div class=" row">
+                <div class="col-md-10 border-right">
+                    <input type="hidden" id="users" value="@*@Model.USERS*@" />
+                    @*@using (Ajax.BeginForm("Details", "GAFormLeave", new AjaxOptions
+                    {
+                        OnSuccess = "OnSuccess",
+                        OnFailure = "OnFailure",
+                        LoadingElementId = "progress"
+                    }, new { enctype = "multipart/form-data", id = "submitForm" }))*@
+                    @*{
+                        @Html.AntiForgeryToken()*@
+                        <br />
+                        <button class="border-0 bg-white" id="backTo" type="button">
+                            <i class="fas fa-angle-left font-title text-muted"></i>
+                            <span class="font-weight-bold ml-2 text-muted lang text-uppercase" key="frmpaidleave_title" style="font-size: 18px;">YÊU CẦU CUNG CẤP</span>
+                        </button>
+
+                        <div class="row">
+                            <div class="col-11 form-inline">
+                                <span class="font-italic text-muted lang" key="state">Trạng thái:</span>
+                                <span class="badge badge-pill badge-primary ml-2 lang font-italic" key="@*@keyState*@">...</span>
+                            </div>
+                            <div class="col-1">
+                                <a href="@*@Url.Action("PrintFormPaidLeave", "GAFormLeave",new { ticket = Model.TICKET.TICKET })" )*@" class="text-dark" target="_blank">
+                                    <i class="fas fa-print"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <hr>
+                        @*@Html.ValidationMessage("Error")*@
+                        <input id="status" name="status" type="hidden" />
+                        @*if (Model.SUBMITS.Contains(SUBMIT.RE_APPROVE))
+                        {*@
+
+                            <button class="spinner-button btn btn-success mb-2 lang col" key="reaccept" id="frmpaidleave_accept" type="submit" value="accept">Chấp thuận</button>
+                        @*}
+                        else if (Model.SUBMITS.Contains(SUBMIT.APPROVE))
+                        {*@
+                            <div class="row">
+                                <div class="col">
+                                    <button class="spinner-button btn btn-danger mb-2 lang col" key="reject" id="frmpaidleave_reject" value="reject" type="submit">Từ chối</button>
+                                </div>
+                                <div class="col">
+                                    <button class="spinner-button btn btn-success mb-2 lang col" key="accept" id="frmpaidleave_accept" value="accept" type="submit">Chấp thuận</button>
+                                </div>
+
+                            </div>
+                        @*}*@
+                        <div class="row mt-4">
+                            <div class="col">
+                                <p class=" font-weight-bold text-uppercase lang" key="req-info">
+                                    THÔNG TIN ĐỀ XUẤT
+                                </p>
+                            </div>
+                            <div class="col text-right">
+                                <span class="text-right text-uppercase lang" key="code">MÃ ĐỀ XUẤT:</span>
+                                <span class="text-primary font-weight-bold text-right" id="ticketNo"@*>@Html.DisplayFor(m => m.TICKET.TICKET)*@</span>
+                                @*@Html.HiddenFor(m => m.TICKET.TICKET, new { @name = "TICKET" })
+                                @Html.HiddenFor(m => m.TICKET.ID, new { @name = "ID" })*@
+                            </div>
+                        </div>
+                        <hr class="mt-1">
+                        <div class="info-edit">
+                            @{
+
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="request_dept_sub">Request Dept </label>
+                                    </div>
+                                    <div class="col-9">
+                                        @*@Html.TextBoxFor(m => m.TICKET.DEPT, new { @name = "DEPT", @class = "form-control", @readonly = "readonly" })*@
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" value="@*@Model.TICKET.DATE_REGISTER.ToString("dd/MM/yyyy")*@" readonly>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="count_subscriber">Count subscriber</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="number" name="NUMBER_REGISTER" value="@*@Model.TICKET.NUMBER_REGISTER*@" readonly>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p style="font-style:italic;font-weight:bold;">
+                                            Chú ý: Bộ phận tích " v "vào cột Ngày đăng ký 70%
+                                        </p>
+                                    </div>
+                                </div>
+
+//if (Model.PERMISSION.Contains(PERMISSION.EDIT_INFO))
+//{
+                                    <div class="table-responsive">
+                                        <input type="hidden" value="@*@Constant.GA_LEAVE_FORM_GA_35*@" name="purpose" />
+                                        <input type="hidden" value="@*@Constant.GA_PAID_LEAVE_ID*@" name="formName" />
+                                        <table class="table-border-dark">
+                                            <tr>
+                                                <th class="lang" key="table-no" rowspan="2">No</th>
+                                                <th class="lang" rowspan="2" key="name">Name <br /></th>
+                                                <th class="lang" rowspan="2" key="table-code" style="width:60px;">Code No</th>
+                                                <th class="lang" rowspan="2" key="subscribe-date">Customer/Department<br />  </th>
+                                                <th class="lang" colspan="1" key="reason-leave">Registration date</th>
+                                                <th class="lang" rowspan="2" key="">Reason</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-center p-2" key="">
+                                                </th>
+                                            </tr>
+                                            <tbody id="tableInfo">
+                                                @{
+                                                    var i = 1;
+                                                    //foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
+                                                    //{
+                                                        <tr class="row-info">
+                                                            <td class="text-center">@(i)</td>
+                                                            <td style="width:20%;">
+                                                                <input class="form-input inputDefault" id=@("FULLNAME" + i) value="" />
+                                                                <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
+                                                            </td>
+                                                            <td style="width:5%;">
+                                                                <input class="form-input inputDefault" id=@("CODE" + i) value="" />
+                                                                <span class="error" id=@("CODE"+i + "_ERROR")></span>
+                                                            </td>
+                                                            <td style="width:15%;">
+                                                                <input class="form-input  inputDefault" id=@("TIME_FROM" + i) value="" autocomplete="off" />
+                                                                <span class="error" id=@("TIME_FROM"+i + "_ERROR")></span>
+                                                            </td>
+                                                            <td style="width:15%;">
+                                                                <input class="form-input inputDefault" id=@("TIME_TO" + i) value="" autocomplete="off" />
+                                                                <span class="error" id=@("TIME_TO"+i + "_ERROR")></span>
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-input text-right inputDefault" id=@("TOTAL" + i) value="" />
+                                                                <span class="error" id=@("TOTAL"+i + "_ERROR")></span>
+                                                            </td>
+                                                        </tr>
+                                                        i++;
+                                                    @*}*@
+                                                }
+                                            </tbody>
+                                        </table>
+                                        <input type="hidden" name="leaveItems" id="leaveItems" />
+                                        <div id="contextMenu" class="dropdown clearfix">
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
+                                                style="display:block;position:static;margin-bottom:5px; color:red">
+                                                <li>
+                                                    <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
+                                                       class="text-muted ml-2"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <br />
+                                @*}
+                                else
+                                {*@
+                                    <div class="table-responsive">
+                                        <table class="table-border-dark">
+                                            <tr>
+                                                <th class="lang" key="table-no" rowspan="2">No</th>
+                                                <th class="lang" rowspan="2" key="name">Name <br /></th>
+                                                <th class="lang" rowspan="2" key="table-code" style="width:60px;">Code No</th>
+                                                <th class="lang" rowspan="2" key="subscribe-date">Customer/Department<br />  </th>
+                                                <th class="lang" colspan="1" key="reason-leave">Registration date</th>
+                                                <th class="lang" rowspan="2" key="">Reason</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-center p-2" key="">
+                                                </th>
+                                            </tr>
+                                            <tbody id="tableInfo">
+                                                @{
+                                                    //var i = 1;
+                                                    //foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
+                                                    //{
+                                                        <tr class="">
+                                                            <td class="text-center">@*@(i)*@</td>
+                                                            <td style="width:20%;">
+                                                        
+
+                                                            </td>
+                                                            <td style="width:5%;">
+                                                            
+
+                                                            </td>
+                                                            <td style="width:15%;">
+                                                              
+                                                            </td>
+                                                            <td style="width:15%;">
+                                                             
+
+                                                            </td>
+                                                            <td>
+                                                               
+
+                                                            </td>
+                                                        </tr>
+                                                        i++;
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <br />
+                                @*}*@
+                            }
+                            @*@Html.Partial("~/Views/Common/_StationApprove.cshtml", Model.STATION_APPROVE)*@
+                        </div>
+                        <hr>
+                    }
+                    <div class="col">
+                        <p class="font-italic font-weight-bold row text-underline">Hướng dẫn chi tiết</p>
+                        <span class="border p-2 row" style="font-size:12px;">
+                            #  Giấy đăng ký nghỉ 70% lương được trưởng bộ phận xác trực tiếp ---> Xác nhận trực tiếp của giám đốc nhà máy  ----> GA
+                            <br />
+                            Thời hạn gửi GA: Trước 12: 00 hôm trước.
+                            <br />
+                        </span>
+                    </div>
+                    <br />
+                </div>
+                <div class="col-md-2">
+                    <h5 class="mt-4 text-success text-uppercase lang" key="comment">THẢO LUẬN</h5>
+                    <hr>
+                    <div class="row">
+                        <script type="text/javascript">
+                            var base_url = window.location.origin;
+                        </script>
+                        <div class="d-inline ml-2">
+                            <img class="avatar" id="avatar" src="~/Content/images/icons8-user-100.png" />
+                        </div>
+                        <div class="d-inline ml-2">
+                            <div class="chat-with" id="user">@*@_session.NAME*@</div>
+                            <div class="chat-num-messages">@*@_session.EMAIL*@</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <textarea id="txbComment" class="form-control ml-2 mt-2"></textarea>
+                        <p id="txbViewComment"></p>
+                    </div>
+                    <button class="btn btn-success lang" key="send" id="btnAddComment">Gửi</button>
+                    <p class="mt-4 text-muted">
+                        <span id="totalComment">0</span> <span class="lang text-uppercase" key="comment">Thảo luận</span>
+                    </p>
+                    <hr>
+                    <ul class="list-group list-group-flush list-comment"></ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*@Html.Hidden("RedirectTo", Url.Action("Index", "Home", new { type = @SendType.SENDTOME }))*@
+<script>
+    var filter = localStorage.getItem('filter')
+    if (filter == null) filter = 'SENDTOME';
+    $('#RedirectTo').val('/Home?type=' + filter);
+</script>
+
+@*@Html.Hidden("LoadTicket", Url.Action("Details", "GAFormLeave", new { ticket = Model.TICKET.TICKET }))*@
+
+@Scripts.Render(Url.ContentVersioned("~/Content/js/mention", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/moment", "js"))
+@Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+@Scripts.Render("~/Scripts/jquery.validate.min.js")
+@Scripts.Render("~/Scripts/jquery.simplePagination.js")
+@Scripts.Render("~/Scripts/bootstrap-typeahead.js")
+@Scripts.Render("~/Scripts/jquery.datetimepicker.js")
+@Scripts.Render(Url.ContentVersioned("~/Content/js/comment", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/form_common", "js"))
+@Scripts.Render(Url.ContentVersioned("~/Content/js/GA/form_leave41", "js"))
