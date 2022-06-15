@@ -205,6 +205,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\DeptController.cs" />
+    <Compile Include="Controllers\GAFormLeave41Controller.cs" />
     <Compile Include="Controllers\GAFormLeaveController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -295,6 +296,7 @@
     <Content Include="Content\js\comment.js" />
     <Content Include="Content\js\form_edit.js" />
     <Content Include="Content\js\GA\form_leave.js" />
+    <Content Include="Content\js\GA\form_leave41.js" />
     <Content Include="Content\js\lca\form_lca.js" />
     <Content Include="Content\js\PR_ACC_F06.js" />
     <Content Include="Content\js\form.js" />
@@ -2212,6 +2214,9 @@
     <Content Include="Views\GAFormLeave\DetailFormUnPaidLeave.cshtml" />
     <Content Include="Views\GAFormLeave\PrintFormUnPaidLeave.cshtml" />
     <Content Include="Views\Home\_ListRequest.cshtml" />
+    <Content Include="Views\GAFormLeave41\CreateFormPaidLeave41.cshtml" />
+    <Content Include="Views\GAFormLeave41\DetailFormPaidLeave41.cshtml" />
+    <Content Include="Views\GAFormLeave41\PrintFormPaidLeave41.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
