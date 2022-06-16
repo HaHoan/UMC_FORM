@@ -9,7 +9,7 @@ namespace UMC_FORM.Business
 {
     public static class MailResponsitory
     {
-        public static  bool SendMail(Form_Summary summary, string typeMail, string controller)
+        public static bool SendMail(Form_Summary summary, string typeMail, string controller)
         {
             try
             {
@@ -49,7 +49,8 @@ namespace UMC_FORM.Business
                     {
                         body = $@"
                                                 <h3>{dear}</h3>
-                                                <h3 style='color: red' >Request reject. Please click below link view details:</h3>
+                                                <h3 style='color: red' >Bạn có 1 yêu cầu bị reject. Click vào link dưới đây để xem chi tiết:</h3>
+                                                <h4'>(Request reject. Please click below link view details)</h4>
 	                                            <a href='{domain}{controller}/Details?ticket={summary.TICKET}'>Click to approval</a>
                                                 <br />
                                                 <h3>Thanks & Best regards</h3>
@@ -63,7 +64,23 @@ namespace UMC_FORM.Business
                     {
                         body = $@"
                                                 <h3>{dear}</h3>
-                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
+                                                <h3 style='color: red' >Bạn có 1 yêu cầu mới cần xác nhận. Click vào link bên dưới để xem chi tiết:</h3>
+                                                <h4>(You have a new Request need to be approved. Please click below link to approve it)</h4>
+	                                            <a href='{domain}{controller}/Details?ticket={summary.TICKET}'>Click to approval</a>
+                                                <br />
+                                                <h3>Thanks & Best regards</h3>
+                                                <h4>*********************</h4>
+                                                <h4>PE-IT</h4>
+                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
+                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
+                                             ";
+                    }
+                    else if(typeMail == STATUS.EDIT_QUOTE)
+                    {
+                        body = $@"
+                                                <h3>{dear}</h3>
+                                                <h3 style='color: red' >Bạn có 1 yêu cầu mới cần xác nhận. Click vào link bên dưới để xem chi tiết:</h3>
+                                                <h4>(You have a new Request need to be approved. Please click below link to approve it)</h4>
 	                                            <a href='{domain}{controller}/Details?ticket={summary.TICKET}'>Click to approval</a>
                                                 <br />
                                                 <h3>Thanks & Best regards</h3>
@@ -74,7 +91,7 @@ namespace UMC_FORM.Business
                                              ";
                     }
 
-                    BackgroundJob.Enqueue(() => MailHelper.SenMailOutlookAsync(userMails, body, null));
+                    BackgroundJob.Enqueue(() => MailHelper.SenMailOutlookAsync(userMails, body, null, summary.TITLE));
                     return true;
                 }
             }

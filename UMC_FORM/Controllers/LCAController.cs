@@ -380,7 +380,7 @@ namespace UMC_FORM.Controllers
 
                             db.SaveChanges();
                             transaction.Commit();
-                            if (!sendMail(summary, STATUS.ACCEPT))
+                            if (!MailResponsitory.SendMail(summary, STATUS.ACCEPT, "LCA"))
                             {
                                 transaction.Rollback();
                                 ModelState.AddModelError("Error", "Error when send mail!");
@@ -673,7 +673,7 @@ namespace UMC_FORM.Controllers
 
                     db.SaveChanges();
                     transaction.Commit();
-                    if (!sendMail(summary, STATUS.REJECT))
+                    if (!MailResponsitory.SendMail(summary, STATUS.REJECT, "LCA"))
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("Error", "Error when send mail!");
@@ -954,7 +954,7 @@ namespace UMC_FORM.Controllers
                     db.SaveChanges();
                     transaction.Commit();
 
-                    if (!sendMail(summary, STATUS.ACCEPT))
+                    if (!MailResponsitory.SendMail(summary, STATUS.ACCEPT, "LCA"))
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("Error", "Gửi mail bị lỗi");
@@ -1058,7 +1058,7 @@ namespace UMC_FORM.Controllers
                     #endregion
                     db.SaveChanges();
                     transaction.Commit();
-                    if (!sendMail(summary, STATUS.EDIT_QUOTE))
+                    if (!MailResponsitory.SendMail(summary, STATUS.EDIT_QUOTE, "LCA"))
                     {
                         transaction.Rollback();
                         ModelState.AddModelError("Error", "Error when send mail!");
@@ -1115,209 +1115,6 @@ namespace UMC_FORM.Controllers
                 ModelState.AddModelError("Error", e.Message.ToString());
                 return View();
             }
-        }
-
-        private bool sendMail(Form_Summary summary, string typeMail)
-        {
-            try
-            {
-                using (var db = new DataContext())
-                {
-                    List<string> userMails = new List<string>();
-                    var dear = "Dear All !";
-                    if (summary.PROCEDURE_INDEX == -1)
-                    {
-                        var userCreate = UserRepository.GetUser(summary.CREATE_USER);
-                        userMails.Add(userCreate.EMAIL);
-                        var name = string.IsNullOrEmpty(userCreate.SHORT_NAME) ? userCreate.NAME : userCreate.SHORT_NAME;
-                        dear = $"Dear {name} san !";
-                    }
-                    else
-                    {
-                        var stations = db.Form_Procedures.Where(m => m.TICKET == summary.TICKET &&
-                        m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1) &&
-                        m.FORM_NAME == summary.PROCESS_ID).Select(m => m.APPROVAL_NAME).ToList();
-                        userMails = UserRepository.GetUsers((List<string>)stations);
-                        if (userMails.Count == 1)
-                        {
-                            var userApproval = db.Form_User.Where(m => m.CODE == stations.FirstOrDefault()).FirstOrDefault();
-                            var name = string.IsNullOrEmpty(userApproval.SHORT_NAME) ? userApproval.NAME : userApproval.SHORT_NAME;
-                            dear = $"Dear {name} san !";
-                        }
-                    }
-
-                    var cc = new List<string>();
-                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (summary.PROCEDURE_INDEX + 1).ToString()
-                 && m.PROCESS == summary.PROCESS_ID).ToList();
-                    var deptSubmit = listPermission.Where(m => !string.IsNullOrEmpty(m.DEPT)).FirstOrDefault();
-                    if (deptSubmit != null)
-                    {
-                        var userCC = UserRepository.GetUsersByDept(deptSubmit.DEPT);
-                        foreach (var user in userCC)
-                        {
-                            if (!userMails.Contains(user.EMAIL))
-                            {
-                                cc.Add(user.EMAIL);
-                            }
-                        }
-
-                    }
-
-
-                    string body = "";
-                    var domain = Bet.Util.Config.GetValue("domain");
-                    if (typeMail == STATUS.REJECT)
-                    {
-                        body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >Request reject. Please click below link view details:</h3>
-	                                            <a href='{domain}LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-                    }
-                    else if (typeMail == STATUS.ACCEPT)
-                    {
-                        body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='{domain}LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-                    }
-                    else if (typeMail == STATUS.EDIT_QUOTE)
-                    {
-                        body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='{domain}LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-                    }
-                    BackgroundJob.Enqueue(() => MailHelper.SenMailOutlookAsync(userMails, body, cc));
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-
-            }
-        }
-        [HttpPost]
-        public JsonResult SendMail(string ticket, string typeMail)
-        {
-            try
-            {
-                using (var db = new DataContext())
-                {
-                    var summary = db.Form_Summary.Where(m => m.TICKET == ticket).FirstOrDefault();
-                    List<string> userMails = new List<string>();
-                    var dear = "Dear All !";
-                    if (summary.PROCEDURE_INDEX == -1)
-                    {
-                        var userCreate = UserRepository.GetUser(summary.CREATE_USER);
-                        userMails.Add(userCreate.EMAIL);
-                        dear = $"Dear {userCreate.SHORT_NAME} san !";
-                    }
-                    else
-                    {
-                        var stations = db.Form_Procedures.Where(m => m.TICKET == ticket &&
-                        m.FORM_INDEX == (summary.PROCEDURE_INDEX + 1) &&
-                        m.FORM_NAME == summary.PROCESS_ID).Select(m => m.APPROVAL_NAME).ToList();
-                        userMails = UserRepository.GetUsers((List<string>)stations);
-                        if (userMails.Count == 1)
-                        {
-                            var userApproval = db.Form_User.Where(m => m.CODE == stations.FirstOrDefault()).FirstOrDefault();
-                            dear = $"Dear {userApproval.SHORT_NAME} san !";
-                        }
-                    }
-
-                    var cc = new List<string>();
-                    var listPermission = db.LCA_PERMISSION.Where(m => m.ITEM_COLUMN_PERMISSION == (summary.PROCEDURE_INDEX + 1).ToString()
-                 && m.PROCESS == summary.PROCESS_ID).ToList();
-                    var deptSubmit = listPermission.Where(m => !string.IsNullOrEmpty(m.DEPT)).FirstOrDefault();
-                    if (deptSubmit != null)
-                    {
-                        var userCC = UserRepository.GetUsersByDept(deptSubmit.DEPT);
-                        foreach (var user in userCC)
-                        {
-                            if (!userMails.Contains(user.EMAIL))
-                            {
-                                cc.Add(user.EMAIL);
-                            }
-                        }
-
-                    }
-
-
-                    string body = "";
-                    if (typeMail == STATUS.REJECT)
-                    {
-                        body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >Request reject. Please click below link view details:</h3>
-	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-                    }
-                    else if (typeMail == STATUS.ACCEPT)
-                    {
-                        body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-                    }
-                    else if (typeMail == STATUS.EDIT_QUOTE)
-                    {
-                        body = $@"
-                                                <h3>{dear}</h3>
-                                                <h3 style='color: red' >You have a new Request need to be approved. Please click below link to approve it:</h3>
-	                                            <a href='http://172.28.10.17:90/LCA/Details?ticket={summary.TICKET}'>Click to approval</a>
-                                                <br />
-                                                <h3>Thanks & Best regards</h3>
-                                                <h4>*********************</h4>
-                                                <h4>PE-IT</h4>
-                                                <h4 style='font-weight: bold;'>UMC Electronic Viet Nam Ltd. </h4>
-                                                <h4>Tan Truong IZ, Cam Giang, Hai Duong. </h4>
-                                             ";
-                    }
-                    BackgroundJob.Enqueue(() => MailHelper.SenMailOutlookAsync(userMails, body, cc));
-
-                }
-            }
-            catch (Exception)
-            {
-                return Json(new { result = STATUS.ERROR }, JsonRequestBehavior.AllowGet);
-
-            }
-            return Json(new { result = STATUS.SUCCESS }, JsonRequestBehavior.AllowGet);
         }
 
         private string validateTicket(LCA_FORM_01 ticket)

@@ -60,7 +60,7 @@ namespace UMC_FORM.Business
             mailMessage.IsBodyHtml = true;
             await smtpClient.SendMailAsync(mailMessage);
         }
-        public static async Task SenMailOutlookAsync(List<string> to, string body, List<string> cc = null)
+        public static async Task SenMailOutlookAsync(List<string> to, string body, List<string> cc = null, string subject = "")
         {
             try
             {
@@ -79,7 +79,7 @@ namespace UMC_FORM.Business
                     Credentials = new NetworkCredential(maiAccount, maiPass)
                 };
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                mailMessage.From = new MailAddress(maiAccount, "System Testing");
+                mailMessage.From = new MailAddress(maiAccount, "Form Online");
                 string hostName = System.Net.Dns.GetHostName();
                 foreach (var item in to)
                 {
@@ -107,8 +107,14 @@ namespace UMC_FORM.Business
                         }
                     }
                 }
-
-                mailMessage.Subject = Constant.SUBJECT;
+                if (string.IsNullOrEmpty(subject))
+                {
+                    mailMessage.Subject = Constant.SUBJECT;
+                }
+                else
+                {
+                    mailMessage.Subject = subject;
+                }
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
                 await smtpClient.SendMailAsync(mailMessage);
@@ -120,6 +126,5 @@ namespace UMC_FORM.Business
 
         }
 
-       
     }
 }

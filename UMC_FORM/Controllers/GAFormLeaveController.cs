@@ -240,7 +240,7 @@ namespace UMC_FORM.Controllers
                         {
                             if (form.PROCEDURE_INDEX == 1)
                             {
-                                if(!string.IsNullOrEmpty(ticket.DEPT_MANAGER) && ticket.DEPT_MANAGER != "0")
+                                if (!string.IsNullOrEmpty(ticket.DEPT_MANAGER) && ticket.DEPT_MANAGER != "0")
                                 {
                                     var nextStation = db.Form_Procedures.Where(m => m.TICKET == form.TICKET && m.FORM_INDEX == 2).FirstOrDefault();
                                     nextStation.APPROVAL_NAME = ticket.DEPT_MANAGER;
@@ -248,10 +248,14 @@ namespace UMC_FORM.Controllers
                                 }
                                 else
                                 {
-                                    transaction.Rollback();
-                                    return Json(new { result = STATUS.ERROR, message = "Bạn cần chọn trưởng phòng cho bước tiếp theo!" }, JsonRequestBehavior.AllowGet);
+                                    var isHaveDeptManager = FormProcedureResponsitory.CheckNextStepHaveApprover(form.TICKET, form.PROCEDURE_INDEX + 1);
+                                    if (!isHaveDeptManager)
+                                    {
+                                        transaction.Rollback();
+                                        return Json(new { result = STATUS.ERROR, message = "Bước tiếp theo chưa có người xác nhận!" }, JsonRequestBehavior.AllowGet);
+                                    }
                                 }
-                               
+
                             }
                             else
                             {
@@ -362,7 +366,7 @@ namespace UMC_FORM.Controllers
                         db.GA_LEAVE_FORM.Add(form);
 
                         // để lưu lại bước sẽ quay lại sau khi luồng reject được thực hiện xong
-                        summary.REJECT_INDEX = form.PROCEDURE_INDEX;
+                        summary.REJECT_INDEX = formDb.PROCEDURE_INDEX;
                         summary.IS_REJECT = true;
 
                         // Để lưu lại bước bị reject về

@@ -50,6 +50,7 @@ namespace UMC_FORM.Business
                 try
                 {
                     var result = from p in db.Form_Summary
+                                 where p.IS_FINISH == false
                                  join c in db.Form_Procedures on p.TICKET equals c.TICKET
                                  where c.APPROVAL_NAME == userCode && p.PROCEDURE_INDEX >= c.FORM_INDEX
                                  select new
