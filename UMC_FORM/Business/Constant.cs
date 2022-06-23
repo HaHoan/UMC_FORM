@@ -16,10 +16,12 @@ namespace UMC_FORM.Business
         public static string LCA_FORM_01_ID = "F01-LCA";
         public static string GA_LEAVE_FORM_GA_35 = "GA-35 GIẤY ĐĂNG KÍ NGHỈ CÓ LƯƠNG";// TITLE
         public static string GA_LEAVE_FORM_GA_34 = "GA-34 GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG 無給休暇届";
+        public static string GA_LEAVE_FORM_GA_41 = "GA-41 GIẤY ĐĂNG KÝ NGHỈ HƯỞNG 70% LƯƠNG";
         public static string GA_LEAVE_FORM = "GA_LEAVE_FORM";
+        public static string GA_LEAVE_FORM41 = "GA_LEAVE_FORM41";
         public static string GA_PAID_LEAVE_ID = "GA_35"; //FORM NAME
         public static string GA_UNPAID_LEAVE_ID = "GA_34";
-
+        public static string GA_LEAVE70_ID = "GA_41";
         public static string FM = "IWASAKI";
         public static string GD = "YOKOUCHI";
         //public static readonly string MAIL = "quyetpv@umcvn.com";

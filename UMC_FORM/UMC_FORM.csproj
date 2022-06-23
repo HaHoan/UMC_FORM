@@ -241,6 +241,7 @@
     <Compile Include="Models\GA\GA_LEAVE_FORM.cs" />
     <Compile Include="Models\GA\GA_LEAVE_FORM_DETAIL_MODEL.cs" />
     <Compile Include="Models\GA\GA_LEAVE_FORM_ITEM.cs" />
+    <Compile Include="Models\GA\GA_LEAVE_FORM_ITEM_DETAIL.cs" />
     <Compile Include="Models\LCA\LCADetailModel.cs" />
     <Compile Include="Models\StationApproveModel.cs" />
     <Compile Include="Models\LCA_FILE.cs" />

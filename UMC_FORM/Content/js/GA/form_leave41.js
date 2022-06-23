@@ -36,7 +36,7 @@ function deleteRow(e) {
 function updateleaveItems() {
     leaveItems = []
     var checkTime = 0;
-    $('.row-info').each(function (rowIndex) {
+    $('#tableInfo .row-info').each(function (rowIndex) {
         index = rowIndex + 1
         var fullname = $('#FULLNAME' + index).val()
         var code = $('#CODE' + index).val()
@@ -48,40 +48,29 @@ function updateleaveItems() {
             $('#CODE' + index + '_ERROR').text('Mã số không được để trống')
             checkTime = 1
         }
-        var time_from = $('#TIME_FROM' + index).val()
-
-        if (time_from == '' && code != '') {
-            $('#TIME_FROM' + index + '_ERROR').text('Thời gian bắt đầu không được để trống')
-            checkTime = 1
-        }
-        var time_to = $('#TIME_TO' + index).val()
-        if (time_to == '' && code != '') {
-            $('#TIME_TO' + index + '_ERROR').text('Thời gian bắt đầu không được để trống')
-            checkTime = 1
-        }
-        var total = $('#TOTAL' + index).val()
-        if (total <= 0 && code != '') {
-            $('#TOTAL' + index + '_ERROR').text('Tổng số không được bằng 0')
-            checkTime = 1
-        }
+        var customer = $('#CUSTOMER' + index).val()
         var reason = $('#REASON' + index).val()
-        if (reason == '' && code != '') {
-            $('#REASON' + index + '_ERROR').text('Lý do nghỉ không được để trống')
-            checkTime = 1
+        var count_col = $('th', $('.table-border-dark ').find('#columns')).length;
+        var list_timeleave = []
+        for (var i = 1; i <= count_col; i++) {
+            var value_checkbox = $('#REGISTRATION_DATE' + index +'_'+ i).is(":checked")
+            if (value_checkbox == true) {
+                var date_resgistration = $("#TIME_LEAVE" + i).val()
+                
+                list_timeleave.push(date_resgistration)
+            }
+
         }
-        var speacial_leave = $('#SPEACIAL_LEAVE' + index).is(":checked")
-        var remark = $('#REMARK' + index).val()
+        
         if (fullname != '') {
             var obj = {
                 NO: index,
                 FULLNAME: fullname,
                 CODE: code,
-                TIME_FROM: time_from.trim(),
-                TIME_TO: time_to.trim(),
-                TOTAL: total == "" ? 0 : total,
                 REASON: reason,
-                SPEACIAL_LEAVE: speacial_leave,
-                REMARK: remark
+                CUSTOMER: customer,
+           
+                TIME_LEAVE: list_timeleave
             }
             leaveItems.push(obj)
         }
@@ -121,7 +110,7 @@ function addTdCheckbox(name) {
     var col = $('<td/>');
     var input = $('<input/>', {
         type: 'checkbox',
-        class:'form-input type_number inputDefault',
+        class: 'form-input type_number inputDefault',
     })
     col.append(input);
     input.attr('id', name)
@@ -134,8 +123,8 @@ function addTdCheckbox(name) {
     return col;
 }
 
-function addTdReason(name) {
-    var col = $('<td id="reason"/>');
+function addTdReason(name,row) {
+    var col = $('<td id="TD_REASON'+row +'"/>');
     var input = $('<textarea/>', {
         class: 'form-input  inputDefault',
         name: name,
@@ -175,28 +164,30 @@ function OnFailure(response) {
     enableButton()
 }
 
-const FORMAT_DATE_TIME = 'd/m/Y H:i'
-const FORMAT_DATE = 'd/m/Y'
+const FORMAT_DATE_TIME = 'd-M'
+const FORMAT_DATE = 'd-M'
 $(function () {
-    $('#DATE_REGISTION_VIEW').datetimepicker({
+    var count_col = $('th', $('.table-border-dark ').find('#columns')).length;
+    $('#TIME_LEAVE' + count_col).datetimepicker({
+        format: FORMAT_DATE,
+        value: moment().format(),
+        onChangeDateTime() {
+            var date = $("#TIME_LEAVE" + count_col).val()
+            $('#TIME_LEAVE' + count_col).val(date)
+        }
+    });
+    var date = $("#TIME_LEAVE" + count_col).val()
+    $('#TIME_LEAVE' + count_col).val(date)
+
+    $('#DATE_REGISTER_VIEW' + count_col).datetimepicker({
         format: FORMAT_DATE,
         formatDate: FORMAT_DATE,
         value: moment().format(),
         onChangeDateTime() {
-            $('#DATE_REGISTION').val(convertDateToValid($("#DATE_REGISTION_VIEW").val()))
+            $('#DATE_REGISTER' + count_col).val(convertDateToValid($("#DATE_REGISTER_VIEW" + count_col).val()))
         }
     });
-    $('#DATE_REGISTION').val(convertDateToValid($("#DATE_REGISTION_VIEW").val()))
-   
-    $('#DATE_REGISTER_VIEW').datetimepicker({
-        format: FORMAT_DATE,
-        formatDate: FORMAT_DATE,
-        value: moment().format(),
-        onChangeDateTime() {
-            $('#DATE_REGISTER').val(convertDateToValid($("#DATE_REGISTER_VIEW").val()))
-        }
-    });
-    $('#DATE_REGISTER').val(convertDateToValid($("#DATE_REGISTER_VIEW").val()))
+    $('#DATE_REGISTER' + count_col).val(convertDateToValid($("#DATE_REGISTER_VIEW" + count_col).val()))
     $('#frmpaidleave_accept').click(function (e) {
         $('#status').val("accept")
     })
@@ -216,8 +207,9 @@ $(function () {
     });
     $('#registration_date').attr('colspan', 1);
     $("#contextMenu li #add_row").click(function (e) {
+        var column = $('.table-border-dark tr #registration_date').attr('colspan');
         var index = $('#tableInfo tr').length + 1;
-        var colCount = $(".table-border-dark tr th").length-1;
+        var colCount = $(".table-border-dark tr th").length - 1;
         var row = $('<tr/>', {
             class: 'row-info'
         });
@@ -229,11 +221,11 @@ $(function () {
         row.append(addTd("CODE" + index));
         row.append(addTd("FULLNAME" + index));
         row.append(addTd("DEPARTMENT_CUS" + index));
-        row.append(addTdCheckbox("REGISTRATION_DATE" + index));
+        row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + span));
         for (var i = 7; i <= colCount; i++) {
-            row.append(addTdCheckbox("REGISTRATION_DATE" + index));
+            row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + column));
         }
-        row.append(addTdReason("REASON" + index));
+        row.append(addTdReason("REASON" + index, index));
         var rowDelete = $('<td/>');
         var btnXoa = $('<button/>', {
             text: 'Xóa',
@@ -248,24 +240,61 @@ $(function () {
         $('#tableInfo').append(row);
     });
     $("#contextMenu li #add_column").click(function (e) {
-        var span = $('.table-border-dark tr #registration_date').attr('colspan');
-        var index_column = parseInt(span) + 1;
-        var index_row = $('#tableInfo tr').length + 1;
+        var column = $('.table-border-dark tr #registration_date').attr('colspan');
+        var index_column = parseInt(column) + 1;
+        var index_row = $('#tableInfo tr').length;
         $('#registration_date').attr('colspan', index_column);
         var col = $('<th/>');
         var input = $('<input/>', {
             class: 'form-input inputDefault',
-        })     
+        })
         $('.table-border-dark #columns').append(col);
         col.append(input);
-        input.attr('id', name);
-        input.attr('name', name);
+        input.attr('id', 'TIME_LEAVE' + index_column);
+        input.attr('name', 'TIME_LEAVE' + index_column);
         input.datetimepicker({
             format: FORMAT_DATE_TIME,
             formatDate: FORMAT_DATE_TIME,
         });
-        $("#tableInfo tr").find("#reason").before(addTdCheckbox("REGISTRATION_DATE" + index_row));      
+        addTdCheckbox_addcol("REGISTRATION_DATE", index_column, index_row)
+
+        $('#TIME_LEAVE' + index_column).datetimepicker({
+            format: FORMAT_DATE,
+            formatDate: FORMAT_DATE,
+            value: moment().format(),
+            onChangeDateTime() {
+                var date_col = $("#TIME_LEAVE" + index_column).val()
+                $('#TIME_LEAVE' + index_column).val(date_col)
+            }
+        });
+        var date_col = $("#TIME_LEAVE" + index_column).val()
+        $('#TIME_LEAVE' + index_column).val(date_col)
     });
+    function addTdCheckbox_addcol(name, index_col, index_row) {
+
+        for (var i = 1; i <= index_row; i++) {
+            var col = $('<td/>');
+            var input = $('<input/>', {
+                type: 'checkbox',
+                class: 'form-input type_number inputDefault',
+            })
+            col.append(input);
+            input.attr('id', name + i + '_' + index_col)
+            input.attr('name', name + i + '_' + index_col)
+            $('#TD_REASON' + i).before(col)
+
+        }
+    }
+    $("#contextMenu li #delete_column").click(function (e) {
+        $("#tableInfo").contextmenu({
+            selector: 'td',
+            callback: function (key, options) {
+                var content = $(this).text();
+                alert("You clicked on: " + content);
+            },
+        });
+    });
+
     $(".btnXoa").on('click', function () {
         deleteRow(this);
     })

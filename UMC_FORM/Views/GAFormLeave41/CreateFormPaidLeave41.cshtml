@@ -1,10 +1,10 @@
-﻿@*@model UMC_FORM.Models.GA.GA_LEAVE_FORM_ITEM*@
+﻿@model UMC_FORM.Models.GA.GA_LEAVE_FORM_ITEM
 @using UMC_FORM.Models
 @using UMC_FORM.Ultils
 @using UMC_FORM.Business
 @{
     Layout = null;
-    // var _session = Session["user"] as Form_User;
+    var _session = Session["user"] as Form_User;
 }
 
 <!DOCTYPE html>
@@ -38,15 +38,15 @@
         <div>
             <div>
                 <div>
-                    @*@using (Ajax.BeginForm("CreateNew", "GAFormLeave", new AjaxOptions
-                        {
-                            OnSuccess = "OnSuccess",
-                            OnFailure = "OnFailure",
-                            LoadingElementId = "progress"
-                        }, new { enctype = "multipart/form-data", id = "formCreate" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.ValidationSummary();*@
+       @using (Ajax.BeginForm("Create", "GAFormLeave41", new AjaxOptions
+        {
+            OnSuccess = "OnSuccess",
+            OnFailure = "OnFailure",
+            LoadingElementId = "progress"
+        }, new { enctype = "multipart/form-data", id = "formCreate" }))
+        {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary();
                     <div class="modal-body">
                         <div>
                             <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
@@ -55,7 +55,7 @@
                             </a>
                         </div>
                         <hr>
-                        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="info-edit">
 
                             <div class="row">
@@ -63,7 +63,7 @@
                                     <label class="font-weight-bold lang" key="request_dept_sub" name="DEPT">Request Dept</label>
                                 </div>
                                 <div class="col-9">
-                                    <input class="form-control" value="@*@_session.DEPT*@" name="DEPT" readonly="readonly" />
+                                    <input class="form-control" value="@_session.DEPT" name="DEPT" readonly="readonly" />
                                 </div>
                             </div>
                             <br />
@@ -76,40 +76,40 @@
                                     <input class="form-control" id="DATE_REGISTER_VIEW" name="DATE_REGISTER_VIEW">
                                 </div>
                             </div>
-                            @*@if (ViewBag.listManager != null)
-                                {*@
-                            <br />
-                            <div class="row">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="dept_manager">Name</label>
-                                </div>
-                                <div class="col-9">
-                                    <select class="custom-select" id="deptManager" name="DEPT_MANAGER">
-                                        @*@foreach (var mng in ViewBag.listManager)
+                            @if (ViewBag.listManager != null)
+                            {
+                                <br />
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <select class="custom-select" id="deptManager" name="DEPT_MANAGER">
+                                            @foreach (var mng in ViewBag.listManager)
                                             {
                                                 <option value="@mng.CODE">@mng.NAME</option>
-                                            }*@
-                                    </select>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            @*}*@
+                            }
                             <br />
-                            @*@if (ViewBag.listShiftManager != null)
-                                {*@
-                            <div class="row">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="manager_shift">Name</label>
-                                </div>
-                                <div class="col-9">
-                                    <select class="custom-select" id="shiftManager" name="SHIFT_MANAGER">
-                                        @*@foreach (var shift_mng in ViewBag.listShiftManager)
+                            @if (ViewBag.listShiftManager != null)
+                            {
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="manager_shift">Name</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <select class="custom-select" id="shiftManager" name="SHIFT_MANAGER">
+                                            @foreach (var shift_mng in ViewBag.listShiftManager)
                                             {
                                                 <option value="@shift_mng.CODE">@shift_mng.NAME</option>
-                                            }*@
-                                    </select>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            @*}*@
+                            }
                             <br />
                             <div class="row">
                                 <div class="col-12">
@@ -119,21 +119,20 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <input type="hidden" value="@*@Constant.GA_LEAVE_FORM_GA_35*@" name="purpose" />
-                                <input type="hidden" value="@*@Constant.GA_PAID_LEAVE_ID*@" name="formName" />
+                                <input type="hidden" value="@Constant.GA_LEAVE_FORM41" name="purpose" />
+                                <input type="hidden" value="@Constant.GA_LEAVE70_ID" name="formName" />
                                 <table class="table-border-dark">
                                     <tr>
                                         <th class="lang" key="table-no" rowspan="2">No</th>
                                         <th class="lang" rowspan="2" key="table-code" style="width:100px;">Code No<br /> コード </th>
-                                        <th class="lang" rowspan="2" key="name">Name <br /> 氏名</th>                                       
-                                        <th class="lang" rowspan="2" key="subscribe-date">Customer/Department<br /> 取得日 </th>
+                                        <th class="lang" rowspan="2" key="name">Name <br /> 氏名</th>
+                                        <th class="lang" rowspan="2" key="customer_department">Customer/Department<br /> 取得日 </th>
                                         <th class="lang" key="registration_date" style="" id="registration_date">Registration date</th>
                                         <th class="lang" rowspan="2" key="reason" style="">Reason</th>
                                     </tr>
                                     <tr id="columns">
-                                        <th id="th_column">
-                                            <input type="hidden" name="DATE_REGISTION" id="DATE_REGISTION" />
-                                            <input class="form-control" id="DATE_REGISTION_VIEW" name="DATE_REGISTION_VIEW">
+                                        <th>
+                                            <input class="form-input inputDefault" name="TIME_LEAVE1" id="TIME_LEAVE1" />
                                         </th>
 
                                     </tr>
@@ -141,28 +140,32 @@
                                         @{
                                             for (int i = 1; i <= 5; i++)
                                             {
+                                                int j = 1;
                                                 <tr class="row-info">
                                                     <td class="text-center">@(i)</td>
+
                                                     <td>
-                                                        <input class="form-input inputDefault" id="" />
-                                                        <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-input inputDefault" id=""name="" />
+                                                        <input class="form-input inputDefault" id=@("CODE"+i) name="" />
                                                         <span class="error" id=@("CODE"+i + "_ERROR")></span>
                                                     </td>
                                                     <td>
-                                                        <input class="form-input inputDefault" id=@("" + i) name=@("" + i) autocomplete="off" />
-                                                        <span class="error" id=@(""+i+"_ERROR")></span>
+                                                        <input class="form-input inputDefault" id=@("FULLNAME"+i) />
+                                                        <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
                                                     </td>
-                                                    <td id="date1">
-                                                        <input class="form-input type_number inputDefault" name=@("" + i) id=@("" + i) type="checkbox" />
-                                                        <span class="error" id=@(""+i+"_ERROR")></span>
+                                                    <td>
+                                                        <input class="form-input inputDefault" id=@("CUSTOMER" + i) name=@("CUSTOMER" + i) autocomplete="off" />
+                                                        <span class="error" id=@("CUSTOMER"+i+"_ERROR")></span>
                                                     </td>
-                                                    <td id="reason" >
+                                                    <td>
+                                                        <input class="form-input type_number inputDefault" name=@("REGISTRATION_DATE" + i+"_"+j) id=@("REGISTRATION_DATE" + i+"_"+j) type="checkbox" />
+                                                        <span class="error" id=@("REGISTRATION_DATE"+i+"_ERROR")></span>
+                                                    </td>
+
+                                                    <td id="@("TD_REASON" + i)">
                                                         <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
                                                         <span class="error" id=@("REASON"+i + "_ERROR")></span>
                                                     </td>
+
                                                 </tr>
                                             }
                                         }
@@ -174,11 +177,15 @@
                                         style="display:block;position:static;margin-bottom:5px; color:red">
                                         <li>
                                             <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                               class="text-muted ml-2" id="add_row"><i class="fas fa-plus"></i><span class="lang" key="add-row"></span></a>
+                                               class="text-muted ml-2" id="add_row"><i class="fas fa-long-arrow-alt-right"></i>&nbsp;<span class="lang" key="add-row"></span></a>
                                         </li>
                                         <li>
                                             <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                               class="text-muted ml-2" id="add_column"><i class="fas fa-plus"></i><span class="lang" key="add-column"></span></a>
+                                               class="text-muted ml-2" id="add_column"><i class="fa fa-columns"></i>&nbsp;<span class="lang" key="add-column"></span></a>
+                                        </li>
+                                        <li>
+                                            <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
+                                               class="text-muted ml-2" id="delete_column"><i class="fa fa-trash"></i>&nbsp;<span class="lang" key="delete-column"></span></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -210,7 +217,7 @@
                         </div>
                     </div>
                     <br>
-                    }
+        }
                 </div>
             </div>
         </div>
