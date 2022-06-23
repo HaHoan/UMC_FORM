@@ -1,9 +1,10 @@
-﻿@*@model UMC_FORM.Models.GA.GA_LEAVE_FORM_DETAIL_MODEL
+﻿@model UMC_FORM.Models.GA.GA_LEAVE_FORM_DETAIL_MODEL
 @using UMC_FORM.Business
-@using UMC_FORM.Models*@
+@using UMC_FORM.Models
 @using UMC_FORM.Ultils
 @{
     Layout = null;
+    var maxPlayCount = Model.TICKET.GA_LEAVE_FORM_ITEMs.Max(x => x.TOTAL);
 }
 
 <!DOCTYPE html>
@@ -92,7 +93,7 @@
                             <label class="font-weight-bold lang" key="request_dept_sub">Bộ phận đăng ký &ensp; 部署</label>
                         </div>
                         <div class="col-9">
-                            @*<p> @Model.TICKET.DEPT</p>*@
+                            <p> @Model.TICKET.DEPT</p>
                         </div>
                     </div>
                     <br />
@@ -101,7 +102,7 @@
                             <label class="font-weight-bold lang" key="request_date_sub">Ngày đăng ký &ensp; 申請日</label>
                         </div>
                         <div class="col-9">
-                            @*@Model.TICKET.DATE_REGISTER.ToString("dd-MM-yyyy")*@
+                            @Model.TICKET.DATE_REGISTER.ToString("dd-MM-yyyy")
                         </div>
                     </div>
                     <br />
@@ -110,7 +111,7 @@
                             <label class="font-weight-bold lang" key="count_subscriber">Số người đăng ký &ensp; 人数</label>
                         </div>
                         <div class="col-9">
-                            @*@Model.TICKET.NUMBER_REGISTER*@
+                            @Model.TICKET.NUMBER_REGISTER
                         </div>
                     </div>
                     <br>
@@ -124,39 +125,68 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table-border-dark" style="font-size:10px;">
+                        <table class="table-border-dark">
                             <tr>
-                                <th class="lang" key="table-no" rowspan="2">No</th>
-                                <th class="lang" rowspan="2" key="name">Name <br /></th>
-                                <th class="lang" rowspan="2" key="table-code" style="width:60px;">Code No</th>
-                                <th class="lang" rowspan="2" key="subscribe-date">Customer/Department<br />  </th>
-                                <th class="lang" colspan="1" key="">Registration date</th>
-                                <th class="lang" rowspan="2" key="reason-leave">Reason</th>
+                                <th class="lang" key="table-no" rowspan="2">STT <br />.No</th>
+
+                                <th class="lang" rowspan="2" key="table-code" style="width:60px;">Mã số <br /> コード</th>
+                                <th class="lang" rowspan="2" key="name">Họ tên <br /> 氏名</th>
+                                <th class="lang" rowspan="2" key="customer_department">Bộ phận/ Khách hàng<br />  </th>
+                                <th class="lang" colspan="@maxPlayCount" key="registration_date">Ngày đăng ký nghỉ 70%</th>
+                                <th class="lang" rowspan="2" key="reason-leave">Lý do</th>
                             </tr>
                             <tr>
-                                <th class="text-center p-2" key="">
-                                </th>
+
+                                @foreach (var item_regis in ViewBag.List_detail)
+                                {
+
+                                    <th class="text-center p-2" key="">
+                                        @item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")
+                                    </th>
+
+                                }
                             </tr>
                             <tbody id="tableInfo">
                                 @{
                                     var i = 1;
-                                    //foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
-                                    //{
+                                    foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
+                                    {
+
                                         <tr class="">
-                                            <td class="text-center">@(i)</td>
-                                            <td style="width:20%;">
-                                            </td>
+                                            <td style="width:5%;" class="text-center">@(i)</td>
                                             <td style="width:5%;">
+                                                @item.CODE
+
                                             </td>
-                                            <td style="width:15%;">
+                                            <td style="width:20%;">
+                                                @item.FULLNAME
+
                                             </td>
-                                            <td style="width:15%;">
+                                            <td style="width:10%;text-align:center;">
+                                                @item.CUSTOMER
                                             </td>
+
+                                            @foreach (var item_regis in ViewBag.List_detail)
+                                            {
+                                                <td style="text-align:center; width:15%;">
+                                                    @foreach (var item_registration in item.GA_LEAVE_FORM_ITEM_DETAILs)
+                                                    {
+                                                        if (item_regis.TIME_LEAVE == item_registration.TIME_LEAVE)
+                                                        {
+                                                            <i class="fa fa-check"></i>
+                                                        }
+
+                                                    }
+                                                </td>
+
+                                            }
                                             <td>
+                                                @item.REASON
                                             </td>
                                         </tr>
+
                                         i++;
-                                    @*}*@
+                                    }
                                 }
                             </tbody>
                         </table>
@@ -164,7 +194,7 @@
                     <br />
                 </div>
                 <br />
-                @*@Html.Partial("~/Views/Common/_StationApprove.cshtml", Model.STATION_APPROVE)*@
+                @Html.Partial("~/Views/Common/_StationApprove.cshtml", Model.STATION_APPROVE)
                 <hr>
                 <div class="col">
                     <p class="font-italic font-weight-bold row text-underline" style="font-size:12px;">Chú ý</p>

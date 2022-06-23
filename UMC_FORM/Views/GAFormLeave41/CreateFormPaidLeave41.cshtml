@@ -14,7 +14,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width" />
-    <title>Tạo form đăng ký nghỉ có lương</title>
+    <title>Tạo form đăng ký nghỉ hưởng 70% lương</title>
     <meta name="description" content="" />
     <meta name="author" content="" />
     <link href="@Url.ContentVersioned("~/Content/css/styles", "css")" rel="stylesheet" />
@@ -38,24 +38,25 @@
         <div>
             <div>
                 <div>
-       @using (Ajax.BeginForm("Create", "GAFormLeave41", new AjaxOptions
-        {
-            OnSuccess = "OnSuccess",
-            OnFailure = "OnFailure",
-            LoadingElementId = "progress"
-        }, new { enctype = "multipart/form-data", id = "formCreate" }))
-        {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary();
-                    <div class="modal-body">
-                        <div>
-                            <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
-                                <i class="fas fa-angle-left font-title text-muted d-inline"></i>
-                                <h5 class="rext-dark d-inline lang text-uppercase" key="create-request">TẠO ĐỀ XUẤT MỚI</h5>
-                            </a>
-                        </div>
-                        <hr>
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @using (Ajax.BeginForm("CreateNew", "GAFormLeave41", new AjaxOptions
+                    {
+                        OnSuccess = "OnSuccess",
+                        OnFailure = "OnFailure",
+                        LoadingElementId = "progress"
+                    }, new { enctype = "multipart/form-data", id = "formCreate" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary();
+                        <input type="hidden" value="@(_session.CODE)" id="user_code" />
+                        <div class="modal-body">
+                            <div>
+                                <a href=@Url.Action("Index", "Home",new {type = SendType.MYREQUEST } ) style="text-decoration: none;" class="text-dark">
+                                    <i class="fas fa-angle-left font-title text-muted d-inline"></i>
+                                    <h5 class="rext-dark d-inline lang text-uppercase" key="create-request">TẠO ĐỀ XUẤT MỚI</h5>
+                                </a>
+                            </div>
+                            <hr>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="info-edit">
 
                             <div class="row">
@@ -76,40 +77,53 @@
                                     <input class="form-control" id="DATE_REGISTER_VIEW" name="DATE_REGISTER_VIEW">
                                 </div>
                             </div>
-                            @if (ViewBag.listManager != null)
-                            {
-                                <br />
-                                <div class="row">
-                                    <div class="col-3">
-                                        <label class="font-weight-bold lang" key="dept_manager">Name</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <select class="custom-select" id="deptManager" name="DEPT_MANAGER">
-                                            @foreach (var mng in ViewBag.listManager)
-                                            {
-                                                <option value="@mng.CODE">@mng.NAME</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            }
                             <br />
-                            @if (ViewBag.listShiftManager != null)
+                            @if (ViewBag.listGroupLeader != null)
                             {
                                 <div class="row">
                                     <div class="col-3">
-                                        <label class="font-weight-bold lang" key="manager_shift">Name</label>
+                                        <label class="font-weight-bold lang" key="group_leader">Name</label>
                                     </div>
                                     <div class="col-9">
-                                        <select class="custom-select" id="shiftManager" name="SHIFT_MANAGER">
-                                            @foreach (var shift_mng in ViewBag.listShiftManager)
+                                        <select class="custom-select" id="GROUP_LEADER" name="GROUP_LEADER">
+                                            <option value="0">Chọn trưởng nhóm có quyền approve</option>
+                                            @foreach (var group_leader in ViewBag.listGroupLeader)
                                             {
-                                                <option value="@shift_mng.CODE">@shift_mng.NAME</option>
+                                                <option value="@group_leader.CODE">@group_leader.NAME</option>
                                             }
                                         </select>
+                                        <span class="error" id="GROUP_LEADER_ERROR"></span>
                                     </div>
                                 </div>
+                                <br />
                             }
+                            <br>
+                            <div class="row" id="select_dept_manager">
+                                <div class="col-3">
+                                    <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                </div>
+                                <div class="col-9">
+
+                                    <select class="custom-select" id="DEPT_MANAGER" name="DEPT_MANAGER">
+                                        <option value="0">Chọn trưởng phòng có quyền approve</option>
+                                        @foreach (var mng in ViewBag.listManager)
+                                        {
+                                            <option value="@mng.CODE">@mng.NAME</option>
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                            <br />
+
+                            <div class="row">
+                                <div class="col-3">
+                                    <label class="font-weight-bold lang" key="count_subscriber">Count subscriber</label>
+                                </div>
+                                <div class="col-9">
+                                    <p id="NUMBER_REGISTER">0</p>
+                                </div>
+                            </div>
                             <br />
                             <div class="row">
                                 <div class="col-12">
@@ -119,8 +133,8 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <input type="hidden" value="@Constant.GA_LEAVE_FORM41" name="purpose" />
-                                <input type="hidden" value="@Constant.GA_LEAVE70_ID" name="formName" />
+                                <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_41" name="TITLE" />
+                                <input type="hidden" value="@Constant.GA_LEAVE70_ID" name="FORM_NAME" id="formName" />
                                 <table class="table-border-dark">
                                     <tr>
                                         <th class="lang" key="table-no" rowspan="2">No</th>
@@ -128,10 +142,11 @@
                                         <th class="lang" rowspan="2" key="name">Name <br /> 氏名</th>
                                         <th class="lang" rowspan="2" key="customer_department">Customer/Department<br /> 取得日 </th>
                                         <th class="lang" key="registration_date" style="" id="registration_date">Registration date</th>
-                                        <th class="lang" rowspan="2" key="reason" style="">Reason</th>
+                                        <th class="lang" rowspan="2" key="reason-leave" style="">Reason</th>
+                                        <th rowspan="2"></th>
                                     </tr>
                                     <tr id="columns">
-                                        <th>
+                                        <th style="width:100px;">
                                             <input class="form-input inputDefault" name="TIME_LEAVE1" id="TIME_LEAVE1" />
                                         </th>
 
@@ -158,14 +173,15 @@
                                                     </td>
                                                     <td>
                                                         <input class="form-input type_number inputDefault" name=@("REGISTRATION_DATE" + i+"_"+j) id=@("REGISTRATION_DATE" + i+"_"+j) type="checkbox" />
-                                                        <span class="error" id=@("REGISTRATION_DATE"+i+"_ERROR")></span>
                                                     </td>
 
-                                                    <td id="@("TD_REASON" + i)">
+                                                    <td class=@("TD_REASON" + i)>
                                                         <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
                                                         <span class="error" id=@("REASON"+i + "_ERROR")></span>
                                                     </td>
-
+                                                    <td>
+                                                        <button class="btnXoa btn btn-danger" type="button" onclick="deleteRow(this)"> Xóa</button>
+                                                    </td>
                                                 </tr>
                                             }
                                         }
@@ -183,41 +199,38 @@
                                             <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
                                                class="text-muted ml-2" id="add_column"><i class="fa fa-columns"></i>&nbsp;<span class="lang" key="add-column"></span></a>
                                         </li>
-                                        <li>
-                                            <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                               class="text-muted ml-2" id="delete_column"><i class="fa fa-trash"></i>&nbsp;<span class="lang" key="delete-column"></span></a>
-                                        </li>
+
                                     </ul>
                                 </div>
                             </div>
                             <br />
                         </div>
-                        <hr>
-                        <br />
-                        <div class="col">
-                            <p class="font-italic font-weight-bold row text-underline">Hướng dẫn chi tiết</p>
-                            <span class="border p-2 row">
-                                #  Giấy đăng ký nghỉ 70% lương được trưởng bộ phận xác trực tiếp ---> Xác nhận trực tiếp của giám đốc nhà máy  ----> GA
-                                <br />
-                                Thời hạn gửi GA: Trước 12:00 hôm trước.
-                                <br />
-                            </span>
+                            <hr>
+                            <br />
+                            <div class="col">
+                                <p class="font-italic font-weight-bold row text-underline">Hướng dẫn chi tiết</p>
+                                <span class="border p-2 row">
+                                    #  Giấy đăng ký nghỉ 70% lương được trưởng bộ phận xác trực tiếp ---> Xác nhận trực tiếp của giám đốc nhà máy  ----> GA
+                                    <br />
+                                    Thời hạn gửi GA: Trước 12:00 hôm trước.
+                                    <br />
+                                </span>
+                            </div>
+                            <br />
                         </div>
-                        <br />
-                    </div>
-                    <div class="row">
-                        <div class="col-3"></div>
-                        <div class="col">
-                            <button class="btn btn-danger col lang" key="cancel" id='frmpaidleave_cancel' type="button" formnovalidate>Từ chối</button>
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col">
+                                <button class="btn btn-danger col lang" key="cancel" id='frmpaidleave_cancel' type="button" formnovalidate>Từ chối</button>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="spinner-button btn btn-success mb-2 lang col" key="create" id="frmpaidleave_create">
+                                    Đề xuất
+                                </button>
+                            </div>
                         </div>
-                        <div class="col">
-                            <button type="submit" class="spinner-button btn btn-success mb-2 lang col" key="create" id="frmpaidleave_create">
-                                Đề xuất
-                            </button>
-                        </div>
-                    </div>
-                    <br>
-        }
+                        <br>
+                    }
                 </div>
             </div>
         </div>

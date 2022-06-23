@@ -165,7 +165,10 @@ var arrLang = {
         "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
         "request_date_sub": "Ngày đăng ký",
         "group_leader": "Leader",
-        "my-approve":"Approved"
+        "my-approve": "Approved",
+        "customer_department": "Department/ Customer",
+        "registration_date": "Registration date 70%",
+        "frmpaidleave41_title": "GIẤY ĐĂNG KÝ NGHỈ HƯỞNG 70% LƯƠNG ",
     },
     "vi": {
         "Home": "TRANG CHỦ",
@@ -297,7 +300,10 @@ var arrLang = {
         "frmunpaidleave_title": "GIẤY ĐĂNG KÝ NGHỈ KHÔNG LƯƠNG",
         "request_date_sub": "Ngày đăng ký",
         "group_leader": "Trưởng Nhóm",
-        "my-approve": "Đã phê duyệt"
+        "my-approve": "Đã phê duyệt",
+         "customer_department": "Bộ phận/ Khách hàng",
+        "registration_date": "Ngày đăng ký 70%",
+        "frmpaidleave41_title": "GIẤY ĐĂNG KÝ NGHỈ HƯỞNG 70% LƯƠNG ",
     },
     "ja": {
         "reaccept": "Re-accept",
@@ -359,5 +365,8 @@ var arrLang = {
         "cancel-request": "キャンセル",
         "my-approve": "Approved",
         "delete": "Delete",
+        "customer_department": "Department/ Customer",
+        "registration_date": "Registration date 70%",
+        "frmpaidleave41_title": "自宅待機届 ",
     }
 };

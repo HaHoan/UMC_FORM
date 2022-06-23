@@ -68,6 +68,10 @@
                                     {
                                         controller = "GAFormLeave";
                                     }
+                                    else if(item.PROCESS_ID.Contains(Constant.GA_LEAVE_FORM41))
+                                    {
+                                        controller = "GAFormLeave41";
+                                    }
                                 }
                                 <td>
 
@@ -142,6 +146,10 @@
                                         else if (item.PROCESS_ID.Contains(Constant.GA_LEAVE_FORM))
                                         {
                                             controller = "GAFormLeave";
+                                        }
+                                        else if (item.PROCESS_ID.Contains(Constant.GA_LEAVE_FORM41))
+                                        {
+                                            controller = "GAFormLeave41";
                                         }
                                     }
                                     <td>
@@ -224,6 +232,10 @@
                                         else if (item.PROCESS_ID.Contains(Constant.GA_LEAVE_FORM))
                                         {
                                             controller = "GAFormLeave";
+                                        }
+                                        else if (item.PROCESS_ID.Contains(Constant.GA_LEAVE_FORM41))
+                                        {
+                                            controller = "GAFormLeave41";
                                         }
                                     }
                                     <td>
