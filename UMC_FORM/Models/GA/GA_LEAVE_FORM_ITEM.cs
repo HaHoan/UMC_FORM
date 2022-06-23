@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -34,5 +35,9 @@ namespace UMC_FORM.Models.GA
 
         public bool SPEACIAL_LEAVE { get; set; }
         public string REMARK { get; set; }
+        public string CUSTOMER { get; set; }
+
+        [NotMapped]
+        public List<GA_LEAVE_FORM_ITEM_DETAIL> GA_LEAVE_FORM_ITEM_DETAILs;
     }
 }

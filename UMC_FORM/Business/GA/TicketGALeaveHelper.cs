@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -38,11 +39,13 @@ namespace UMC_FORM.Business.GA
                 using (var db = new DataContext())
                 {
                     List<GA_LEAVE_FORM_ITEM> listLeaveItems = new List<GA_LEAVE_FORM_ITEM>();
+                    
                     // không sửa gì
                     if (string.IsNullOrEmpty(leaveItems))
                     {
 
                         listLeaveItems = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == prevID).ToList();
+                       
                     }
 
                     // Khi sửa đổi items
@@ -64,7 +67,7 @@ namespace UMC_FORM.Business.GA
                         {
                             return null;
                         }
-
+                        
                         var itemDB = new GA_LEAVE_FORM_ITEM
                         {
                             TICKET = currentID,
@@ -75,7 +78,7 @@ namespace UMC_FORM.Business.GA
                             TIME_TO = item.TIME_TO,
                             TOTAL = item.TOTAL,
                             REASON = string.IsNullOrEmpty(item.REASON) ? "" : item.REASON,
-                            SPEACIAL_LEAVE = item.SPEACIAL_LEAVE,
+                            SPEACIAL_LEAVE = false,
                             REMARK = string.IsNullOrEmpty(item.REMARK) ? "" : item.REMARK,
                         };
 
@@ -94,7 +97,87 @@ namespace UMC_FORM.Business.GA
 
 
         }
+        public static List<GA_LEAVE_FORM_ITEM> convertStringToListItem_Detail(string leaveItems, string prevID, string currentID)
+        {
+            try
+            {
+                using (var db = new DataContext())
+                {
+                    List<GA_LEAVE_FORM_ITEM> listLeaveItems = new List<GA_LEAVE_FORM_ITEM>();
+                    List<GA_LEAVE_FORM_ITEM_DETAIL> listDetailTimeleave = new List<GA_LEAVE_FORM_ITEM_DETAIL>();
+                    if (string.IsNullOrEmpty(leaveItems))
+                    {
+                        listLeaveItems = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == prevID).ToList();
+                        
+                    }
+                    // Khi sửa đổi items
+                    else
+                    {
+                        var format = "dd/MM/yyyy";
+                        var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
+                        listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems, dateTimeConverter);                       
+                    }
 
-
+                    if (listLeaveItems == null || listLeaveItems.Count == 0)
+                    {
+                        return null;
+                    }
+                    
+                    var newListItem = new List<GA_LEAVE_FORM_ITEM>();
+                    foreach (var item in listLeaveItems)
+                    {
+                        if (string.IsNullOrEmpty(item.CODE))
+                        {
+                            return null;
+                        }
+                        if (item.GA_LEAVE_FORM_ITEM_DETAILs == null)
+                        {                         
+                              var detail_timeleave = db.GA_LEAVE_FORM_ITEM_DETAIL.Where(m => m.GA_LEAVE_FORM_ITEM_ID == item.ID).ToList();
+                                
+                                var itemDB = new GA_LEAVE_FORM_ITEM
+                                {
+                                    TICKET = currentID,
+                                    NO = item.NO,
+                                    FULLNAME = item.FULLNAME,
+                                    CODE = item.CODE,
+                                    TIME_FROM = DateTime.Now,
+                                    TIME_TO = DateTime.Now,
+                                    TOTAL = item.TOTAL,
+                                    REASON = string.IsNullOrEmpty(item.REASON) ? "" : item.REASON,
+                                    SPEACIAL_LEAVE = item.SPEACIAL_LEAVE,
+                                    REMARK = string.IsNullOrEmpty(item.REMARK) ? "" : item.REMARK,
+                                    GA_LEAVE_FORM_ITEM_DETAILs = detail_timeleave,
+                                    CUSTOMER = item.CUSTOMER,
+                                };
+                                newListItem.Add(itemDB);    
+                        }
+                        else
+                        {
+                            var itemDB = new GA_LEAVE_FORM_ITEM
+                            {
+                                TICKET = currentID,
+                                NO = item.NO,
+                                FULLNAME = item.FULLNAME,
+                                CODE = item.CODE,
+                                TIME_FROM = DateTime.Now,
+                                TIME_TO = DateTime.Now,
+                                TOTAL = item.TOTAL,
+                                REASON = string.IsNullOrEmpty(item.REASON) ? "" : item.REASON,
+                                SPEACIAL_LEAVE = item.SPEACIAL_LEAVE,
+                                REMARK = string.IsNullOrEmpty(item.REMARK) ? "" : item.REMARK,
+                                GA_LEAVE_FORM_ITEM_DETAILs = item.GA_LEAVE_FORM_ITEM_DETAILs,
+                                CUSTOMER = item.CUSTOMER,
+                            };
+                            newListItem.Add(itemDB);
+                        }                     
+                    }
+                    return newListItem;
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }

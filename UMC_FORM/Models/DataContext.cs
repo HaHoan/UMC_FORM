@@ -32,7 +32,7 @@ namespace UMC_FORM.Models
         public virtual DbSet<Form_Log> Form_Logs { get; set; }
         public virtual DbSet<GA_LEAVE_FORM> GA_LEAVE_FORM { get; set; }
         public virtual DbSet<GA_LEAVE_FORM_ITEM> GA_LEAVE_FORM_ITEM { get; set; }
-
+        public virtual DbSet<GA_LEAVE_FORM_ITEM_DETAIL> GA_LEAVE_FORM_ITEM_DETAIL { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
