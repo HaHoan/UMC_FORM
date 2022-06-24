@@ -97,7 +97,6 @@
                                 </div>
                                 <br />
                             }
-                            <br>
                             <div class="row" id="select_dept_manager">
                                 <div class="col-3">
                                     <label class="font-weight-bold lang" key="dept_manager">Name</label>
@@ -135,6 +134,7 @@
                             <div class="table-responsive">
                                 <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_41" name="TITLE" />
                                 <input type="hidden" value="@Constant.GA_LEAVE70_ID" name="FORM_NAME" id="formName" />
+                                <span class="error" id="DATE_ERROR"></span>
                                 <table class="table-border-dark">
                                     <tr>
                                         <th class="lang" key="table-no" rowspan="2">No</th>
@@ -193,12 +193,13 @@
                                         style="display:block;position:static;margin-bottom:5px; color:red">
                                         <li>
                                             <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                               class="text-muted ml-2" id="add_row"><i class="fas fa-long-arrow-alt-right"></i>&nbsp;<span class="lang" key="add-row"></span></a>
+                                               class="text-muted ml-2" id="add_column"><i class="fa fa-columns"></i>&nbsp;<span class="lang" key="add-column"></span></a>
                                         </li>
                                         <li>
                                             <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                               class="text-muted ml-2" id="add_column"><i class="fa fa-columns"></i>&nbsp;<span class="lang" key="add-column"></span></a>
+                                               class="text-muted ml-2" id="add_row"><i class="fas fa-long-arrow-alt-right"></i>&nbsp;<span class="lang" key="add-row"></span></a>
                                         </li>
+
 
                                     </ul>
                                 </div>
