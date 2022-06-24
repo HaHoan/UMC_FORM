@@ -116,62 +116,86 @@ function Change_ThAdd_Whendeletecol(rowIndex, index, column, name, indexInTd) {
 function updateleaveItems() {
     leaveItems = []
     var checkTime = 0;
-    $('#tableInfo .row-info').each(function (rowIndex) {
-        index = rowIndex + 1
-        var fullname = $('#FULLNAME' + index).val()
-        var code = $('#CODE' + index).val()
-         if (code == '' && fullname != '') {
-            $('#CODE' + index + '_ERROR').text('Mã số không được để trống')
-            checkTime = 1
+    var duplicate_list=[]
+    var count_col = $('th', $('.table-border-dark ').find('#columns')).length;
+    for (var i = 1; i <= count_col; i++) {
+        var date_resgistration = $("#TIME_LEAVE" + i).val()      
+            duplicate_list.push(date_resgistration);
+    };
+    var duplicate_listarray = duplicate_list.sort();
+    var reportRecipientsDuplicate = [];
+    for (var i = 0; i < duplicate_listarray.length - 1; i++) {
+        if (duplicate_listarray[i + 1] == duplicate_listarray[i]) {
+            reportRecipientsDuplicate.push(duplicate_listarray[i]);
         }
-        if (fullname == "" && code != '') {
-            $('#FULLNAME' + index + '_ERROR').text('Tên không được để trống')
-            checkTime = 1
-        }
-       
-        var customer = $('#CUSTOMER' + index).val()
-        if (customer == '' && code != '') {
-            $('#CUSTOMER' + index + '_ERROR').text('Bộ phận/ Khách hàng không được để trống')
-            checkTime = 1
-        }
-        var reason = $('#REASON' + index).val()
-        if (reason == '' && code != '') {
-            $('#REASON' + index + '_ERROR').text('Lý do nghỉ không được để trống')
-            checkTime = 1
-        }
-        var count_col = $('th', $('.table-border-dark ').find('#columns')).length;
-        var list_timeleave = []
-        for (var i = 1; i <= count_col; i++) {
-            var value_checkbox = $('#REGISTRATION_DATE' + index +'_'+ i).is(":checked")
-            if (value_checkbox == true) {
-                var date_resgistration = $("#TIME_LEAVE" + i).val()           
-                var detailObj = {
-                    TIME_LEAVE: date_resgistration
+    }
+    var count = reportRecipientsDuplicate.length;
+    if (count > 0) {
+        $("#DATE_ERROR").text("Ngày đăng ký 70% không được trùng")
+        checkTime = 1;
+    }
+    else {
+        $('#tableInfo .row-info').each(function (rowIndex) {
+            index = rowIndex + 1
+
+            var code = $('#CODE' + index).val()
+            var fullname = $('#FULLNAME' + index).val()
+            if (code == '' && fullname != '') {
+                $('#CODE' + index + '_ERROR').text('Mã số không được để trống')
+                checkTime = 1
+            }
+
+            if (fullname == "" && code != '') {
+                $('#FULLNAME' + index + '_ERROR').text('Tên không được để trống')
+                checkTime = 1
+            }
+
+            var customer = $('#CUSTOMER' + index).val()
+            if (customer == '' && code != '') {
+                $('#CUSTOMER' + index + '_ERROR').text('Bộ phận/ Khách hàng không được để trống')
+                checkTime = 1
+            }
+            var reason = $('#REASON' + index).val()
+            if (reason == '' && code != '') {
+                $('#REASON' + index + '_ERROR').text('Lý do nghỉ không được để trống')
+                checkTime = 1
+            }
+            var list_timeleave = []
+
+            for (var i = 1; i <= count_col; i++) {
+                var value_checkbox = $('#REGISTRATION_DATE' + index + '_' + i).is(":checked")
+                if (value_checkbox == true) {
+                    var date_resgistration = $("#TIME_LEAVE" + i).val()
+                    var detailObj = {
+                        TIME_LEAVE: date_resgistration
+                    }
+                    list_timeleave.push(detailObj)
                 }
-                list_timeleave.push(detailObj)
             }
-            
-        }
-        if (fullname != '') {
-      
-            var obj = {
-                NO: index,
-                FULLNAME: fullname,
-                CODE: code,
-                TOTAL: count_col,
-                REASON: reason,
-                CUSTOMER: customer,
-                GA_LEAVE_FORM_ITEM_DETAILs: list_timeleave
+
+            if (code != '') {
+
+                var obj = {
+                    NO: index,
+                    FULLNAME: fullname,
+                    CODE: code,
+                    TOTAL: count_col,
+                    REASON: reason,
+                    CUSTOMER: customer,
+                    GA_LEAVE_FORM_ITEM_DETAILs: list_timeleave
+                }
+                leaveItems.push(obj)
             }
-            leaveItems.push(obj)
+
+        });
+        if (leaveItems.length == 0 && $('.row-info').length > 0) {
+            $('#CODE' + 1 + '_ERROR').text('Mã số không được để trống')
+            checkTime = 1
         }
 
-    });
-    if (leaveItems.length == 0 && $('.row-info').length > 0) {
-        $('#FULLNAME' + 1 + '_ERROR').text('Tên không được để trống')
-        checkTime = 1
+        $('#leaveItems').val(JSON.stringify(leaveItems))
     }
-    $('#leaveItems').val(JSON.stringify(leaveItems))
+    
     return checkTime;
 }
 function addTd(name) {
@@ -346,20 +370,22 @@ $(function () {
         var index_column = parseInt(column) + 1;
         var index_row = $('#tableInfo tr').length;
         $('#registration_date').attr('colspan', index_column);
-        var col = $('<th id=' + 'Add_col'+index_column+' /> ');
+        var col = $('<th id=' + 'Add_col'+index_column+'  style= "width:120px;"/> ');
         var input = $('<input/>', {
             class: 'form-input inputDefault',
-            style:'width:100px;'
+            style:'width:80px;'
         });
-        var input_deletecol = $('<input/>', {
-            class: 'btnDelete btn btn-danger',
+
+        var input_deletecol = $('<input />', {
             type:'button',
             id: 'DELETE' + index_column,
             click: function () {
                 Delete_col(index_column)
             },
-            value:'X'
-        });        
+            value: 'x',
+            style: 'width:10px;height:22px;float:right;padding-left: 3px;border: 0px;background-color: white;'
+        });
+        
         $('.table-border-dark #columns').append(col);
         col.append(input, input_deletecol);
        
@@ -396,15 +422,7 @@ $(function () {
             $('.TD_REASON' + i).before(col)
         }
     }
-    $("#contextMenu li #delete_column").click(function (e) {
-        $("#tableInfo").contextmenu({
-            selector: 'td',
-            callback: function (key, options) {
-                var content = $(this).text();
-                alert("You clicked on: " + content);
-            },
-        });
-    });
+  
     $(".btnXoa").on('click', function () {
         deleteRow(this);
     })

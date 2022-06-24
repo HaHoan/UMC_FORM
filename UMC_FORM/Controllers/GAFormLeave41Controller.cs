@@ -111,8 +111,7 @@ namespace UMC_FORM.Controllers
                                 };
                                 db.GA_LEAVE_FORM_ITEM_DETAIL.Add(new_itemdetail);
                                 db.SaveChanges();
-                            }
-                           
+                            }                           
                         }
                         ticket.NUMBER_REGISTER = ticket.GA_LEAVE_FORM_ITEMs.Count();
                         db.GA_LEAVE_FORM.Add(ticket);
@@ -159,7 +158,6 @@ namespace UMC_FORM.Controllers
                             }
                             return Accept(ticket);
                         }
-
                         return Json(new
                         {
                             result = STATUS.SUCCESS,
