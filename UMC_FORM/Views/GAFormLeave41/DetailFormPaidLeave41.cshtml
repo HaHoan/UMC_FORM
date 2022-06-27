@@ -214,8 +214,8 @@
                                                     {
 
 
-                                                    <th class="text-center p-2" id=@("Add_col"+j)>
-                                                        <input class="form-input inputDefault" name="TIME_LEAVE" id=@("TIME_LEAVE" + j) value="@item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")" />
+                                                    <th class="text-center p-2" id=@("Add_col"+j) style="width:110px;">
+                                                        <input class="form-input inputDefault" name="TIME_LEAVE" id=@("TIME_LEAVE" + j) value="@item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")" style="width:80px;"/>
                                                         <input type="button" id=@("DELETE"+j) style="width: 10px; height: 22px; float: right; padding-left: 3px; border: 0px; background-color: white;" value="x" onclick="Delete_col(@j)" />
                                                     </th>
                                                         j++;

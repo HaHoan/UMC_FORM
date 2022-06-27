@@ -91,8 +91,8 @@ function Delete_col(index_column) {
         $('#Add_col' + index_column).remove();
     });
     var count_columns = column_registration_date - 1;
-    for (var i = column_registration_date; i >= column_registration_date; i--) {
-        var value_next_id = i -1;
+    for (var i = column_registration_date; i > count_columns; i--) {
+        var value_next_id = i-1;
         $('.table-border-dark #columns #Add_col' + i + ' #TIME_LEAVE' + i).attr('id', "TIME_LEAVE" + value_next_id);
         $('.table-border-dark #columns #Add_col' + i).attr('id', "Add_col" + value_next_id);
     }
