@@ -484,10 +484,8 @@ namespace UMC_FORM.Controllers
             using (var db = new DataContext())
             {
                 var detail =new  List<GA_LEAVE_FORM_ITEM_DETAIL>();
-                var list_GAFORM = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).ToList();
-                foreach(var item in list_GAFORM)
-                {
-                    var list_GAFORMITEM = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == item.ID).ToList();
+                var list_GAFORM = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();      
+                    var list_GAFORMITEM = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == list_GAFORM.ID).ToList();
                     foreach(var items in list_GAFORMITEM)
                     {
                         var list_GAFORMITEMDETAIL = db.GA_LEAVE_FORM_ITEM_DETAIL.Where(m => m.GA_LEAVE_FORM_ITEM_ID == items.ID).ToList();
@@ -497,7 +495,7 @@ namespace UMC_FORM.Controllers
                             detail.Add(item_detail);
                         }
                     }
-                }
+               
                 return detail.GroupBy(x => x.TIME_LEAVE).Select(y => y.First()).ToList();
             }
         }

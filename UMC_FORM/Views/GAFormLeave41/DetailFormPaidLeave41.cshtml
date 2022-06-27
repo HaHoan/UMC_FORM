@@ -184,83 +184,94 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <p style="font-style:italic;font-weight:bold;">
-                                            Giấy này được sử dụng cho nghỉ ưu đãi và nghỉ đặc biệt. Đối với các trường hợp nghỉ đặc biệt hãy đánh dấu √ vào cột "Nghỉ đặc biệt", ngoài ra sẽ được hiểu là nghỉ ưu đãi.
+                                            Chú ý: Bộ phận tích " v "vào cột Ngày đăng ký 70%
                                         </p>
                                     </div>
                                 </div>
 
                                 if (Model.PERMISSION.Contains(PERMISSION.EDIT_INFO))
                                 {
-                                     <div class="table-responsive">
+                                    <div class="table-responsive">
                                         <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_41" name="purpose" />
                                         <input type="hidden" value="@Constant.GA_LEAVE70_ID" name="formName" id="formName" />
+                                        <input type="hidden" value="@maxPlayCount" id="ColSpan_table" />
                                         <table class="table-border-dark">
                                             <tr>
                                                 <th class="lang" key="table-no" rowspan="2">No</th>
 
                                                 <th class="lang" rowspan="2" key="table-code" style="width:60px;">Code No</th>
                                                 <th class="lang" rowspan="2" key="name">Name <br /></th>
-                                                <th class="lang" rowspan="2" key="subscribe-date">Customer/Department<br />  </th>
-                                                <th class="lang" colspan="@maxPlayCount" id="registration_date">Registration date</th>
-                                                <th class="lang" rowspan="2" key="">Reason</th>
-                                                <th rowspan="2" style="display:none;"></th>
+                                                <th class="lang" rowspan="2" key="customer_department">Customer/Department<br />  </th>
+                                                <th class="lang" key="registrationdate" id="registration_date">Registration date</th>
+                                                <th class="lang" rowspan="2" key="reason-leave">Reason</th>
+                                                <th rowspan="2" style=""></th>
                                             </tr>
                                             <tr id="columns">
 
-                                                @foreach (var item_regis in ViewBag.List_detail)
-                                                {
+                                                @{
                                                     var j = 1;
-                                                    <th class="text-center p-2" >
-                                                        <input class="form-input inputDefault" name=@("TIME_LEAVE"+j) id=@("TIME_LEAVE"+j) value="@item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")" />  
+                                                    foreach (var item_regis in ViewBag.List_detail)
+                                                    {
+
+
+                                                    <th class="text-center p-2" id=@("Add_col"+j)>
+                                                        <input class="form-input inputDefault" name="TIME_LEAVE" id=@("TIME_LEAVE" + j) value="@item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")" />
+                                                        <input type="button" id=@("DELETE"+j) style="width: 10px; height: 22px; float: right; padding-left: 3px; border: 0px; background-color: white;" value="x" onclick="Delete_col(@j)" />
                                                     </th>
-                                                    j++;
-                                                }
+                                                        j++;
+                                                    }
+
+                                               }
                                             </tr>
                                             <tbody id="tableInfo">
                                                 @{
                                                     var i = 1;
                                                     foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
                                                     {
-                                                        int k = 1;
-                                                        <tr class="row-info">
-                                                            <td class="text-center">@(i)</td>
-                                                            <td style="width:5%;">
-                                                                <input class="form-input inputDefault" id=@("CODE" + i) value="@item.CODE" />
-                                                                <span class="error" id=@("CODE"+i + "_ERROR")></span>
-                                                            </td>
-                                                            <td style="width:20%;">
-                                                                <input class="form-input inputDefault" id=@("FULLNAME" + i) value="@item.FULLNAME" />
-                                                                <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
-                                                            </td>
 
-                                                            <td style="width:15%;">
-                                                                <input class="form-input  inputDefault" id=@("CUSTOMER" + i) value="@item.CUSTOMER" autocomplete="off" />
-                                                                <span class="error" id=@("CUSTOMER"+i + "_ERROR")></span>
-                                                            </td>
-                                                            @foreach (var item_regis in ViewBag.List_detail)
-                                                            {
-                                                                <td style="text-align:center;">
-                                                                    @foreach (var item_registration in item.GA_LEAVE_FORM_ITEM_DETAILs)
-                                                                    {
-                                                                        if (item_regis.TIME_LEAVE == item_registration.TIME_LEAVE)
-                                                                        {
-                                                                            <input type="checkbox" id=@("REGISTRATION_DATE" + i+"_"+k) name=@("REGISTRATION_DATE" + i+"_"+k) checked />
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <input type="checkbox" id=@("REGISTRATION_DATE" + i+"_"+k) name=@("REGISTRATION_DATE" + i+"_"+k) />
-                                                                        }
-                                                                    }
-                                                                </td>
+                                                                                                <tr class="row-info">
+                                                                                                    <td class="text-center">@(i)</td>
+                                                                                                    <td style="width:5%;">
+                                                                                                        <input class="form-input inputDefault" id=@("CODE" + i) value="@item.CODE" />
+                                                                                                        <span class="error" id=@("CODE" + i + "_ERROR")></span>
+                                                                                                    </td>
+                                                                                                    <td style="width:20%;">
+                                                                                                        <input class="form-input inputDefault" id=@("FULLNAME" + i) value="@item.FULLNAME" />
+                                                                                                        <span class="error" id=@("FULLNAME" + i + "_ERROR")></span>
+                                                                                                    </td>
 
-                                                            }
-                                                            <td  class=@("TD_REASON" + i)>
-                                                                <input class="form-input text-right inputDefault" id=@("REASON" + i) value="@item.REASON" />
-                                                                <span class="error" id=@("REASON"+i + "_ERROR")></span>
-                                                            </td>
-                                                           
-                                                        </tr>
+                                                                                                    <td style="width:15%;">
+                                                                                                        <input class="form-input  inputDefault" id=@("CUSTOMER" + i) value="@item.CUSTOMER" autocomplete="off" />
+                                                                                                        <span class="error" id=@("CUSTOMER" + i + "_ERROR")></span>
+                                                                                                    </td>
+                                                                                                    @{var k = 1;
+                                                                                                        foreach (var item_list in ViewBag.List_detail)
+                                                                                                        {
 
+                                                                                                        <td>
+                                                                                                            @if (item.GA_LEAVE_FORM_ITEM_DETAILs.Where(m => m.TIME_LEAVE == item_list.TIME_LEAVE).FirstOrDefault() != null)
+                                                                                                            {
+                                                                                                                <input class="form-input inputDefault" name=@("REGISTRATION_DATE" + i + "_" + k) id=@("REGISTRATION_DATE" + i + "_" + k) checked type="checkbox" />
+                                                                                                                
+                                                                                                            }
+                                                                                                            else
+                                                                                                            { <input class="form-input inputDefault" name=@("REGISTRATION_DATE" + i + "_" + k) id=@("REGISTRATION_DATE" + i + "_" + k) type="checkbox" />
+
+                                                                                                                
+                                                                                                            }
+
+                                                                                                        </td>
+                                                                                                            k++;
+                                                                                                        }
+                                                                                                        }
+                                                                                                    <td class=@("TD_REASON" + i)>
+                                                                                                        <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i) required cols="50">@item.REASON</textarea>
+                                                                                                        <span class="error" id=@("REASON"+i + "_ERROR")></span>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <button class="btnXoa btn btn-danger" type="button" onclick="deleteRow(this)"> Xóa</button>
+                                                                                                    </td>
+                                                                                                </tr>
                                                         i++;
                                                     }
                                                 }
@@ -279,6 +290,8 @@
                                                     <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
                                                        class="text-muted ml-2" id="add_row"><i class="fas fa-long-arrow-alt-right"></i>&nbsp;<span class="lang" key="add-row"></span></a>
                                                 </li>
+
+
                                             </ul>
                                         </div>
                                     </div>
@@ -288,25 +301,25 @@
                                 {
 
                                     <div class="table-responsive">
-                                         <table class="table-border-dark">
+                                        <table class="table-border-dark">
                                             <tr>
                                                 <th class="lang" key="table-no" rowspan="2">No</th>
 
                                                 <th class="lang" rowspan="2" key="table-code" style="width:60px;">Code No</th>
                                                 <th class="lang" rowspan="2" key="name">Name <br /></th>
-                                                <th class="lang" rowspan="2" key="customer_department">Customer/Department<br />  </th>                                                                    
-                                                <th class="lang" colspan="@maxPlayCount" key="registration_date">Registration date</th>
+                                                <th class="lang" rowspan="2" key="customer_department">Customer/Department<br />  </th>
+                                                <th class="lang" colspan="@maxPlayCount" key="registrationdate" >Registration date</th>
                                                 <th class="lang" rowspan="2" key="reason-leave">Reason</th>
                                             </tr>
                                             <tr>
 
                                                 @foreach (var item_regis in ViewBag.List_detail)
                                                 {
-                                      
+
                                                     <th class="text-center p-2" key="">
                                                         @item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")
                                                     </th>
-                                       
+
                                                 }
                                             </tr>
                                             <tbody id="tableInfo">
@@ -326,27 +339,27 @@
 
                                                             </td>
                                                             <td style="width:15%;">
-                                                                   @item.CUSTOMER
+                                                                @item.CUSTOMER
                                                             </td>
 
                                                             @foreach (var item_regis in ViewBag.List_detail)
-                                                            { 
-                                                                <td style="text-align:center;">
-                                                                    @foreach (var item_registration in item.GA_LEAVE_FORM_ITEM_DETAILs)
-                                                                    {
-                                                                        if (item_regis.TIME_LEAVE == item_registration.TIME_LEAVE)
-                                                                        {
-                                                                            <i class="fa fa-check"></i>
-                                                                        }
+                                                            {
+                                                        <td style="text-align:center;">
+                                                            @if (item.GA_LEAVE_FORM_ITEM_DETAILs.Where(m => m.TIME_LEAVE == item_regis.TIME_LEAVE).FirstOrDefault() != null)
+                                                            {
+                                                               
+                                                                    <i class="fa fa-check"></i>
+                                                              
 
-                                                                    }
-                                                                </td>
-                                                                                                                      
+                                                            }
+                                                        </td>
+
                                                             }
                                                             <td>
-                                                                   @item.REASON
+                                                                @item.REASON
                                                             </td>
-                                                                                    </tr>                                        
+                                                        </tr>
+
                                                         i++;
                                                     }
                                                 }
