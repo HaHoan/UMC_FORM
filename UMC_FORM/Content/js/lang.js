@@ -167,7 +167,7 @@ var arrLang = {
         "group_leader": "Leader",
         "my-approve": "Approved",
         "customer_department": "Department/ Customer",
-        "registration_date": "Registration date 70%",
+        "registrationdate": "Registration date 70%",
         "frmpaidleave41_title": "GIẤY ĐĂNG KÝ NGHỈ HƯỞNG 70% LƯƠNG ",
     },
     "vi": {
@@ -302,7 +302,7 @@ var arrLang = {
         "group_leader": "Trưởng Nhóm",
         "my-approve": "Đã phê duyệt",
          "customer_department": "Bộ phận/ Khách hàng",
-        "registration_date": "Ngày đăng ký 70%",
+        "registrationdate": "Ngày đăng ký 70%",
         "frmpaidleave41_title": "GIẤY ĐĂNG KÝ NGHỈ HƯỞNG 70% LƯƠNG ",
     },
     "ja": {
@@ -366,7 +366,7 @@ var arrLang = {
         "my-approve": "Approved",
         "delete": "Delete",
         "customer_department": "Department/ Customer",
-        "registration_date": "Registration date 70%",
+        "registrationdate": "Registration date 70%",
         "frmpaidleave41_title": "自宅待機届 ",
     }
 };

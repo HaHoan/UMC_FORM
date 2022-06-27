@@ -91,6 +91,11 @@ function Delete_col(index_column) {
         $('#Add_col' + index_column).remove();
     });
     var count_columns = column_registration_date - 1;
+    for (var i = column_registration_date; i >= column_registration_date; i--) {
+        var value_next_id = i -1;
+        $('.table-border-dark #columns #Add_col' + i + ' #TIME_LEAVE' + i).attr('id', "TIME_LEAVE" + value_next_id);
+        $('.table-border-dark #columns #Add_col' + i).attr('id', "Add_col" + value_next_id);
+    }
     var index = 1;
     $('#registration_date').attr('colspan', count_columns);
     if (count_columns > 1) {
@@ -99,6 +104,7 @@ function Delete_col(index_column) {
             if (stt) {
                 for (var i = 1; i <= count_columns; i++) {
                     var value = 4 + i;
+                    
                     Change_ThAdd_Whendeletecol(rowIndex, index, i, 'REGISTRATION_DATE', value)
                 }               
                 index++;
@@ -282,16 +288,29 @@ const FORMAT_DATE_TIME = 'd/m/Y'
 const FORMAT_DATE = 'd/m/Y'
 $(function () {
     var count_col = $('th', $('.table-border-dark ').find('#columns')).length;
-    $('#TIME_LEAVE' + count_col).datetimepicker({
-        format: FORMAT_DATE,
-        value: moment().format(),
-        onChangeDateTime() {
-            var date = $("#TIME_LEAVE" + count_col).val()
-            $('#TIME_LEAVE' + count_col).val(date)
+    var name = $('#TIME_LEAVE' + count_col).attr("name");
+    if (name != "TIME_LEAVE") {
+        $('#TIME_LEAVE' + count_col).datetimepicker({
+            format: FORMAT_DATE,
+            value: moment().format(),
+            onChangeDateTime() {
+                var date = $("#TIME_LEAVE" + count_col).val()
+                $('#TIME_LEAVE' + count_col).val(date)
+            }
+        });
+        var date = $("#TIME_LEAVE" + count_col).val()
+        $('#TIME_LEAVE' + count_col).val(date)
+    }
+    else {
+        for (var i = 1; i <= count_col; i++) {
+            $('#TIME_LEAVE' + i).datetimepicker({
+                format: FORMAT_DATE,
+
+            });
         }
-    });
-    var date = $("#TIME_LEAVE" + count_col).val()
-    $('#TIME_LEAVE' + count_col).val(date)
+        
+    }
+    
 
     $('#DATE_REGISTER_VIEW').datetimepicker({
         format: FORMAT_DATE,
@@ -312,6 +331,16 @@ $(function () {
             $('#select_dept_manager').hide()
         }
     });
+    //đặt giá trị colspan cho ngày đăng ký nghỉ 70%
+   
+    var col_register = $("#ColSpan_table").val();
+    if (col_register == null) {
+        $('.table-border-dark tr #registration_date').attr('colspan', 1);
+    }
+    else {
+        $('.table-border-dark tr #registration_date').attr('colspan', col_register);
+    }
+
     $('#frmpaidleave_accept').click(function (e) {
         $('#status').val("accept")
     })
@@ -331,7 +360,7 @@ $(function () {
     $('html').click(function () {
         $contextMenu.hide();
     });
-    $('#registration_date').attr('colspan', 1);
+    $
     $("#contextMenu li #add_row").click(function (e) {
         var column = $('.table-border-dark tr #registration_date').attr('colspan');
         var index = $('#tableInfo tr').length + 1;
