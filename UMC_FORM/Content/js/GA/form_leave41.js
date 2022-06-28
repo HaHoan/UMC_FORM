@@ -40,17 +40,17 @@ function deleteRow(e) {
         var column = $('.table-border-dark tr #registration_date').attr('colspan');
         var colCount = parseInt($(".table-border-dark tr th").length - 3);
         if (stt) {
-            
-                $('#tableInfo tr:eq(' + rowIndex + ') td:eq(0)').text(index);
-                changeIdWhenDelete(rowIndex, index, 'CODE', 1)
-                changeIdWhenDelete(rowIndex, index, 'FULLNAME', 2)
-                changeIdWhenDelete(rowIndex, index, 'CUSTOMER', 3)
-                for (var j = 1; j <= column; j++) {                    
-                    changeIdRegistrationdate_WhenDelete(rowIndex, index,j , 'REGISTRATION_DATE', 3 + j);                 
-                }
-                changeIdWhenDelete(rowIndex, index, 'REASON', colCount)
-                changeId_TdreasonWhenDelete(rowIndex, index, 'TD_REASON', colCount)
-                index++;           
+
+            $('#tableInfo tr:eq(' + rowIndex + ') td:eq(0)').text(index);
+            changeIdWhenDelete(rowIndex, index, 'CODE', 1)
+            changeIdWhenDelete(rowIndex, index, 'FULLNAME', 2)
+            changeIdWhenDelete(rowIndex, index, 'CUSTOMER', 3)
+            for (var j = 1; j <= column; j++) {
+                changeIdRegistrationdate_WhenDelete(rowIndex, index, j, 'REGISTRATION_DATE', 3 + j);
+            }
+            changeIdWhenDelete(rowIndex, index, 'REASON', colCount)
+            changeId_TdreasonWhenDelete(rowIndex, index, 'TD_REASON', colCount)
+            index++;
         }
     });
     updateNumberRegister()
@@ -59,10 +59,10 @@ function changeIdWhenDelete(rowIndex, index, name, indexInTd) {
     try {
         $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('id', name + index)
         $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('name', name + index)
-        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') textarea').attr('id', name + index )
+        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') textarea').attr('id', name + index)
         $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') textarea').attr('name', name + index)
-        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') span').attr('id', name + index + "_ERROR" )
-   
+        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') span').attr('id', name + index + "_ERROR")
+
     } catch (e) {
     }
 }
@@ -90,18 +90,12 @@ function Delete_col(index_column) {
         });
         $('#Add_col' + index_column).remove();
     });
-    if (index_column < column_registration_date) {
-        for (var i = 0; i < column_registration_date - index_column; i++) {
-            
-            var value_next_id = index_column + i;
-            var get_valueidnext = value_next_id + 1;
-            $('.table-border-dark #columns #Add_col' + get_valueidnext + ' #TIME_LEAVE' + get_valueidnext).attr('id', "TIME_LEAVE" + value_next_id);
-            $('.table-border-dark #columns #Add_col' + get_valueidnext).attr('id', "Add_col" + value_next_id);
-            $('#DELETE' + get_valueidnext).remove();
-            Change_buttondelete_col("DELETE",value_next_id);
-        }
-    }
     var count_columns = column_registration_date - 1;
+    for (var i = column_registration_date; i > count_columns; i--) {
+        var value_next_id = i - 1;
+        $('.table-border-dark #columns #Add_col' + i + ' #TIME_LEAVE' + i).attr('id', "TIME_LEAVE" + value_next_id);
+        $('.table-border-dark #columns #Add_col' + i).attr('id', "Add_col" + value_next_id);
+    }
     var index = 1;
     $('#registration_date').attr('colspan', count_columns);
     if (count_columns > 1) {
@@ -110,43 +104,29 @@ function Delete_col(index_column) {
             if (stt) {
                 for (var i = 1; i <= count_columns; i++) {
                     var value = 4 + i;
-                    
+
                     Change_ThAdd_Whendeletecol(rowIndex, index, i, 'REGISTRATION_DATE', value)
-                }               
+                }
                 index++;
             }
         });
     }
-   
-}
-function Change_buttondelete_col(name, index) {
-    var input_deletecol = $('<input />', {
-        type: 'button',
-        id: name + index,
-        click: function () {
-            Delete_col(index)
-        },
-        value: 'x',
-        style: 'width:10px;height:22px;float:right;padding-left: 3px;border: 0px;background-color: white;'
-    });
-    $('.table-border-dark #columns #Add_col' + index).append(input_deletecol);
-  
 }
 function Change_ThAdd_Whendeletecol(rowIndex, index, column, name, indexInTd) {
     try {
         $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('id', name + index + '_' + column)
-        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('name', name + index + '_' + column)  
+        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('name', name + index + '_' + column)
     } catch (e) {
     }
 }
 function updateleaveItems() {
     leaveItems = []
     var checkTime = 0;
-    var duplicate_list=[]
+    var duplicate_list = []
     var count_col = $('th', $('.table-border-dark ').find('#columns')).length;
     for (var i = 1; i <= count_col; i++) {
-        var date_resgistration = $("#TIME_LEAVE" + i).val()      
-            duplicate_list.push(date_resgistration);
+        var date_resgistration = $("#TIME_LEAVE" + i).val()
+        duplicate_list.push(date_resgistration);
     };
     var duplicate_listarray = duplicate_list.sort();
     var reportRecipientsDuplicate = [];
@@ -221,7 +201,7 @@ function updateleaveItems() {
 
         $('#leaveItems').val(JSON.stringify(leaveItems))
     }
-    
+
     return checkTime;
 }
 function addTd(name) {
@@ -230,7 +210,6 @@ function addTd(name) {
         class: 'form-input inputDefault',
         keypress: function () {
             $('#' + name + '_ERROR').text('')
-            updateNumberRegister()
         }
     })
     col.append(input);
@@ -264,8 +243,8 @@ function addTdCheckbox(name) {
     span.attr('id', name + '_ERROR');
     return col;
 }
-function addTdReason(name,row) {
-    var col = $('<td class="TD_REASON'+row +'"/>');
+function addTdReason(name, row) {
+    var col = $('<td class="TD_REASON' + row + '"/>');
     var input = $('<textarea/>', {
         class: 'form-input  inputDefault',
         name: name,
@@ -300,6 +279,71 @@ function OnSuccess(response) {
         enableButton()
     }
 }
+
+function generateTable(e) {
+    $(e).html(
+        '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
+    );
+
+    var data = $('textarea[name=excel_data]').val();
+    var rows = data.split("\n");
+    var firstIndexToAdd = 0
+    $('.row-info').each(function (rowIndex) {
+        var cols = $(this).find('td')
+        var fullname = ''
+        var code = ''
+        cols.each(function (index, value) {
+            if (index == 1) {
+                var input = $(this).find('input')
+                fullname = input.val()
+            } else if (index == 2) {
+                var input = $(this).find('input')
+                code = input.val()
+            }
+        })
+        rowIndex++
+
+        if (fullname == '' && code == '') {
+            firstIndexToAdd = rowIndex
+            return false
+        }
+    });
+    if (firstIndexToAdd == 0) {
+        firstIndexToAdd = $('.row-info').length + 1
+    }
+
+    var totalRow = firstIndexToAdd + rows.length - 1
+    var y = 0;
+    for (var index = firstIndexToAdd; index <= totalRow; index++) {
+
+        var cells = rows[y].split("\t");
+        if ($('.row-info').length < index) {
+            addRow()
+        }
+        if (cells.length > 1) {
+            $('#CODE' + index).val(cells[1])
+        }
+        if (cells.length > 2) {
+            $('#FULLNAME' + index).val(cells[2])
+        }
+        if (cells.length > 3) {
+            $('#CUSTOMER' + index).val(cells[3])
+        }
+        if (cells.length > 4) {
+            $('#REGISTRATION_DATE' + index + '_1').prop('checked', true)
+        }
+        if (cells.length > 5) {
+            $('#REASON' + index).val(cells[5])
+        }
+       
+        y++
+    }
+    updateNumberRegister()
+
+    $(e).html(
+        'Paste dữ liệu vào bảng bên dưới'
+    );
+}
 function OnFailure(response) {
     alert("Kiểm tra lại dữ liệu nhập có kí tự đặc biệt không?" + "Detail:" + response.responseText)
     enableButton()
@@ -329,18 +373,9 @@ $(function () {
 
             });
         }
-        
+
     }
-    for (var i = 1; i <= $('#tableInfo tr').length; i++) {
-        $('#CODE' + i).keypress(function () {
-            updateNumberRegister()
-        })
-        
-        eraseTextError('CODE' + i)
-        eraseTextError('FULLNAME' + i)
-        eraseTextError('CUSTOMER' + i)
-        eraseTextError('REASON' + i)
-    }
+
 
     $('#DATE_REGISTER_VIEW').datetimepicker({
         format: FORMAT_DATE,
@@ -352,7 +387,7 @@ $(function () {
     });
     $('#DATE_REGISTER').val(convertDateToValid($("#DATE_REGISTER_VIEW").val()));
     $('#select_dept_manager').hide();
-    $('#GROUP_LEADER').on('change',function () {
+    $('#GROUP_LEADER').on('change', function () {
         var groupLeader = this.value;
         var userCode = $('#user_code').val();
         if (groupLeader == userCode) {
@@ -362,7 +397,7 @@ $(function () {
         }
     });
     //đặt giá trị colspan cho ngày đăng ký nghỉ 70%
-   
+
     var col_register = $("#ColSpan_table").val();
     if (col_register == null) {
         $('.table-border-dark tr #registration_date').attr('colspan', 1);
@@ -392,51 +427,21 @@ $(function () {
     });
     $
     $("#contextMenu li #add_row").click(function (e) {
-        var column = $('.table-border-dark tr #registration_date').attr('colspan');
-        var index = $('#tableInfo tr').length + 1;
-        var colCount = $(".table-border-dark tr th").length - 1;
-        var row = $('<tr/>', {
-            class: 'row-info'
-        });
-        var col = $('<td/>', {
-            text: (index),
-            class: 'text-center'
-        })
-        row.append(col);
-        row.append(addTd("CODE" + index));
-        row.append(addTd("FULLNAME" + index));
-        row.append(addTd("CUSTOMER" + index));
-        row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + 1));
-        for (var i = 8; i <= colCount; i++) {
-            row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + column));
-        }
-        row.append(addTdReason("REASON" + index, index));
-        var rowDelete = $('<td/>');
-        var btnXoa = $('<button/>', {
-            text: 'Xóa',
-            type: 'button',
-            class: 'btnXoa btn btn-danger',
-            click: function () {
-                deleteRow(this)
-            }
-        });
-        rowDelete.append(btnXoa);
-        row.append(rowDelete);
-        $('#tableInfo').append(row);
+        addRow();
     });
     $("#contextMenu li #add_column").click(function (e) {
         var column = $('.table-border-dark tr #registration_date').attr('colspan');
         var index_column = parseInt(column) + 1;
         var index_row = $('#tableInfo tr').length;
         $('#registration_date').attr('colspan', index_column);
-        var col = $('<th id=' + 'Add_col'+index_column+'  style= "width:120px;"/> ');
+        var col = $('<th id=' + 'Add_col' + index_column + '  style= "width:120px;"/> ');
         var input = $('<input/>', {
             class: 'form-input inputDefault',
-            style:'width:80px;'
+            style: 'width:80px;'
         });
 
         var input_deletecol = $('<input />', {
-            type:'button',
+            type: 'button',
             id: 'DELETE' + index_column,
             click: function () {
                 Delete_col(index_column)
@@ -444,10 +449,10 @@ $(function () {
             value: 'x',
             style: 'width:10px;height:22px;float:right;padding-left: 3px;border: 0px;background-color: white;'
         });
-        
+
         $('.table-border-dark #columns').append(col);
         col.append(input, input_deletecol);
-       
+
         input.attr('id', 'TIME_LEAVE' + index_column);
         input.attr('name', 'TIME_LEAVE' + index_column);
         input.datetimepicker({
@@ -481,7 +486,7 @@ $(function () {
             $('.TD_REASON' + i).before(col)
         }
     }
-  
+
     $(".btnXoa").on('click', function () {
         deleteRow(this);
     })
@@ -512,13 +517,20 @@ $(function () {
         submitHandler: function (form) {
             if (confirm('Do you want to create?')) {
                 disableButtonWhenSubmit('#frmpaidleave_create')
-                var result = updateleaveItems()
-                if (result == 0) {
-                    form.ajax.submit()
-                } else {
+                var selectGroupleader = $("#GROUP_LEADER option:selected").val()
+                if (selectGroupleader == 0) {
+                    $('#GROUP_LEADER_ERROR').text('Trưởng phòng không được để trống!')
                     enableButton()
                 }
-                
+                else {
+                    var result = updateleaveItems()
+                    if (result == 0) {
+                        form.ajax.submit()
+                    } else {
+                        enableButton()
+                    }
+                }
+
             } else {
                 return false;
             }
@@ -527,11 +539,6 @@ $(function () {
         }
     });
     $("#submitForm").validate({
-        rules: {
-            "TICKET.DEPT_MANAGER": {
-                valueNotEquals: '0'
-            }
-        },
         submitHandler: function (form) {
             var status = $('#status').val();
             if (status == 'reject' || status == 'delete') {
@@ -559,6 +566,39 @@ $(function () {
         }
     });
 })
+function addRow() {
+    var column = $('.table-border-dark tr #registration_date').attr('colspan');
+    var index = $('#tableInfo tr').length + 1;
+    var colCount = $(".table-border-dark tr th").length - 1;
+    var row = $('<tr/>', {
+        class: 'row-info'
+    });
+    var col = $('<td/>', {
+        text: (index),
+        class: 'text-center'
+    })
+    row.append(col);
+    row.append(addTd("CODE" + index));
+    row.append(addTd("FULLNAME" + index));
+    row.append(addTd("CUSTOMER" + index));
+    row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + 1));
+    for (var i = 8; i <= colCount; i++) {
+        row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + column));
+    }
+    row.append(addTdReason("REASON" + index, index));
+    var rowDelete = $('<td/>');
+    var btnXoa = $('<button/>', {
+        text: 'Xóa',
+        type: 'button',
+        class: 'btnXoa btn btn-danger',
+        click: function () {
+            deleteRow(this)
+        }
+    });
+    rowDelete.append(btnXoa);
+    row.append(rowDelete);
+    $('#tableInfo').append(row);
+}
 function updateNumberRegister() {
     var total = 0
     $('.row-info').each(function (rowIndex) {

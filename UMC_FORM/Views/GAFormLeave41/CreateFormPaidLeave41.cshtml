@@ -57,155 +57,177 @@
                             </div>
                             <hr>
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="info-edit">
+                            <div class="info-edit">
 
-                            <div class="row">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="request_dept_sub" name="DEPT">Request Dept</label>
-                                </div>
-                                <div class="col-9">
-                                    <input class="form-control" value="@_session.DEPT" name="DEPT" readonly="readonly" />
-                                </div>
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
-                                </div>
-                                <div class="col-9">
-                                    <input type="hidden" name="DATE_REGISTER" id="DATE_REGISTER" />
-                                    <input class="form-control" id="DATE_REGISTER_VIEW" name="DATE_REGISTER_VIEW">
-                                </div>
-                            </div>
-                            <br />
-                            @if (ViewBag.listGroupLeader != null)
-                            {
                                 <div class="row">
                                     <div class="col-3">
-                                        <label class="font-weight-bold lang" key="group_leader">Name</label>
+                                        <label class="font-weight-bold lang" key="request_dept_sub" name="DEPT">Request Dept</label>
                                     </div>
                                     <div class="col-9">
-                                        <select class="custom-select" id="GROUP_LEADER" name="GROUP_LEADER">
-                                            <option value="0">Chọn trưởng nhóm có quyền approve</option>
-                                            @foreach (var group_leader in ViewBag.listGroupLeader)
-                                            {
-                                                <option value="@group_leader.CODE">@group_leader.NAME</option>
-                                            }
-                                        </select>
-                                        <span class="error" id="GROUP_LEADER_ERROR"></span>
+                                        <input class="form-control" value="@_session.DEPT" name="DEPT" readonly="readonly" />
                                     </div>
                                 </div>
                                 <br />
-                            }
-                            <div class="row" id="select_dept_manager">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="request_date_sub">Request Date</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input type="hidden" name="DATE_REGISTER" id="DATE_REGISTER" />
+                                        <input class="form-control" id="DATE_REGISTER_VIEW" name="DATE_REGISTER_VIEW">
+                                    </div>
                                 </div>
-                                <div class="col-9">
+                                <br />
+                                @if (ViewBag.listGroupLeader != null)
+                                {
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label class="font-weight-bold lang" key="group_leader">Name</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <select class="custom-select" id="GROUP_LEADER" name="GROUP_LEADER">
+                                                <option value="0">Chọn trưởng nhóm có quyền approve</option>
+                                                @foreach (var group_leader in ViewBag.listGroupLeader)
+                                                {
+                                                    <option value="@group_leader.CODE">@group_leader.NAME</option>
+                                                }
+                                            </select>
+                                            <span class="error" id="GROUP_LEADER_ERROR"></span>
+                                        </div>
+                                    </div>
+                                    <br />
+                                }
+                                <div class="row" id="select_dept_manager">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                    </div>
+                                    <div class="col-9">
 
-                                    <select class="custom-select" id="DEPT_MANAGER" name="DEPT_MANAGER">
-                                        <option value="0">Chọn trưởng phòng có quyền approve</option>
-                                        @foreach (var mng in ViewBag.listManager)
-                                        {
-                                            <option value="@mng.CODE">@mng.NAME</option>
-                                        }
-                                    </select>
-
-                                </div>
-                            </div>
-                            <br />
-
-                            <div class="row">
-                                <div class="col-3">
-                                    <label class="font-weight-bold lang" key="count_subscriber">Count subscriber</label>
-                                </div>
-                                <div class="col-9">
-                                    <p id="NUMBER_REGISTER">0</p>
-                                </div>
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-12">
-                                    <p style="font-style:italic;font-weight:bold;">
-                                        Chú ý: Bộ phận tích "v" vào cột Ngày đăng ký 70%
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_41" name="TITLE" />
-                                <input type="hidden" value="@Constant.GA_LEAVE70_ID" name="FORM_NAME" id="formName" />
-                                <span class="error" id="DATE_ERROR"></span>
-                                <table class="table-border-dark">
-                                    <tr>
-                                        <th class="lang" key="table-no" rowspan="2">No</th>
-                                        <th class="lang" rowspan="2" key="table-code" style="width:100px;">Code No<br /> コード </th>
-                                        <th class="lang" rowspan="2" key="name">Name <br /> 氏名</th>
-                                        <th class="lang" rowspan="2" key="customer_department">Customer/Department<br /> 取得日 </th>
-                                        <th class="lang" key="registrationdate" style="" id="registration_date">Registration date</th>
-                                        <th class="lang" rowspan="2" key="reason-leave" style="">Reason</th>
-                                        <th rowspan="2"></th>
-                                    </tr>
-                                    <tr id="columns">
-                                        <th style="width:100px;" id="Add_col1">
-                                            <input class="form-input inputDefault" name="TIME_LEAVE1" id="TIME_LEAVE1" />
-                                        </th>
-
-                                    </tr>
-                                    <tbody id="tableInfo">
-                                        @{
-                                            for (int i = 1; i <= 5; i++)
+                                        <select class="custom-select" id="DEPT_MANAGER" name="DEPT_MANAGER">
+                                            <option value="0">Chọn trưởng phòng có quyền approve</option>
+                                            @foreach (var mng in ViewBag.listManager)
                                             {
-                                                int j = 1;
-                                                <tr class="row-info">
-                                                    <td class="text-center">@(i)</td>
-
-                                                    <td>
-                                                        <input class="form-input inputDefault" id=@("CODE"+i) name="" />
-                                                        <span class="error" id=@("CODE"+i + "_ERROR")></span>
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-input inputDefault" id=@("FULLNAME"+i) />
-                                                        <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-input inputDefault" id=@("CUSTOMER" + i) name=@("CUSTOMER" + i) autocomplete="off" />
-                                                        <span class="error" id=@("CUSTOMER"+i+"_ERROR")></span>
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-input type_number inputDefault" name=@("REGISTRATION_DATE" + i+"_"+j) id=@("REGISTRATION_DATE" + i+"_"+j) type="checkbox" />
-                                                    </td>
-
-                                                    <td class=@("TD_REASON" + i)>
-                                                        <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
-                                                        <span class="error" id=@("REASON"+i + "_ERROR")></span>
-                                                    </td>
-                                                    <td>
-                                                        <button class="btnXoa btn btn-danger" type="button" onclick="deleteRow(this)"> Xóa</button>
-                                                    </td>
-                                                </tr>
+                                                <option value="@mng.CODE">@mng.NAME</option>
                                             }
-                                        }
-                                    </tbody>
-                                </table>
-                                <input type="hidden" name="leaveItems" id="leaveItems" />
-                                <div id="contextMenu" class="dropdown clearfix">
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
-                                        style="display:block;position:static;margin-bottom:5px; color:red">
-                                        <li>
-                                            <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                               class="text-muted ml-2" id="add_column"><i class="fa fa-columns"></i>&nbsp;<span class="lang" key="add-column"></span></a>
-                                        </li>
-                                        <li>
-                                            <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
-                                               class="text-muted ml-2" id="add_row"><i class="fas fa-long-arrow-alt-right"></i>&nbsp;<span class="lang" key="add-row"></span></a>
-                                        </li>
+                                        </select>
 
-
-                                    </ul>
+                                    </div>
                                 </div>
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="font-weight-bold lang" key="count_subscriber">Count subscriber</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <p id="NUMBER_REGISTER">0</p>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p style="font-style:italic;font-weight:bold;">
+                                            Chú ý: Bộ phận tích "v" vào cột Ngày đăng ký 70%
+                                        </p>
+                                    </div>
+                                </div>
+                                <p>
+                                    ** Nếu số người nghỉ quá nhiều, bấm vào
+                                    <a class="text-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        COPY/PASTE EXCEL DATA
+                                    </a>
+                                    để sử dụng chức năng copy paste từ Excel
+                                </p>
+                                <p class="text-danger">Lưu ý chỉ copy đối với form nghỉ 1 ngày, 
+                                    đối với form nghỉ nhiều ngày vui lòng thêm ngày bằng tay</p>
+
+                                <div class="collapse" id="collapseExample">
+                                    <div class="m-2">
+                                        <div class="form-group">
+                                            <label for="exampleTextarea">
+                                                <span id="inline-forms" class="btn-outline-success">Copy dữ liệu từ Excel rồi Paste vào đây:</span>
+                                            </label>
+                                            <textarea name="excel_data" class="form-control" rows="10"></textarea>
+                                        </div>
+                                        <button class="btn btn-outline-success" onclick="javascript:generateTable(this)" type="button">Paste dữ liệu vào bảng bên dưới</button>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_41" name="TITLE" />
+                                    <input type="hidden" value="@Constant.GA_LEAVE70_ID" name="FORM_NAME" id="formName" />
+                                    <span class="error" id="DATE_ERROR"></span>
+                                    <table class="table-border-dark">
+                                        <tr>
+                                            <th class="lang" key="table-no" rowspan="2">No</th>
+                                            <th class="lang" rowspan="2" key="table-code" style="width:100px;">Code No<br /> コード </th>
+                                            <th class="lang" rowspan="2" key="name">Name <br /> 氏名</th>
+                                            <th class="lang" rowspan="2" key="customer_department">Customer/Department<br /> 取得日 </th>
+                                            <th class="lang" key="registrationdate" style="" id="registration_date">Registration date</th>
+                                            <th class="lang" rowspan="2" key="reason-leave" style="">Reason</th>
+                                            <th rowspan="2"></th>
+                                        </tr>
+                                        <tr id="columns">
+                                            <th style="width:100px;" id="Add_col1">
+                                                <input class="form-input inputDefault" name="TIME_LEAVE1" id="TIME_LEAVE1" />
+                                            </th>
+
+                                        </tr>
+                                        <tbody id="tableInfo">
+                                            @{
+                                                for (int i = 1; i <= 5; i++)
+                                                {
+                                                    int j = 1;
+                                                    <tr class="row-info">
+                                                        <td class="text-center">@(i)</td>
+
+                                                        <td>
+                                                            <input class="form-input inputDefault" id=@("CODE"+i) name="" />
+                                                            <span class="error" id=@("CODE"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input inputDefault" id=@("FULLNAME"+i) />
+                                                            <span class="error" id=@("FULLNAME"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input inputDefault" id=@("CUSTOMER" + i) name=@("CUSTOMER" + i) autocomplete="off" />
+                                                            <span class="error" id=@("CUSTOMER"+i+"_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-input type_number inputDefault" name=@("REGISTRATION_DATE" + i+"_"+j) id=@("REGISTRATION_DATE" + i+"_"+j) type="checkbox" />
+                                                        </td>
+
+                                                        <td class=@("TD_REASON" + i)>
+                                                            <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i)></textarea>
+                                                            <span class="error" id=@("REASON"+i + "_ERROR")></span>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btnXoa btn btn-danger" type="button" onclick="deleteRow(this)"> Xóa</button>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" name="leaveItems" id="leaveItems" />
+                                    <div id="contextMenu" class="dropdown clearfix">
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
+                                            style="display:block;position:static;margin-bottom:5px; color:red">
+                                            <li>
+                                                <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
+                                                   class="text-muted ml-2" id="add_column"><i class="fa fa-columns"></i>&nbsp;<span class="lang" key="add-column"></span></a>
+                                            </li>
+                                            <li>
+                                                <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
+                                                   class="text-muted ml-2" id="add_row"><i class="fas fa-long-arrow-alt-right"></i>&nbsp;<span class="lang" key="add-row"></span></a>
+                                            </li>
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                <br />
                             </div>
-                            <br />
-                        </div>
                             <hr>
                             <br />
                             <div class="col">
