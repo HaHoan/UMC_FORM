@@ -229,49 +229,49 @@
                                                     foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
                                                     {
 
-                                                                                                <tr class="row-info">
-                                                                                                    <td class="text-center">@(i)</td>
-                                                                                                    <td style="width:5%;">
-                                                                                                        <input class="form-input inputDefault" id=@("CODE" + i) value="@item.CODE" />
-                                                                                                        <span class="error" id=@("CODE" + i + "_ERROR")></span>
-                                                                                                    </td>
-                                                                                                    <td style="width:20%;">
-                                                                                                        <input class="form-input inputDefault" id=@("FULLNAME" + i) value="@item.FULLNAME" />
-                                                                                                        <span class="error" id=@("FULLNAME" + i + "_ERROR")></span>
-                                                                                                    </td>
+                                                        <tr class="row-info">
+                                                            <td class="text-center">@(i)</td>
+                                                            <td style="width:5%;">
+                                                                <input class="form-input inputDefault" id=@("CODE" + i) value="@item.CODE" />
+                                                                <span class="error" id=@("CODE" + i + "_ERROR")></span>
+                                                            </td>
+                                                            <td style="width:20%;">
+                                                                <input class="form-input inputDefault" id=@("FULLNAME" + i) value="@item.FULLNAME" />
+                                                                <span class="error" id=@("FULLNAME" + i + "_ERROR")></span>
+                                                            </td>
 
-                                                                                                    <td style="width:15%;">
-                                                                                                        <input class="form-input  inputDefault" id=@("CUSTOMER" + i) value="@item.CUSTOMER" autocomplete="off" />
-                                                                                                        <span class="error" id=@("CUSTOMER" + i + "_ERROR")></span>
-                                                                                                    </td>
-                                                                                                    @{var k = 1;
-                                                                                                        foreach (var item_list in ViewBag.List_detail)
-                                                                                                        {
+                                                            <td style="width:15%;">
+                                                                <input class="form-input  inputDefault" id=@("CUSTOMER" + i) value="@item.CUSTOMER" autocomplete="off" />
+                                                                <span class="error" id=@("CUSTOMER" + i + "_ERROR")></span>
+                                                            </td>
+                                                            @{var k = 1;
+                                                                foreach (var item_list in ViewBag.List_detail)
+                                                                {
 
-                                                                                                        <td>
-                                                                                                            @if (item.GA_LEAVE_FORM_ITEM_DETAILs.Where(m => m.TIME_LEAVE == item_list.TIME_LEAVE).FirstOrDefault() != null)
-                                                                                                            {
-                                                                                                                <input class="form-input inputDefault" name=@("REGISTRATION_DATE" + i + "_" + k) id=@("REGISTRATION_DATE" + i + "_" + k) checked type="checkbox" />
-                                                                                                                
-                                                                                                            }
-                                                                                                            else
-                                                                                                            { <input class="form-input inputDefault" name=@("REGISTRATION_DATE" + i + "_" + k) id=@("REGISTRATION_DATE" + i + "_" + k) type="checkbox" />
+                                                                    <td>
+                                                                        @if (item.GA_LEAVE_FORM_ITEM_DETAILs.Where(m => m.TIME_LEAVE == item_list.TIME_LEAVE).FirstOrDefault() != null)
+                                                                        {
+                                                                            <input class="form-input inputDefault" name=@("REGISTRATION_DATE" + i + "_" + k) id=@("REGISTRATION_DATE" + i + "_" + k) checked type="checkbox" />
 
-                                                                                                                
-                                                                                                            }
+                                                                        }
+                                                                        else
+                                                                        { <input class="form-input inputDefault" name=@("REGISTRATION_DATE" + i + "_" + k) id=@("REGISTRATION_DATE" + i + "_" + k) type="checkbox" />
 
-                                                                                                        </td>
-                                                                                                            k++;
-                                                                                                        }
-                                                                                                        }
-                                                                                                    <td class=@("TD_REASON" + i)>
-                                                                                                        <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i) required cols="50">@item.REASON</textarea>
-                                                                                                        <span class="error" id=@("REASON"+i + "_ERROR")></span>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        <button class="btnXoa btn btn-danger" type="button" onclick="deleteRow(this)"> Xóa</button>
-                                                                                                    </td>
-                                                                                                </tr>
+
+                                                                        }
+
+                                                                    </td>
+                                                                    k++;
+                                                                }
+                                                            }
+                                                            <td class=@("TD_REASON" + i)>
+                                                                <textarea class="form-input inputDefault" id=@("REASON" + i) name=@("REASON" + i) required cols="50">@item.REASON</textarea>
+                                                                <span class="error" id=@("REASON"+i + "_ERROR")></span>
+                                                            </td>
+                                                            <td>
+                                                                <button class="btnXoa btn btn-danger" type="button" onclick="deleteRow(this)"> Xóa</button>
+                                                            </td>
+                                                        </tr>
                                                         i++;
                                                     }
                                                 }
