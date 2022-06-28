@@ -308,7 +308,7 @@
                                                 <th class="lang" rowspan="2" key="table-code" style="width:60px;">Code No</th>
                                                 <th class="lang" rowspan="2" key="name">Name <br /></th>
                                                 <th class="lang" rowspan="2" key="customer_department">Customer/Department<br />  </th>
-                                                <th class="lang" colspan="@maxPlayCount" key="registrationdate" >Registration date</th>
+                                                <th class="lang" colspan="@maxPlayCount" key="registrationdate">Registration date</th>
                                                 <th class="lang" rowspan="2" key="reason-leave">Reason</th>
                                             </tr>
                                             <tr>
@@ -344,15 +344,12 @@
 
                                                             @foreach (var item_regis in ViewBag.List_detail)
                                                             {
-                                                        <td style="text-align:center;">
-                                                            @if (item.GA_LEAVE_FORM_ITEM_DETAILs.Where(m => m.TIME_LEAVE == item_regis.TIME_LEAVE).FirstOrDefault() != null)
-                                                            {
-                                                               
-                                                                    <i class="fa fa-check"></i>
-                                                              
-
-                                                            }
-                                                        </td>
+                                                                <td style="text-align:center;">
+                                                                    @if (item.GA_LEAVE_FORM_ITEM_DETAILs.Where(m => m.TIME_LEAVE == item_regis.TIME_LEAVE).FirstOrDefault() != null)
+                                                                    {
+                                                                        <i class="fa fa-check"></i>
+                                                                    }
+                                                                </td>
 
                                                             }
                                                             <td>
