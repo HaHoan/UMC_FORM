@@ -90,12 +90,18 @@ function Delete_col(index_column) {
         });
         $('#Add_col' + index_column).remove();
     });
-    var count_columns = column_registration_date - 1;
-    for (var i = column_registration_date; i > count_columns; i--) {
-        var value_next_id = i-1;
-        $('.table-border-dark #columns #Add_col' + i + ' #TIME_LEAVE' + i).attr('id', "TIME_LEAVE" + value_next_id);
-        $('.table-border-dark #columns #Add_col' + i).attr('id', "Add_col" + value_next_id);
+    if (index_column < column_registration_date) {
+        for (var i = 0; i < column_registration_date - index_column; i++) {
+            
+            var value_next_id = index_column + i;
+            var get_valueidnext = value_next_id + 1;
+            $('.table-border-dark #columns #Add_col' + get_valueidnext + ' #TIME_LEAVE' + get_valueidnext).attr('id', "TIME_LEAVE" + value_next_id);
+            $('.table-border-dark #columns #Add_col' + get_valueidnext).attr('id', "Add_col" + value_next_id);
+            $('#DELETE' + get_valueidnext).remove();
+            Change_buttondelete_col("DELETE",value_next_id);
+        }
     }
+    var count_columns = column_registration_date - 1;
     var index = 1;
     $('#registration_date').attr('colspan', count_columns);
     if (count_columns > 1) {
@@ -111,6 +117,20 @@ function Delete_col(index_column) {
             }
         });
     }
+   
+}
+function Change_buttondelete_col(name, index) {
+    var input_deletecol = $('<input />', {
+        type: 'button',
+        id: name + index,
+        click: function () {
+            Delete_col(index)
+        },
+        value: 'x',
+        style: 'width:10px;height:22px;float:right;padding-left: 3px;border: 0px;background-color: white;'
+    });
+    $('.table-border-dark #columns #Add_col' + index).append(input_deletecol);
+  
 }
 function Change_ThAdd_Whendeletecol(rowIndex, index, column, name, indexInTd) {
     try {
@@ -210,6 +230,7 @@ function addTd(name) {
         class: 'form-input inputDefault',
         keypress: function () {
             $('#' + name + '_ERROR').text('')
+            updateNumberRegister()
         }
     })
     col.append(input);
@@ -310,7 +331,16 @@ $(function () {
         }
         
     }
-    
+    for (var i = 1; i <= $('#tableInfo tr').length; i++) {
+        $('#CODE' + i).keypress(function () {
+            updateNumberRegister()
+        })
+        
+        eraseTextError('CODE' + i)
+        eraseTextError('FULLNAME' + i)
+        eraseTextError('CUSTOMER' + i)
+        eraseTextError('REASON' + i)
+    }
 
     $('#DATE_REGISTER_VIEW').datetimepicker({
         format: FORMAT_DATE,
@@ -470,24 +500,23 @@ $(function () {
         });
         return false;
     });
-
+    $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        return arg !== value;
+    }, "")
     $("#formCreate").validate({
-
+        rules: {
+            "GROUP_LEADER": {
+                valueNotEquals: '0'
+            }
+        },
         submitHandler: function (form) {
             if (confirm('Do you want to create?')) {
                 disableButtonWhenSubmit('#frmpaidleave_create')
-                var selectGroupleader = $("#GROUP_LEADER option:selected").val()
-                if (selectGroupleader ==0) {
-                    $('#GROUP_LEADER_ERROR').text('Trưởng phòng không được để trống!')
+                var result = updateleaveItems()
+                if (result == 0) {
+                    form.ajax.submit()
+                } else {
                     enableButton()
-                }
-                else {
-                    var result = updateleaveItems()
-                    if (result == 0) {
-                        form.ajax.submit()
-                    } else {
-                        enableButton()
-                    }
                 }
                 
             } else {
@@ -498,6 +527,11 @@ $(function () {
         }
     });
     $("#submitForm").validate({
+        rules: {
+            "TICKET.DEPT_MANAGER": {
+                valueNotEquals: '0'
+            }
+        },
         submitHandler: function (form) {
             var status = $('#status').val();
             if (status == 'reject' || status == 'delete') {

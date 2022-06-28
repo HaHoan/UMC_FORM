@@ -158,6 +158,10 @@ namespace UMC_FORM.Controllers
                             }
                             return Accept(ticket);
                         }
+                        if (!MailResponsitory.SendMail(summary, STATUS.ACCEPT, "GAFormLeave41"))
+                        {
+                            return Json(new { result = STATUS.ERROR, message = "Error when send mail!" }, JsonRequestBehavior.AllowGet);
+                        };
                         return Json(new
                         {
                             result = STATUS.SUCCESS,
@@ -282,11 +286,11 @@ namespace UMC_FORM.Controllers
                             }
                         }
 
-                        //if (!MailResponsitory.SendMail(summary, STATUS.ACCEPT, "GAFormLeave41"))
-                        //{
-                        //    transaction.Rollback();
-                        //    return Json(new { result = STATUS.ERROR, message = "Error when send mail!" }, JsonRequestBehavior.AllowGet);
-                        //};
+                        if (!MailResponsitory.SendMail(summary, STATUS.ACCEPT, "GAFormLeave41"))
+                        {
+                            transaction.Rollback();
+                            return Json(new { result = STATUS.ERROR, message = "Error when send mail!" }, JsonRequestBehavior.AllowGet);
+                        };
                         return Json(new
                         {
                             result = STATUS.SUCCESS,
@@ -370,11 +374,11 @@ namespace UMC_FORM.Controllers
 
                         db.SaveChanges();
                         transaction.Commit();
-                        //if (!MailResponsitory.SendMail(summary, STATUS.REJECT, "GAFormLeave41"))
-                        //{
-                        //    transaction.Rollback();
-                        //    return Json(new { result = STATUS.ERROR, message = "Error when send mail!" }, JsonRequestBehavior.AllowGet);
-                        //};
+                        if (!MailResponsitory.SendMail(summary, STATUS.REJECT, "GAFormLeave41"))
+                        {
+                            transaction.Rollback();
+                            return Json(new { result = STATUS.ERROR, message = "Error when send mail!" }, JsonRequestBehavior.AllowGet);
+                        };
 
                         return Json(new { result = STATUS.SUCCESS, message = "" }, JsonRequestBehavior.AllowGet);
                     }

@@ -166,15 +166,15 @@
                                                 @item.CUSTOMER
                                             </td>
 
+
                                             @foreach (var item_regis in ViewBag.List_detail)
                                             {
-                                                <td style="text-align:center; width:15%;">
-                                                    @foreach (var item_registration in item.GA_LEAVE_FORM_ITEM_DETAILs)
+                                                <td style="text-align:center;">
+                                                    @if (item.GA_LEAVE_FORM_ITEM_DETAILs.Where(m => m.TIME_LEAVE == item_regis.TIME_LEAVE).FirstOrDefault() != null)
                                                     {
-                                                        if (item_regis.TIME_LEAVE == item_registration.TIME_LEAVE)
-                                                        {
-                                                            <i class="fa fa-check"></i>
-                                                        }
+
+                                                        <i class="fa fa-check"></i>
+
 
                                                     }
                                                 </td>
