@@ -24,6 +24,7 @@
                     }, new { enctype = "multipart/form-data", id = "submitForm" }))
                     {
                         @Html.AntiForgeryToken()
+                        <input type="hidden" value="@(_session.CODE)" id="user_code" />
                         <br />
                         <button class="border-0 bg-white" id="backTo" type="button">
                             <i class="fas fa-angle-left font-title text-muted"></i>
@@ -149,7 +150,30 @@
                                         </div>
                                     </div>
                                     <br />
+                                    <div class="row" id="select_dept_manager">
+                                        <div class="col-3">
+                                            <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                        </div>
+                                        <div class="col-9">
 
+                                            <select class="custom-select" id="DEPT_MANAGER" name="TICKET.DEPT_MANAGER">
+                                                <option value="0">Chọn trưởng phòng có quyền approve</option>
+                                                @foreach (var mng in ViewBag.listManager)
+                                                {
+                                                    if (Model.TICKET.DEPT_MANAGER_OBJECT != null && Model.TICKET.DEPT_MANAGER_OBJECT.CODE == mng.CODE)
+                                                    {
+                                                        <option value="@mng.CODE" selected>@mng.NAME</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@mng.CODE">@mng.NAME</option>
+                                                    }
+
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
                                 }
                                 if (Model.PERMISSION.Contains(PERMISSION.ADD_DEPT_MANAGER) && ViewBag.listManager != null)
                                 {
@@ -214,14 +238,14 @@
                                                     {
 
 
-                                                    <th class="text-center p-2" id=@("Add_col"+j) style="width:110px;">
-                                                        <input class="form-input inputDefault" name="TIME_LEAVE" id=@("TIME_LEAVE" + j) value="@item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")" style="width:80px;"/>
-                                                        <input type="button" id=@("DELETE"+j) style="width: 10px; height: 22px; float: right; padding-left: 3px; border: 0px; background-color: white;" value="x" onclick="Delete_col(@j)" />
-                                                    </th>
+                                                        <th class="text-center p-2" id=@("Add_col"+j) style="width:110px;">
+                                                            <input class="form-input inputDefault" name="TIME_LEAVE" id=@("TIME_LEAVE" + j) value="@item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")" style="width:80px;" />
+                                                            <input type="button" id=@("DELETE"+j) style="width: 10px; height: 22px; float: right; padding-left: 3px; border: 0px; background-color: white;" value="x" onclick="Delete_col(@j)" />
+                                                        </th>
                                                         j++;
                                                     }
 
-                                               }
+                                                }
                                             </tr>
                                             <tbody id="tableInfo">
                                                 @{

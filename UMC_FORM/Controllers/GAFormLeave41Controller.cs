@@ -50,7 +50,7 @@ namespace UMC_FORM.Controllers
                 return Delete(ticket);
             }
             return Json(new { result = STATUS.ERROR, message = "Chưa có status này" }, JsonRequestBehavior.AllowGet);
-            }
+        }
         public ActionResult CreateFormPaidLeave41()
         {
             SetUpViewBagForCreate();
@@ -62,7 +62,7 @@ namespace UMC_FORM.Controllers
         {
             return Create(ticket);
         }
-                public JsonResult Create(object obj)
+        public JsonResult Create(object obj)
         {
             using (var db = new DataContext())
             {
@@ -86,9 +86,9 @@ namespace UMC_FORM.Controllers
                         var station = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault();
                         ticket.STATION_NAME = station.STATION_NAME;
                         ticket.STATION_NO = station.STATION_NO;
-                        ticket.GA_LEAVE_FORM_ITEMs= TicketGALeaveHelper.convertStringToListItem_Detail(ticket.leaveItems, ticket.ID, ticket.ID);
-                        
-                        if(ticket.GA_LEAVE_FORM_ITEMs == null)
+                        ticket.GA_LEAVE_FORM_ITEMs = TicketGALeaveHelper.convertStringToListItem_Detail(ticket.leaveItems, ticket.ID, ticket.ID);
+
+                        if (ticket.GA_LEAVE_FORM_ITEMs == null)
                         {
                             transaction.Rollback();
                             return Json(new { result = STATUS.ERROR, message = "Xem lại thông tin đăng ký!" }, JsonRequestBehavior.AllowGet);
@@ -111,7 +111,7 @@ namespace UMC_FORM.Controllers
                                 };
                                 db.GA_LEAVE_FORM_ITEM_DETAIL.Add(new_itemdetail);
                                 db.SaveChanges();
-                            }                           
+                            }
                         }
                         ticket.NUMBER_REGISTER = ticket.GA_LEAVE_FORM_ITEMs.Count();
                         db.GA_LEAVE_FORM.Add(ticket);
@@ -151,7 +151,7 @@ namespace UMC_FORM.Controllers
                         && m.FORM_INDEX == (ticket.PROCEDURE_INDEX + 1)).FirstOrDefault();
 
                         if (_sess.CODE == currentProceduce.APPROVAL_NAME)
-                        { 
+                        {
                             if (string.IsNullOrEmpty(ticket.DEPT_MANAGER))
                             {
                                 return Json(new { result = STATUS.ERROR, message = "Bạn cần chọn trưởng phòng!" }, JsonRequestBehavior.AllowGet);
@@ -179,9 +179,9 @@ namespace UMC_FORM.Controllers
 
         public JsonResult Accept(object obj)
         {
-            using(var db= new DataContext())
+            using (var db = new DataContext())
             {
-                using(DbContextTransaction transaction= db.Database.BeginTransaction())
+                using (DbContextTransaction transaction = db.Database.BeginTransaction())
                 {
                     try
                     {
@@ -202,9 +202,9 @@ namespace UMC_FORM.Controllers
                         }
                         else
                         {
-                            form.IS_SIGNATURE = 1;
                             form.PROCEDURE_INDEX += 1;
                         }
+                        form.IS_SIGNATURE = 1;
                         summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
                         if (summary.PROCEDURE_INDEX == summary.LAST_INDEX)
                         {
@@ -215,8 +215,11 @@ namespace UMC_FORM.Controllers
                         form.SUBMIT_USER = _sess.CODE;
                         form.UPD_DATE = DateTime.Now;
                         form.ORDER_HISTORY++;
+                        form.DEPT_MANAGER = ticket.DEPT_MANAGER;
+                        form.GROUP_LEADER = ticket.GROUP_LEADER;
                         if (!summary.IS_FINISH)
                         {
+                            var isCheckNextStep = false;
                             if (form.PROCEDURE_INDEX == 1)
                             {
                                 if (!string.IsNullOrEmpty(ticket.DEPT_MANAGER) && ticket.DEPT_MANAGER != "0")
@@ -227,16 +230,28 @@ namespace UMC_FORM.Controllers
                                 }
                                 else
                                 {
-                                    var isHaveDeptManager = FormProcedureResponsitory.CheckNextStepHaveApprover(form.TICKET, form.PROCEDURE_INDEX + 1);
-                                    if (!isHaveDeptManager)
-                                    {
-                                        transaction.Rollback();
-                                        return Json(new { result = STATUS.ERROR, message = "Bước tiếp theo chưa có người xác nhận!" }, JsonRequestBehavior.AllowGet);
-                                    }
+                                    isCheckNextStep = true;
                                 }
 
                             }
+                            else if (form.PROCEDURE_INDEX == 0)
+                            {
+                                if (!string.IsNullOrEmpty(ticket.GROUP_LEADER) && ticket.GROUP_LEADER != "0")
+                                {
+                                    var nextStation = db.Form_Procedures.Where(m => m.TICKET == form.TICKET && m.FORM_INDEX == 1).FirstOrDefault();
+                                    nextStation.APPROVAL_NAME = ticket.GROUP_LEADER;
+                                    db.SaveChanges();
+                                }
+                                else
+                                {
+                                    isCheckNextStep = true;
+                                }
+                            }
                             else
+                            {
+                                isCheckNextStep = true;
+                            }
+                            if (isCheckNextStep)
                             {
                                 var isHaveDeptManager = FormProcedureResponsitory.CheckNextStepHaveApprover(form.TICKET, form.PROCEDURE_INDEX + 1);
                                 if (!isHaveDeptManager)
@@ -305,13 +320,13 @@ namespace UMC_FORM.Controllers
                     }
                 }
             }
-            
+
         }
         public JsonResult Reject(object obj)
         {
-            using(var db= new DataContext())
+            using (var db = new DataContext())
             {
-                using(DbContextTransaction transaction= db.Database.BeginTransaction())
+                using (DbContextTransaction transaction = db.Database.BeginTransaction())
                 {
                     try
                     {
@@ -321,7 +336,7 @@ namespace UMC_FORM.Controllers
                         if (formDB == null)
                         {
                             return Json(new { result = STATUS.ERROR, message = "Ticket không tồn tại!" }, JsonRequestBehavior.AllowGet);
-                            
+
                         }
                         var form = formDB.CloneObject() as GA_LEAVE_FORM;
                         var summary = db.Form_Summary.Where(m => m.TICKET == formDB.TICKET).FirstOrDefault();
@@ -389,7 +404,7 @@ namespace UMC_FORM.Controllers
                     }
                 }
             }
-         
+
         }
         public JsonResult Delete(object obj)
         {
@@ -410,7 +425,7 @@ namespace UMC_FORM.Controllers
 
         private GA_LEAVE_FORM_DETAIL_MODEL GetDetailTicket(string ticket)
         {
-            using( var db= new DataContext())
+            using (var db = new DataContext())
             {
                 var model_Detail = new GA_LEAVE_FORM_DETAIL_MODEL();
                 var list_ticket = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).ToList();
@@ -424,16 +439,16 @@ namespace UMC_FORM.Controllers
                     return null;
                 }
                 model_Detail.TICKET.GA_LEAVE_FORM_ITEMs = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == model_Detail.TICKET.ID).ToList();
-                foreach(var item in model_Detail.TICKET.GA_LEAVE_FORM_ITEMs)
+                foreach (var item in model_Detail.TICKET.GA_LEAVE_FORM_ITEMs)
                 {
                     var item_detail = db.GA_LEAVE_FORM_ITEM_DETAIL.Where(m => m.GA_LEAVE_FORM_ITEM_ID == item.ID).ToList();
-                    item.GA_LEAVE_FORM_ITEM_DETAILs= item_detail;
+                    item.GA_LEAVE_FORM_ITEM_DETAILs = item_detail;
                 }
                 model_Detail.SUMARY = db.Form_Summary.Where(m => m.TICKET == ticket).FirstOrDefault();
                 if (model_Detail.SUMARY == null)
                 {
                     return null;
-                }      
+                }
                 _sess = Session["user"] as Form_User;
                 var dept_mng = db.Form_Procedures.Where(m => m.TICKET == ticket && m.STATION_NO == "DEPT_MANAGER").FirstOrDefault();
                 if (dept_mng != null && !string.IsNullOrEmpty(dept_mng.APPROVAL_NAME))
@@ -462,8 +477,8 @@ namespace UMC_FORM.Controllers
             {
                 var ticketDb = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).FirstOrDefault();
                 if (ticketDb == null) return HttpNotFound();
-               
-                return RedirectToAction("DetailFormPaidLeave41", new { ticket = ticket });    
+
+                return RedirectToAction("DetailFormPaidLeave41", new { ticket = ticket });
             }
 
         }
@@ -487,19 +502,19 @@ namespace UMC_FORM.Controllers
         {
             using (var db = new DataContext())
             {
-                var detail =new  List<GA_LEAVE_FORM_ITEM_DETAIL>();
-                var list_GAFORM = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();      
-                    var list_GAFORMITEM = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == list_GAFORM.ID).ToList();
-                    foreach(var items in list_GAFORMITEM)
+                var detail = new List<GA_LEAVE_FORM_ITEM_DETAIL>();
+                var list_GAFORM = db.GA_LEAVE_FORM.Where(m => m.TICKET == ticket).OrderByDescending(m => m.ORDER_HISTORY).FirstOrDefault();
+                var list_GAFORMITEM = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == list_GAFORM.ID).ToList();
+                foreach (var items in list_GAFORMITEM)
+                {
+                    var list_GAFORMITEMDETAIL = db.GA_LEAVE_FORM_ITEM_DETAIL.Where(m => m.GA_LEAVE_FORM_ITEM_ID == items.ID).ToList();
+
+                    foreach (var item_detail in list_GAFORMITEMDETAIL)
                     {
-                        var list_GAFORMITEMDETAIL = db.GA_LEAVE_FORM_ITEM_DETAIL.Where(m => m.GA_LEAVE_FORM_ITEM_ID == items.ID).ToList();
-                        
-                        foreach (var item_detail in list_GAFORMITEMDETAIL)
-                        {
-                            detail.Add(item_detail);
-                        }
+                        detail.Add(item_detail);
                     }
-               
+                }
+
                 return detail.GroupBy(x => x.TIME_LEAVE).Select(y => y.First()).ToList();
             }
         }

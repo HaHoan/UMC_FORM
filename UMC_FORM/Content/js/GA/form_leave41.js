@@ -352,8 +352,13 @@ $(function () {
         }
     });
     $('#DATE_REGISTER').val(convertDateToValid($("#DATE_REGISTER_VIEW").val()));
-    $('#select_dept_manager').hide();
-    $('#GROUP_LEADER').on('change',function () {
+    if ($('#GROUP_LEADER').val() == $('#user_code').val()) {
+        $('#select_dept_manager').show();
+    } else {
+        $('#select_dept_manager').hide();
+    }
+
+    $('#GROUP_LEADER').on('change', function () {
         var groupLeader = this.value;
         var userCode = $('#user_code').val();
         if (groupLeader == userCode) {
