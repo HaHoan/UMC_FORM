@@ -188,6 +188,8 @@
     <Compile Include="Business\FormRejectResponsitory.cs" />
     <Compile Include="Business\FormSummaryRepository.cs" />
     <Compile Include="Business\GA\TicketGALeaveHelper.cs" />
+    <Compile Include="Business\GA\TicketGALeaveHelperForm35.cs" />
+    <Compile Include="Business\GA\TicketGALeaveHelperForm41.cs" />
     <Compile Include="Business\LogRepository.cs" />
     <Compile Include="Business\MailHelper.cs" />
     <Compile Include="Business\MailResponsitory.cs" />
@@ -223,6 +225,7 @@
     <Compile Include="Models\AuthorEntity.cs" />
     <Compile Include="Models\BaseDetailModel.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\BaseResult.cs" />
     <Compile Include="Models\CostChangeEntity.cs" />
     <Compile Include="Models\DataContext.cs" />
     <Compile Include="Models\FormProcessJsonEntity.cs" />
