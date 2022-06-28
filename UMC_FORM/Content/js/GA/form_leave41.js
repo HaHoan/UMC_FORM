@@ -393,37 +393,7 @@ $(function () {
     });
     $
     $("#contextMenu li #add_row").click(function (e) {
-        var column = $('.table-border-dark tr #registration_date').attr('colspan');
-        var index = $('#tableInfo tr').length + 1;
-        var colCount = $(".table-border-dark tr th").length - 1;
-        var row = $('<tr/>', {
-            class: 'row-info'
-        });
-        var col = $('<td/>', {
-            text: (index),
-            class: 'text-center'
-        })
-        row.append(col);
-        row.append(addTd("CODE" + index));
-        row.append(addTd("FULLNAME" + index));
-        row.append(addTd("CUSTOMER" + index));
-        row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + 1));
-        for (var i = 8; i <= colCount; i++) {
-            row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + column));
-        }
-        row.append(addTdReason("REASON" + index, index));
-        var rowDelete = $('<td/>');
-        var btnXoa = $('<button/>', {
-            text: 'Xóa',
-            type: 'button',
-            class: 'btnXoa btn btn-danger',
-            click: function () {
-                deleteRow(this)
-            }
-        });
-        rowDelete.append(btnXoa);
-        row.append(rowDelete);
-        $('#tableInfo').append(row);
+        addRow();
     });
     $("#contextMenu li #add_column").click(function (e) {
         var column = $('.table-border-dark tr #registration_date').attr('colspan');
@@ -528,11 +498,7 @@ $(function () {
         }
     });
     $("#submitForm").validate({
-        rules: {
-            "TICKET.DEPT_MANAGER": {
-                valueNotEquals: '0'
-            }
-        },
+        
         submitHandler: function (form) {
             var status = $('#status').val();
             if (status == 'reject' || status == 'delete') {
@@ -560,6 +526,103 @@ $(function () {
         }
     });
 })
+function generateTable(e) {
+    $(e).html(
+        '<i class="fa fa-circle-o-notch fa-spin"></i> loading...'
+    );
+
+    var data = $('textarea[name=excel_data]').val();
+    var rows = data.split("\n");
+    var firstIndexToAdd = 0
+    $('.row-info').each(function (rowIndex) {
+        var cols = $(this).find('td')
+        var fullname = ''
+        var code = ''
+        cols.each(function (index, value) {
+            if (index == 1) {
+                var input = $(this).find('input')
+                fullname = input.val()
+            } else if (index == 2) {
+                var input = $(this).find('input')
+                code = input.val()
+            }
+        })
+        rowIndex++
+
+        if (fullname == '' && code == '') {
+            firstIndexToAdd = rowIndex
+            return false
+        }
+    });
+    if (firstIndexToAdd == 0) {
+        firstIndexToAdd = $('.row-info').length + 1
+    }
+
+    var totalRow = firstIndexToAdd + rows.length - 1
+    var y = 0;
+    for (var index = firstIndexToAdd; index <= totalRow; index++) {
+
+        var cells = rows[y].split("\t");
+        if ($('.row-info').length < index) {
+            addRow()
+        }
+        if (cells.length > 1) {
+            $('#CODE' + index).val(cells[1])
+        }
+        if (cells.length > 2) {
+            $('#FULLNAME' + index).val(cells[2])
+        }
+        if (cells.length > 3) {
+            $('#CUSTOMER' + index).val(cells[3])
+        }
+        if (cells.length > 4) {
+            $('#REGISTRATION_DATE' + index + '_1').prop('checked', true)
+        }
+        if (cells.length > 5) {
+            $('#REASON' + index).val(cells[5])
+        }
+
+        y++
+    }
+    updateNumberRegister()
+
+    $(e).html(
+        'Paste dữ liệu vào bảng bên dưới'
+    );
+}
+function addRow() {
+    var column = $('.table-border-dark tr #registration_date').attr('colspan');
+    var index = $('#tableInfo tr').length + 1;
+    var colCount = $(".table-border-dark tr th").length - 1;
+    var row = $('<tr/>', {
+        class: 'row-info'
+    });
+    var col = $('<td/>', {
+        text: (index),
+        class: 'text-center'
+    })
+    row.append(col);
+    row.append(addTd("CODE" + index));
+    row.append(addTd("FULLNAME" + index));
+    row.append(addTd("CUSTOMER" + index));
+    row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + 1));
+    for (var i = 8; i <= colCount; i++) {
+        row.append(addTdCheckbox("REGISTRATION_DATE" + index + '_' + column));
+    }
+    row.append(addTdReason("REASON" + index, index));
+    var rowDelete = $('<td/>');
+    var btnXoa = $('<button/>', {
+        text: 'Xóa',
+        type: 'button',
+        class: 'btnXoa btn btn-danger',
+        click: function () {
+            deleteRow(this)
+        }
+    });
+    rowDelete.append(btnXoa);
+    row.append(rowDelete);
+    $('#tableInfo').append(row);
+}
 function updateNumberRegister() {
     var total = 0
     $('.row-info').each(function (rowIndex) {
