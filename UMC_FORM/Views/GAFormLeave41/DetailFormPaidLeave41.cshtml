@@ -38,10 +38,10 @@
                             </div>
                             <div class="col-2">
                                 <div class="row d-flex justify-content-end">
-                                    <a href="@Url.Action("Export", "GAFormLeave41",new { ticket = Model.TICKET.TICKET })" )" class="text-success ">
+                                    <a href="@Url.Action("Export", "GAFormLeave41",new { ticket = Model.TICKET.TICKET })" class="text-success ">
                                         <i class="fa-regular fa-file-excel"></i>
                                     </a>
-                                    <a href="@Url.Action("PrintFormPaidLeave41", "GAFormLeave41",new { ticket = Model.TICKET.TICKET })" )" class="text-dark ml-3 mr-3">
+                                    <a href="@Url.Action("PrintFormPaidLeave41", "GAFormLeave41",new { ticket = Model.TICKET.TICKET })" class="text-dark ml-3 mr-3">
                                         <i class="fas fa-print"></i>
                                     </a>
 
@@ -98,7 +98,6 @@
                         <hr class="mt-1">
                         <div class="info-edit">
                             @{
-
                                 <div class="row">
                                     <div class="col-3">
                                         <label class="font-weight-bold lang" key="request_dept_sub">Request Dept </label>
@@ -155,7 +154,6 @@
                                             <label class="font-weight-bold lang" key="dept_manager">Name</label>
                                         </div>
                                         <div class="col-9">
-
                                             <select class="custom-select" id="DEPT_MANAGER" name="TICKET.DEPT_MANAGER">
                                                 <option value="0">Chọn trưởng phòng có quyền approve</option>
                                                 @foreach (var mng in ViewBag.listManager)
@@ -168,10 +166,8 @@
                                                     {
                                                         <option value="@mng.CODE">@mng.NAME</option>
                                                     }
-
                                                 }
                                             </select>
-
                                         </div>
                                     </div>
                                 }
@@ -195,16 +191,12 @@
                                                     {
                                                         <option value="@mng.CODE">@mng.NAME</option>
                                                     }
-
                                                 }
                                             </select>
-
                                         </div>
                                     </div>
                                     <br />
                                 }
-
-
                                 <div class="row">
                                     <div class="col-12">
                                         <p style="font-style:italic;font-weight:bold;">
@@ -212,17 +204,16 @@
                                         </p>
                                     </div>
                                 </div>
-
                                 if (Model.PERMISSION.Contains(PERMISSION.EDIT_INFO))
                                 {
                                     <div class="table-responsive">
                                         <input type="hidden" value="@Constant.GA_LEAVE_FORM_GA_41" name="purpose" />
                                         <input type="hidden" value="@Constant.GA_LEAVE70_ID" name="formName" id="formName" />
                                         <input type="hidden" value="@maxPlayCount" id="ColSpan_table" />
+                                        <span class="error" id="DATE_ERROR"></span>
                                         <table class="table-border-dark">
                                             <tr>
                                                 <th class="lang" key="table-no" rowspan="2">No</th>
-
                                                 <th class="lang" rowspan="2" key="table-code" style="width:60px;">Code No</th>
                                                 <th class="lang" rowspan="2" key="name">Name <br /></th>
                                                 <th class="lang" rowspan="2" key="customer_department">Customer/Department<br />  </th>
@@ -231,20 +222,16 @@
                                                 <th rowspan="2" style=""></th>
                                             </tr>
                                             <tr id="columns">
-
                                                 @{
                                                     var j = 1;
                                                     foreach (var item_regis in ViewBag.List_detail)
                                                     {
-
-
                                                         <th class="text-center p-2" id=@("Add_col"+j) style="width:110px;">
                                                             <input class="form-input inputDefault" name="TIME_LEAVE" id=@("TIME_LEAVE" + j) value="@item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")" style="width:80px;" />
                                                             <input type="button" id=@("DELETE"+j) style="width: 10px; height: 22px; float: right; padding-left: 3px; border: 0px; background-color: white;" value="x" onclick="Delete_col(@j)" />
                                                         </th>
                                                         j++;
                                                     }
-
                                                 }
                                             </tr>
                                             <tbody id="tableInfo">
@@ -252,7 +239,6 @@
                                                     var i = 1;
                                                     foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
                                                     {
-
                                                         <tr class="row-info">
                                                             <td class="text-center">@(i)</td>
                                                             <td style="width:5%;">
@@ -263,7 +249,6 @@
                                                                 <input class="form-input inputDefault" id=@("FULLNAME" + i) value="@item.FULLNAME" />
                                                                 <span class="error" id=@("FULLNAME" + i + "_ERROR")></span>
                                                             </td>
-
                                                             <td style="width:15%;">
                                                                 <input class="form-input  inputDefault" id=@("CUSTOMER" + i) value="@item.CUSTOMER" autocomplete="off" />
                                                                 <span class="error" id=@("CUSTOMER" + i + "_ERROR")></span>
@@ -271,19 +256,15 @@
                                                             @{var k = 1;
                                                                 foreach (var item_list in ViewBag.List_detail)
                                                                 {
-
                                                                     <td>
                                                                         @if (item.GA_LEAVE_FORM_ITEM_DETAILs.Where(m => m.TIME_LEAVE == item_list.TIME_LEAVE).FirstOrDefault() != null)
                                                                         {
                                                                             <input class="form-input inputDefault" name=@("REGISTRATION_DATE" + i + "_" + k) id=@("REGISTRATION_DATE" + i + "_" + k) checked type="checkbox" />
-
                                                                         }
                                                                         else
-                                                                        { <input class="form-input inputDefault" name=@("REGISTRATION_DATE" + i + "_" + k) id=@("REGISTRATION_DATE" + i + "_" + k) type="checkbox" />
-
-
+                                                                        {
+                                                                            <input class="form-input inputDefault" name=@("REGISTRATION_DATE" + i + "_" + k) id=@("REGISTRATION_DATE" + i + "_" + k) type="checkbox" />
                                                                         }
-
                                                                     </td>
                                                                     k++;
                                                                 }
@@ -301,7 +282,6 @@
                                                 }
                                             </tbody>
                                         </table>
-
                                         <input type="hidden" name="TICKET.leaveItems" id="leaveItems" />
                                         <div id="contextMenu" class="dropdown clearfix">
                                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
@@ -314,8 +294,6 @@
                                                     <a tabindex="-1" href="javascript:void(0)" style="text-decoration:none;"
                                                        class="text-muted ml-2" id="add_row"><i class="fas fa-long-arrow-alt-right"></i>&nbsp;<span class="lang" key="add-row"></span></a>
                                                 </li>
-
-
                                             </ul>
                                         </div>
                                     </div>
@@ -323,12 +301,10 @@
                                 }
                                 else
                                 {
-
                                     <div class="table-responsive">
                                         <table class="table-border-dark">
                                             <tr>
                                                 <th class="lang" key="table-no" rowspan="2">No</th>
-
                                                 <th class="lang" rowspan="2" key="table-code" style="width:60px;">Code No</th>
                                                 <th class="lang" rowspan="2" key="name">Name <br /></th>
                                                 <th class="lang" rowspan="2" key="customer_department">Customer/Department<br />  </th>
@@ -336,14 +312,11 @@
                                                 <th class="lang" rowspan="2" key="reason-leave">Reason</th>
                                             </tr>
                                             <tr>
-
                                                 @foreach (var item_regis in ViewBag.List_detail)
                                                 {
-
                                                     <th class="text-center p-2" key="" style="width: 10%;">
                                                         @item_regis.TIME_LEAVE.ToString("dd/MM/yyyy")
                                                     </th>
-
                                                 }
                                             </tr>
                                             <tbody id="tableInfo">
@@ -351,7 +324,6 @@
                                                     var i = 1;
                                                     foreach (var item in Model.TICKET.GA_LEAVE_FORM_ITEMs)
                                                     {
-
                                                         <tr class="">
                                                             <td style="width:5%;" class="text-center">@(i)</td>
                                                             <td style="width:5%;">
@@ -365,7 +337,6 @@
                                                             <td style="width:15%;">
                                                                 @item.CUSTOMER
                                                             </td>
-
                                                             @foreach (var item_regis in ViewBag.List_detail)
                                                             {
                                                                 <td style="text-align:center;">
@@ -374,13 +345,11 @@
                                                                         <i class="fa fa-check"></i>
                                                                     }
                                                                 </td>
-
                                                             }
                                                             <td>
                                                                 @item.REASON
                                                             </td>
                                                         </tr>
-
                                                         i++;
                                                     }
                                                 }

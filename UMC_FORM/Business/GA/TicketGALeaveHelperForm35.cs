@@ -66,7 +66,7 @@ namespace UMC_FORM.Business.GA
                             TIME_TO = item.TIME_TO,
                             TOTAL = item.TOTAL,
                             REASON = string.IsNullOrEmpty(item.REASON) ? "" : item.REASON,
-                            SPEACIAL_LEAVE = false,
+                            SPEACIAL_LEAVE = item.SPEACIAL_LEAVE,
                             REMARK = string.IsNullOrEmpty(item.REMARK) ? "" : item.REMARK,
                         };
 
