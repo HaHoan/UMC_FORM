@@ -494,10 +494,18 @@ $(function () {
     })
     var $contextMenu = $("#contextMenu");
     $("body").on("contextmenu", "table tr", function (e) {
+        var width = 0
+        var height = 0;
+        if ($('#layoutSidenav_nav').length) {
+            width = $('#layoutSidenav_nav').width()
+        }
+        if ($('.sb-topnav').length) {
+            height = $('.sb-topnav').height()
+        }
         $contextMenu.css({
             display: "block",
-            left: e.pageX,
-            top: e.pageY
+            left: e.pageX - width,
+            top: e.pageY - height
         });
         return false;
     });
