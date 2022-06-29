@@ -1,4 +1,5 @@
 ﻿
+
 function enableButton() {
     $('#frmpaidleave_create').prop("disabled", false);
     $('#frmpaidleave_accept').prop("disabled", false);
@@ -83,12 +84,23 @@ function changeId_TdreasonWhenDelete(rowIndex, index, name, indexInTd) {
 }
 function Delete_col(index_column) {
     var column_registration_date = $('.table-border-dark tr #registration_date').attr('colspan');
+    list_checkbox = []
+    for (var j = 1; j <= $('#tableInfo tr').length; j++) {
+        for (var i = 1; i <= column_registration_date; i++) {
+            var value_checkbox = $('#REGISTRATION_DATE' + j + '_' + i).is(":checked")
+            if (value_checkbox == true) {
+                list_checkbox.push('REGISTRATION_DATE' + j + '_' + i);
+            }
+            
+        }
+    }
     $('.table-border-dark').delegate('#Add_col' + index_column, 'click', function () {
         var index = this.cellIndex;
         $(this).closest('.table-border-dark ').find('.row-info').each(function () {
-            this.removeChild(this.cells[index + 3]);
+            this.removeChild(this.cells[index + 4]);
         });
         $('#Add_col' + index_column).remove();
+       
     });
     if (index_column < column_registration_date) {
         for (var i = 0; i < column_registration_date - index_column; i++) {
@@ -100,7 +112,7 @@ function Delete_col(index_column) {
             $('#DELETE' + get_valueidnext).remove();
             Change_buttondelete_col("DELETE",value_next_id);
         }
-    }
+    } 
     var count_columns = column_registration_date - 1;
     var index = 1;
     $('#registration_date').attr('colspan', count_columns);
@@ -108,15 +120,20 @@ function Delete_col(index_column) {
         $('#tableInfo tr').each(function (rowIndex) {
             var stt = $('#tableInfo tr:eq(' + rowIndex + ') td:eq(0)').text();
             if (stt) {
-                for (var i = 1; i <= count_columns; i++) {
-                    var value = 4 + i;
-                    Change_ThAdd_Whendeletecol(rowIndex, index, i, 'REGISTRATION_DATE', value)
+                for (var i = 1; i <= column_registration_date; i++) {
+                    var value = 3 + i;
+                    if (i < index_column) {
+                        Change_ThAdd_Whendeletecol(rowIndex, index, i, 'REGISTRATION_DATE', value, list_checkbox)
+                    }
+                    else if (i > index_column) {
+
+                        Change_ThAdd_Whendeletecol(rowIndex, index, i - 1, 'REGISTRATION_DATE', value, list_checkbox)
+                    }
                 }
                 index++;
             }
         });
     }
-   
 }
 function Change_buttondelete_col(name, index) {
     var input_deletecol = $('<input />', {
@@ -131,13 +148,26 @@ function Change_buttondelete_col(name, index) {
     $('.table-border-dark #columns #Add_col' + index).append(input_deletecol);
   
 }
-function Change_ThAdd_Whendeletecol(rowIndex, index, column, name, indexInTd) {
+function Change_ThAdd_Whendeletecol(rowIndex, index, column, name, indexInTd,list_checkbox) {
     try {
-        var value_checkbox = $('#REGISTRATION_DATE' + index + '_' + column).is(":checked")
-        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('id', name + index + '_' + column)
-        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('name', name + index + '_' + column)
-        $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('checked', value_checkbox)
-    } catch (e) {
+        var id = $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('id')
+        if (list_checkbox.length <= 0) {
+            $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('id', name + index + '_' + column)
+            $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('name', name + index + '_' + column)
+        }
+        else {
+            if (jQuery.inArray(id, list_checkbox) !== -1) {
+                $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('id', name + index + '_' + column)
+                $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('name', name + index + '_' + column)
+                $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('checked', true)
+            }
+            else {
+                $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('id', name + index + '_' + column)
+                $('#tableInfo tr:eq(' + rowIndex + ') td:eq(' + indexInTd + ') input').attr('name', name + index + '_' + column)
+            }
+        }
+    }
+    catch (e) {
     }
 }
 function updateleaveItems() {
@@ -352,13 +382,8 @@ $(function () {
         }
     });
     $('#DATE_REGISTER').val(convertDateToValid($("#DATE_REGISTER_VIEW").val()));
-    if ($('#GROUP_LEADER').val() == $('#user_code').val()) {
-        $('#select_dept_manager').show();
-    } else {
-        $('#select_dept_manager').hide();
-    }
-
-    $('#GROUP_LEADER').on('change', function () {
+    $('#select_dept_manager').hide();
+    $('#GROUP_LEADER').on('change',function () {
         var groupLeader = this.value;
         var userCode = $('#user_code').val();
         if (groupLeader == userCode) {
@@ -446,7 +471,7 @@ $(function () {
     function addTdCheckbox_addcol(name, index_col, index_row) {
 
         for (var i = 1; i <= index_row; i++) {
-            var col = $('<td/>');
+            var col = $('<td /> ');
             var input = $('<input/>', {
                 type: 'checkbox',
                 class: 'form-input type_number inputDefault',
