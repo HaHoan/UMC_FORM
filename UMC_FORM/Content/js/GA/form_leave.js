@@ -285,16 +285,22 @@ function timeToOnShow($input, context) {
 const FORMAT_DATE_TIME = 'd/m/Y H:i'
 const FORMAT_DATE = 'd/m/Y'
 $(function () {
-    $('#select_dept_manager').hide();
-    $('#GROUP_LEADER').change(function (e) {
-        var groupLeader = $('#GROUP_LEADER option:selected').val()
-        var userCode = $('#user_code').val()
+    if ($('#GROUP_LEADER').val() == $('#user_code').val()) {
+        $('#select_dept_manager').show();
+    } else {
+        $('#select_dept_manager').hide();
+    }
+
+    $('#GROUP_LEADER').on('change', function () {
+        var groupLeader = this.value;
+        var userCode = $('#user_code').val();
         if (groupLeader == userCode) {
             $('#select_dept_manager').show()
         } else {
             $('#select_dept_manager').hide()
         }
-    })
+    });
+  
     for (var i = 1; i <= $('#tableInfo tr').length; i++) {
         $('#CODE' + i).keypress(function () {
             updateNumberRegister()

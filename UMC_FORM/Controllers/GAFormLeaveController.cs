@@ -98,7 +98,7 @@ namespace UMC_FORM.Controllers
         public JsonResult Reject(object obj)
         {
             _sess = Session["user"] as Form_User;
-            var result = TicketGALeaveHelper.Reject(obj, _sess);
+            var result = new TicketGALeaveHelperForm35().Reject(obj, _sess);
             return Json(new { result = result.result, message = result.message }, JsonRequestBehavior.AllowGet);
         }
 
@@ -125,7 +125,7 @@ namespace UMC_FORM.Controllers
         public ActionResult DetailFormPaidLeave(string ticket)
         {
             _sess = Session["user"] as Form_User;
-            var ticketDb = TicketGALeaveHelper.GetDetailTicket(ticket,_sess);
+            var ticketDb = new TicketGALeaveHelperForm35().GetDetailTicket(ticket,_sess);
             if (ticketDb == null) return HttpNotFound();
             SetUpViewBagForCreate();
             return View(ticketDb);
@@ -134,7 +134,7 @@ namespace UMC_FORM.Controllers
         public ActionResult DetailFormUnPaidLeave(string ticket)
         {
             _sess = Session["user"] as Form_User;
-            var ticketDb = TicketGALeaveHelper.GetDetailTicket(ticket, _sess);
+            var ticketDb = new TicketGALeaveHelperForm35().GetDetailTicket(ticket, _sess);
             if (ticketDb == null) return HttpNotFound();
             SetUpViewBagForCreate();
             return View(ticketDb);
@@ -143,7 +143,7 @@ namespace UMC_FORM.Controllers
         {
             SetUpViewBagForCreate();
             _sess = Session["user"] as Form_User;
-            var ticketDb = TicketGALeaveHelper.GetDetailTicket(ticket, _sess);
+            var ticketDb = new TicketGALeaveHelperForm35().GetDetailTicket(ticket, _sess);
             if (ticketDb == null) return HttpNotFound();
             return View(ticketDb);
         }
@@ -152,7 +152,7 @@ namespace UMC_FORM.Controllers
         {
             SetUpViewBagForCreate();
             _sess = Session["user"] as Form_User;
-            var ticketDb = TicketGALeaveHelper.GetDetailTicket(ticket, _sess);
+            var ticketDb = new TicketGALeaveHelperForm35().GetDetailTicket(ticket, _sess);
             if (ticketDb == null) return HttpNotFound();
             return View(ticketDb);
         }

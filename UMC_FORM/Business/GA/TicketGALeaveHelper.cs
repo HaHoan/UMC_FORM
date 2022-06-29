@@ -14,6 +14,8 @@ namespace UMC_FORM.Business.GA
 {
     public abstract class TicketGALeaveHelper : TicketHelper
     {
+        public string ControllerName { get; set; }
+        public string ProcessName { get; set; }
         public override Form_Procedures CheckIsSignature(string stationName, Form_Summary summary)
         {
             using (var db = new DataContext())
@@ -32,154 +34,8 @@ namespace UMC_FORM.Business.GA
 
             }
         }
-
-        public static List<GA_LEAVE_FORM_ITEM> convertStringToListItem(string leaveItems, string prevID, string currentID)
-        {
-            try
-            {
-                using (var db = new DataContext())
-                {
-                    List<GA_LEAVE_FORM_ITEM> listLeaveItems = new List<GA_LEAVE_FORM_ITEM>();
-
-                    // không sửa gì
-                    if (string.IsNullOrEmpty(leaveItems))
-                    {
-
-                        listLeaveItems = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == prevID).ToList();
-
-                    }
-
-                    // Khi sửa đổi items
-                    else
-                    {
-                        var format = "dd/MM/yyyy";
-                        var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
-                        listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems, dateTimeConverter);
-                    }
-
-                    if (listLeaveItems == null || listLeaveItems.Count == 0)
-                    {
-                        return null;
-                    }
-                    var newListItem = new List<GA_LEAVE_FORM_ITEM>();
-                    foreach (var item in listLeaveItems)
-                    {
-                        if (string.IsNullOrEmpty(item.CODE))
-                        {
-                            return null;
-                        }
-
-                        var itemDB = new GA_LEAVE_FORM_ITEM
-                        {
-                            TICKET = currentID,
-                            NO = item.NO,
-                            FULLNAME = item.FULLNAME,
-                            CODE = item.CODE,
-                            TIME_FROM = item.TIME_FROM,
-                            TIME_TO = item.TIME_TO,
-                            TOTAL = item.TOTAL,
-                            REASON = string.IsNullOrEmpty(item.REASON) ? "" : item.REASON,
-                            SPEACIAL_LEAVE = false,
-                            REMARK = string.IsNullOrEmpty(item.REMARK) ? "" : item.REMARK,
-                        };
-
-                        newListItem.Add(itemDB);
-                    }
-
-                    return newListItem;
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-
-
-        }
-        public static List<GA_LEAVE_FORM_ITEM> convertStringToListItem_Detail(string leaveItems, string prevID, string currentID)
-        {
-            try
-            {
-                using (var db = new DataContext())
-                {
-                    List<GA_LEAVE_FORM_ITEM> listLeaveItems = new List<GA_LEAVE_FORM_ITEM>();
-                    List<GA_LEAVE_FORM_ITEM_DETAIL> listDetailTimeleave = new List<GA_LEAVE_FORM_ITEM_DETAIL>();
-                    if (string.IsNullOrEmpty(leaveItems))
-                    {
-                        listLeaveItems = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == prevID).ToList();
-
-                    }
-                    // Khi sửa đổi items
-                    else
-                    {
-                        var format = "dd/MM/yyyy";
-                        var dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
-                        listLeaveItems = JsonConvert.DeserializeObject<List<GA_LEAVE_FORM_ITEM>>(leaveItems, dateTimeConverter);
-                    }
-
-                    if (listLeaveItems == null || listLeaveItems.Count == 0)
-                    {
-                        return null;
-                    }
-
-                    var newListItem = new List<GA_LEAVE_FORM_ITEM>();
-                    foreach (var item in listLeaveItems)
-                    {
-                        if (string.IsNullOrEmpty(item.CODE))
-                        {
-                            return null;
-                        }
-                        if (item.GA_LEAVE_FORM_ITEM_DETAILs == null)
-                        {
-                            var detail_timeleave = db.GA_LEAVE_FORM_ITEM_DETAIL.Where(m => m.GA_LEAVE_FORM_ITEM_ID == item.ID).ToList();
-
-                            var itemDB = new GA_LEAVE_FORM_ITEM
-                            {
-                                TICKET = currentID,
-                                NO = item.NO,
-                                FULLNAME = item.FULLNAME,
-                                CODE = item.CODE,
-                                TIME_FROM = DateTime.Now,
-                                TIME_TO = DateTime.Now,
-                                TOTAL = item.TOTAL,
-                                REASON = string.IsNullOrEmpty(item.REASON) ? "" : item.REASON,
-                                SPEACIAL_LEAVE = item.SPEACIAL_LEAVE,
-                                REMARK = string.IsNullOrEmpty(item.REMARK) ? "" : item.REMARK,
-                                GA_LEAVE_FORM_ITEM_DETAILs = detail_timeleave,
-                                CUSTOMER = item.CUSTOMER,
-                            };
-                            newListItem.Add(itemDB);
-                        }
-                        else
-                        {
-                            var itemDB = new GA_LEAVE_FORM_ITEM
-                            {
-                                TICKET = currentID,
-                                NO = item.NO,
-                                FULLNAME = item.FULLNAME,
-                                CODE = item.CODE,
-                                TIME_FROM = DateTime.Now,
-                                TIME_TO = DateTime.Now,
-                                TOTAL = item.TOTAL,
-                                REASON = string.IsNullOrEmpty(item.REASON) ? "" : item.REASON,
-                                SPEACIAL_LEAVE = item.SPEACIAL_LEAVE,
-                                REMARK = string.IsNullOrEmpty(item.REMARK) ? "" : item.REMARK,
-                                GA_LEAVE_FORM_ITEM_DETAILs = item.GA_LEAVE_FORM_ITEM_DETAILs,
-                                CUSTOMER = item.CUSTOMER,
-                            };
-                            newListItem.Add(itemDB);
-                        }
-                    }
-                    return newListItem;
-                }
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
+        public abstract List<GA_LEAVE_FORM_ITEM> GetGALeaveFormItem(DataContext db, string ID);
+        public abstract List<GA_LEAVE_FORM_ITEM> convertStringToListItem(string leaveItems, string prevID, string currentID);
         public abstract BaseResult SaveGALeaveItemDetail(DataContext db, GA_LEAVE_FORM_ITEM item);
         public BaseResult Create(object obj, Form_User _sess)
         {
@@ -199,11 +55,11 @@ namespace UMC_FORM.Business.GA
                         ticket.SUBMIT_USER = _sess.CODE;
                         ticket.IS_SIGNATURE = 1;
                         ticket.UPD_DATE = DateTime.Now;
-                        var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.GA_LEAVE_FORM).ToList();
+                        var process = db.Form_Process.Where(m => m.FORM_NAME == ProcessName).ToList();
                         var station = process.Where(m => m.FORM_INDEX == ticket.PROCEDURE_INDEX).FirstOrDefault();
                         ticket.STATION_NAME = station.STATION_NAME;
                         ticket.STATION_NO = station.STATION_NO;
-                        ticket.GA_LEAVE_FORM_ITEMs = TicketGALeaveHelper.convertStringToListItem(ticket.leaveItems, ticket.ID, ticket.ID);
+                        ticket.GA_LEAVE_FORM_ITEMs = convertStringToListItem(ticket.leaveItems, ticket.ID, ticket.ID);
 
                         if (ticket.GA_LEAVE_FORM_ITEMs == null)
                         {
@@ -216,7 +72,7 @@ namespace UMC_FORM.Business.GA
                             db.GA_LEAVE_FORM_ITEM.Add(item);
                             db.SaveChanges();
                             var result = SaveGALeaveItemDetail(db, item);
-                            if(result.result == STATUS.ERROR)
+                            if (result.result == STATUS.ERROR)
                             {
                                 transaction.Rollback();
                                 return result;
@@ -226,7 +82,7 @@ namespace UMC_FORM.Business.GA
                         ticket.NUMBER_REGISTER = ticket.GA_LEAVE_FORM_ITEMs.Count();
                         db.GA_LEAVE_FORM.Add(ticket);
                         db.SaveChanges();
-                        var listProcedures = FormProcedureResponsitory.SetUpFormProceduce(Constant.GA_LEAVE_FORM, ticket, process, _sess.CODE);
+                        var listProcedures = FormProcedureResponsitory.SetUpFormProceduce(ProcessName, ticket, process, _sess.CODE);
 
                         if (listProcedures == null)
                         {
@@ -255,7 +111,7 @@ namespace UMC_FORM.Business.GA
                             UPD_DATE = DateTime.Now,
                             TITLE = ticket.TITLE,
                             PURPOSE = ticket.TITLE,
-                            PROCESS_ID = Constant.GA_LEAVE_FORM,
+                            PROCESS_ID = ProcessName,
                             LAST_INDEX = process.Count() - 1
                         };
                         db.Form_Summary.Add(summary);
@@ -271,10 +127,10 @@ namespace UMC_FORM.Business.GA
                             {
                                 return new BaseResult(STATUS.ERROR, "Bạn cần chọn trưởng phòng!");
                             }
-                            return Accept(ticket,_sess);
+                            return Accept(ticket, _sess);
                         }
 
-                        if (!MailResponsitory.SendMail(summary, STATUS.ACCEPT, "GAFormLeave"))
+                        if (!MailResponsitory.SendMail(summary, STATUS.ACCEPT, ControllerName))
                         {
                             return new BaseResult(STATUS.ERROR, "Error when send mail!");
                         };
@@ -289,7 +145,7 @@ namespace UMC_FORM.Business.GA
                 }
             }
         }
-        public BaseResult Accept(object obj,Form_User _sess)
+        public BaseResult Accept(object obj, Form_User _sess)
         {
             using (var db = new DataContext())
             {
@@ -320,9 +176,9 @@ namespace UMC_FORM.Business.GA
                         }
                         else
                         {
-                            form.IS_SIGNATURE = 1;
                             form.PROCEDURE_INDEX += 1;
                         }
+                        form.IS_SIGNATURE = 1;
                         summary.PROCEDURE_INDEX = form.PROCEDURE_INDEX;
                         if (summary.PROCEDURE_INDEX == summary.LAST_INDEX)
                         {
@@ -382,11 +238,11 @@ namespace UMC_FORM.Business.GA
                             }
                         }
 
-                        var process = db.Form_Process.Where(m => m.FORM_NAME == Constant.GA_LEAVE_FORM).ToList();
+                        var process = db.Form_Process.Where(m => m.FORM_NAME == ProcessName).ToList();
                         var station = process.Where(m => m.FORM_INDEX == form.PROCEDURE_INDEX).FirstOrDefault();
                         form.STATION_NAME = station.STATION_NAME;
                         form.STATION_NO = station.STATION_NO;
-                        form.GA_LEAVE_FORM_ITEMs = TicketGALeaveHelper.convertStringToListItem(ticket.leaveItems, ticket.ID, form.ID);
+                        form.GA_LEAVE_FORM_ITEMs = convertStringToListItem(ticket.leaveItems, ticket.ID, form.ID);
                         if (form.GA_LEAVE_FORM_ITEMs == null)
                         {
                             transaction.Rollback();
@@ -400,7 +256,12 @@ namespace UMC_FORM.Business.GA
                         {
                             db.GA_LEAVE_FORM_ITEM.Add(item);
                             db.SaveChanges();
-                            SaveGALeaveItemDetail(db, item);
+                            var result = SaveGALeaveItemDetail(db, item);
+                            if (result.result == STATUS.ERROR)
+                            {
+                                transaction.Rollback();
+                                return result;
+                            }
                         }
                         form.NUMBER_REGISTER = form.GA_LEAVE_FORM_ITEMs.Count();
                         db.GA_LEAVE_FORM.Add(form);
@@ -414,7 +275,7 @@ namespace UMC_FORM.Business.GA
                         {
                             if (currentProceduce != null && _sess.CODE == currentProceduce.APPROVAL_NAME)
                             {
-                                return Accept(form,_sess);
+                                return Accept(form, _sess);
                             }
                         }
 
@@ -427,7 +288,7 @@ namespace UMC_FORM.Business.GA
                                 message = "Error when send mail!"
                             };
                         };
-                        
+
                         return new BaseResult()
                         {
                             result = STATUS.SUCCESS,
@@ -446,7 +307,7 @@ namespace UMC_FORM.Business.GA
                 }
             }
         }
-        public static BaseResult Reject(object obj, Form_User _sess)
+        public BaseResult Reject(object obj, Form_User _sess)
         {
             using (var db = new DataContext())
             {
@@ -457,7 +318,7 @@ namespace UMC_FORM.Business.GA
                         var ticket = (GA_LEAVE_FORM)obj;
                         var formDb = db.GA_LEAVE_FORM.Where(m => m.ID == ticket.ID).FirstOrDefault();
                         if (formDb == null)
-                            return  new BaseResult()
+                            return new BaseResult()
                             {
                                 result = STATUS.ERROR,
                                 message = "Ticket không tồn tại"
@@ -482,7 +343,7 @@ namespace UMC_FORM.Business.GA
                         form.ID = Guid.NewGuid().ToString();
                         form.SUBMIT_USER = _sess.CODE;
                         form.COMMENT = ticket.COMMENT;
-                        form.GA_LEAVE_FORM_ITEMs = TicketGALeaveHelper.convertStringToListItem(ticket.leaveItems, ticket.ID, form.ID);
+                        form.GA_LEAVE_FORM_ITEMs = convertStringToListItem(ticket.leaveItems, ticket.ID, form.ID);
                         if (form.GA_LEAVE_FORM_ITEMs == null)
                         {
                             transaction.Rollback();
@@ -492,6 +353,12 @@ namespace UMC_FORM.Business.GA
                         {
                             db.GA_LEAVE_FORM_ITEM.Add(item);
                             db.SaveChanges();
+                            var result = SaveGALeaveItemDetail(db, item);
+                            if (result.result == STATUS.ERROR)
+                            {
+                                transaction.Rollback();
+                                return result;
+                            }
                         }
                         form.NUMBER_REGISTER = form.GA_LEAVE_FORM_ITEMs.Count();
                         db.GA_LEAVE_FORM.Add(form);
@@ -511,7 +378,7 @@ namespace UMC_FORM.Business.GA
                             transaction.Rollback();
                             return new BaseResult(STATUS.ERROR, "Error when send mail!");
                         };
-                        return new BaseResult(STATUS.SUCCESS,"");
+                        return new BaseResult(STATUS.SUCCESS, "");
                     }
                     catch (Exception e)
                     {
@@ -536,7 +403,7 @@ namespace UMC_FORM.Business.GA
             }
         }
 
-        public static GA_LEAVE_FORM_DETAIL_MODEL GetDetailTicket(string ticket,Form_User _sess)
+        public GA_LEAVE_FORM_DETAIL_MODEL GetDetailTicket(string ticket, Form_User _sess)
         {
             using (var db = new DataContext())
             {
@@ -553,8 +420,7 @@ namespace UMC_FORM.Business.GA
                 {
                     return null;
                 }
-
-                modelDetail.TICKET.GA_LEAVE_FORM_ITEMs = db.GA_LEAVE_FORM_ITEM.Where(m => m.TICKET == modelDetail.TICKET.ID).ToList();
+                modelDetail.TICKET.GA_LEAVE_FORM_ITEMs = GetGALeaveFormItem(db,modelDetail.TICKET.ID);
                 modelDetail.SUMARY = db.Form_Summary.Where(m => m.TICKET == ticket).FirstOrDefault();
 
                 if (modelDetail.SUMARY == null)

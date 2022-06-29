@@ -88,7 +88,7 @@ namespace UMC_FORM.Controllers
         public JsonResult Reject(object obj)
         {
             _sess = Session["user"] as Form_User;
-            var result = TicketGALeaveHelper.Reject(obj, _sess);
+            var result = new TicketGALeaveHelperForm41().Reject(obj, _sess);
             return Json(new { result = result.result, message = result.message }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Details(string ticket)
@@ -105,7 +105,7 @@ namespace UMC_FORM.Controllers
         public ActionResult DetailFormPaidLeave41(string ticket)
         {
             _sess = Session["user"] as Form_User;
-            var model_detail = TicketGALeaveHelper.GetDetailTicket(ticket, _sess);
+            var model_detail = new TicketGALeaveHelperForm41().GetDetailTicket(ticket, _sess);
             if (model_detail == null) HttpNotFound();
             ViewBag.List_detail = GetTimeLeave(ticket);
             SetUpViewBagForCreate();
@@ -114,7 +114,7 @@ namespace UMC_FORM.Controllers
         public ActionResult PrintFormPaidLeave41(string ticket)
         {
             _sess = Session["user"] as Form_User;
-            var model_detail = TicketGALeaveHelper.GetDetailTicket(ticket, _sess); 
+            var model_detail = new TicketGALeaveHelperForm41().GetDetailTicket(ticket, _sess);
             if (model_detail == null) HttpNotFound();
             ViewBag.List_detail = GetTimeLeave(ticket);
             SetUpViewBagForCreate();

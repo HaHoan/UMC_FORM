@@ -7,17 +7,14 @@ namespace UMC_FORM.Models
 {
     public class BaseResult
     {
-        private string eRROR;
-        private string v;
-
         public BaseResult()
         {
         }
 
-        public BaseResult(string eRROR, string v)
+        public BaseResult(string result, string v)
         {
-            this.eRROR = eRROR;
-            this.v = v;
+            this.result = result;
+            this.message = v;
         }
 
         public string result { get; set; }

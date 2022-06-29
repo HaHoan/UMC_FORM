@@ -24,6 +24,8 @@
                     }, new { enctype = "multipart/form-data", id = "submitForm" }))
                     {
                         @Html.AntiForgeryToken()
+                        <input type="hidden" value="@(_session.CODE)" id="user_code" />
+
                         <br />
                         <button class="border-0 bg-white" id="backTo" type="button">
                             <i class="fas fa-angle-left font-title text-muted"></i>
@@ -133,7 +135,7 @@
                                             <label class="font-weight-bold lang" key="group_leader">Name</label>
                                         </div>
                                         <div class="col-9">
-                                            <select class="custom-select" id="GROUP_LEADER" name="GROUP_LEADER">
+                                            <select class="custom-select" id="GROUP_LEADER" name="TICKET.GROUP_LEADER">
                                                 <option value="0">Chọn trưởng nhóm có quyền approve</option>
                                                 @foreach (var group_leader in ViewBag.listGroupLeader)
                                                 {
@@ -150,6 +152,30 @@
                                         </div>
                                     </div>
                                     <br />
+                                    <div class="row" id="select_dept_manager">
+                                        <div class="col-3">
+                                            <label class="font-weight-bold lang" key="dept_manager">Name</label>
+                                        </div>
+                                        <div class="col-9">
+
+                                            <select class="custom-select" id="DEPT_MANAGER" name="TICKET.DEPT_MANAGER">
+                                                <option value="0">Chọn trưởng phòng có quyền approve</option>
+                                                @foreach (var mng in ViewBag.listManager)
+                                                {
+                                                    if (Model.TICKET.DEPT_MANAGER_OBJECT != null && Model.TICKET.DEPT_MANAGER_OBJECT.CODE == mng.CODE)
+                                                    {
+                                                        <option value="@mng.CODE" selected>@mng.NAME</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@mng.CODE">@mng.NAME</option>
+                                                    }
+
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
                                 }
                                 if (Model.PERMISSION.Contains(PERMISSION.ADD_DEPT_MANAGER) && ViewBag.listManager != null)
                                 {
