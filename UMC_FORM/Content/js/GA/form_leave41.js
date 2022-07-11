@@ -1,5 +1,6 @@
 ﻿
 
+
 function enableButton() {
     $('#frmpaidleave_create').prop("disabled", false);
     $('#frmpaidleave_accept').prop("disabled", false);
@@ -288,6 +289,7 @@ function addTdCheckbox(name) {
     col.append(input);
     input.attr('id', name)
     input.attr('name', name)
+    //input.prop("checked", true);
     var span = $('<span />', {
         class: 'error'
     })
@@ -426,63 +428,11 @@ $(function () {
         addRow();
     });
     $("#contextMenu li #add_column").click(function (e) {
-        var column = $('.table-border-dark tr #registration_date').attr('colspan');
-        var index_column = parseInt(column) + 1;
-        var index_row = $('#tableInfo tr').length;
-        $('#registration_date').attr('colspan', index_column);
-        var col = $('<th id=' + 'Add_col'+index_column+'  style= "width:120px;"/> ');
-        var input = $('<input/>', {
-            class: 'form-input inputDefault',
-            style:'width:80px;'
-        });
-
-        var input_deletecol = $('<input />', {
-            type:'button',
-            id: 'DELETE' + index_column,
-            click: function () {
-                Delete_col(index_column)
-            },
-            value: 'x',
-            style: 'width:10px;height:22px;float:right;padding-left: 3px;border: 0px;background-color: white;'
-        });
+        addColumn();
         
-        $('.table-border-dark #columns').append(col);
-        col.append(input, input_deletecol);
-       
-        input.attr('id', 'TIME_LEAVE' + index_column);
-        input.attr('name', 'TIME_LEAVE' + index_column);
-        input.datetimepicker({
-            format: FORMAT_DATE_TIME,
-            formatDate: FORMAT_DATE_TIME,
-        });
-        addTdCheckbox_addcol("REGISTRATION_DATE", index_column, index_row)
-        $('#TIME_LEAVE' + index_column).datetimepicker({
-            format: FORMAT_DATE,
-            formatDate: FORMAT_DATE,
-            value: moment().format(),
-            onChangeDateTime() {
-                var date_col = $("#TIME_LEAVE" + index_column).val()
-                $('#TIME_LEAVE' + index_column).val(date_col)
-            }
-        });
-        var date_col = $("#TIME_LEAVE" + index_column).val()
-        $('#TIME_LEAVE' + index_column).val(date_col)
     });
-    function addTdCheckbox_addcol(name, index_col, index_row) {
 
-        for (var i = 1; i <= index_row; i++) {
-            var col = $('<td /> ');
-            var input = $('<input/>', {
-                type: 'checkbox',
-                class: 'form-input type_number inputDefault',
-            })
-            col.append(input);
-            input.attr('id', name + i + '_' + index_col)
-            input.attr('name', name + i + '_' + index_col)
-            $('.TD_REASON' + i).before(col)
-        }
-    }
-  
+    
     $(".btnXoa").on('click', function () {
         deleteRow(this);
     })
@@ -590,27 +540,59 @@ function generateTable(e) {
 
     var totalRow = firstIndexToAdd + rows.length - 1
     var y = 0;
+    var cells = rows[y].split("\t");
+    var value_columndate = cells.length - 1 - 4;
+    if (cells.length > 6) {       
+        for (var i = 2; i <= value_columndate; i++) {
+            addColumn_excel(i)
+        }
+    }
     for (var index = firstIndexToAdd; index <= totalRow; index++) {
-
         var cells = rows[y].split("\t");
+        
         if ($('.row-info').length < index) {
             addRow()
         }
-        if (cells.length > 1) {
-            $('#CODE' + index).val(cells[1])
+      
+        if (cells.length > 6) {
+            
+            if (cells.length > 1) {
+                $('#CODE' + index).val(cells[1])
+            }
+            if (cells.length > 2) {
+                $('#FULLNAME' + index).val(cells[2])
+            }
+            if (cells.length > 3) {
+                $('#CUSTOMER' + index).val(cells[3])
+            }
+            for (var i = 4; i < cells.length - 1; i++) {
+                var j = i - 3;
+                    if (cells[i] == "v") {
+                        $('#REGISTRATION_DATE' + index +'_'+ j).prop('checked', true)
+                    }
+            }            
+            var number = cells.length - 1;
+            if (cells.length > number) {
+                $('#REASON' + index).val(cells[number])
+            }
+        } else {
+            if (cells.length > 1) {
+                $('#CODE' + index).val(cells[1])
+            }
+            if (cells.length > 2) {
+                $('#FULLNAME' + index).val(cells[2])
+            }
+            if (cells.length > 3) {
+                $('#CUSTOMER' + index).val(cells[3])
+            }
+            if (cells.length > 4) {
+                $('#REGISTRATION_DATE' + index + '_1').prop('checked', true)
+            }
+            if (cells.length > 5) {
+                $('#REASON' + index).val(cells[5])
+            }
         }
-        if (cells.length > 2) {
-            $('#FULLNAME' + index).val(cells[2])
-        }
-        if (cells.length > 3) {
-            $('#CUSTOMER' + index).val(cells[3])
-        }
-        if (cells.length > 4) {
-            $('#REGISTRATION_DATE' + index + '_1').prop('checked', true)
-        }
-        if (cells.length > 5) {
-            $('#REASON' + index).val(cells[5])
-        }
+        
 
         y++
     }
@@ -619,6 +601,121 @@ function generateTable(e) {
     $(e).html(
         'Paste dữ liệu vào bảng bên dưới'
     );
+}
+function addColumn() {
+    var column = $('.table-border-dark tr #registration_date').attr('colspan');
+    var index_column = parseInt(column) + 1;
+    var index_row = $('#tableInfo tr').length;
+    $('#registration_date').attr('colspan', index_column);
+    var col = $('<th id=' + 'Add_col' + index_column + '  style= "width:120px;"/> ');
+    var input = $('<input/>', {
+        class: 'form-input inputDefault',
+        style: 'width:80px;'
+    });
+
+    var input_deletecol = $('<input />', {
+        type: 'button',
+        id: 'DELETE' + index_column,
+        click: function () {
+            Delete_col(index_column)
+        },
+        value: 'x',
+        style: 'width:10px;height:22px;float:right;padding-left: 3px;border: 0px;background-color: white;'
+    });
+
+    $('.table-border-dark #columns').append(col);
+    col.append(input, input_deletecol);
+
+    input.attr('id', 'TIME_LEAVE' + index_column);
+    input.attr('name', 'TIME_LEAVE' + index_column);
+    input.datetimepicker({
+        format: FORMAT_DATE_TIME,
+        formatDate: FORMAT_DATE_TIME,
+    });
+    addTdCheckbox_addcol("REGISTRATION_DATE", index_column, index_row)
+    $('#TIME_LEAVE' + index_column).datetimepicker({
+        format: FORMAT_DATE,
+        formatDate: FORMAT_DATE,
+        value: moment().format(),
+        onChangeDateTime() {
+            var date_col = $("#TIME_LEAVE" + index_column).val()
+            $('#TIME_LEAVE' + index_column).val(date_col)
+        }
+    });
+    var date_col = $("#TIME_LEAVE" + index_column).val()
+    $('#TIME_LEAVE' + index_column).val(date_col)
+}
+function addTdCheckbox_addcol(name, index_col, index_row) {
+
+    for (var i = 1; i <= index_row; i++) {
+        var col = $('<td /> ');
+        var input = $('<input/>', {
+            type: 'checkbox',
+            class: 'form-input type_number inputDefault',
+        })
+        col.append(input);
+        input.attr('id', name + i + '_' + index_col)
+        input.attr('name', name + i + '_' + index_col)
+        //input.prop("checked", true);
+        $('.TD_REASON' + i).before(col)
+    }
+}
+function addColumn_excel(value) {
+    var index_row = $('#tableInfo tr').length;
+    $('#registration_date').attr('colspan', value);
+
+    var col = $('<th id=' + 'Add_col' + value + '  style= "width:120px;"/> ');
+        var input = $('<input/>', {
+            class: 'form-input inputDefault',
+            style: 'width:80px;'
+        });
+
+        var input_deletecol = $('<input />', {
+            type: 'button',
+            id: 'DELETE' + value,
+            click: function () {
+                Delete_col(value)
+            },
+            value: 'x',
+            style: 'width:10px;height:22px;float:right;padding-left: 3px;border: 0px;background-color: white;'
+        });
+
+        $('.table-border-dark #columns').append(col);
+        col.append(input, input_deletecol);
+
+    input.attr('id', 'TIME_LEAVE' + value);
+    input.attr('name', 'TIME_LEAVE' + value);
+        input.datetimepicker({
+            format: FORMAT_DATE_TIME,
+            formatDate: FORMAT_DATE_TIME,
+        });
+    addTdCheckbox_addcolexcel("REGISTRATION_DATE", value, index_row)
+    $('#TIME_LEAVE' + value).datetimepicker({
+            format: FORMAT_DATE,
+            formatDate: FORMAT_DATE,
+            value: moment().format(),
+            onChangeDateTime() {
+                var date_col = $("#TIME_LEAVE" + value).val()
+                $('#TIME_LEAVE' + value).val(date_col)
+            }
+        });
+    var date_col = $("#TIME_LEAVE" + value).val()
+    $('#TIME_LEAVE' + value).val(date_col)
+    
+}
+function addTdCheckbox_addcolexcel(name, index_col, index_row) {
+
+    for (var i = 1; i <= index_row; i++) {
+        var col = $('<td /> ');
+        var input = $('<input/>', {
+            type: 'checkbox',
+            class: 'form-input type_number inputDefault',
+        })
+        col.append(input);
+        input.attr('id', name + i + '_' + index_col)
+        input.attr('name', name + i + '_' + index_col)
+        $('.TD_REASON' + i).before(col)
+    }
 }
 function addRow() {
     var column = $('.table-border-dark tr #registration_date').attr('colspan');
