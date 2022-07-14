@@ -279,7 +279,7 @@ namespace UMC_FORM.Business.GA
                             }
                         }
 
-                        if (!MailResponsitory.SendMail(summary, STATUS.ACCEPT, "GAFormLeave"))
+                        if (!MailResponsitory.SendMail(summary, STATUS.ACCEPT, ControllerName))
                         {
                             transaction.Rollback();
                             return new BaseResult()
